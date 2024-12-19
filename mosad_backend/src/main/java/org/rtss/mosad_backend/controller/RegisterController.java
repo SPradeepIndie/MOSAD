@@ -1,11 +1,13 @@
 package org.rtss.mosad_backend.controller;
 
+import jakarta.validation.Valid;
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.UserRegistrationDTO;
-import org.rtss.mosad_backend.service.RegisterService;
+import org.rtss.mosad_backend.dto.user_dtos.UserRegistrationDTO;
+import org.rtss.mosad_backend.service.register_user.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +31,9 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    private ResponseEntity<ResponseDTO> createAccount(@RequestBody UserRegistrationDTO userRegistrationDTO) {
-        return ResponseEntity.ok(registerService.addUser(userRegistrationDTO));
+    private ResponseEntity<ResponseDTO> createAccount(@RequestBody @Valid UserRegistrationDTO userRegistrationDto) {
+        return ResponseEntity.accepted().body(registerService.addUser(userRegistrationDto));
+
+        //return ResponseEntity.ok("Access ganted");
     }
 }

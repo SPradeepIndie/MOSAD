@@ -1,63 +1,91 @@
 package org.rtss.mosad_backend.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class Users implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id",nullable = false, unique = true)
-    private Integer user_id;
+    @Column(name = "userId",nullable = false, unique = true)
+    private Integer userId;
     @Column(name = "username",nullable = false,length = 30)
     private String username;
     @Column(name = "password",nullable = false)
     private String password;
-    @Column(name = "first_name",nullable = false,length = 30)
-    private String first_name;
-    @Column(name = "last_name",length = 30)
-    private String last_name;
+    @Column(name = "firstName",nullable = false,length = 30)
+    private String firstName;
+    @Column(name = "lastName",length = 30)
+    private String lastName;
     @Column(name = "email")
     private String email;
 
     @ManyToOne
-    @JoinColumn(name = "role_id",nullable = false)
-    private UserRoles user_roles;
+    @JoinColumn(name = "roleId",nullable = false)
+    private UserRoles userRoles;
 
-    @OneToMany(mappedBy = "contact_num")
-    private List<UserContacts> user_contacts;
+    @OneToMany(mappedBy = "contactNum")
+    private List<UserContacts> userContacts;
 
     public Users() {
     }
 
-    public Users(Integer user_id, String username, String password, String first_name, String last_name, String email, UserRoles user_roles, List<UserContacts> user_contacts) {
-        this.user_id = user_id;
+    public Users(Integer userId, String username, String password, String firstName, String lastName, String email, UserRoles userRoles, List<UserContacts> userContacts) {
+        this.userId = userId;
         this.username = username;
         this.password = password;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.user_roles = user_roles;
-        this.user_contacts = user_contacts;
+        this.userRoles = userRoles;
+        this.userContacts = userContacts;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
     public String getPassword() {
@@ -68,20 +96,20 @@ public class Users {
         this.password = password;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String last_name) {
+        this.lastName = last_name;
     }
 
     public String getEmail() {
@@ -92,33 +120,33 @@ public class Users {
         this.email = email;
     }
 
-    public UserRoles getUser_roles() {
-        return user_roles;
+    public UserRoles getUserRoles() {
+        return userRoles;
     }
 
-    public void setUser_roles(UserRoles user_roles) {
-        this.user_roles = user_roles;
+    public void setUserRoles(UserRoles user_roles) {
+        this.userRoles = user_roles;
     }
 
-    public List<UserContacts> getUser_contacts() {
-        return user_contacts;
+    public List<UserContacts> getUserContacts() {
+        return userContacts;
     }
 
-    public void setUser_contacts(List<UserContacts> user_contacts) {
-        this.user_contacts = user_contacts;
+    public void setUserContacts(List<UserContacts> userContacts) {
+        this.userContacts = userContacts;
     }
 
     @Override
     public String toString() {
         return "Users{" +
-                "user_id=" + user_id +
+                "user_id=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                ", first_name='" + firstName + '\'' +
+                ", last_name='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", user_roles=" + user_roles +
-                ", user_contacts=" + user_contacts +
+                ", userRoles=" + userRoles +
+                ", userContacts=" + userContacts +
                 '}';
     }
 }
