@@ -1,6 +1,6 @@
 package org.rtss.mosad_backend.controller;
 
-import org.rtss.mosad_backend.service.AccountManagementService;
+import org.rtss.mosad_backend.service.account_management.AccountManagementService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
