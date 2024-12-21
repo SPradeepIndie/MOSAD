@@ -7,6 +7,9 @@ import HeaderBar from "../component/Header";
 import ConfirmationDialog from "../component/ConfirmationDialog";
 import GeneralMessage from "../component/GeneralMessage";
 import ItemDetailsSection from "../component/ItemDetailsSection";
+import PriceDetailsSection from "../component/priceDetailsSection";
+
+
 
 
 // React Modal setup
@@ -302,67 +305,17 @@ const ItemTable = () => {
         >
           <h2>{currentItem ? "Edit Item" : "Add New Item"}</h2>
           <form onSubmit={handleSubmit}>
-            {/* <section
-              id="itemdetails"
-              style={{
-                marginBottom: "20px",
-                padding: "15px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-              }}
-            >
-              <h3 style={{ color: "green", marginBottom: "10px" }}>Item Details</h3>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 2fr",
-                  gap: "15px",
-                }}
-              >
-                {Object.keys(formData).map((key) => (
-                  <React.Fragment key={key}>
-                    <label
-                      disabled={key === "itemID"}
-                      style={{
-                        alignSelf: "center",
-                        color: "#333",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {key.replace(/([A-Z])/g, " $1").trim()}:
-                    </label>
-                    <input
-                      type="text"
-                      value={formData[key]}
-                      onChange={(e) =>
-                        setFormData({ ...formData, [key]: e.target.value })
-                      }
-                      required={key !== "itemID"}
-                      disabled={key === "itemID"}
-                      style={{
-                        backgroundColor: "#F5F5F5",
-                        color: "#333",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        padding: "8px",
-                        width: "100%",
-                        maxWidth: "300px",
-                      }}
-                    />
-                  </React.Fragment>
-                ))}
-              </div>
-            </section> */}
+            
 
-<ItemDetailsSection
-  formData={formData}
-  setFormData={setFormData}
-  errors={inputFieldErrors}
-  handleChange={handleChange}
-/>
+            <ItemDetailsSection
+              formData={formData}
+              setFormData={setFormData}
+              errors={inputFieldErrors}
+              handleChange={handleChange}
+            />
 
 
-             {true && (
+             {/* {true && (
               <section id="pricedetails" style={{ padding: "15px", border: "1px solid #ccc", borderRadius: "8px" }}>
                 <h3 style={{ color: "green", marginBottom: "10px" }}>Price Details</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "15px" }}>
@@ -463,7 +416,13 @@ const ItemTable = () => {
                   </div>
                 </div>
               </section>
-            )}    
+            )}     */}
+      <PriceDetailsSection 
+        
+
+      /> 
+
+
 
             <button
               type="submit"

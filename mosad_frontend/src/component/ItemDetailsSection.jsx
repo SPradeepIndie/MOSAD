@@ -11,8 +11,8 @@ const ItemDetailsSection = ({ formData,handleChange,errors }) => {
     <Box
       id="itemdetails"
       sx={{
-        marginBottom: "20px",
-        padding: "15px",
+        marginBottom: "25px",
+        padding: "20px",
         border: "1px solid #ccc",
         borderRadius: "8px",
       }}
