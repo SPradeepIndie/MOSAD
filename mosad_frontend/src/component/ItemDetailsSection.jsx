@@ -5,37 +5,7 @@ import { useState } from "react";
  
   
 
-const ItemDetailsSection = ({ formData, setFormData,handleChange,errors }) => {
-
-    //const [errors, setErrors] = useState({});
-
-    // const handleChange = (key, value) => {
-    //     // Validate the field
-    //     let fieldError = "";
-      
-    //     if (!value) {
-    //       fieldError = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
-    //     } else if (key === "tyreCount" && !Number.isInteger(Number(value))) {
-    //       fieldError = "PR must be a valid integer.";
-    //     } else if (key === "officialSellingPrice" && !/^(-?\d+(\.\d+)?)$/.test(value)) {
-    //       fieldError = "OSP must be a valid number.";
-    //     }
-      
-    //     // Update the error state
-    //     setErrors((prevErrors) => ({
-    //       ...prevErrors,
-    //       [key]: fieldError || undefined, // Clear the error if validation passes
-    //     }));
-      
-    //     // Only update formData if there's no error
-    //     if (!fieldError) {
-    //       setFormData((prevData) => ({ ...prevData, [key]: value }));
-    //     }
-    //   };
-
-
-
-
+const ItemDetailsSection = ({ formData,handleChange,errors }) => {
 
   return (
     <Box
@@ -53,7 +23,7 @@ const ItemDetailsSection = ({ formData, setFormData,handleChange,errors }) => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "auto auto",
+          gridTemplateColumns: "45% 45%",
           gap: "15px",
         }}
       >
