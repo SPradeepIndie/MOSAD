@@ -13,7 +13,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useNavigate } from 'react-router-dom';
 
-function Home() {
+function HomePage() {
   const navigate = useNavigate();
 
   const handleTileClick = (title) => {
@@ -85,4 +85,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;
