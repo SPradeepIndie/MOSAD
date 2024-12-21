@@ -28,7 +28,7 @@ public class ItemTyrePresaController {
 
     @PutMapping
     public ResponseEntity<ItemTyrePresaDTO> UpdateItemTyrePresa(@RequestBody ItemTyrePresaDTO itemTyrePresaDTO) {
-        return ResponseEntity.ok(itemTyrePresaService.saveItemTyrePresa(itemTyrePresaDTO));
+        return ResponseEntity.ok(itemTyrePresaService.updateItemTyrePresa(itemTyrePresaDTO));
     }
 
     @DeleteMapping

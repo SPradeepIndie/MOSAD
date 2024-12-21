@@ -10,6 +10,4 @@ public class MosadBackendApplication {
 		SpringApplication.run(MosadBackendApplication.class, args);
 	}
 
-
-
 }

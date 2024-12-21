@@ -62,8 +62,6 @@
 			<version>3.2.2</version>
 		</dependency>
 
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -92,10 +90,6 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.6</version>
 		</dependency>
-
-
-
-	</dependencies>
 
 	<build>
 		<plugins>

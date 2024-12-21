@@ -28,7 +28,7 @@ public class ItemTyreRapidController {
 
     @PutMapping
     public ResponseEntity<ItemTyreRapidDTO> UpdateItemTyreRapid(@RequestBody ItemTyreRapidDTO itemTyreRapidDTO) {
-        return ResponseEntity.ok(itemTyreRapidService.saveItemTyreRapid(itemTyreRapidDTO));
+        return ResponseEntity.ok(itemTyreRapidService.updateItemTyreRapid(itemTyreRapidDTO));
     }
 
     @DeleteMapping
