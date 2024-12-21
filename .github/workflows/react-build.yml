@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: install_dependencies
+      - name: npm_install_dependencies
         run: npm install
         working-directory: ./mosad_frontend
 
-      - name: build
+      - name: npm_build
         run: npm run build
         working-directory: ./mosad_frontend
       

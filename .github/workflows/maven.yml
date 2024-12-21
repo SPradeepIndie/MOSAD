@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Spring Boot Applcation Build
 
 on:
   push:
@@ -9,21 +9,17 @@ on:
 
 jobs:
   build:
-
+    name: build_spring_boot_app
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: set_up_jdk_21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
+    - name: maven_build
       run: mvn -B package --file pom.xml
       working-directory: ./mosad_backend
-    
-    - name: Change directory
-      run: cd ./mosad_backend
 
