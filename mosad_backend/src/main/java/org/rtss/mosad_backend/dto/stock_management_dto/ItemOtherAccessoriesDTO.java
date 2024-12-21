@@ -4,14 +4,14 @@ public class ItemOtherAccessoriesDTO {
 
     private Integer itemID;
     private String accessoryType;
-    private String accessoryCount;
+    private Integer accessoryCount;
     private double officialSellingPrice;
     private String vehicleType;
 
     public ItemOtherAccessoriesDTO() {
     }
 
-    public ItemOtherAccessoriesDTO(Integer itemID, String accessoryType, String accessoryCount, double officialSellingPrice, String vehicleType) {
+    public ItemOtherAccessoriesDTO(Integer itemID, String accessoryType, Integer accessoryCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.accessoryType = accessoryType;
         this.accessoryCount = accessoryCount;
@@ -35,11 +35,11 @@ public class ItemOtherAccessoriesDTO {
         this.accessoryType = accessoryType;
     }
 
-    public String getAccessoryCount() {
+    public Integer getAccessoryCount() {
         return accessoryCount;
     }
 
-    public void setAccessoryCount(String accessoryCount) {
+    public void setAccessoryCount(Integer accessoryCount) {
         this.accessoryCount = accessoryCount;
     }
 
