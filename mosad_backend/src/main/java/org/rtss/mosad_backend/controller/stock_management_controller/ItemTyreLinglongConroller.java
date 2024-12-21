@@ -17,7 +17,7 @@ public class ItemTyreLinglongConroller {
 
     @PostMapping
     public ResponseEntity<ItemTyreLinglongDTO> saveItemTyreLinglong(@RequestBody ItemTyreLinglongDTO itemTyreLinglongDTO) {
-        return ResponseEntity.ok(itemTyreLinglongService.saveItem(itemTyreLinglongDTO));
+        return ResponseEntity.ok(itemTyreLinglongService.saveItemTyreLinglong(itemTyreLinglongDTO));
     }
 
     @GetMapping
@@ -27,11 +27,11 @@ public class ItemTyreLinglongConroller {
 
     @PutMapping
     public ResponseEntity<ItemTyreLinglongDTO> UpdateItemTyreLinglong(@RequestBody ItemTyreLinglongDTO itemTyreLinglongDTO) {
-        return ResponseEntity.ok(itemTyreLinglongService.saveItem(itemTyreLinglongDTO));
+        return ResponseEntity.ok(itemTyreLinglongService.updateItemTyreLinglong(itemTyreLinglongDTO));
     }
 
     @DeleteMapping
     public boolean deleteUser(@RequestBody ItemTyreLinglongDTO itemTyreLinglongDTO) {
-        return itemTyreLinglongService.deleteUser(itemTyreLinglongDTO);
+        return itemTyreLinglongService.deleteItemTyreLinglong(itemTyreLinglongDTO);
     }
 }
