@@ -3,7 +3,7 @@ name: React App Build
 on: 
   push:
     branches: ["developer_*"]
-  pull_requset:
+  pull_request:
     branches: ["develop","master"]
     types: [opened,reoponed,synchronize]
 
