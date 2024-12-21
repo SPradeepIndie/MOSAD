@@ -5,7 +5,7 @@ on:
     branches: ["developer_*"]
   pull_requset:
     branches: ["develop","master"]
-    type: [opened,reoponed,synchronize]
+    types: [opened,reoponed,synchronize]
 
 jobs:
   build:
