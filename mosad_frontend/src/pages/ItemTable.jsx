@@ -17,20 +17,18 @@ const ItemTable = () => {
 
   const getInitialFormData = (title) => {
     switch (title) {
-      case "tyre_ceat":
+      case "CEAT":
        
         return {
           itemId: "",
           size: "",
           pattern: "",
           pr: 0,
-          tyreCount: 0,
-          officialSellingPrice: 0,
-          vehicleType:""
+          availableQty: 0,
+          osp: 0,
+          cp:0
         };
-
       case "tyre_presa":
-        
         return {
           itemId: "",
           tyreSize: "",
@@ -38,47 +36,43 @@ const ItemTable = () => {
           ply: 0,
           tyreCount: 0,
           officialSellingPrice: 0,
-          vehicleType:""
+          vehicleType: "",
         };
       case "tyre_rapid":
         return {
           itemId: "",
           tyreSize: "",
           pattern: "",
-          
           tyreCount: 0,
           officialSellingPrice: 0,
-          vehicleType:""
-        };  
+          vehicleType: "",
+        };
       case "tyre_linglong":
         return {
           itemId: "",
           tyreSize: "",
           pattern: "",
-    
           tyreCount: 0,
           officialSellingPrice: 0,
-          vehicleType:""
-        };  
-        case "tyre_atlander":
-          return {
-            itemId: "",
-            tyreSize: "",
-            pattern: "",
-            
-            tyreCount: 0,
-            officialSellingPrice: 0,
-            vehicleType:""
-          };  
+          vehicleType: "",
+        };
+      case "tyre_atlander":
+        return {
+          itemId: "",
+          tyreSize: "",
+          pattern: "",
+          tyreCount: 0,
+          officialSellingPrice: 0,
+          vehicleType: "",
+        };
       default:
         return {
           itemId: "",
           field1: "",
           field2: "",
         };
-
     }
-  }
+  };
 
   const [items, setItems] = useState([]);
   const [currentItem, setCurrentItem] = useState(null);
@@ -86,7 +80,7 @@ const ItemTable = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility state
   const [itemIdToDelete, setItemIdToDelete] = useState(null); // Store the item ID to delete
   const [formData, setFormData] = useState(getInitialFormData(title));
-  const [Message, setMessage] = useState(null);
+  const [message, setMessage] = useState(null); // Message for GeneralMessage component
 
   useEffect(() => {
     fetchItems();
@@ -107,6 +101,8 @@ const ItemTable = () => {
           fetchItems();
           setIsDialogOpen(false);
           setItemIdToDelete(null);
+          setMessage({ type: "error", text: "Item deleted successfully!" });
+          setTimeout(() => setMessage(null), 3000); // Clear message after 3 seconds
         })
         .catch((error) => console.error("Error deleting item:", error));
     }
@@ -129,15 +125,6 @@ const ItemTable = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    // const transformedData = {
-    //   ...formData,
-    //   pr: Number(formData.pr),
-    //   availableQty: Number(formData.availableQty),
-    //   cp: Number(formData.cp),
-    //   osp: Number(formData.osp),
-    // };
-    // console.log(transformedData);
     const request = currentItem
       ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemId}`, formData)
       : axios.post(`http://localhost:8080/api/v1/stock/${title}`, formData);
@@ -146,19 +133,22 @@ const ItemTable = () => {
       .then(() => {
         fetchItems();
         closeModal();
-        setMessage("Item saved successfully!");
+        setMessage(currentItem ? { type: "success", text:"Item updated successfully!"} : { type: "success", text:"Item added successfully!"});
+        setTimeout(() => setMessage(null), 3000); // Clear message after 3 seconds
       })
       .catch((error) => {
         console.error("Error saving item:", error.response?.data || error.message);
-        alert("Failed to save item. Please check input values.");
+        setMessage(currentItem ? { type: "error", text:"Item updated successfully!"} : { type: "error", text:"Item added successfully!"});
+        setTimeout(() => setMessage(null), 3000); // Clear message after 3 seconds
       });
   };
 
   return (
     <>
-      <HeaderBar />
+      {/* <HeaderBar /> */}
       <div>
         <h1>{title} Items</h1>
+        {message && <GeneralMessage message={message} />}
         <button
           onClick={() => openModal(null)}
           style={{
@@ -176,9 +166,7 @@ const ItemTable = () => {
           <thead>
             <tr>
               {Object.keys(formData).map((key) => (
-                <th key={key}
-                    hidden={key === "itemId"} // Hide itemId column
-                >
+                <th key={key} hidden={key === "itemId"}>
                   {key.replace(/([A-Z])/g, " $1").trim()}
                 </th>
               ))}
@@ -189,9 +177,7 @@ const ItemTable = () => {
             {items.map((item) => (
               <tr key={item.itemId}>
                 {Object.keys(formData).map((key) => (
-                  <td key={key}
-                      hidden={key === "itemId"} // Hide itemId column
-                  >
+                  <td key={key} hidden={key === "itemId"}>
                     {item[key]}
                   </td>
                 ))}
@@ -250,9 +236,23 @@ const ItemTable = () => {
         >
           <h2>{currentItem ? "Edit Item" : "Add New Item"}</h2>
           <form onSubmit={handleSubmit}>
-            <section id="itemdetails" style={{ marginBottom: "20px", padding: "15px", border: "1px solid #ccc", borderRadius: "8px" }}>
+            <section
+              id="itemdetails"
+              style={{
+                marginBottom: "20px",
+                padding: "15px",
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+              }}
+            >
               <h3 style={{ color: "green", marginBottom: "10px" }}>Item Details</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "15px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 2fr",
+                  gap: "15px",
+                }}
+              >
                 {Object.keys(formData).map((key) => (
                   <React.Fragment key={key}>
                     <label
@@ -271,8 +271,8 @@ const ItemTable = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, [key]: e.target.value })
                       }
-                      required={key !== "itemId"} // Make input required if key is not "itemId"
-                      hidden={key === "itemId"} // Hide input if key is "itemId"
+                      required={key !== "itemId"}
+                      hidden={key === "itemId"}
                       style={{
                         backgroundColor: "#F5F5F5",
                         color: "#333",
@@ -288,7 +288,7 @@ const ItemTable = () => {
               </div>
             </section>
 
-            {true && (
+             {true && (
               <section id="pricedetails" style={{ padding: "15px", border: "1px solid #ccc", borderRadius: "8px" }}>
                 <h3 style={{ color: "green", marginBottom: "10px" }}>Price Details</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "15px" }}>
@@ -389,7 +389,7 @@ const ItemTable = () => {
                   </div>
                 </div>
               </section>
-            )}
+            )}    
 
             <button
               type="submit"
