@@ -2,9 +2,9 @@ name: React App Build
 
 on: 
   push:
-    branches: ["developer-*"]
+    branches: [ "developer-*" ]
   pull_request:
-    branches: ["develop","master"]
+    branches: [ "develop","master"]
     types: [opened,reoponed,synchronize]
 
 jobs:
@@ -19,6 +19,6 @@ jobs:
         working-directory: ./mosad_frontend
 
       - name: build
-        run: npm run dev
+        run: npm run build
         working-directory: ./mosad_frontend
       

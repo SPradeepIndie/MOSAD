@@ -2,7 +2,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ["developer-*" ]
+    branches: [ "developer-*" ]
   pull_request:
     branches: [ "develop","master" ]
     types: [opened,reopened,synchronize]
