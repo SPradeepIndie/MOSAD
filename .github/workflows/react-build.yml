@@ -2,7 +2,7 @@ name: React App Build
 
 on: 
   push:
-    branches: ["developer_*"]
+    branches: ["developer-*"]
   pull_request:
     branches: ["develop","master"]
     types: [opened,reoponed,synchronize]
