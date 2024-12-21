@@ -138,7 +138,7 @@ const ItemTable = () => {
       })
       .catch((error) => {
         console.error("Error saving item:", error.response?.data || error.message);
-        setMessage(currentItem ? { type: "error", text:"Item updated successfully!"} : { type: "error", text:"Item added successfully!"});
+        setMessage(currentItem ? { type: "error", text:"Failed to update item !"} : { type: "error", text:"Failed to add item!"});
         setTimeout(() => setMessage(null), 3000); // Clear message after 3 seconds
       });
   };
