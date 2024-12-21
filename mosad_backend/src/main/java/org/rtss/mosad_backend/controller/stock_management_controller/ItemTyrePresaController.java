@@ -18,7 +18,7 @@ public class ItemTyrePresaController {
 
     @PostMapping
     public ResponseEntity<ItemTyrePresaDTO> saveItemTyrePresa(@RequestBody ItemTyrePresaDTO itemTyrePresaDTO) {
-        return ResponseEntity.ok(itemTyrePresaService.saveItem(itemTyrePresaDTO));
+        return ResponseEntity.ok(itemTyrePresaService.saveItemTyrePresa(itemTyrePresaDTO));
     }
 
     @GetMapping
@@ -28,12 +28,12 @@ public class ItemTyrePresaController {
 
     @PutMapping
     public ResponseEntity<ItemTyrePresaDTO> UpdateItemTyrePresa(@RequestBody ItemTyrePresaDTO itemTyrePresaDTO) {
-        return ResponseEntity.ok(itemTyrePresaService.saveItem(itemTyrePresaDTO));
+        return ResponseEntity.ok(itemTyrePresaService.updateItemTyrePresa(itemTyrePresaDTO));
     }
 
     @DeleteMapping
     public boolean deleteUser(@RequestBody ItemTyrePresaDTO itemTyrePresaDTO) {
-        return itemTyrePresaService.deleteUser(itemTyrePresaDTO);
+        return itemTyrePresaService.deleteItemTyrePresa(itemTyrePresaDTO);
     }
     
 }

@@ -52,6 +52,9 @@ public class ItemTyreAtlanderService {
         return true;
     }
 
+    public List<ItemTyreAtlander> searchBySize(String tyreSize) {
+        return itemTyreAtlanderRepo.findBytyreSize(tyreSize);
+    }
 
 
 

@@ -20,7 +20,7 @@ public class ItemTyreAtlanderConroller{
 
     @PostMapping
     public ResponseEntity<ItemTyreAtlanderDTO> saveItemTyreAtlander(@RequestBody ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
-        return ResponseEntity.ok(itemTyreAtlanderService.saveItem(itemTyreAtlanderDTO));
+        return ResponseEntity.ok(itemTyreAtlanderService.saveItemTyreAtlander(itemTyreAtlanderDTO));
     }
 
     @GetMapping
@@ -30,12 +30,12 @@ public class ItemTyreAtlanderConroller{
 
     @PutMapping
     public ResponseEntity<ItemTyreAtlanderDTO> UpdateItemTyreAtlander(@RequestBody ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
-        return ResponseEntity.ok(itemTyreAtlanderService.saveItem(itemTyreAtlanderDTO));
+        return ResponseEntity.ok(itemTyreAtlanderService.updateItemTyreAtlander(itemTyreAtlanderDTO));
     }
 
     @DeleteMapping
     public boolean deleteUser(@RequestBody ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
-        return itemTyreAtlanderService.deleteUser(itemTyreAtlanderDTO);
+        return itemTyreAtlanderService.deleteItemTyreAtlander(itemTyreAtlanderDTO);
     }
 
 }
