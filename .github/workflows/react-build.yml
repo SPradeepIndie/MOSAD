@@ -20,5 +20,5 @@ jobs:
 
       - name: build
         run: npm run dev
-        working-firectory: ./mosad_frontend
+        working-directory: ./mosad_frontend
       
