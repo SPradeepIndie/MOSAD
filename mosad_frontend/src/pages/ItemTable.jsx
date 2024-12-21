@@ -6,6 +6,8 @@ import "./Itemtable.css";
 import HeaderBar from "../component/Header";
 import ConfirmationDialog from "../component/ConfirmationDialog";
 import GeneralMessage from "../component/GeneralMessage";
+import ItemDetailsSection from "../component/ItemDetailsSection";
+
 
 // React Modal setup
 Modal.setAppElement("#root");
@@ -13,14 +15,14 @@ Modal.setAppElement("#root");
 const ItemTable = () => {
   const location = useLocation();
   const { title } = location.state || {};
-  console.log(title);
+  //console.log(title);
 
   const getInitialFormData = (title) => {
     switch (title) {
       case "CEAT":
        
         return {
-          itemId: "",
+          itemID: "",
           size: "",
           pattern: "",
           pr: 0,
@@ -30,7 +32,7 @@ const ItemTable = () => {
         };
       case "tyre_presa":
         return {
-          itemId: "",
+          itemID: "",
           tyreSize: "",
           pattern: "",
           ply: 0,
@@ -40,7 +42,7 @@ const ItemTable = () => {
         };
       case "tyre_rapid":
         return {
-          itemId: "",
+          itemID: "",
           tyreSize: "",
           pattern: "",
           tyreCount: 0,
@@ -49,25 +51,26 @@ const ItemTable = () => {
         };
       case "tyre_linglong":
         return {
-          itemId: "",
+          itemID: "",
           tyreSize: "",
           pattern: "",
-          tyreCount: 0,
-          officialSellingPrice: 0,
+          tyreCount: null,
+          officialSellingPrice: null,
           vehicleType: "",
         };
       case "tyre_atlander":
         return {
-          itemId: "",
+          itemID: "",
           tyreSize: "",
           pattern: "",
           tyreCount: 0,
           officialSellingPrice: 0,
           vehicleType: "",
         };
+        
       default:
         return {
-          itemId: "",
+          itemID: "",
           field1: "",
           field2: "",
         };
@@ -81,6 +84,8 @@ const ItemTable = () => {
   const [itemIdToDelete, setItemIdToDelete] = useState(null); // Store the item ID to delete
   const [formData, setFormData] = useState(getInitialFormData(title));
   const [message, setMessage] = useState(null); // Message for GeneralMessage component
+  const [inputFieldErrors, setinputFieldErrors] = useState({});
+
 
   useEffect(() => {
     fetchItems();
@@ -89,14 +94,18 @@ const ItemTable = () => {
   const fetchItems = () => {
     axios
       .get(`http://localhost:8080/api/v1/stock/${title}`)
-      .then((response) => setItems(response.data))
+      .then((response) => {
+        //console.log("Fetched items:", response.data);
+        setItems(response.data);
+      })
       .catch((error) => console.error("Error fetching data:", error));
   };
 
   const deleteItem = () => {
     if (itemIdToDelete) {
       axios
-        .delete(`http://localhost:8080/api/v1/stock/${title}/${itemIdToDelete}`)
+        //.delete(`http://localhost:8080/api/v1/stock/${title}/${itemIdToDelete}`)
+        .delete(`http://localhost:8080/api/v1/stock/${title}`,itemIdToDelete)
         .then(() => {
           fetchItems();
           setIsDialogOpen(false);
@@ -123,10 +132,65 @@ const ItemTable = () => {
     setIsModalOpen(false);
   };
 
+  // const validateForm = () => {
+  //   const newErrors = {};
+  
+  //   // Iterate over form fields to validate
+  //   Object.keys(formData).forEach((key) => {
+  //     if (!formData[key] && key !== "itemID") {
+  //       newErrors[key] = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
+  //     }
+  //     // Example for validating numeric fields
+  //     if (key === "tyreCount" && isNaN(formData[key])) {
+  //       newErrors[key] = "tyreCount must be a valid number.";
+  //     }
+  //   });
+  
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0; // Returns true if no errors
+  // };
+
+
+  const handleChange = (key, value) => {
+    // Update the form data
+    setFormData((prevData) => ({ ...prevData, [key]: value }));
+  
+    // Validate the field
+    let fieldError = "";
+  
+    if (!value) {
+      fieldError = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
+    } else if (key === "tyreCount" && !Number.isInteger(Number(value))) {
+      fieldError = "Tyre Count must be a valid integer.";
+    } else if (key === "officialSellingPrice" && !/^(-?\d+(\.\d+)?)$/.test(value)) {
+      fieldError = "Official Selling Price must be a valid number.";
+    }
+  
+    // Update or clear the specific field's error
+    setinputFieldErrors((prevErrors) => {
+      const updatedErrors = { ...prevErrors };
+      if (fieldError) {
+        updatedErrors[key] = fieldError; // Add error if validation fails
+      } else {
+        delete updatedErrors[key]; // Remove error if validation passes
+      }
+      return updatedErrors;
+    });
+  };
+  
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (Object.keys(inputFieldErrors).length > 0) {
+      console.log("Errors found in the form:", inputFieldErrors);
+      setMessage({ type: "error", text: "Please re-check all red fields!" });
+      setTimeout(() => setMessage(null), 2000); // Clear message after 3 seconds
+      return; // Stop submission if validation fails
+    }
+    console.log("Form data:", formData);
     const request = currentItem
-      ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemId}`, formData)
+      ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemID}`, formData)
       : axios.post(`http://localhost:8080/api/v1/stock/${title}`, formData);
 
     request
@@ -166,8 +230,9 @@ const ItemTable = () => {
           <thead>
             <tr>
               {Object.keys(formData).map((key) => (
-                <th key={key} hidden={key === "itemId"}>
-                  {key.replace(/([A-Z])/g, " $1").trim()}
+                <th key={key} hidden={key === "itemID"}>
+                  {/* {key.replace(/([A-Z])/g, " $1").trim()} */}
+                  {key}
                 </th>
               ))}
               <th>Actions</th>
@@ -175,9 +240,9 @@ const ItemTable = () => {
           </thead>
           <tbody>
             {items.map((item) => (
-              <tr key={item.itemId}>
+              <tr key={item.itemID}>
                 {Object.keys(formData).map((key) => (
-                  <td key={key} hidden={key === "itemId"}>
+                  <td key={key} hidden={key === "itemID"}>
                     {item[key]}
                   </td>
                 ))}
@@ -197,8 +262,9 @@ const ItemTable = () => {
                   </button>
                   <button
                     onClick={() => {
-                      setItemIdToDelete(item.itemId);
+                      setItemIdToDelete(item);
                       setIsDialogOpen(true);
+                      console.log("Item ID to delete:", item);
                     }}
                     style={{
                       backgroundColor: "#CF6679",
@@ -236,7 +302,7 @@ const ItemTable = () => {
         >
           <h2>{currentItem ? "Edit Item" : "Add New Item"}</h2>
           <form onSubmit={handleSubmit}>
-            <section
+            {/* <section
               id="itemdetails"
               style={{
                 marginBottom: "20px",
@@ -256,7 +322,7 @@ const ItemTable = () => {
                 {Object.keys(formData).map((key) => (
                   <React.Fragment key={key}>
                     <label
-                      hidden={key === "itemId"}
+                      disabled={key === "itemID"}
                       style={{
                         alignSelf: "center",
                         color: "#333",
@@ -271,8 +337,8 @@ const ItemTable = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, [key]: e.target.value })
                       }
-                      required={key !== "itemId"}
-                      hidden={key === "itemId"}
+                      required={key !== "itemID"}
+                      disabled={key === "itemID"}
                       style={{
                         backgroundColor: "#F5F5F5",
                         color: "#333",
@@ -286,7 +352,15 @@ const ItemTable = () => {
                   </React.Fragment>
                 ))}
               </div>
-            </section>
+            </section> */}
+
+<ItemDetailsSection
+  formData={formData}
+  setFormData={setFormData}
+  errors={inputFieldErrors}
+  handleChange={handleChange}
+/>
+
 
              {true && (
               <section id="pricedetails" style={{ padding: "15px", border: "1px solid #ccc", borderRadius: "8px" }}>
