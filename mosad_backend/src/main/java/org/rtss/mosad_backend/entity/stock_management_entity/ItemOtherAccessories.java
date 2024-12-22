@@ -1,6 +1,8 @@
 package org.rtss.mosad_backend.entity.stock_management_entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 
@@ -8,16 +10,17 @@ import jakarta.persistence.Id;
 
 public class ItemOtherAccessories {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer itemID;
     private String accessoryType;
-    private String accessoryCount;
+    private Integer accessoryCount;
     private double officialSellingPrice;
     private String vehicleType;
 
     public ItemOtherAccessories() {
     }
 
-    public ItemOtherAccessories(Integer itemID, String accessoryType, String accessoryCount, double officialSellingPrice, String vehicleType) {
+    public ItemOtherAccessories(Integer itemID, String accessoryType, Integer accessoryCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.accessoryType = accessoryType;
         this.accessoryCount = accessoryCount;
@@ -41,11 +44,11 @@ public class ItemOtherAccessories {
         this.accessoryType = accessoryType;
     }
 
-    public String getAccessoryCount() {
+    public Integer getAccessoryCount() {
         return accessoryCount;
     }
 
-    public void setAccessoryCount(String accessoryCount) {
+    public void setAccessoryCount(Integer accessoryCount) {
         this.accessoryCount = accessoryCount;
     }
 

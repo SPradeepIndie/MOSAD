@@ -5,14 +5,14 @@ public class ItemTyrePresaDTO {
     private String tyreSize;
     private Integer ply;
     private String pattern;
-    private String tyreCount;
+    private Integer tyreCount;
     private double officialSellingPrice;
     private String vehicleType;
 
     public ItemTyrePresaDTO() {
     }
 
-    public ItemTyrePresaDTO(Integer itemID, String tyreSize, Integer ply, String pattern, String tyreCount, double officialSellingPrice, String vehicleType) {
+    public ItemTyrePresaDTO(Integer itemID, String tyreSize, Integer ply, String pattern, Integer tyreCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.tyreSize = tyreSize;
         this.ply = ply;
@@ -54,11 +54,11 @@ public class ItemTyrePresaDTO {
         this.pattern = pattern;
     }
 
-    public String getTyreCount() {
+    public Integer getTyreCount() {
         return tyreCount;
     }
 
-    public void setTyreCount(String tyreCount) {
+    public void setTyreCount(Integer tyreCount) {
         this.tyreCount = tyreCount;
     }
 
