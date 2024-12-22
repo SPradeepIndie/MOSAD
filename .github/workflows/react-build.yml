@@ -1,0 +1,24 @@
+name: React App Build
+
+on: 
+  push:
+    branches: [ "developer-*" ]
+  pull_request:
+    branches: [ "develop","master"]
+    types: [opened,reoponed,synchronize]
+
+jobs:
+  build:
+    name: build_react_app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: npm_install_dependencies
+        run: npm install
+        working-directory: ./mosad_frontend
+
+      - name: npm_build
+        run: npm run build
+        working-directory: ./mosad_frontend
+      
