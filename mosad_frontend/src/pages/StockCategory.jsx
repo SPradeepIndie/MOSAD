@@ -17,7 +17,10 @@ function Stock() {
   const navigate = useNavigate();
 
   const handleTileClick = (title) => {
-    navigate('/stock/brands',{state:{title}});
+    if(title==='Tyre'){
+      navigate('/stock/brands',{state:{title}});
+    }
+    
     
   };
 
