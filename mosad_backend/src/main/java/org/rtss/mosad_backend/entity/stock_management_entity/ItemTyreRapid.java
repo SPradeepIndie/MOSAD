@@ -2,6 +2,8 @@ package org.rtss.mosad_backend.entity.stock_management_entity;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 
@@ -10,10 +12,11 @@ import jakarta.persistence.Id;
 public class ItemTyreRapid {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer itemID;
 
     private String tyreSize;
-    private String tyreCount;
+    private Integer tyreCount;
     private double officialSellingPrice;
     private String vehicleType;
 
@@ -21,7 +24,7 @@ public class ItemTyreRapid {
     public ItemTyreRapid() {
     }
 
-    public ItemTyreRapid(Integer itemID, String tyreSize, String tyreCount, double officialSellingPrice, String vehicleType) {
+    public ItemTyreRapid(Integer itemID, String tyreSize, Integer tyreCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.tyreSize = tyreSize;
         this.tyreCount = tyreCount;
@@ -45,11 +48,11 @@ public class ItemTyreRapid {
         this.tyreSize = tyreSize;
     }
 
-    public String getTyreCount() {
+    public Integer getTyreCount() {
         return tyreCount;
     }
 
-    public void setTyreCount(String tyreCount) {
+    public void setTyreCount(Integer tyreCount) {
         this.tyreCount = tyreCount;
     }
 

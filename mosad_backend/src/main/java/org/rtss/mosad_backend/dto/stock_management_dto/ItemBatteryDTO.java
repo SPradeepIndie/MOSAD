@@ -6,14 +6,14 @@ package org.rtss.mosad_backend.dto.stock_management_dto;
 public class ItemBatteryDTO {
     private Integer itemID;
     private String batteryType;
-    private String batteryCount;
+    private Integer batteryCount;
     private double officialSellingPrice;
     private String vehicleType;
 
     public ItemBatteryDTO() {
     }
 
-    public ItemBatteryDTO(Integer itemID, String batteryType, String batteryCount, double officialSellingPrice, String vehicleType) {
+    public ItemBatteryDTO(Integer itemID, String batteryType, Integer batteryCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.batteryType = batteryType;
         this.batteryCount = batteryCount;
@@ -37,11 +37,11 @@ public class ItemBatteryDTO {
         this.batteryType = batteryType;
     }
 
-    public String getBatteryCount() {
+    public Integer getBatteryCount() {
         return batteryCount;
     }
 
-    public void setBatteryCount(String batteryCount) {
+    public void setBatteryCount(Integer batteryCount) {
         this.batteryCount = batteryCount;
     }
 

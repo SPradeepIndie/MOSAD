@@ -4,12 +4,12 @@ public class ItemTyreRapidDTO {
 
     private Integer itemID;
     private String tyreSize;
-    private String tyreCount;
+    private Integer tyreCount;
     private double officialSellingPrice;
     private String vehicleType;
 
 
-    public ItemTyreRapidDTO(Integer itemID, String tyreSize, String tyreCount, double officialSellingPrice, String vehicleType) {
+    public ItemTyreRapidDTO(Integer itemID, String tyreSize, Integer tyreCount, double officialSellingPrice, String vehicleType) {
         this.itemID = itemID;
         this.tyreSize = tyreSize;
         this.tyreCount = tyreCount;
@@ -33,11 +33,11 @@ public class ItemTyreRapidDTO {
         this.tyreSize = tyreSize;
     }
 
-    public String getTyreCount() {
+    public Integer getTyreCount() {
         return tyreCount;
     }
 
-    public void setTyreCount(String tyreCount) {
+    public void setTyreCount(Integer tyreCount) {
         this.tyreCount = tyreCount;
     }
 

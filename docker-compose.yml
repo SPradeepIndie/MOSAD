@@ -3,20 +3,20 @@ services:
     build: ./mosad_backend # Image of the backend which was ceated(Get latest version)
     image: sanjayapradeep/mosadbackend #Define image name
     environment:
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "Idon_tknow"
+      POSTGRES_HOST: "172.18.0.2"
+      POSTGRES_PORT: "5432"
     ports:
       - 8080:8080 # Map container port 8080 to host port 8080
     depends_on:
       - postgresqldb # Spring Boot app depends on postgresql
   
-  # mosad_frontend:
-  #   build: ./mosad_frontend # Image of the frontend which was ceated(Get latest version)
-  #   image: sanjayapradeep/mosadfrontend #define image name
-  #   ports:
-  #     - 3000:3000 # Map container port 3000 to host port 3000
+  mosad_frontend:
+    build: ./mosad_frontend # Image of the frontend which was ceated(Get latest version)
+    image: sanjayapradeep/mosadfrontend #define image name
+    ports:
+      - 3000:3000 # Map container port 3000 to host port 3000
   
   postgresqldb:
     image: postgres:alpine

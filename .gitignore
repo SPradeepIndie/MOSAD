@@ -1,0 +1,2 @@
+#remove docker-compose file from git commits
+./docker-compose.yml

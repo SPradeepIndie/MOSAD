@@ -1,17 +1,28 @@
 package org.rtss.mosad_backend.controller;
 
-import org.rtss.mosad_backend.service.LoginService;
+import org.rtss.mosad_backend.dto.ResponseDTO;
+import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
+import org.rtss.mosad_backend.service.login_user.LoginService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1/login")
 public class LoginController {
 
-    private LoginService loginService;
+    private final LoginService loginService;
 
-    @GetMapping("/api/v1/login")
-    private ResponseEntity<String> login(){
-        return ResponseEntity.ok("Login unsuccessful");
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
+
+
+    @PostMapping
+    public ResponseEntity<ResponseDTO> login(@RequestBody UserLoginDTO userLoginDto) {
+        return ResponseEntity.ok(loginService.verifyUser(userLoginDto));
+    }
+
 }
