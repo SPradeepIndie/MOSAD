@@ -1,0 +1,25 @@
+name: Spring Boot Applcation Build
+
+on:
+  push:
+    branches: [ "developer-*" ]
+  pull_request:
+    branches: [ "develop","master" ]
+    types: [opened,reopened,synchronize]
+
+jobs:
+  build:
+    name: build_spring_boot_app
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: set_up_jdk_21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: maven_build
+      run: mvn -B package --file pom.xml
+      working-directory: ./mosad_backend
+

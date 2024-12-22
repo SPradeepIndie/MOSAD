@@ -1,15 +1,22 @@
 
-
-import React, { useState } from "react";
-import ItemView from "./itemview/ItemView";
-import "./App.css";
+import './App.css'
+import HomePage from './pages/HomePage'
 
 function App() {
   return (
-    <div className="app-container">
-      <ItemView />
-    </div>
-  );
+    <>
+      <HomePage/>
+    </>
+  )
+
 }
 
 export default App;
+
+import React, { useState } from "./pages/ItemView";
+import ItemView from "./pages/ItemView";
+import "./App.css";
+
+
+
+

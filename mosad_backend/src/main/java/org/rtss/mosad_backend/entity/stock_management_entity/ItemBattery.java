@@ -1,6 +1,8 @@
 package org.rtss.mosad_backend.entity.stock_management_entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 
@@ -8,6 +10,7 @@ import jakarta.persistence.Id;
 
 public class ItemBattery {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer itemID;
     private String batteryType;
     private Integer batteryCount;
