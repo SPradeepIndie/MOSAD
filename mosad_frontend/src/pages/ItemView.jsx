@@ -4,7 +4,7 @@ import axios from "axios";
 import Modal from "react-modal";
 import GeneralMessage from "../component/GeneralMessage";
 import ItemDetailsSection from "../component/ItemDetailsSection";
-import PriceDetailsSection from "../component/priceDetailsSection";
+import PriceDetailsSection from "../component/PriceDetailsSection";
 import "./ItemView.css";
 import setItemAddFromFields from "../utils/setItemAddFromFields";
 
