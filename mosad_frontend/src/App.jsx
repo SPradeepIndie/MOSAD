@@ -13,10 +13,6 @@ function App() {
 
 export default App;
 
-import React, { useState } from "./pages/ItemView";
-import ItemView from "./pages/ItemView";
-import "./App.css";
-
 
 
 

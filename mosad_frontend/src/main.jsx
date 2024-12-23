@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import StockCategory from './pages/StockCategory.jsx'
 import Brands from './pages/Brands.jsx'
-import ItemTable from './pages/ItemTable.jsx'
+import ItemView from './pages/ItemView.jsx'
 
 const router=createBrowserRouter([
   {
@@ -28,8 +28,8 @@ const router=createBrowserRouter([
     element:<Brands/>
   },
   {
-    path:'/stock/brands/itemtable',
-    element:<ItemTable/>
+    path:'/stock/brands/itemview',
+    element:<ItemView/>
   }
 ])
 

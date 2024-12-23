@@ -24,7 +24,7 @@ function ItemTable() {
     
       const handleTileClick = (title) => {
         
-          navigate('/stock/brands/itemtable',{state:{title}}); // Redirect to /stock/brands/itemtable with state
+          navigate('/stock/brands/itemview',{state:{title}}); // Redirect to /stock/brands/itemview with state
         
       };
   

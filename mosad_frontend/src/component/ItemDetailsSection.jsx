@@ -30,6 +30,7 @@ const ItemDetailsSection = ({ formData,handleChange,errors }) => {
         {Object.keys(formData).map((key) => (
           <TextField
             key={key}
+            type={key === "officialSellingPrice" || key=== "tyreCount"  ? "number" : "text"} // Set input type based on the key
             label={key.replace(/([A-Z])/g, " $1").trim()} // Generate label from the key
             value={formData[key]}
             onChange={(e) =>
