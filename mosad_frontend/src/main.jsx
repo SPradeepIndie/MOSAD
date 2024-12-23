@@ -5,6 +5,9 @@ import './index.css'
 import App from './App.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import StockCategory from './pages/StockCategory.jsx'
+import Brands from './pages/Brands.jsx'
+import ItemView from './pages/ItemView.jsx'
 
 const router=createBrowserRouter([
   {
@@ -18,7 +21,15 @@ const router=createBrowserRouter([
   },
   {
     path:'/stock',
-    element:<NotFoundPage/>
+    element:<StockCategory/>
+  },
+  {
+    path:'/stock/brands',
+    element:<Brands/>
+  },
+  {
+    path:'/stock/brands/itemview',
+    element:<ItemView/>
   }
 ])
 
