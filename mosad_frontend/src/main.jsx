@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
+import BillGenerator from './pages/BillGenerator.jsx'
 
 const router=createBrowserRouter([
   {
@@ -16,6 +17,13 @@ const router=createBrowserRouter([
     path:'/home',
     element:<App/>
   },
+
+  {
+    path: '/bill-generate', // Add a route for Bill Generator
+    element: <BillGenerator />,
+  },
+   
+
   {
     path:'/stock',
     element:<NotFoundPage/>
