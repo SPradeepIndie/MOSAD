@@ -11,7 +11,7 @@ import setItemAddFromFields from "../utils/setItemAddFromFields";
 // React Modal setup
 Modal.setAppElement("#root");
 
-const ItemView = ({ selectedCategory, selectedBrand }) => {
+const ItemView = ({ selectedCategory="tyre", selectedBrand="presa" }) => {
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
@@ -110,13 +110,21 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   // Fetch table data from backend
   useEffect(() => {
     if (selectedCategory && selectedBrand) {
+      const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6IiwiaWF0IjoxNzM1MzU1MDA2LCJleHAiOjE3MzU0NDE0MDZ9.jf7wwOZNqHAJAfXroj7viZR7BTbnmvnWgQqYnb70BS4"; // Assuming the token is stored in localStorage
       fetch(
-        `http://localhost:8080/api/items?category=${selectedCategory}&brand=${selectedBrand}`
+        `http://localhost:8080/api/v1/item-view?category=${selectedCategory}&brand=${selectedBrand}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       )
         .then((response) => response.json())
         .then((data) => setRows(data))
+        
         .catch((error) => console.error("Error fetching data:", error));
     }
+    
   }, [selectedCategory, selectedBrand]);
 
   // Update banner image based on brand
@@ -156,14 +164,15 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
           </tr>
         </thead>
         <tbody>
+          {console.log(rows)}
           {rows.map((row) => (
             <tr
-              key={row.id}
+              key={row.itemID}
               className={selectedRowId === row.id ? "selected-row" : ""}
               onClick={() => handleRowClick(row.id)}
             >
               <td>{row.pattern}</td>
-              <td>{row.size}</td>
+              <td>{row.tyreSize}</td>
               <td>{row.pr}</td>
               <td>{row.price}</td>
               <td>{row.stock}</td>

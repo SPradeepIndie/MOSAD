@@ -1,2 +1,11 @@
 #remove docker-compose file from git commits
 ./docker-compose.yml
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.iml~
+*.ipr
+*.java~
+

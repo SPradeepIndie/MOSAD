@@ -8,6 +8,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx'
 import StockCategory from './pages/StockCategory.jsx'
 import Brands from './pages/Brands.jsx'
 import ItemView from './pages/ItemView.jsx'
+import Credits from './pages/Credits.jsx'
 
 const router=createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router=createBrowserRouter([
   {
     path:'/stock/brands/itemview',
     element:<ItemView/>
+  },
+  {
+    path:'/credits',
+    element:<Credits/>
   }
 ])
 

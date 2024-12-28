@@ -1,4 +1,0 @@
-package org.rtss.mosad_backend.config.security;
-
-public class WebConfig {
-}
