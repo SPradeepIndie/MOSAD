@@ -4,11 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.user_dtos.UserDTO;
-import org.rtss.mosad_backend.entity.UserContacts;
-import org.rtss.mosad_backend.entity.UserRoles;
-import org.rtss.mosad_backend.entity.Users;
+import org.rtss.mosad_backend.entity.user_management.UserContacts;
+import org.rtss.mosad_backend.entity.user_management.UserRoles;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +60,13 @@ class UserDTOMapperTest {
     }
 
     @Test
+    void shouldThrowUserDtoIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, ()->{
+            userDTOMapper.userDtoToUsers(null);
+        },"UserDTO is null");
+    }
+
+    @Test
     public void shouldMapUsersToUserDTO() {
         //Given
         Users users = new Users(
@@ -68,7 +77,7 @@ class UserDTOMapperTest {
                 "Pradeep",
                 "mymail@gmail.com",
                 userRoles,
-                new ArrayList<>(List.of(userContacts))
+                new HashSet<UserContacts>(Arrays.asList(userContacts))
         );
 
         //when
@@ -79,6 +88,13 @@ class UserDTOMapperTest {
         assertEquals(users.getFirstName(), dto.getFirstName());
         assertEquals(users.getLastName(), dto.getLastName());
         assertEquals(users.getEmail(), dto.getEmail());
+    }
+
+    @Test
+    void shouldThrowUserIllegalArgumentException(){
+        assertThrows(IllegalArgumentException.class, ()->{
+            userDTOMapper.usersToUserDTO(null);
+        },"Users is null");
     }
 
 }

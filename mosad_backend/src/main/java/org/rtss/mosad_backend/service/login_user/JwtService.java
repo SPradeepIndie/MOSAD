@@ -20,6 +20,8 @@ import java.util.function.Function;
 public class JwtService {
     private String secretKey;
 
+    //Generate Secret key when OBJECT is created
+    //For each object generating key is different
     public JwtService() {
         KeyGenerator keyGene = null;
         try {
@@ -31,7 +33,9 @@ public class JwtService {
         }
 
     }
-
+    /*-----------------------------
+     * Services for generate token
+     * -----------------------------*/
     public String generateToken(String username) {
         Map<String, Object> claims=new HashMap<>();
 
@@ -40,9 +44,9 @@ public class JwtService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+60*60*35))
+                .expiration(new Date(System.currentTimeMillis()+1000*60*30))
                 .and()
-                .signWith(getKey())
+                .signWith(getKey()) //sign the token with generated key
                 .compact();
     }
 
@@ -51,6 +55,9 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyInBytes);
     }
 
+    /*-----------------------------
+    * Services for validate token
+    * -----------------------------*/
     public String extractUsernameFromToken(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
     }
@@ -66,7 +73,6 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(jwtToken)
                 .getPayload();
-
     }
 
     public boolean validateToken(String jwtToken, UserDetails userDetails) {

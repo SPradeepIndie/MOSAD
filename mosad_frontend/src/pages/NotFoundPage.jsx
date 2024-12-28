@@ -3,7 +3,7 @@ import React from "react";
 
 const NotFoundPage=()=>{
     return(
-       <UnderConstruction displayTxt={<p> This page is under constuction</p>}/>
+       <UnderConstruction displayTxt={<p> Bas url</p>}/>
     )
 }
 

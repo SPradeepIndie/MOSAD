@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "./ConfirmationDialog.css"; 
+import "./css/ConfirmationDialog.css"; 
 const ConfirmationDialog = ({
   message,
   onCancel,

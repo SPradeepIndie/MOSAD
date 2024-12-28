@@ -5,9 +5,19 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
-import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
 
-function HeaderBar() {
+function HeaderBar({setIsLoggedIn}) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove token from local storage
+    localStorage.removeItem('token'); 
+    setIsLoggedIn(false);
+    // Redirect to login page
+    navigate('/',{ replace: true }); 
+  
+  };
   return (
     <AppBar
       position="static"
@@ -41,7 +51,7 @@ function HeaderBar() {
         </Typography>
 
         {/* Right Side: Logout Button */}
-        <Button sx={{ color: 'black', fontWeight: 'bold' }}>Logout</Button>
+        <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={handleLogout}>Logout</Button>
       </Toolbar>
     </AppBar>
   );
