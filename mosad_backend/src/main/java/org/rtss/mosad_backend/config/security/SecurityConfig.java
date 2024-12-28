@@ -31,17 +31,17 @@ public class SecurityConfig {
 
     @Bean
    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/api/v1/login").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .cors(Customizer.withDefaults()) // Enable CORS
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
-                .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+       http
+                    .authorizeHttpRequests((request) -> request
+                       .requestMatchers("/api/v1/user/csrf").permitAll()
+                       .anyRequest().authenticated()
+                    )
+                    //disabled the csrf token
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .httpBasic(Customizer.withDefaults())
+                    //enable custom jwtFilter before the UPA Filter
+                    .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class);
+       return http.build();
 
    }
    @Bean
