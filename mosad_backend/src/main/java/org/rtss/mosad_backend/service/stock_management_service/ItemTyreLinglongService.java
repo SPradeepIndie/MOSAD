@@ -11,6 +11,7 @@ package org.rtss.mosad_backend.service.stock_management_service;
 
 import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreLinglongDTO;
+import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreAtlander;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreLinglong;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreLinglongDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemTyreLinglongRepo;
@@ -62,5 +63,9 @@ public class ItemTyreLinglongService {
     public boolean deleteItemTyreLinglong(ItemTyreLinglongDTO itemTyreLinglongDTO){
         itemTyreLinglongRepo.delete(itemTyreLinglongDTOMapper.ItemTyreLinglongDtoTOItemTyreLinglong(itemTyreLinglongDTO));
         return true;
+    }
+
+    public List<ItemTyreLinglong> searchBySize(String tyreSize) {
+        return itemTyreLinglongRepo.findBytyreSize(tyreSize);
     }
 }

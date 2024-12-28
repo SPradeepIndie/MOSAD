@@ -1,3 +1,4 @@
+
 import './App.css'
 import HomePage from './pages/home/HomePage'
 import BillPage from './pages/bill_section/BillPage'
@@ -48,6 +49,15 @@ function App() {
       {isLoggedIn && <Footer />}
     </>
   )
+
 }
 
-export default App
+export default App;
+
+import React, { useState } from "./pages/ItemView";
+import ItemView from "./pages/ItemView";
+import "./App.css";
+
+
+
+

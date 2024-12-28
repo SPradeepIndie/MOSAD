@@ -28,17 +28,17 @@ function StockPage() {
           <Tile
             title="Tyre"
             icon={<DescriptionIcon fontSize="large" />}
-            onClick={() => handleTileClick('Tyre')}
+            link=""
           />
           <Tile
             title="Tube"
             icon={<InventoryIcon fontSize="large" />}
-            onClick={() => handleTileClick('Tube')}
+            link=""
           />
           <Tile
             title="Tape"
             icon={<StorefrontIcon fontSize="large" />}
-            onClick={() => handleTileClick('Tape')}
+            link=""
           />
         </Stack>
 
@@ -48,18 +48,7 @@ function StockPage() {
           <Tile
             title="Battery"
             icon={<CreditCardIcon fontSize="large" />}
-            onClick={() => handleTileClick('Credit')}
-          />
-
-          <Tile
-            title="A"
-            icon={<AccountTreeIcon fontSize="large" />}
-            onClick={() => handleTileClick('Branches')}
-          />
-          <Tile
-            title="B"
-            icon={<PeopleIcon fontSize="large" />}
-            onClick={() => handleTileClick('Employee')}
+            link=""
           />
         </Stack>
 
