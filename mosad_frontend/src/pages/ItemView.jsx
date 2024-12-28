@@ -110,7 +110,6 @@ const ItemView = ({ selectedCategory="tyre", selectedBrand="presa" }) => {
   // Fetch table data from backend
   useEffect(() => {
     if (selectedCategory && selectedBrand) {
-      const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6IiwiaWF0IjoxNzM1MzU1MDA2LCJleHAiOjE3MzU0NDE0MDZ9.jf7wwOZNqHAJAfXroj7viZR7BTbnmvnWgQqYnb70BS4"; // Assuming the token is stored in localStorage
       fetch(
         `http://localhost:8080/api/v1/item-view?category=${selectedCategory}&brand=${selectedBrand}`,
         {

@@ -58,7 +58,6 @@ function Row(props) {
     setOpenDialog(false);
     setNewRepayment({ repayId: '', date: '', amount: '' });
   };
-var totalRepayed=0;
 
   return (
     <Fragment>
