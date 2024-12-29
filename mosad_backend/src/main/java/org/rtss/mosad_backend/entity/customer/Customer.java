@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.credit.Credit;
 
 import java.util.List;
 
@@ -17,7 +18,19 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CustomerContact> contacts;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Credit> credits;
+
+    public Customer() {
+    }
+
+    public Customer(Long id, String name, List<CustomerContact> contacts, List<Credit> credits) {
+        this.id = id;
+        this.name = name;
+        this.contacts = contacts;
+        this.credits = credits;
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,9 +53,23 @@ public class Customer {
 
     public void setContacts(List<CustomerContact> contacts) {
         this.contacts = contacts;
-        // Ensure proper bidirectional relationship
-        for (CustomerContact contact : contacts) {
-            contact.setCustomer(this);
-        }
+    }
+
+    public List<Credit> getCredits() {
+        return credits;
+    }
+
+    public void setCredits(List<Credit> credits) {
+        this.credits = credits;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", contacts=" + contacts +
+                ", credits=" + credits +
+                '}';
     }
 }
