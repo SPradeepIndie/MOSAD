@@ -34,10 +34,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b81186f5edd1d37ccac3a02d75cd394334a4d0a8
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+<<<<<<< HEAD
+=======
+    
+>>>>>>> b81186f5edd1d37ccac3a02d75cd394334a4d0a8
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -61,7 +69,10 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.2</version>
 		</dependency>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b81186f5edd1d37ccac3a02d75cd394334a4d0a8
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -84,17 +95,23 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> b81186f5edd1d37ccac3a02d75cd394334a4d0a8
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.6</version>
 		</dependency>
 	</dependencies>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b81186f5edd1d37ccac3a02d75cd394334a4d0a8
 	<build>
 		<plugins>
 			<plugin>
