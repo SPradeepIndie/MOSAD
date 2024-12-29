@@ -10,7 +10,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
 function BrandPage() {
-  console.log('brandpage')
+ 
   return (
     <>
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

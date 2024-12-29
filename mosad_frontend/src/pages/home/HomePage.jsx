@@ -20,6 +20,9 @@ function HomePage() {
     } else if (title === 'Bill Generate') {
       navigate('/bill-generate'); // Example for other tiles
     }
+    else if(title=="Credit"){
+      navigate('/credits');
+    }
     // Add more conditions for other tiles as needed
   };
 

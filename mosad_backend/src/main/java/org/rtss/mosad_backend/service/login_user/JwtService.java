@@ -73,6 +73,7 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(jwtToken)
                 .getPayload();
+
     }
 
     public boolean validateToken(String jwtToken, UserDetails userDetails) {
