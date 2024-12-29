@@ -102,3 +102,24 @@ body {
 .info {
   background-color: #17a2b8;
 }
+
+.formBtns{
+  align-self: center;
+  margin-left: auto;
+}
+
+#itemdetails,#pricedetails{
+  border:1px solid #FFFFFF;
+  margin: 5px;
+  border-radius: 10px;
+  background-color: #ffffff;
+
+}
+
+#pricedetails{
+  
+  color: #000000;
+  input{
+    max-width: 200px;
+  }
+}   
