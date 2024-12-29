@@ -8,24 +8,9 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useNavigate,useLocation } from 'react-router-dom';
 
-function ItemTable() {
-  
-  const location = useLocation();
-  const { title } = location.state || {};
-  console.log(title);
-
-
-     const navigate = useNavigate();
-    
-      const handleTileClick = (title) => {
-        
-          navigate('/stock/brands/itemtable',{state:{title}}); // Redirect to /stock/brands/itemtable with state
-        
-      };
-  
-
+function BrandPage() {
+  console.log('brandpage')
   return (
     <>
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -34,17 +19,17 @@ function ItemTable() {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            onClick={() => handleTileClick('CEAT')}
+            link=""      
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
-            onClick={() => handleTileClick('tyre_presa')}
+            link=""
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
-            onClick={() => handleTileClick('tyre_linglong')}
+            link=""
           />
         </Stack>
 
@@ -53,17 +38,17 @@ function ItemTable() {
           <Tile
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
-            onClick={() => handleTileClick('tyre_rapid')}
+            link=""
           />
           <Tile
             title="Atlander"
             icon={<AccountTreeIcon fontSize="large" />}
-            onClick={() => handleTileClick('tyre_atlander')}
+            link=""
           />
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            onClick={() => handleTileClick('')}
+            link=""   
           />
         </Stack>
 
@@ -81,5 +66,5 @@ function ItemTable() {
   );
 }
 
-export default ItemTable;
+export default BrandPage;
 

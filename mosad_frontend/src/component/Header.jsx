@@ -1,23 +1,24 @@
-import React from 'react';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useNavigate } from 'react-router-dom';
+import { React } from 'react';
+import { useNavigate,Link } from 'react-router-dom';
+import SideDrawer from './SideDrawer';
 
-function HeaderBar({setIsLoggedIn}) {
+function HeaderBar({ setIsLoggedIn }) {
+ 
   const navigate = useNavigate();
 
   const handleLogout = () => {
     // Remove token from local storage
-    localStorage.removeItem('token'); 
+    localStorage.removeItem('token');
     setIsLoggedIn(false);
     // Redirect to login page
-    navigate('/',{ replace: true }); 
-  
+    navigate('/', { replace: true });
+
   };
+
   return (
     <AppBar
       position="static"
@@ -25,21 +26,19 @@ function HeaderBar({setIsLoggedIn}) {
         backgroundColor: 'gray',
         maxWidth: '1600px',
         margin: 'auto',
-        borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
       }}
     >
-      <Toolbar>
-        {/* Left Side: Menu Icon */}
-        <IconButton edge="start" aria-label="menu" sx={{ color: 'black' }}>
-          <MenuIcon />
-        </IconButton>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'center' }}>
+        {/* Drawer */}
+        <SideDrawer/>
 
+        
         {/* Center: Professional Text */}
+        <Link to="/" style={{ textDecoration: 'none' ,flexGrow: 1}}> 
         <Typography
           component="div"
-          sx={{
-            flexGrow: 1,
+          sx={{  
             textAlign: 'center',
             fontFamily: `'Roboto', sans-serif`,
             fontSize: '28px',
@@ -49,6 +48,7 @@ function HeaderBar({setIsLoggedIn}) {
         >
           Rashmi Tyre Center
         </Typography>
+        </Link>
 
         {/* Right Side: Logout Button */}
         <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={handleLogout}>Logout</Button>

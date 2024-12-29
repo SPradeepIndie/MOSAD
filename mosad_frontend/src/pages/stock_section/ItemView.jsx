@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./ItemView.css";
+import "./css/ItemView.css";
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [rows, setRows] = useState([]);

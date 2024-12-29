@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.service.register_user;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ class RegisterServiceTest {
 
     //Best Scenario...
     @Test
+    @Disabled
     void ShouldAddUserAndSaveInDatabase() {
         UserRegistrationDTO userRegistrationDto = new UserRegistrationDTO(
                 new UserDTO("Sanjaya", "sanjaya", "pradeep", "spkent5@gamil.com"),

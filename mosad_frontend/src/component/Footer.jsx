@@ -12,11 +12,9 @@ function Footer() {
         backgroundColor: 'gray',
         maxWidth: '1600px',
         margin: 'auto',
-        borderRadius: '8px',
         boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.1)',
         top: 'auto',
         bottom: 0,
-        marginTop: '20px',
       }}
     >
       <Toolbar sx={{ justifyContent: 'center' }}>

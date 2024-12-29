@@ -1,4 +1,3 @@
-
 import './App.css'
 import HomePage from './pages/home/HomePage'
 import BillPage from './pages/bill_section/BillPage'
@@ -13,8 +12,12 @@ import ServicesPage from './pages/services_section/ServicesPage'
 import LoginPage from './pages/LoginPage'
 import Footer from './component/Footer';
 import HeaderBar from './component/Header';
+import BrandPage from './pages/stock_section/BrandPage'
+import ItemView from './pages/stock_section/ItemView'
 import { Route,Routes,Navigate } from 'react-router-dom';
 import { useState,useEffect } from 'react';
+import { Box, Container } from '@mui/material'
+import UserManagement from './pages/users_section/UserManagement'
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
@@ -29,34 +32,46 @@ function App() {
   }, []);
 
   return (
-    <>
-      {isLoggedIn && <HeaderBar setIsLoggedIn={setIsLoggedIn}/>} 
-      <Routes>
-        <Route path='/'
-          element={!isLoggedIn ? <LoginPage setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} /> : <Navigate to="/home" replace />} /> 
-        <Route path="/home" 
-          element={isLoggedIn ? <HomePage /> : <Navigate to="/" replace />} /> 
-        <Route path='/stock' element={<StockPage/>} />
-        <Route path='/branch' element={<BranchPage/>} />
-        <Route path='/credit' element={<CreditPage/>} />
-        <Route path='/bill' element={<BillPage/>} />
-        <Route path='/dack' element={<DackPage/>} />
-        <Route path='/retail' element={<RetailPage/>} />
-        <Route path='/future' element={<ReportPredictionPage/>} />
-        <Route path='/employee' element={<EmployeePage/>} />
-        <Route path='/services' element={<ServicesPage/>} />
-      </Routes>
-      {isLoggedIn && <Footer />}
-    </>
+    <Container maxWidth="xl" disableGutters sx={{width:'100vw',height:'100vh'}}>
+      <Box maxWidth="xl">
+        {isLoggedIn && <HeaderBar setIsLoggedIn={setIsLoggedIn}/>} 
+      </Box>
+      
+      <Box  sx={{ p: 3}}>
+        <Routes>
+          <Route path='/'
+            element={!isLoggedIn ? <LoginPage setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} /> : <Navigate to="/home" replace />} /> 
+          <Route path="/home" 
+            element={isLoggedIn ? <HomePage /> : <Navigate to="/" replace />} />
+          <Route path="/stock" element={isLoggedIn ? <StockPage /> : <Navigate to="/" replace />} > 
+            <Route path="brand" element={<BrandPage />}>
+              <Route path="item-view" element={<ItemView />} /> 
+            </Route>
+          </Route> 
+          <Route path="/branch" element={isLoggedIn ? <BranchPage /> : <Navigate to="/" replace />} />
+          <Route path="/credit" element={isLoggedIn ? <CreditPage /> : <Navigate to="/" replace />} />
+          <Route path="/bill" element={isLoggedIn ? <BillPage /> : <Navigate to="/" replace />} />
+          <Route path="/dack" element={isLoggedIn ? <DackPage /> : <Navigate to="/" replace />} />
+          <Route path="/retail" element={isLoggedIn ? <RetailPage /> : <Navigate to="/" replace />} />
+          <Route path="/future" element={isLoggedIn ? <ReportPredictionPage /> : <Navigate to="/" replace />} />
+          <Route path="/employee" element={isLoggedIn ? <EmployeePage /> : <Navigate to="/" replace />} />
+          <Route path="/services" element={isLoggedIn ? <ServicesPage /> : <Navigate to="/" replace />} />
+          <Route path="/user" element={isLoggedIn ? <UserManagement /> : <Navigate to="/" replace />} />
+        
+        </Routes>
+      </Box>
+
+      <Box maxWidth="xl">
+        {isLoggedIn && <Footer />}
+      </Box>
+     
+    </Container>
   )
 
 }
 
 export default App;
 
-import React, { useState } from "./pages/ItemView";
-import ItemView from "./pages/ItemView";
-import "./App.css";
 
 
 

@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.repository.user_management;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;

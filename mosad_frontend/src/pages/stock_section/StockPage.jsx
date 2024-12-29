@@ -5,22 +5,10 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import PeopleIcon from '@mui/icons-material/People';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useNavigate } from 'react-router-dom';
 
 function StockPage() {
-  const navigate = useNavigate();
-
-  const handleTileClick = (title) => {
-    navigate('/stock/brands',{state:{title}});
-    
-  };
-
   return (
     <>
-      
     <h1>Select a Category</h1>
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* First Row: Three Tiles */}
@@ -28,7 +16,7 @@ function StockPage() {
           <Tile
             title="Tyre"
             icon={<DescriptionIcon fontSize="large" />}
-            link=""
+            link="/stock/brand"
           />
           <Tile
             title="Tube"
