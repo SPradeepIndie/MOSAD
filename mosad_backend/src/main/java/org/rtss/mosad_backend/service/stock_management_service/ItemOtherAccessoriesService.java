@@ -3,7 +3,7 @@ package org.rtss.mosad_backend.service.stock_management_service;
 import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemOtherAccessoriesDTO;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemOtherAccessories;
-import org.rtss.mosad_backend.model_mapper.stock_management_model_mapper.ItemOtherAccessoriesDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemOtherAccessoriesDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemOtherAccessoriesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

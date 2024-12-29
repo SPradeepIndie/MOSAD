@@ -1,12 +1,13 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-function Tile({ title, icon, onClick }) {
+function Tile({ title, icon, link}) {
   return (
-    <Card
+    <Card component={Link} to={link}
       sx={{
-        height: '200px',
-        width: '300px',
+        height: 'auto',
+        width: '15em',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -20,7 +21,6 @@ function Tile({ title, icon, onClick }) {
           boxShadow: 6 
         },
       }}
-      onClick={onClick}
     >
       <CardActionArea sx={{ height: '100%', width: '100%', textAlign: 'center' }}>
         <CardContent>

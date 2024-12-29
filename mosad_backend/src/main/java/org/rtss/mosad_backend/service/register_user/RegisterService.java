@@ -9,16 +9,17 @@ import org.rtss.mosad_backend.dto.user_dtos.UserRoleDTO;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
-import org.rtss.mosad_backend.entity.UserContacts;
-import org.rtss.mosad_backend.entity.UserRoles;
-import org.rtss.mosad_backend.entity.Users;
-import org.rtss.mosad_backend.repository.UserContactsRepo;
-import org.rtss.mosad_backend.repository.UserRolesRepo;
-import org.rtss.mosad_backend.repository.UsersRepo;
+import org.rtss.mosad_backend.entity.user_management.UserContacts;
+import org.rtss.mosad_backend.entity.user_management.UserRoles;
+import org.rtss.mosad_backend.entity.user_management.Users;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
+import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Service
 public class RegisterService {
@@ -45,7 +46,6 @@ public class RegisterService {
     ------------------------------*/
     private final UsersRepo usersRepo;
     private final UserRolesRepo userRolesRepo;
-    private final UserContactsRepo userContactsRepo;
 
     /*-----------------------------
     * Inject the DtoValidator
@@ -53,7 +53,7 @@ public class RegisterService {
     private final DtoValidator dtoValidator;
 
 
-    public RegisterService(UserDTOMapper userDTOMapper, UserRoleDTOMapper userRoleDTOMapper, UserContactDTOMapper userContactDTOMapper, ResponseDTO responseDTO, PasswordEncoder passwordEncoder, UsersRepo usersRepo, UserRolesRepo userRolesRepo, UserContactsRepo userContactsRepo, DtoValidator dtoValidator) {
+    public RegisterService(UserDTOMapper userDTOMapper, UserRoleDTOMapper userRoleDTOMapper, UserContactDTOMapper userContactDTOMapper, ResponseDTO responseDTO, PasswordEncoder passwordEncoder, UsersRepo usersRepo, UserRolesRepo userRolesRepo, DtoValidator dtoValidator) {
         this.userDTOMapper = userDTOMapper;
         this.userRoleDTOMapper = userRoleDTOMapper;
         this.userContactDTOMapper = userContactDTOMapper;
@@ -61,30 +61,40 @@ public class RegisterService {
         this.passwordEncoder = passwordEncoder;
         this.usersRepo = usersRepo;
         this.userRolesRepo = userRolesRepo;
-        this.userContactsRepo = userContactsRepo;
         this.dtoValidator = dtoValidator;
     }
 
 
     //This method called from the controller class when there is a request for register endpoint
     public ResponseDTO addUser(UserRegistrationDTO userRegistrationDto) {
-        var violations = dtoValidator.validate(userRegistrationDto);
-        if(!violations.isEmpty()) {
-            return generateResponse(true,String.join("|",violations));
+        dtoValidator.validate(userRegistrationDto);
+        UserDTO userDto=extractUserDTO(userRegistrationDto);
+        dtoValidator.validate(userDto);
+
+        //check the duplication of username
+        uniqueUsername(userDto.getUsername());
+        //check the duplication of email
+        uniqueEmail(userDto.getEmail());
+
+        Users users=convertToUsersEntity(userDto);
+
+        users.setPassword(passwordEncode(extractPassword(userRegistrationDto)));
+
+        UserRoleDTO userRoleDTO=extractUserRoleDTO(userRegistrationDto);
+        dtoValidator.validate(userRoleDTO);
+        //check the given user role is in database
+        checkUserRoleByName(userRoleDTO.getRoleName());
+        UserRoles userRoles= convertToUserRoles(userRoleDTO);
+
+        users.setUserRoles(userRolesRepo.findUserRolesByRoleName(userRoles.getRoleName()).get());
+
+        ArrayList<UserContactDTO> userContactDtoS=extractUserContactDTO(userRegistrationDto);
+        for(UserContactDTO userContactDto:userContactDtoS){
+            dtoValidator.validate(userContactDto);
         }
+        users.setUserContacts(convertToUserContacts(userContactDtoS));
 
-        Users users=convertToUsersEntity(validateUserDto(extractUserDTO(userRegistrationDto)));
-
-        users.setPassword(passwordEncode(passwordValidator(extractPassword(userRegistrationDto))));
-
-        UserRoles userRoles= convertToUserRoles(extractUserRoleDTO(userRegistrationDto));
-        users.setUserRoles(getUserRoleByname(userRoles.getRoleName()));
-
-        UserContacts userContacts=convertToUserContacts(extractUserContactDTO(userRegistrationDto));
-
-        users.setUserContacts(List.of(userContacts));
-
-        storeData(users,userContacts);
+        storeData(users);
 
         return generateResponse(true,"User registered successfully");
     }
@@ -94,47 +104,20 @@ public class RegisterService {
         return userRegistrationDTO.getUserDto();
     }
 
-    //react front end basic email validation, basic firstname,lastname,username check is done
-    //check the userDto username,email validity(duplicate)
-    private UserDTO validateUserDto(UserDTO userDto) {
-        if(userDto==null){
-            return null;
+    private void uniqueUsername(String username) {
+        if(usersRepo.findByUsername(username).isPresent()){
+            throw new ObjectNotValidException(new HashSet<>(List.of("User already exists")));
         }
-        if(uniqueUsername(userDto.getUsername())){
-            generateResponse(false,"User already exists");
-            return null;
+    }
+
+    private void uniqueEmail(String email) {
+        if(usersRepo.findByEmail(email).isPresent()){
+            throw new ObjectNotValidException(new HashSet<>(List.of("User already exists")));
         }
-        if(validUsername(userDto.getUsername())){
-            generateResponse(false,"Username not valid");
-            return null;
-        }
-        if(uniqueEmail(userDto.getEmail())){
-            generateResponse(false,"Email already exists");
-            return null;
-        }
-        if(validEmail(userDto.getEmail())){
-            generateResponse(false,"Email not valid");
-            return null;
-        }
-        return userDto;
     }
-    private boolean uniqueUsername(String username) {
-        return usersRepo.findByUsername(username).isPresent();
-    }
-    private boolean validUsername(String username) {
-        return false;
-    }
-    private boolean uniqueEmail(String email) {
-        return usersRepo.findByEmail(email).isPresent();
-    }
-    private boolean validEmail(String email) {
-        return false;
-    }
+
     //map to the Users entity.
     private Users convertToUsersEntity(UserDTO userDto) {
-        if(userDto==null){
-            return null;
-        }
         return userDTOMapper.userDtoToUsers(userDto);
     }
 
@@ -142,16 +125,9 @@ public class RegisterService {
     private String extractPassword(UserRegistrationDTO userRegistrationDTO) {
         return userRegistrationDTO.getPassword();
     }
-    //In react frontend check basic password  validation (greater than 6 characters and has alphanumeric characters)
-    //password validation
-    private String passwordValidator(String pwd){
-        return pwd;
-    }
+
     //Encrypt the password
     private String passwordEncode(String pwd) {
-        if(pwd==null){
-            return null;
-        }
         return passwordEncoder.bCryptPasswordEncoder().encode(pwd);
     }
 
@@ -159,31 +135,38 @@ public class RegisterService {
     private UserRoleDTO extractUserRoleDTO(UserRegistrationDTO userRegistrationDto) {
         return userRegistrationDto.getUserRoleDto();
     }
+
     //map to the UserRoles entity.
     private UserRoles convertToUserRoles(UserRoleDTO UserRoleDto) {
         return userRoleDTOMapper.userRoleDTOToUserRoles(UserRoleDto);
     }
+
     //check user role in the database
-    private UserRoles getUserRoleByname(String roleName) {
-        if( userRolesRepo.findUserRolesByRoleName(roleName).isPresent()){
-            return userRolesRepo.findUserRolesByRoleName(roleName).get();
+    private void checkUserRoleByName(String roleName) {
+        if(userRolesRepo.findUserRolesByRoleName(roleName).isEmpty()){
+            throw new ObjectNotValidException(new HashSet<>(List.of("User role does not exist")));
         }
-        return null;
     }
 
     //Extract userContactDTO from UserRegistrationDTO
-    private UserContactDTO extractUserContactDTO(UserRegistrationDTO userRegistrationDTO) {
+    private ArrayList<UserContactDTO> extractUserContactDTO(UserRegistrationDTO userRegistrationDTO) {
         return userRegistrationDTO.getUserContactDto();
     }
+
     //map to the UserRoles entity.
-    private UserContacts convertToUserContacts(UserContactDTO userContactDto) {
-        return userContactDTOMapper.userContactsDTOToUserContacts(userContactDto);
+    private Set<UserContacts> convertToUserContacts(ArrayList<UserContactDTO> userContactDtoList) {
+        Set<UserContacts> userContactsSet = new HashSet<>();
+        for(UserContactDTO userContactDto:userContactDtoList){
+            userContactsSet.add(userContactDTOMapper.userContactsDTOToUserContacts(userContactDto));
+        }
+        return userContactsSet;
     }
 
     //store data in the database
-    private void storeData(Users users,UserContacts userContacts) {
-        usersRepo.saveAndFlush(users);
-        //userContactsRepo.saveAndFlush(userContacts);
+    private void storeData(Users user) {
+        // Ensure contacts are associated with the user
+        user.getUserContacts().forEach(contact-> contact.setUser(user));
+        usersRepo.saveAndFlush(user);
     }
 
     //Generate response

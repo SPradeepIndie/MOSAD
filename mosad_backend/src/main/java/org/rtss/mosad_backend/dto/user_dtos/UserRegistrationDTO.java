@@ -1,20 +1,32 @@
 package org.rtss.mosad_backend.dto.user_dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class UserRegistrationDTO{
 
-    @NotNull(message = "user details object can not be null")
+    @NotNull(message = "User details object can not be null")
     private UserDTO userDto;
-    @NotNull(message = "user password object can not be null")
-    private String password;
-    @NotNull(message = "user role object can not be null")
-    private UserRoleDTO userRoleDto;
-    private UserContactDTO userContactDto;
 
-    public UserRegistrationDTO(UserDTO userDto, String password, UserRoleDTO userRoleDto, UserContactDTO userContactDto) {
+    @NotBlank(message = "Password is mandatory")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{6,}$",
+            message = "Password must be at least 6 characters long " +
+                    "and contain at least one number " +
+                    "and one special character.")
+    private String password;
+
+    @NotNull(message = "User role object can not be null")
+    private UserRoleDTO userRoleDto;
+
+    @NotNull(message = "User contact object can not be null")
+    private ArrayList<UserContactDTO> userContactDto;
+
+    public UserRegistrationDTO(UserDTO userDto, String password, UserRoleDTO userRoleDto, ArrayList<UserContactDTO> userContactDto) {
         this.userDto = userDto;
         this.password = password;
         this.userRoleDto = userRoleDto;
@@ -48,11 +60,11 @@ public class UserRegistrationDTO{
         this.userRoleDto = userRoleDto;
     }
 
-    public UserContactDTO getUserContactDto() {
+    public @NotNull(message = "User contact object can not be null") ArrayList<UserContactDTO> getUserContactDto() {
         return userContactDto;
     }
 
-    public void setUserContactDto(UserContactDTO userContactDto) {
+    public void setUserContactDto(@NotNull(message = "User contact object can not be null") ArrayList<UserContactDTO> userContactDto) {
         this.userContactDto = userContactDto;
     }
 

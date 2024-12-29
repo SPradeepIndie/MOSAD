@@ -3,10 +3,9 @@ package org.rtss.mosad_backend.validator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.rtss.mosad_backend.config.validator.ValidatorConfig;
-import org.rtss.mosad_backend.dto.user_dtos.UserRegistrationDTO;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,18 +21,17 @@ public class DtoValidator {
     public Validator getValidator() {
         return validatorConfig.localValidatorFactoryBean().getValidator();
     }
-    public Set<String> validate(UserRegistrationDTO userRegistrationDTO) {
-        Set<ConstraintViolation<UserRegistrationDTO>> violation = getValidator().validate(userRegistrationDTO);
+
+    //Generic validator for validate dto classes
+    public <T> void validate(T dto) {
+        Set<ConstraintViolation<T>> violation = getValidator().validate(dto);
         if(!violation.isEmpty()){
-            return violation
+            Set<String> validationErrorMsg = violation
                     .stream()
                     .map(ConstraintViolation::getMessage)
                     .collect(Collectors.toSet());
+            throw new ObjectNotValidException(validationErrorMsg);
         }
-        return Collections.emptySet();
+
     }
-
-
-
-
 }
