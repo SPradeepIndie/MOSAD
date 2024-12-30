@@ -18,3 +18,4 @@ UNION ALL
 SELECT 'MECHANIC'
     WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'MECHANIC');
 
+
