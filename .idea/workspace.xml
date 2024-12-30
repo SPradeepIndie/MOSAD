@@ -5,57 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04e07e13-c1b3-4f13-a9e5-5f0e8bd3bf67" name="Changes" comment="resolve_conflict">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/maven.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/react-build.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/ConfirmationDialog.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/ConfirmationDialog.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/Footer.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/GeneralMessage.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/Header.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/Slideshow.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/Tile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/UnderConsruction.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/resources/pic1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/resources/pic2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/component/resources/pic3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/Brands.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/ItemTable.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/Itemtable.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/LoginPage.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/NotFoundPage.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/StockCategory.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/services/apiStockService.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/services/apiUserService.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mosad_frontend/src/services/api_config/apiClient.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MOSAD.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mosad_backend/src/test/java/org/rtss/mosad_backend/controller/ItemViewControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mosad_backend/src/test/java/org/rtss/mosad_backend/service/stock_management_service/ItemViewServiceUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mosad_backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemBattery.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemBattery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemOtherAccessories.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemOtherAccessories.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTube.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTube.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreAtlander.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreAtlander.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreLinglong.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreLinglong.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyrePresa.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyrePresa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreRapid.java" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_backend/src/main/java/org/rtss/mosad_backend/entity/stock_management_entity/ItemTyreRapid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/itemview/ItemView.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/itemview/ItemView.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/pages/HomePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/mosad_frontend/src/pages/HomePage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mosad_frontend/src/pages/Login.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +49,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.MosadBackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging develop&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Final Year Project/Rashmi Tyre Center/development/MOSAD&quot;,
@@ -169,6 +122,8 @@
       <workItem from="1734835050033" duration="12299000" />
       <workItem from="1734890911336" duration="227000" />
       <workItem from="1734891272049" duration="13000" />
+      <workItem from="1735123105061" duration="498000" />
+      <workItem from="1735279529151" duration="2837000" />
     </task>
     <task id="LOCAL-00001" summary="resolve_conflict">
       <option name="closed" value="true" />
