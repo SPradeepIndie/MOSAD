@@ -7,6 +7,11 @@ function App() {
       <HomePage/>
     </>
   )
+
 }
 
-export default App
+export default App;
+
+
+
+

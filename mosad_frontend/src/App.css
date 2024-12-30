@@ -1,8 +1,20 @@
-#root {
-  max-width: 1280px;
+body {
+  font-family: "Poppins", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #F9F9F9;
+  color: #333;
+}
+
+.app-container {
+  max-width: 1200px;
   margin: 0 auto;
+<<<<<<< HEAD
+  padding: 20px;
+=======
   padding: 2rem;
   text-align: center;
+>>>>>>> 042afaa020dd8ae63d355745a273bf580b3c2113
 }
 @media print {
   /* Hide the print button */

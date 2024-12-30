@@ -13,6 +13,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useNavigate } from 'react-router-dom';
 
+
 function HomePage() {
   const navigate = useNavigate();
 
@@ -20,7 +21,10 @@ function HomePage() {
     if (title === 'Stock') {
       navigate('/stock'); // Redirect to /stock
     } else if (title === 'Bill Generate') {
-      navigate('/bill-generate'); // Example for other tiles
+      navigate('/BillGenerator'); // Example for other tiles
+    }
+    else if(title=="Credit"){
+      navigate('/credits');
     }
     // Add more conditions for other tiles as needed
   };
