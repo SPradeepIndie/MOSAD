@@ -4,19 +4,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.user_dtos.UserContactDTO;
-import org.rtss.mosad_backend.entity.UserContacts;
+import org.rtss.mosad_backend.entity.user_management.UserContacts;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@ExtendWith(MockitoExtension.class)
 class UserContactDTOMapperTest {
 
-    //Testing Service
-    //@InjectMocks
     private UserContactDTOMapper userContactDTOMapper;
 
     //Declare model mapper
-    //@Mock
     private ModelMapper modelMapper;
 
     @BeforeEach
@@ -41,6 +38,28 @@ class UserContactDTOMapperTest {
     }
 
     @Test
+    void shouldThrowUserContactDtoNullPointerException(){
+        assertThrows(NullPointerException.class, ()->{
+            userContactDTOMapper.userContactsDTOToUserContacts(null);
+        },"userContactDTO is null");
+    }
+
+    @Test
     void shouldMapuserContactsToUserContactDTO() {
+        UserContacts userContacts = new UserContacts();
+        userContacts.setContactNum("0112536722");
+        userContacts.setUser(new Users());
+
+        UserContactDTO userContactDto = userContactDTOMapper.userContactsToUserContactDTO(userContacts);
+
+        assertNotNull(userContactDto);
+        assertEquals(userContactDto.getContactNum(),userContacts.getContactNum());
+    }
+
+    @Test
+    void shouldThrowUserContactNullPointerException(){
+        assertThrows(NullPointerException.class, ()->{
+            userContactDTOMapper.userContactsToUserContactDTO(null);
+        },"userContactDTO is null");
     }
 }

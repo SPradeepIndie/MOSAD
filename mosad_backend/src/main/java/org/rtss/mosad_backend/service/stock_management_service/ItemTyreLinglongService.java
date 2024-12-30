@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreLinglongDTO;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreAtlander;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreLinglong;
-import org.rtss.mosad_backend.model_mapper.stock_management_model_mapper.ItemTyreLinglongDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreLinglongDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemTyreLinglongRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
