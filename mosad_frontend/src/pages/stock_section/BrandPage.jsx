@@ -19,7 +19,7 @@ function BrandPage() {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link=""      
+            link="/stock/item-view"      
           />
           <Tile
             title="PRESA"

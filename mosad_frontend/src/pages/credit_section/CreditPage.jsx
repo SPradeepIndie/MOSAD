@@ -20,6 +20,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { addRepayment,fetchAllCreditDetails } from '../../services/apiCreditService';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 function Row({ row, onAddRepayment }) {
   const [open, setOpen] = useState(false);
@@ -114,18 +119,28 @@ function Row({ row, onAddRepayment }) {
           </Collapse>
         </TableCell>
       </TableRow>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Add New Repayment</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={newRepayment.date}
-            onChange={(e) => setNewRepayment({ ...newRepayment, date: e.target.value })}
-          />
+      <Dialog 
+        open={openDialog} 
+        onClose={handleDialogClose} 
+        aria-modal="true" 
+        aria-labelledby="add-repayment-title"
+        aria-describedby="add-repayment-description"
+        
+      >
+        <DialogTitle id="add-repayment-title">Add New Repayment</DialogTitle>
+        <DialogContent id="add-repayment-description">
+         
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                label="Basic date picker"
+                value={ null}
+                onChange={(newValue) =>
+                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.toISOString() : null })
+                }
+              />
+            </DemoContainer>
+          </LocalizationProvider>
           <TextField
             margin="dense"
             label="Amount"
