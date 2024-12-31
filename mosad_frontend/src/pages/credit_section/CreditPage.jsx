@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Collapse from '@mui/material/Collapse';
@@ -20,6 +19,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { addRepayment,fetchAllCreditDetails } from '../../services/apiCreditService';
 
 function Row({ row, onAddRepayment }) {
   const [open, setOpen] = useState(false);
@@ -158,20 +158,11 @@ const CreditPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        console.error('No token found in localStorage');
-        setLoading(false);
-        return;
-      }
-
+    
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/credit/all-credit-details', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await fetchAllCreditDetails();
         setRows(response.data);
-        console.log(response.data);
+        //console.log(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -183,21 +174,9 @@ const CreditPage = () => {
   }, []);
 
   const handleAddRepayment = async (creditId, repayment) => {
-    const token = localStorage.getItem('token');
   
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/v1/repayments',
-        {
-          creditId, // Pass creditId
-          ...repayment, // Pass date and amount
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await addRepayment(creditId, repayment);
   
       console.log('Repayment added successfully:', response.data);
   
