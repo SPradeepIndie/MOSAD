@@ -1,4 +1,4 @@
-//set form fields
+//set Add Item form fields
 const setItemAddFromFields = (title) => {
     console.log(title);
     switch (title) {

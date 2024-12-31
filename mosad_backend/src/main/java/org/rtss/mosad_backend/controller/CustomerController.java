@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.controller;
 
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.service.CustomerService;
+import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,14 +47,12 @@ public class CustomerController {
     @GetMapping("/search/by-contact")
     public List<CustomerContactDTO> getCustomerByContact(@RequestParam String contactNumber) {
         // Fetch all customers with contacts and return as DTO list
-        //System.out.println("\n Controller ekata awa "+contactNumber);
         return customerService.getCustomerByContact(contactNumber);
     }
 
     @GetMapping("/search")
     public List<CustomerDTO> getCustomersByContact(@RequestParam String contactNumber) {
         // Fetch all customers with contacts and return as DTO list
-        System.out.println("\n Controller ekata awa "+contactNumber);
         return customerService.getCustomersByContact(contactNumber);
     }
 
