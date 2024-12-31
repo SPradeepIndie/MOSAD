@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>

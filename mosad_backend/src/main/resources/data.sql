@@ -1,4 +1,4 @@
--- Insert ADMIN,OWNER,STOCK_MANAGER,RETAIL_CUSTOMER,MECHANIC user roles in to
+-- Insert ADMIN,OWNER,STOCK_MANAGER,RETAIL_CUSTOMER,MECHANIC admin roles in to
 -- user_roles if they are not exists in table
 -- This will run at the initializing step in spring boot application
 
@@ -17,4 +17,5 @@ SELECT 'RETAIL_CUSTOMER'
 UNION ALL
 SELECT 'MECHANIC'
     WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'MECHANIC');
+
 

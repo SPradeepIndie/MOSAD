@@ -1,4 +1,4 @@
- import { Grid2} from "@mui/material";
+ import Grid from "@mui/material/Grid2";
  import { 
    TextField, 
    Button, 
@@ -6,7 +6,8 @@
    InputLabel, 
    Select, 
    MenuItem, 
-   Box
+   Box,
+   Paper
  } from '@mui/material';
 import React,{ useState, useEffect } from "react";
 
@@ -74,55 +75,68 @@ const UserDetailsForm=()=>{
 
     return(
         <form onSubmit={handleSubmit} >
-            <Grid2 Container>
-                <Grid2 >
+            <Paper elevation={1} sx={{p:2,m:2}}>
+                <Grid container spacing={2} >
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField 
+                        label="First name" 
+                        variant="outlined" 
+                        name="firstname" 
+                        value={userData.userDto.firstName} 
+                        onChange={handleChange} 
+                        fullWidth 
+                        />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField 
+                        label="Last name" 
+                        variant="outlined" 
+                        name="lastname" 
+                        value={userData.userDto.lastName} 
+                        onChange={handleChange} 
+                        fullWidth 
+                        />
+                    </Grid>
+                    
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField 
+                            label="Username" 
+                            variant="outlined" 
+                            name="username" 
+                            value={userData.userDto.username} 
+                            onChange={handleChange} 
+                            fullWidth 
+                        />
+                    </Grid>
+                    
+                    <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField 
-                    label="First name" 
-                    variant="outlined" 
-                    name="firstname" 
-                    value={userData.userDto.firstName} 
-                    onChange={handleChange} 
-                    fullWidth 
+                        label="Email" 
+                        variant="outlined" 
+                        name="email" 
+                        value={userData.userDto.email} 
+                        onChange={handleChange} 
+                        fullWidth 
                     />
-                    <TextField 
-                    label="Last name" 
-                    variant="outlined" 
-                    name="lastname" 
-                    value={userData.userDto.lastName} 
-                    onChange={handleChange} 
-                    fullWidth 
-                    />
-                </Grid2>
-                
-                <TextField 
-                    label="Username" 
-                    variant="outlined" 
-                    name="username" 
-                    value={userData.userDto.username} 
-                    onChange={handleChange} 
-                    fullWidth 
-                />
-                
-                <TextField 
-                    label="Email" 
-                    variant="outlined" 
-                    name="email" 
-                    value={userData.userDto.email} 
-                    onChange={handleChange} 
-                    fullWidth 
-                />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                     {/* User contact */}
+                        <TextField 
+                        type='password'
+                        label="User contact" 
+                        variant="outlined" 
+                        name="contactNum" 
+                        value={userData.password} 
+                        onChange={handleChange} 
+                        fullWidth 
+                        />
+                    </Grid>
+                </Grid>
+            </Paper>
 
-                {/* User contact */}
-                <TextField 
-                type='password'
-                label="User contact" 
-                variant="outlined" 
-                name="contactNum" 
-                value={userData.password} 
-                onChange={handleChange} 
-                fullWidth 
-                />
-
+            <Paper elevation={1} sx={{p:2,m:2}}>
+                <Grid container spacing={2} >
+                <Grid size={{ xs: 12, sm: 6 }}>
                 {/* Example of a Select field for role */}
                 <FormControl fullWidth>
                     <InputLabel id="role-label">Role</InputLabel>
@@ -140,7 +154,13 @@ const UserDetailsForm=()=>{
                     <MenuItem value="MECHANIC">Mechanic</MenuItem>
                     </Select>
                 </FormControl>
+                </Grid>
+                </Grid>
+            </Paper>
 
+            <Paper elevation={1} sx={{p:2,m:2}}>
+            <Grid container spacing={2} >
+            <Grid size={{ xs: 12, sm: 6 }}>
                 {/* Enter password */}
                 <TextField 
                     type='password'
@@ -151,6 +171,8 @@ const UserDetailsForm=()=>{
                     onChange={handleChange} 
                     fullWidth 
                 />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField 
                     type='password'
                     label="Re-enter Password" 
@@ -160,8 +182,11 @@ const UserDetailsForm=()=>{
                     onChange={handleChange} 
                     fullWidth 
                 />
+                 </Grid>
+                 </Grid>
+            </Paper>
             
-            <Box>
+            <Box sx={{p:2,m:2}} spacing={2}>
                 <Button  variant="contained" color="primary">
                     Add user
                 </Button>
@@ -177,7 +202,6 @@ const UserDetailsForm=()=>{
                     </Button>
                 )}
             </Box>
-        </Grid2>
         </form>
     );
 }
