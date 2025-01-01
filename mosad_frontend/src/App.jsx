@@ -15,7 +15,7 @@ import Footer from './component/Footer';
 import HeaderBar from './component/Header';
 import BrandPage from './pages/stock_section/BrandPage'
 import ItemView from './pages/stock_section/ItemView'
-import { Route,Routes } from 'react-router-dom';
+import { Route,Routes,Navigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material'
 import UserManagement from './pages/users_section/UserManagement'
 import backgroundImage from './assets/bg-image.jpg';
@@ -37,9 +37,9 @@ function App() {
         { auth.success && <HeaderBar/>} 
       </Box>
       
-      <Box  sx={{ p: 3}} >
+      <Box  sx={{ p: 3,minHeight: '100vh'}} >
         <Routes>
-          <Route path='/' element={<LoginPage />} /> 
+          <Route path='/' element={<LoginPage/>} /> 
           <Route element={<RoutesProtector />}>
             <Route path="/home" element={ <HomePage />} />
             <Route path="/stock" element={ <StockPageLayout />} > 
@@ -69,26 +69,3 @@ function App() {
 }
 
 export default App;
-
-
-{/* <Routes>
-          <Route path='/'
-            element={!isLoggedIn ? <LoginPage setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} /> : <Navigate to="/home" replace />} /> 
-          <Route path="/home" 
-            element={isLoggedIn ? <HomePage /> : <Navigate to="/" replace />} />
-          <Route path="/stock" element={isLoggedIn ? <StockPageLayout /> : <Navigate to="/" replace />} > 
-            <Route index element={<StockPage />}/>
-            <Route path="brand" element={<BrandPage />}/>
-            <Route path="item-view" element={<ItemView />} /> 
-          </Route>
-          <Route path="/branch" element={isLoggedIn ? <BranchPage /> : <Navigate to="/" replace />} />
-          <Route path="/credit" element={isLoggedIn ? <CreditPage /> : <Navigate to="/" replace />} />
-          <Route path="/bill" element={isLoggedIn ? <BillPage /> : <Navigate to="/" replace />} />
-          <Route path="/dack" element={isLoggedIn ? <DackPage /> : <Navigate to="/" replace />} />
-          <Route path="/retail" element={isLoggedIn ? <RetailPage /> : <Navigate to="/" replace />} />
-          <Route path="/future" element={isLoggedIn ? <ReportPredictionPage /> : <Navigate to="/" replace />} />
-          <Route path="/employee" element={isLoggedIn ? <EmployeePage /> : <Navigate to="/" replace />} />
-          <Route path="/services" element={isLoggedIn ? <ServicesPage /> : <Navigate to="/" replace />} />
-          <Route path="/user" element={isLoggedIn ? <UserManagement /> : <Navigate to="/" replace />} />
-        
-        </Routes> */}
