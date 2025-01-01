@@ -43,8 +43,9 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         with:
           projectBaseDir: ./mosad_frontend
-          projectKey: spradeepindie_MOSAD_FRONTEND
-          organization: spradeepindie
+          args: >
+            -Dsonar.organization=spradeepindie
+            -Dsonar.projectKey=spradeepindie_MOSAD_FRONTEND
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
