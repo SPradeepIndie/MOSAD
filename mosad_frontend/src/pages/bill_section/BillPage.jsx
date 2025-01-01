@@ -21,7 +21,7 @@ function ccyFormat(num) {
   return `${num.toFixed(2)}`;
 }
 
-const Bill = () => {
+const BillPage = () => {
   const [rows, setRows] = React.useState(
     Array(5).fill({ description: "", unitPrice: "", quantity: "", subtotal: 0 })
   );
