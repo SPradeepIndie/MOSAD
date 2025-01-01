@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.repository;
+package org.rtss.mosad_backend.repository.customer_repository;
 
 
 import org.rtss.mosad_backend.entity.customer.Customer;

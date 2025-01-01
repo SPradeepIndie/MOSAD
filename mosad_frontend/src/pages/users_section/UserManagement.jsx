@@ -1,13 +1,15 @@
 import React from 'react';
 import UserDetailsForm from '../../forms/UserDetailForm';
-import {Paper} from '@mui/material';
+import {Container, Paper, Typography} from '@mui/material';
 
 const UserManagement=()=>{
     return(
-        <Paper elevation={2}>
+       <Container>
+            <Typography>
+                WELCOME 
+            </Typography>
             <UserDetailsForm/>
-        </Paper>
-        
+       </Container>
     )
     
 }
