@@ -13,8 +13,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemId",nullable = false,unique = true)
     private Long itemId;
-    @Column(name = "av_qty")
-    private Integer av_qty;
+    @Column(name = "availableQuantity")
+    private Integer availableQuantity;
     @Column(name = "itemName")
     private String itemName;
     @Column(name = "itemDescription")
@@ -48,8 +48,8 @@ public class Item {
     public Item() {
     }
 
-    public Item(Integer av_qty, String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, Category category, Brand brand, Set<Branch> branches) {
-        this.av_qty = av_qty;
+    public Item(Integer availableQuantity, String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, Category category, Brand brand, Set<Branch> branches) {
+        this.availableQuantity = availableQuantity;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.companyPrice = companyPrice;
@@ -68,12 +68,12 @@ public class Item {
         this.itemId = itemId;
     }
 
-    public Integer getAv_qty() {
-        return av_qty;
+    public Integer getAvailableQuantity() {
+        return availableQuantity;
     }
 
-    public void setAv_qty(Integer av_qty) {
-        this.av_qty = av_qty;
+    public void setAvailableQuantity(Integer availableQuantity) {
+        this.availableQuantity = availableQuantity;
     }
 
     public String getItemName() {
