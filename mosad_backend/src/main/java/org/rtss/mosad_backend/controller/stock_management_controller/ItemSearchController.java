@@ -21,6 +21,13 @@ public class ItemSearchController {
         this.itemSearchService = itemSearchService;
     }
 
+    @GetMapping("/brands")
+    public ResponseEntity<List<String>> getAvailableBrands() {
+        List<String> brands = itemSearchService.getAvailableBrands();
+        return ResponseEntity.ok(brands);
+    }
+
+
     @GetMapping("/brand")
     public ResponseEntity<?> searchByBrandAndSize(
             @RequestParam String brand,

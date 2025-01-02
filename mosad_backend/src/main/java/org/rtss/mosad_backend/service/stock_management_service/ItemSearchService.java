@@ -39,4 +39,9 @@ public class ItemSearchService {
                 throw new IllegalArgumentException("Invalid brand name: " + brand);
         }
     }
+
+    public List<String> getAvailableBrands() {
+        return List.of("Atlander", "Linglong", "Presa", "Rapid");
+    }
+
 }

@@ -16,9 +16,10 @@ import HeaderBar from "../../component/Header";
 import Footer from "../../component/Footer";
 import "../../App.css";
 import { useReactToPrint } from "react-to-print";
+import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 
 function ccyFormat(num) {
-  return `${num.toFixed(2)}`;
+  return num.toFixed(2);
 }
 
 const BillPage = () => {
@@ -77,7 +78,14 @@ const BillPage = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <HeaderBar />
+     
+
+      {/* Search Component */}
+      <Box sx={{ mb: 4 }}>
+        <SearchComponent />
+      </Box>
+
+      {/* Bill Content */}
       <Box
         ref={printRef}
         sx={{
@@ -87,6 +95,7 @@ const BillPage = () => {
           padding: "16px",
         }}
       >
+        {/* Business Info */}
         <Box
           sx={{
             textAlign: "center",
@@ -102,6 +111,7 @@ const BillPage = () => {
           </Typography>
         </Box>
 
+        {/* Address and Contact */}
         <Box
           sx={{
             mb: 2,
@@ -120,7 +130,9 @@ const BillPage = () => {
               lineHeight: 1.6,
             }}
           >
-            We provide high-quality tires and tubes for motorcycles, three-wheelers, cars, vans, lorries, and buses. Additionally, we offer vehicle battery charging and nitrogen services.
+            We provide high-quality tires and tubes for motorcycles, three-wheelers, cars, vans,
+            lorries, and buses. Additionally, we offer vehicle battery charging and nitrogen
+            services.
           </Typography>
           <Typography sx={{ fontSize: "1.2rem", color: "#555", mt: 2 }}>
             Visit us at: <strong>205/106, Pattiyakuburawatta, Hakurukubura, Mirigama</strong>
@@ -130,6 +142,7 @@ const BillPage = () => {
           </Typography>
         </Box>
 
+        {/* Table and Bill */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -255,7 +268,17 @@ const BillPage = () => {
           </Table>
         </TableContainer>
 
-        <Box sx={{ mb: 2, textAlign: "center", background: "#f1f1f1", p: 4, borderRadius: "8px", boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)" }}>
+        {/* Footer Note */}
+        <Box
+          sx={{
+            mb: 2,
+            textAlign: "center",
+            background: "#f1f1f1",
+            p: 4,
+            borderRadius: "8px",
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <Typography sx={{ fontSize: "1.2rem", color: "#555", mt: 2 }}>
             <strong>We will not be responsible for any tires you give us for DAG and re-build after one month.</strong>
           </Typography>
@@ -265,13 +288,15 @@ const BillPage = () => {
         </Box>
       </Box>
 
+      {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
         <Button variant="contained" color="primary" onClick={handlePrint}>
           Print Bill
         </Button>
       </Box>
 
-      <Footer />
+      {/* Footer */}
+      
     </Box>
   );
 };
