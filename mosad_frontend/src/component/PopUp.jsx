@@ -2,13 +2,13 @@ import { Dialog, DialogContent, DialogTitle, Typography ,Button,Paper, Box} from
 import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function PopUp({tite,children,openPopup,setOpenPopup}){
+export default function PopUp({title,children,openPopup,setOpenPopup}){
     return(
         <Dialog open={openPopup} maxWidth="md">
             <DialogTitle sx={{p:2}}>
                 <Box display='flex'>
                 <Typography variant="h5" component="div" flexGrow={1} sx={{pt:1,pl:3}}>
-                    {tite}
+                    {title}
                 </Typography>
                 <Button onClick={()=>setOpenPopup(false)}>
                     <CloseIcon/>

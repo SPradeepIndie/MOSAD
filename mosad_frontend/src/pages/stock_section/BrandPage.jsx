@@ -12,7 +12,6 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 function BrandPage() {
  
   return (
-    <>
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* First Row: Three Tiles */}
         <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
@@ -61,8 +60,6 @@ function BrandPage() {
           />
         </Stack>
       </Box>
-
-    </>
   );
 }
 

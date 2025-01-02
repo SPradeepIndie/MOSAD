@@ -4,7 +4,6 @@ import useAuth from "./hooks/useAuth"
 
 const RoutesProtector = () => {
   const{ auth }= useAuth()
-  // if (true) return <Navigate to="/home" />;
   if (!auth.success) return <Navigate to="/" />;
   return <Outlet />;
 };
