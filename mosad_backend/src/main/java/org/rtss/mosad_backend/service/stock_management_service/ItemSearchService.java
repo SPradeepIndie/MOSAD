@@ -31,7 +31,7 @@ public class ItemSearchService {
                 return atlanderService.searchBySize(size);
             case "linglong":
                 return linglongService.searchBySize(size);
-            case "prasa":
+            case "presa":
                 return presaService.searchBySize(size);
             case "rapid":
                 return rapidService.searchBySize(size);
@@ -43,5 +43,4 @@ public class ItemSearchService {
     public List<String> getAvailableBrands() {
         return List.of("Atlander", "Linglong", "Presa", "Rapid");
     }
-
 }
