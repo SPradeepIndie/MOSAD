@@ -3,7 +3,7 @@ package org.rtss.mosad_backend.service.stock_management_service;
 import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemBatteryDTO;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBattery;
-import org.rtss.mosad_backend.model_mapper.stock_management_model_mapper.ItemBatteryDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemBatteryDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemBatteryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

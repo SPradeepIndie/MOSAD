@@ -2,6 +2,7 @@ package org.rtss.mosad_backend.service.login_user;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
+import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,16 +14,21 @@ public class LoginService {
     private final ResponseDTO responseDTO;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    /*-----------------------------
+       * Inject the DtoValidator
+       ------------------------------*/
+    private final DtoValidator dtoValidator;
 
-
-    public LoginService(ResponseDTO responseDTO, AuthenticationManager authenticationManager, JwtService jwtService) {
+    public LoginService(ResponseDTO responseDTO, AuthenticationManager authenticationManager, JwtService jwtService, DtoValidator dtoValidator) {
         this.responseDTO = responseDTO;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.dtoValidator = dtoValidator;
     }
 
 
     public ResponseDTO verifyUser(UserLoginDTO userLoginDto) {
+        dtoValidator.validate(userLoginDto);
         Authentication authentication=authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDto.getUsername(), userLoginDto.getPassword()));
         if(authentication.isAuthenticated()) {
             responseDTO.setSuccess(true);

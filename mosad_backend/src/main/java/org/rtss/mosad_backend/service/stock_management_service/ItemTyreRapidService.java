@@ -1,8 +1,9 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreRapidDTO;
+import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreLinglong;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreRapid;
-import org.rtss.mosad_backend.model_mapper.stock_management_model_mapper.ItemTyreRapidDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreRapidDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemTyreRapidRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,5 +51,9 @@ public class ItemTyreRapidService {
     public boolean deleteItemTyreRapid(ItemTyreRapidDTO itemTyreRapidDTO){
         itemTyreRapidRepo.delete(itemTyreRapidDTOMapper.ItemTyreRapidDtoToItemTyreRapid(itemTyreRapidDTO));
         return true;
+    }
+
+    public List<ItemTyreRapid> searchBySize(String tyreSize) {
+        return itemTyreRapidRepo.findBytyreSize(tyreSize);
     }
 }

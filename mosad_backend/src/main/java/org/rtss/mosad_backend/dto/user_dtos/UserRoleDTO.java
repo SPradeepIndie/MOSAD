@@ -1,9 +1,12 @@
 package org.rtss.mosad_backend.dto.user_dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserRoleDTO{
+
+    @NotBlank(message = "User role is Mandatory")
     private String roleName;
 
     public UserRoleDTO(String roleName) {

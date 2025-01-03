@@ -1,6 +1,6 @@
 package org.rtss.mosad_backend.service.login_user;
 
-import org.rtss.mosad_backend.repository.UsersRepo;
+import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

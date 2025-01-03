@@ -1,10 +1,14 @@
 package org.rtss.mosad_backend.dto.user_dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserLoginDTO {
+
+    @NotBlank(message = "Username is Mandatory")
     private String username;
+    @NotBlank(message = "Password is Mandatory")
     private String password;
 
     public UserLoginDTO(String username, String password) {

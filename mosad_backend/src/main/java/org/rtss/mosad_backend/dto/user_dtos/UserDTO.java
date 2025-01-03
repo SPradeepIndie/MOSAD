@@ -1,13 +1,24 @@
 package org.rtss.mosad_backend.dto.user_dtos;
 
+import jakarta.validation.constraints.*;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserDTO{
 
+    @NotBlank(message = "Username is Mandatory")
+    @Size(min = 3,max = 30,message = "Username should between 6 and 50 characters long.")
     private String username;
+
+    @NotBlank(message = "Firstname is Mandatory")
     private String firstName;
+
+    @NotNull(message = "Lastname object can not be null")
+    @Size(max = 30,message = "Lastname should maximum 30 characters long")
     private String lastName;
+
+    @NotNull(message = "Email object can not be null")
+    @Email(message = "Email should be valid (example@gmail.com)")
     private String email;
 
     public UserDTO() {

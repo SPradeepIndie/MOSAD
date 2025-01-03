@@ -3,7 +3,7 @@ package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreAtlanderDTO;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreAtlander;
-import org.rtss.mosad_backend.model_mapper.stock_management_model_mapper.ItemTyreAtlanderDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreAtlanderDTOMapper;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemTyreAtlanderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,6 +52,9 @@ public class ItemTyreAtlanderService {
         return true;
     }
 
+    public List<ItemTyreAtlander> searchBySize(String tyreSize) {
+        return itemTyreAtlanderRepo.findBytyreSize(tyreSize);
+    }
 
 
 
