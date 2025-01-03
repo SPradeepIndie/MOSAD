@@ -1,77 +1,37 @@
  import Grid from "@mui/material/Grid2";
  import { 
    TextField, 
-   Button, 
    FormControl, 
    InputLabel, 
    Select, 
    MenuItem, 
-   Box,
    Paper
  } from '@mui/material';
-import React,{ useState, useEffect } from "react";
+import { useState } from "react";
 
-const initialUser={
-    userDto:{
-        username:"",
-        firstName:"",
-        lastName:"",
-        email:""
-    },
-    password:"",
-    userRoleDto:{
-        roleName:""
-    },
-    userContactDto:[{
-        contactNum:"0112536722"
-    }]
-}
-// const useStyle=makeStyles(theme=>({
-//     root:{
-
-//     }
-// }))
-
-const UserDetailsForm=()=>{    
-    //use sate for add and view user
-    const [userData, setUserData] = useState(initialUser);
-   //const classes=useStyle()
-
-    //Use states for editing
-    const [editMode, setEditMode] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setUserData({ ...userData, [name]: value });
-    };
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission (add or update user)
-        if (editMode) {
-        // Update user logic (e.g., API call)
-        } else {
-        // Add user logic (e.g., API call)
-        }
-    };
-    
-    const handleEdit = (userId) => {
-        // Fetch user details by userId (e.g., API call)
-        // Set editMode to true
-        // Set selectedUserId
-    };
-    
-    const handleCancel = () => {
-        setEditMode(false);
-    };
-    
-    useEffect(() => {
-        // Fetch user details if there is token is saved
-        if (true) {
+export default function UserDetailsForm({
+    userData,
+    handleUserDtoChange,
+    handleUserContactDtoChange,
+    handleUserRoleDtoChange,
+    handlePasswordChange,
+    handleSubmit
+    }){
+    const initialPwds={
+        pwd_1:"",
+        pwd_2:""
+    }
         
-        }
-    }, []);
+    const[pwds,setPwds]=useState(initialPwds)
+    const[pwdMatcher,setPwdMatcher]=useState(false)
+
+    //user paswords  handling
+    const handlePwds = (event) => {
+        const { name, value } = event.target;
+        setPwds({ [name]: value });
+        pwds.pwd_2===pwds.pwd_1 ? setPwdMatcher(true) :setPwdMatcher(false);
+    };
+
 
     return(
         <form onSubmit={handleSubmit} >
@@ -81,9 +41,9 @@ const UserDetailsForm=()=>{
                         <TextField 
                         label="First name" 
                         variant="outlined" 
-                        name="firstname" 
+                        name="firstName" 
                         value={userData.userDto.firstName} 
-                        onChange={handleChange} 
+                        onChange={handleUserDtoChange} 
                         fullWidth 
                         />
                     </Grid>
@@ -91,9 +51,9 @@ const UserDetailsForm=()=>{
                         <TextField 
                         label="Last name" 
                         variant="outlined" 
-                        name="lastname" 
+                        name="lastName" 
                         value={userData.userDto.lastName} 
-                        onChange={handleChange} 
+                        onChange={handleUserDtoChange} 
                         fullWidth 
                         />
                     </Grid>
@@ -104,7 +64,7 @@ const UserDetailsForm=()=>{
                             variant="outlined" 
                             name="username" 
                             value={userData.userDto.username} 
-                            onChange={handleChange} 
+                            onChange={handleUserDtoChange} 
                             fullWidth 
                         />
                     </Grid>
@@ -115,19 +75,18 @@ const UserDetailsForm=()=>{
                         variant="outlined" 
                         name="email" 
                         value={userData.userDto.email} 
-                        onChange={handleChange} 
+                        onChange={handleUserDtoChange} 
                         fullWidth 
                     />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
                      {/* User contact */}
                         <TextField 
-                        type='password'
                         label="User contact" 
                         variant="outlined" 
                         name="contactNum" 
-                        value={userData.password} 
-                        onChange={handleChange} 
+                        value={userData.userContactDto.contactNum} 
+                        onChange={handleUserContactDtoChange} 
                         fullWidth 
                         />
                     </Grid>
@@ -141,11 +100,12 @@ const UserDetailsForm=()=>{
                 <FormControl fullWidth>
                     <InputLabel id="role-label">Role</InputLabel>
                     <Select 
-                    labelId="role-label" 
-                    id="role" 
-                    value={userData.userRoleDto.roleName} 
-                    onChange={handleChange} 
-                    label="Role"
+                        name="roleName"
+                        labelId="role-label" 
+                        id="role" 
+                        value={userData.userRoleDto.roleName} 
+                        onChange={handleUserRoleDtoChange} 
+                        label="Role"
                     >
                     <MenuItem value="ADMIN">Admin</MenuItem>
                     <MenuItem value="OWNER">User</MenuItem>
@@ -166,9 +126,9 @@ const UserDetailsForm=()=>{
                     type='password'
                     label="Password" 
                     variant="outlined" 
-                    name="password" 
-                    value={userData.password} 
-                    onChange={handleChange} 
+                    name="pwd_1" 
+                    value={pwds.pwd_1} 
+                    onChange={handlePwds} 
                     fullWidth 
                 />
                 </Grid>
@@ -177,33 +137,14 @@ const UserDetailsForm=()=>{
                     type='password'
                     label="Re-enter Password" 
                     variant="outlined" 
-                    name="password" 
-                    value={userData.password} 
-                    onChange={handleChange} 
+                    name="pwd_2" 
+                    value={pwds.pwd_2} 
+                    onChange={handlePwds} 
                     fullWidth 
                 />
                  </Grid>
                  </Grid>
             </Paper>
-            
-            <Box sx={{p:2,m:2}} spacing={2}>
-                <Button  variant="contained" color="primary">
-                    Add user
-                </Button>
-                <Button  variant="contained" color="primary">
-                    Delete
-                </Button>
-                <Button type="submit" variant="contained" color="primary" onClick={()=>setEditMode(true)}>
-                    {editMode ? 'Save' : 'Edit'}
-                </Button>
-                {editMode && (
-                    <Button variant="outlined" onClick={handleCancel}>
-                    Cancel
-                    </Button>
-                )}
-            </Box>
         </form>
     );
 }
-
-export default UserDetailsForm
