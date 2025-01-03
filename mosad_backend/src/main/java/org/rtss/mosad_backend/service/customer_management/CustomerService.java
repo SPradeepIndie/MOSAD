@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.service;
+package org.rtss.mosad_backend.service.customer_management;
 
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
@@ -6,8 +6,8 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOM
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
-import org.rtss.mosad_backend.repository.CustomerContactRepository;
-import org.rtss.mosad_backend.repository.CustomerRepository;
+import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
+import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

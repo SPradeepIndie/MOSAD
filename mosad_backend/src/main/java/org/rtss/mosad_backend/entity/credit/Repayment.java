@@ -14,7 +14,7 @@ public class Repayment {
     private double amount;
 
     @ManyToOne
-    @JoinColumn(name = "credit_id", nullable = false)
+    @JoinColumn(name = "credit_id", nullable = true)
     private Credit credit;
 
     public Repayment() {
