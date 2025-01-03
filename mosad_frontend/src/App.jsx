@@ -4,7 +4,7 @@ import BillPage from './pages/bill_section/BillPage'
 import CreditPage from './pages/credit_section/CreditPage'
 import StockPage from './pages/stock_section/StockPage'
 import StockPageLayout from './pages/stock_section/StockPageLayout'
-import BranchPage from './pages/branch_section/BranchPage'
+import BranchPageLayout from './pages/branch_section/BranchPageLayout'
 import DackPage from './pages/dack_section/DackPage'
 import EmployeePage from './pages/employee_section/EmployeePage'
 import ReportPredictionPage from './pages/prediction_report_section/ReportPredictionPage'
@@ -15,62 +15,59 @@ import Footer from './component/Footer';
 import HeaderBar from './component/Header';
 import BrandPage from './pages/stock_section/BrandPage'
 import ItemView from './pages/stock_section/ItemView'
-import { Route,Routes,Navigate } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { Route,Routes} from 'react-router-dom';
 import { Box, Container } from '@mui/material'
 import UserManagement from './pages/users_section/UserManagement'
 import backgroundImage from './assets/bg-image.jpg';
-import { red } from '@mui/material/colors'
+import RoutesProtector from './RoutesProtector'
+import useAuth  from "./hooks/useAuth";
+import BranchPage from './pages/branch_section/BranchPage'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
   
-
-  useEffect(() => {
-    //Check if user is already logged in
-    const storedToken = localStorage.getItem('token'); 
-    if (storedToken) {
-      setIsLoggedIn(true); 
-    }
-  }, []);
+  const {auth}=useAuth()  
 
   return (
     <Container maxWidth="xl" disableGutters sx={{
       width:'100vw',
-      backgroundImage: `url(${!isLoggedIn && backgroundImage})`, // Apply background only on login page
+      backgroundImage: `url(${!auth.success && backgroundImage})`, // Apply background only on login page
       backgroundSize: 'cover', 
       backgroundPosition: 'center' ,
       height:'100vh'}}>
       <Box maxWidth="xl">
-        {isLoggedIn && <HeaderBar setIsLoggedIn={setIsLoggedIn}/>} 
+        { auth.success && <HeaderBar/>} 
       </Box>
       
-      <Box  sx={{ p: 3}} >
+      <Box  sx={{ p: 3,minHeight: '100vh'}} >
         <Routes>
-          <Route path='/'
-            element={!isLoggedIn ? <LoginPage setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} /> : <Navigate to="/home" replace />} /> 
-          <Route path="/home" 
-            element={isLoggedIn ? <HomePage /> : <Navigate to="/" replace />} />
-          <Route path="/stock" element={isLoggedIn ? <StockPageLayout /> : <Navigate to="/" replace />} > 
-            <Route index element={<StockPage />}/>
-            <Route path="brand" element={<BrandPage />}/>
-            <Route path="item-view" element={<ItemView />} /> 
+          <Route path='/' element={<LoginPage/>} /> 
+          <Route element={<RoutesProtector />}>
+            <Route path="/home" element={ <HomePage />} />
+
+            <Route path="/stock" element={ <StockPageLayout />} > 
+              <Route index element={<StockPage />}/>
+              <Route path="brand" element={<BrandPage />}/>
+              <Route path="item-view" element={<ItemView />} /> 
+            </Route>
+
+            <Route path="/branch" element={ <BranchPageLayout />} >
+              <Route index element={<BranchPage/>}/>
+            </Route>
+            <Route path="/credit" element={ <CreditPage />} />
+            <Route path="/bill" element={ <BillPage />} />
+            <Route path="/dack" element={ <DackPage />} />
+            <Route path="/retail" element={ <RetailPage />} />
+            <Route path="/future" element={ <ReportPredictionPage />} />
+            <Route path="/employee" element={ <EmployeePage />} />
+            <Route path="/services" element={ <ServicesPage />} />
+            
+            <Route path="/user" element={ <UserManagement />} />
           </Route>
-          <Route path="/branch" element={isLoggedIn ? <BranchPage /> : <Navigate to="/" replace />} />
-          <Route path="/credit" element={isLoggedIn ? <CreditPage /> : <Navigate to="/" replace />} />
-          <Route path="/bill" element={isLoggedIn ? <BillPage /> : <Navigate to="/" replace />} />
-          <Route path="/dack" element={isLoggedIn ? <DackPage /> : <Navigate to="/" replace />} />
-          <Route path="/retail" element={isLoggedIn ? <RetailPage /> : <Navigate to="/" replace />} />
-          <Route path="/future" element={isLoggedIn ? <ReportPredictionPage /> : <Navigate to="/" replace />} />
-          <Route path="/employee" element={isLoggedIn ? <EmployeePage /> : <Navigate to="/" replace />} />
-          <Route path="/services" element={isLoggedIn ? <ServicesPage /> : <Navigate to="/" replace />} />
-          <Route path="/user" element={isLoggedIn ? <UserManagement /> : <Navigate to="/" replace />} />
-        
         </Routes>
       </Box>
 
       <Box maxWidth="xl">
-        {isLoggedIn && <Footer />}
+        {auth.success && <Footer />}
       </Box>
     </Container>
   )
@@ -78,6 +75,3 @@ function App() {
 }
 
 export default App;
-
-
-
