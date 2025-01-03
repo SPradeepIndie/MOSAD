@@ -1,21 +1,16 @@
-import { CheckBox, Label, LockOutlined } from "@mui/icons-material";
-import { Avatar, Box, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
+import { CheckBox, LockOutlined } from "@mui/icons-material";
+import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from "../services/apiUserService";
+import useAuth from "../hooks/useAuth"
 
 
-const LoginPage = ({ setIsLoggedIn, isLoggedIn }) => {
+const LoginPage = () => {
+    const{setAuth}= useAuth();
+
     const navigate = useNavigate();
     const location = useLocation();
-
-    // Check if user is already logged in and try to navigate to home
-    useEffect(() => {
-        if (isLoggedIn && location.pathname === '/') {
-            navigate('/home');
-        }
-    }, [isLoggedIn, location.pathname]);
-
 
     //Request data inital state
     const initalLoginState = {
@@ -31,16 +26,12 @@ const LoginPage = ({ setIsLoggedIn, isLoggedIn }) => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await loginRequest(loginData);
-            const { success, message } = response.data;
-            localStorage.setItem('token', message);
-            setIsLoggedIn(true);
-            navigate('/home', { replace: true }); // Used replace to prevent back navigation
-        }
-        catch (err) {
-
-        }
+        const response = await loginRequest(loginData);
+        const { success, message } = response.data;
+        localStorage.setItem("token",message)
+        setAuth({message,success,username:loginData.username})
+        navigate('/home', { replace: true }); // Used replace to prevent back navigation
+       
     }
     return (
         <Container maxWidth="xs">
@@ -88,6 +79,7 @@ const LoginPage = ({ setIsLoggedIn, isLoggedIn }) => {
                                 </Grid2>
                                 <Grid2 size={{xs:12}} mb={1}>
                                     <TextField
+                                        type="password"
                                         name="password"
                                         placeholder="Password"
                                         fullWidth

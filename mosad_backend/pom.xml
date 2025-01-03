@@ -15,6 +15,14 @@
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
 		<java.version>21</java.version>
+		<sonar.organization>spradeepindie</sonar.organization>
+<!--		Sonar cloud build artifact-->
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+<!--		Sonar cloud code coverage-->
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/report-aggregate/target/site/
+			jacoco-aggregate/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -76,6 +84,8 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.6</version>
 		</dependency>
+
+<!--	For testing -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -85,6 +95,7 @@
 
 	<build>
 		<plugins>
+<!--			Maven jar build with manifest-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -92,6 +103,21 @@
 					<mainClass>org.rtss.mosad_backend.MosadBackendApplication</mainClass>
 					<layout>JAR</layout>
 				</configuration>
+			</plugin>
+<!--			Maven jar build with jacoco coverage-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<id>report-aggregate</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>report-aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
