@@ -5,26 +5,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemDeleteService {
-    @Autowired
-    private ItemBatteryRepo itemBatteryRepository;
+   
+    private final ItemBatteryRepo itemBatteryRepository;
 
-    @Autowired
-    private ItemTubeRepo itemTubeRepository;
+    private final ItemTubeRepo itemTubeRepository;
 
-    @Autowired
-    private ItemTyreAtlanderRepo itemTyreAtlanderRepository;
+    
+    private final ItemTyreAtlanderRepo itemTyreAtlanderRepository;
 
-    @Autowired
-    private ItemTyreLinglongRepo itemTyreLinglongRepository;
+    
+    private final ItemTyreLinglongRepo itemTyreLinglongRepository;
 
-    @Autowired
-    private ItemTyrePresaRepo itemTyrePresaRepository;
+    
+    private final ItemTyrePresaRepo itemTyrePresaRepository;
 
-    @Autowired
-    private ItemTyreRapidRepo itemTyreRapidRepository;
+    
+    private final ItemTyreRapidRepo itemTyreRapidRepository;
 
-    @Autowired
-    private ItemOtherAccessoriesRepo itemOtherAccessoriesRepository;
+    
+    private final ItemOtherAccessoriesRepo itemOtherAccessoriesRepository;
 
     // Method to delete item
     public boolean deleteItem(String category, String brand, Integer id) {
