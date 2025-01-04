@@ -6,6 +6,7 @@ import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
 import org.rtss.mosad_backend.service.credit_management.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +33,9 @@ public class CreditController {
 
     @PostMapping("/add-credit")
     public ResponseEntity<CreditDTO> addCredit(@RequestBody CreditDTO creditDTO) {
-        // Save the credit and return the saved DTO
-        return ResponseEntity.ok(creditService.saveCredit(creditDTO));
+        return ResponseEntity.ok(creditService.saveCredit(creditDTO)).getBody();
     }
+
 
     @PostMapping("/add-repayment")
     public ResponseEntity<RepaymentResponseDTO> addRepayment(@RequestBody RepaymentRequestDTO repaymentRequest) {

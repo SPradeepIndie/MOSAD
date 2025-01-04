@@ -5,11 +5,14 @@ import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.RepaymentDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.entity.credit.Repayment;
+import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.exceptions.CreditException;
 import org.rtss.mosad_backend.exceptions.RepaymentException;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
+import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +32,31 @@ public class CreditService {
 
     @Autowired
     private RepaymentDTOMapper repaymentDTOMapper;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     // Save credit
-    public CreditDTO saveCredit(CreditDTO creditDTO) {
-        try {
-            Credit credit = creditDTOMapper.toEntity(creditDTO);
-            return creditDTOMapper.toDTO(creditRepository.save(credit));
-        } catch (Exception ex) {
-            throw new CreditException("Failed to save credit: " + ex.getMessage());
+    public ResponseEntity<CreditDTO> saveCredit(CreditDTO creditDTO) {
+
+        if (creditDTO.getCustomerId() == null) {
+            throw new IllegalArgumentException("Customer ID must not be null ");
         }
+
+        // Fetch the Customer entity using customer_id from the DTO
+        Customer customer = customerRepository.findById(creditDTO.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + creditDTO.getCustomerId()));
+
+        // Map the CreditDTO to a Credit entity
+        Credit credit=creditDTOMapper.toEntity(creditDTO);
+        credit.setCustomer(customer); // Associate the Customer entity
+
+        // Save the Credit entity
+        Credit savedCredit = creditRepository.save(credit);
+
+        // Convert the saved Credit entity back to a DTO
+        return new ResponseEntity<>(creditDTOMapper.toDTOWithCustomer(savedCredit), HttpStatus.CREATED);
     }
+
 
     // Get all credits
     public List<CreditDTO> getAllCredits() {
