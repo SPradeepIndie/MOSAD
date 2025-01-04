@@ -29,7 +29,7 @@ public class ItemDeleteController {
             itemDeleteService.deleteItem(category, brand, itemId);
             return ResponseEntity.ok("Item deleted successfully.");
         } catch (IllegalArgumentException e) {
-            throw new ItemDeletionException("Invalid input provided: " + e.getMessage());
+            throw new ItemDeletionException("Invalid input provided : " + e.getMessage());
         }
     }
 }

@@ -1,6 +1,6 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 import org.rtss.mosad_backend.repository.stock_management_repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 @Service
