@@ -24,7 +24,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
+import GeneralMessage from '../../component/GeneralMessage';
 
 function Row({ row, onAddRepayment }) {
   const [open, setOpen] = useState(false);
@@ -134,7 +134,7 @@ function Row({ row, onAddRepayment }) {
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Basic date picker"
-                value={ null}
+                value={null}
                 onChange={(newValue) =>
                   setNewRepayment({ ...newRepayment, date: newValue ? newValue.toISOString() : null })
                 }
@@ -170,6 +170,7 @@ const CreditPage = () => {
   const [rows, setRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -194,6 +195,9 @@ const CreditPage = () => {
       const response = await addRepayment(creditId, repayment);
   
       console.log('Repayment added successfully:', response.data);
+
+      setMessage({ type: 'success', text: 'Repayment added successfully!' });
+      setTimeout(() => setMessage(null), 2000);
   
       // Update the rows state
       setRows((prevRows) =>
@@ -208,6 +212,8 @@ const CreditPage = () => {
       );
     } catch (error) {
       console.error('Error adding repayment:', error.response?.data || error.message);
+      setMessage({ type: 'error', text: 'Failed to add repayment!' });
+      setTimeout(() => setMessage(null), 2000);
     }
   };
   
@@ -233,6 +239,7 @@ const CreditPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+      {message && <GeneralMessage message={message} />}
       <Paper elevation={3} sx={{ padding: 3 }}>
         <TextField
           fullWidth

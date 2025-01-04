@@ -38,7 +38,8 @@ public class CreditController {
 
     @PostMapping("/add-repayment")
     public ResponseEntity<RepaymentResponseDTO> addRepayment(@RequestBody RepaymentRequestDTO repaymentRequest) {
-        return creditService.addRepayment(repaymentRequest);
+
+        return ResponseEntity.ok(creditService.addRepayment(repaymentRequest).getBody());
     }
 
 }
