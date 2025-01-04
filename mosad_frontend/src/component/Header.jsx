@@ -3,20 +3,21 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { React } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import SideDrawer from './SideDrawer';
+import useAuth from "../hooks/useAuth"
 
-function HeaderBar({ setIsLoggedIn }) {
- 
+
+function HeaderBar() {
   const navigate = useNavigate();
+  const{setAuth}= useAuth();
 
   const handleLogout = () => {
+    setAuth({message:"",success:false,username:""})
     // Remove token from local storage
     localStorage.removeItem('token');
-    setIsLoggedIn(false);
     // Redirect to login page
     navigate('/', { replace: true });
-
   };
 
   return (
@@ -35,7 +36,7 @@ function HeaderBar({ setIsLoggedIn }) {
 
         
         {/* Center: Professional Text */}
-        <Link to="/" style={{ textDecoration: 'none' ,flexGrow: 1}}> 
+        <Link to="/home" style={{ textDecoration: 'none' ,flexGrow: 1}}> 
         <Typography
           component="div"
           sx={{  
