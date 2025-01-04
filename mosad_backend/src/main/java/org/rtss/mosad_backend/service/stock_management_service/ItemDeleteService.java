@@ -25,6 +25,16 @@ public class ItemDeleteService {
     
     private final ItemOtherAccessoriesRepo itemOtherAccessoriesRepository;
 
+    public ItemDeleteService(ItemBatteryRepo itemBatteryRepository, ItemTubeRepo itemTubeRepository, ItemTyreAtlanderRepo itemTyreAtlanderRepository, ItemTyreLinglongRepo itemTyreLinglongRepository, ItemTyrePresaRepo itemTyrePresaRepository, ItemTyreRapidRepo itemTyreRapidRepository, ItemOtherAccessoriesRepo itemOtherAccessoriesRepository) {
+        this.itemBatteryRepository = itemBatteryRepository;
+        this.itemTubeRepository = itemTubeRepository;
+        this.itemTyreAtlanderRepository = itemTyreAtlanderRepository;
+        this.itemTyreLinglongRepository = itemTyreLinglongRepository;
+        this.itemTyrePresaRepository = itemTyrePresaRepository;
+        this.itemTyreRapidRepository = itemTyreRapidRepository;
+        this.itemOtherAccessoriesRepository = itemOtherAccessoriesRepository;
+    }
+
     // Method to delete item
     public boolean deleteItem(String category, String brand, Integer id) {
         switch (category.toLowerCase()) {
