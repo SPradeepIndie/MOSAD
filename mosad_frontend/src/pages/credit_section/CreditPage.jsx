@@ -188,7 +188,17 @@ const CreditPage = () => {
       incompleted: value === 'incompleted',
     });
   };
-  const selectedValue = state.all ? 'all' : state.completed ? 'completed' : 'incompleted';
+  let selectedValue;
+  if (state.all){
+    selectedValue = 'all';
+  }
+  else if (state.completed){
+    selectedValue = 'completed';
+  }
+  else {
+    selectedValue = 'incompleted';
+  }
+ 
 
 
   useEffect(() => {
