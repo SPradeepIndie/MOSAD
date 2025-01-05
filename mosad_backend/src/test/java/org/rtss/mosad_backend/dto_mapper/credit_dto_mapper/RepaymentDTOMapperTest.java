@@ -3,29 +3,24 @@ package org.rtss.mosad_backend.dto_mapper.credit_dto_mapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.credit_dtos.RepaymentDTO;
 import org.rtss.mosad_backend.entity.credit.Repayment;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RepaymentDTOMapperTest {
     private RepaymentDTOMapper repaymentDTOMapper;
-    private ModelMapper modelMapper;
 
     @BeforeEach
     void setUp() {
-        modelMapper = new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
         repaymentDTOMapper = new RepaymentDTOMapper(modelMapper);
     }
 
     @Test
-    void shouldMapRepaymentToRepaymentDTO() throws ParseException {
+    void shouldMapRepaymentToRepaymentDTO()  {
         //Given
         Repayment repayment = new Repayment();
         repayment.setRepaymentId(1L);

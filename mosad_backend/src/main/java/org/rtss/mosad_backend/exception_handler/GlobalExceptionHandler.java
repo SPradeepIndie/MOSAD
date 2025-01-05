@@ -25,12 +25,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RepaymentException.class)
-    public ResponseEntity<?> handleRepaymentException(RepaymentException e) {
+    public ResponseEntity<String> handleRepaymentException(RepaymentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler(CreditException.class)
-    public ResponseEntity<?> handleCreditNotFoundException(CreditException e) {
+    public ResponseEntity<String> handleCreditNotFoundException(CreditException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

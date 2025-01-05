@@ -6,7 +6,6 @@ import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
 import org.rtss.mosad_backend.service.credit_management.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -12,17 +12,17 @@ public class CreditDTO {
 
     private Date dueDate;
 
-    private Long customer_id;
+    private Long customerId;
 
 
     public CreditDTO() {
     }
 
-    public CreditDTO(Long creditId, double balance, Date dueDate,Long customer_id) {
+    public CreditDTO(Long creditId, double balance, Date dueDate,Long customerId) {
         this.creditId = creditId;
         this.balance = balance;
         this.dueDate = dueDate;
-        this.customer_id = customer_id;
+        this.customerId = customerId;
 
     }
 
@@ -51,10 +51,10 @@ public class CreditDTO {
     }
 
     public Long getCustomerId() {
-        return customer_id;
+        return customerId;
     }
 
-    public void setCustomerId(Long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

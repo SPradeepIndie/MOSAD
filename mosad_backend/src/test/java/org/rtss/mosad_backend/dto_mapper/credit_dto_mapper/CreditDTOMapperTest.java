@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.entity.credit.Credit;
-import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 
 class CreditDTOMapperTest {
     private CreditDTOMapper creditDTOMapper;

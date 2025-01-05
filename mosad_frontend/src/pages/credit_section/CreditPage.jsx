@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box, Container, Collapse, IconButton, Button, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Typography, Paper, TextField, Checkbox,
-  FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle,RadioGroup, Radio, FormControl
+  TableContainer, TableHead, TableRow, Typography, Paper, TextField,
+   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle,RadioGroup, Radio, FormControl
 } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
@@ -10,8 +10,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import GeneralMessage from '../../component/GeneralMessage';
+import PropTypes from 'prop-types';
 
-function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
+function Row({ row, onAddRepayment, setMessage,message}) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
@@ -42,7 +43,7 @@ function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
     <>
       
       
-      {state.all && remainingBalance >= 0 &&
+      
       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : 'white' }}>
         <TableCell>
           <IconButton
@@ -63,8 +64,8 @@ function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
         <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
           {remainingBalance}
         </TableCell>
-      </TableRow>}
-      {state.all &&
+      </TableRow>
+     
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -115,157 +116,7 @@ function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
           </Collapse>
         </TableCell>
       </TableRow>
-    }
-
-      {state.completed && remainingBalance == 0 &&
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : 'white' }}>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
-          <TableCell>{row.creditId}</TableCell>
-          <TableCell component="th" scope="row">
-            {row.customerName}
-          </TableCell>
-          <TableCell>{row.contactNumber}</TableCell>
-          <TableCell align="right">{row.balance}</TableCell>
-          <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
-          <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black', fontWeight: 'bold', fontSize: 20 }}>
-            {remainingBalance}
-          </TableCell>
-        </TableRow>}
-      {state.completed && remainingBalance == 0 &&
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  Repayment History
-                </Typography>
-                <Table size="small" aria-label="repayments">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Repayment ID</TableCell>
-                      <TableCell>Date</TableCell>
-                      <TableCell align="right">Amount ($)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.repayments.map((repayment) => (
-                      <TableRow key={repayment.repaymentId}>
-                        <TableCell>{repayment.repaymentId}</TableCell>
-                        <TableCell>{new Date(repayment.date).toLocaleDateString()}</TableCell>
-                        <TableCell align="right">{repayment.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                    <TableRow sx={{ borderTop: 2 }}>
-                      <TableCell colSpan={2}>
-                        <Typography variant="body1" fontWeight="bold">
-                          Total Repaid
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right" fontWeight="bold">
-                        {row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-                {remainingBalance != 0 &&
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={handleDialogOpen}
-                    sx={{ marginTop: 2, backgroundColor: '#4CAF50', color: 'white' }}
-                  >
-                    Add New Repayment
-                  </Button>
-                }
-
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      }
-
-      {state.incompleted && remainingBalance > 0 &&
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : 'white' }}>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
-            >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
-          </TableCell>
-          <TableCell>{row.creditId}</TableCell>
-          <TableCell component="th" scope="row">
-            {row.customerName}
-          </TableCell>
-          <TableCell>{row.contactNumber}</TableCell>
-          <TableCell align="right">{row.balance}</TableCell>
-          <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
-          <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black', fontWeight: 'bold', fontSize: 20 }}>
-            {remainingBalance}
-          </TableCell>
-        </TableRow>}
-      {state.incompleted && remainingBalance > 0 &&
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                  Repayment History
-                </Typography>
-                <Table size="small" aria-label="repayments">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Repayment ID</TableCell>
-                      <TableCell>Date</TableCell>
-                      <TableCell align="right">Amount ($)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.repayments.map((repayment) => (
-                      <TableRow key={repayment.repaymentId}>
-                        <TableCell>{repayment.repaymentId}</TableCell>
-                        <TableCell>{new Date(repayment.date).toLocaleDateString()}</TableCell>
-                        <TableCell align="right">{repayment.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                    <TableRow sx={{ borderTop: 2 }}>
-                      <TableCell colSpan={2}>
-                        <Typography variant="body1" fontWeight="bold">
-                          Total Repaid
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right" fontWeight="bold">
-                        {row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-                {remainingBalance != 0 &&
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={handleDialogOpen}
-                    sx={{ marginTop: 2, backgroundColor: '#4CAF50', color: 'white' }}
-                  >
-                    Add New Repayment
-                  </Button>
-                }
-
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      }
+    
 
       <Dialog 
         open={openDialog} 
@@ -315,7 +166,10 @@ function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
       
     </>
   );
+
+  
 }
+
 
 const CreditPage = () => {
   const [rows, setRows] = useState([]);
@@ -384,15 +238,20 @@ const CreditPage = () => {
 
 
 
-  const  filteredRows = rows.filter(
+  const filteredRows = rows.filter((row) => {
+    const remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
 
-      (row) =>
-        
-        row.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.contactNumber.toLowerCase().includes(searchText.toLowerCase()) ||
-        row.creditId.toString().includes(searchText) 
-        
-    );
+    if (state.all) return true; // Show all credits
+    if (state.completed) return remainingBalance === 0; // Show completed credits
+    if (state.incompleted) return remainingBalance > 0; // Show incomplete credits
+    return false;
+  }).filter(
+    (row) =>
+      row.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.contactNumber.toLowerCase().includes(searchText.toLowerCase()) ||
+      row.creditId.toString().includes(searchText)
+  );
+
  
 
 
@@ -458,7 +317,7 @@ const CreditPage = () => {
             </TableHead>
             <TableBody>
               {filteredRows.map((row) => (
-                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} state={state} setState={setState} />
+                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} />
               ))}
             </TableBody>
           </Table>
@@ -466,6 +325,33 @@ const CreditPage = () => {
       </Paper>
     </Container>
   );
+};
+
+// Add PropTypes for validation
+Row.propTypes = {
+  row: PropTypes.shape({
+    creditId: PropTypes.number.isRequired,
+    customerName: PropTypes.string.isRequired,
+    contactNumber: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
+    dueDate: PropTypes.string.isRequired,
+    repayments: PropTypes.arrayOf(
+      PropTypes.shape({
+        repaymentId: PropTypes.number.isRequired,
+        date: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+  onAddRepayment: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  message: PropTypes.oneOfType([
+    PropTypes.shape({
+      type: PropTypes.string,
+      text: PropTypes.string,
+    }),
+    PropTypes.oneOf([null]), // Allow null
+  ])
 };
 
 export default CreditPage;

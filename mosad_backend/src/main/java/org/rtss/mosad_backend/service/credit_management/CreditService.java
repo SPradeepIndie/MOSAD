@@ -21,19 +21,23 @@ import java.util.*;
 @Service
 public class CreditService {
 
-    @Autowired
-    private CreditRepository creditRepository;
+    private final CreditRepository creditRepository;
 
-    @Autowired
-    private RepaymentRepository repaymentRepository;
+    private final RepaymentRepository repaymentRepository;
 
-    @Autowired
-    private CreditDTOMapper creditDTOMapper;
+    private final CreditDTOMapper creditDTOMapper;
 
-    @Autowired
-    private RepaymentDTOMapper repaymentDTOMapper;
-    @Autowired
-    private CustomerRepository customerRepository;
+    private final RepaymentDTOMapper repaymentDTOMapper;
+
+    private final CustomerRepository customerRepository;
+
+    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, RepaymentDTOMapper repaymentDTOMapper, CustomerRepository customerRepository) {
+        this.creditRepository = creditRepository;
+        this.repaymentRepository = repaymentRepository;
+        this.creditDTOMapper = creditDTOMapper;
+        this.repaymentDTOMapper = repaymentDTOMapper;
+        this.customerRepository = customerRepository;
+    }
 
     // Save credit
     public ResponseEntity<CreditDTO> saveCredit(CreditDTO creditDTO) {
