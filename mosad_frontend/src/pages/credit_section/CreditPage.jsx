@@ -1,32 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { addRepayment,fetchAllCreditDetails } from '../../services/apiCreditService';
+import {
+  Box, Container, Collapse, IconButton, Button, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Typography, Paper, TextField, Checkbox,
+  FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle,RadioGroup, Radio, FormControl
+} from '@mui/material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import GeneralMessage from '../../component/GeneralMessage';
 
 function Row({ row, onAddRepayment, setMessage,message,state,setState}) {
@@ -340,34 +322,17 @@ const CreditPage = () => {
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
-  const [state, setState] = useState({all: true ,completed: false,incompleted: false,});
+  const [state, setState] = useState({all: false ,completed: false,incompleted: true,});
 
-  const handleCheckBoxes = (event) => {
-    const { name, checked } = event.target;
+  const handleRadioChange = (event) => {
+    const { value } = event.target;
 
-    if (name === 'all') {
-      // If "All Credits" is toggled, reset other checkboxes
-      setState({
-        all: checked,
-        completed: false,
-        incompleted: false,
-      });
-    } else if(name==='completed'){
-      // If "Completed" uncheck "All Credits"
-      setState({
-        all: false,
-        completed: checked,
-        incompleted: false,
-      });
-
-    }
-    else if(name==='incompleted'){
-      setState({
-        all: false,
-        completed: false,
-        incompleted: checked,
-      });
-    }
+    // Update state based on selected radio button
+    setState({
+      all: value === 'all',
+      completed: value === 'completed',
+      incompleted: value === 'incompleted',
+    });
   };
   
 
@@ -454,38 +419,30 @@ const CreditPage = () => {
           onChange={(e) => setSearchText(e.target.value)}
           sx={{ marginBottom: 2 }}
         />
-        <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.all}
-                onChange={handleCheckBoxes}
-                name="all"
-              />
-            }
-            label="All"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.completed}
-                onChange={handleCheckBoxes}
-                name="completed"
-              />
-            }
-            label="Completed"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.incompleted}
-                onChange={handleCheckBoxes}
-                name="incompleted"
-              />
-            }
-            label="Incomplete"
-          />
-        </FormGroup>
+        <FormControl>
+          <RadioGroup
+            row
+            name="creditOptions"
+            value={state.all ? 'all' : state.completed ? 'completed' : 'incompleted'}
+            onChange={handleRadioChange}
+          >
+            <FormControlLabel
+              value="all"
+              control={<Radio />}
+              label="All Credits"
+            />
+            <FormControlLabel
+              value="completed"
+              control={<Radio />}
+              label="Completed Credits"
+            />
+            <FormControlLabel
+              value="incompleted"
+              control={<Radio />}
+              label="Incomplete Credits"
+            />
+          </RadioGroup>
+        </FormControl>
         <TableContainer sx={{ maxHeight: 400 }}>
           <Table stickyHeader aria-label="collapsible table">
             <TableHead>
