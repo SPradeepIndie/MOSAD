@@ -146,19 +146,24 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             type="number"
             fullWidth
             variant="outlined"
+            helperText={`Remaining Balance: ${remainingBalance}`}
+            error={newRepayment.amount > remainingBalance}
             value={newRepayment.amount}
             onChange={(e) => setNewRepayment({ ...newRepayment, amount: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button
-            onClick={handleAddRepayment}
-            variant="contained"
-            sx={{ backgroundColor: '#4CAF50', color: 'white' }}
-          >
-            Add
-          </Button>
+          { 
+            <Button
+              onClick={handleAddRepayment}
+              variant="contained"
+              disabled={!newRepayment.date || !newRepayment.amount || newRepayment.amount > remainingBalance}
+              sx={{ backgroundColor: '#4CAF50', color: 'white' }}
+            >
+              Add
+            </Button>
+    }  
         </DialogActions>
         
       </Dialog>
@@ -248,9 +253,9 @@ const CreditPage = () => {
   
 
 
-
+let remainingBalance;
   const filteredRows = rows.filter((row) => {
-    const remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
+     remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
 
     if (state.all) return true; // Show all credits
     if (state.completed) return remainingBalance === 0; // Show completed credits
@@ -280,39 +285,85 @@ const CreditPage = () => {
     <Container maxWidth="lg" sx={{ marginTop: 4 }}>
      
       <Paper elevation={3} sx={{ padding: 3 }}>
+      <FormControl component="fieldset" sx={{ width: '100%' }}>
+  {/* Top Row: Search Field and Radio Group */}
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 2,
+    }}
+  >
+    {/* Search Field */}
+    <TextField
+      fullWidth
+      size="small"
+      label="Search By Name / Contact Number / Credit ID"
+      variant="outlined"
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+      sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
+    />
 
-        <TextField
-          fullWidth
-          label="Search By Name / Contact Number / Credit ID"
-          variant="outlined"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          sx={{ marginBottom: 2 }}
-        />
-        <FormControl>
-          <RadioGroup
-            row
-            name="creditOptions"
-            value={selectedValue}
-            onChange={handleRadioChange}
-          >
-            <FormControlLabel
-              value="all"
-              control={<Radio />}
-              label="All Credits"
-            />
-            <FormControlLabel
-              value="completed"
-              control={<Radio />}
-              label="Completed Credits"
-            />
-            <FormControlLabel
-              value="incompleted"
-              control={<Radio />}
-              label="Incomplete Credits"
-            />
-          </RadioGroup>
-        </FormControl>
+    {/* Radio Buttons */}
+    <RadioGroup
+      row
+      name="creditOptions"
+      value={selectedValue}
+      onChange={handleRadioChange}
+      sx={{
+        justifyContent: 'flex-end', // Align buttons to the right
+        flex: '0 1 auto', // Prevent buttons from stretching
+      }}
+    >
+      <FormControlLabel
+        value="all"
+        control={<Radio size="small" />}
+        label={<Typography variant="body2">All Credits</Typography>}
+      />
+      <FormControlLabel
+        value="completed"
+        control={<Radio size="small" />}
+        label={<Typography variant="body2">Completed Credits</Typography>}
+      />
+      <FormControlLabel
+        value="incompleted"
+        control={<Radio size="small" />}
+        label={<Typography variant="body2">Incomplete Credits</Typography>}
+      />
+    </RadioGroup>
+  </Box>
+
+  {/* Stats Section */}
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: 2,
+      marginTop: 2,
+    }}
+  >
+    
+    <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+      <Typography variant="subtitle2">Total Incomplete Credits</Typography>
+      <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+        {rows.filter((row) => row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0) > 0).length}
+      </Typography>
+    </Box>
+    <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+      <Typography variant="subtitle2">Total Remaining Balance</Typography>
+      <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+        {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
+      </Typography>
+    </Box>
+    
+  </Box>
+</FormControl>
+
+
+
+      
         <TableContainer sx={{ maxHeight: 400 }}>
           <Table stickyHeader aria-label="collapsible table">
             <TableHead>
