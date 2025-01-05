@@ -27,7 +27,6 @@ public class ItemSearchController {
         return ResponseEntity.ok(brands);
     }
 
-
     @GetMapping("/brand")
     public ResponseEntity<?> searchByBrandAndSize(
             @RequestParam String brand,

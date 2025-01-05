@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { Box, TextField, Button, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 import axios from "axios";
 
 const SearchComponent = ({ onSearchResult }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
-  const [size, setSize] = useState(""); // Holds the entered tyre size
+  const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
+  const [results, setResults] = useState([]); // Holds search results
   const [error, setError] = useState(""); // Error message for search failures
-  const [loading, setLoading] = useState(false); // Loading state for fetching brands
+  const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
   // Fetch available brands when the component mounts
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        setLoading(true);
+        setLoadingBrands(true);
         const response = await axios.get("/api/search/brands");
         if (response.status === 200 && Array.isArray(response.data)) {
           setBrands(response.data); // Set brands if the API response is an array
@@ -25,7 +42,7 @@ const SearchComponent = ({ onSearchResult }) => {
         console.error("Failed to fetch brands:", err);
         setError("Failed to load brands. Please try again.");
       } finally {
-        setLoading(false);
+        setLoadingBrands(false);
       }
     };
     fetchBrands();
@@ -34,13 +51,15 @@ const SearchComponent = ({ onSearchResult }) => {
   const handleSearch = async () => {
     try {
       setError(""); // Clear any previous error
-      const response = await axios.get("/api/search/brand", {
+      const response = await axios.get("/api/search/tyres", {
         params: { brand, size },
       });
-      if (response.status === 200) {
-        onSearchResult(response.data); // Pass results to parent component
+      if (response.status === 200 && Array.isArray(response.data)) {
+        setResults(response.data); // Set search results
+        onSearchResult(response.data); // Pass results to parent if needed
       } else {
-        onSearchResult([]); // Clear results if no content
+        setResults([]); // Clear results if no content
+        setError("No results found.");
       }
     } catch (err) {
       console.error("Search request failed:", err);
@@ -53,7 +72,7 @@ const SearchComponent = ({ onSearchResult }) => {
       <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
         Search Tyres
       </Typography>
-      {loading ? (
+      {loadingBrands ? (
         <Typography>Loading brands...</Typography>
       ) : (
         <FormControl fullWidth>
@@ -74,20 +93,46 @@ const SearchComponent = ({ onSearchResult }) => {
       )}
       <TextField
         label="Size"
+        variant="outlined"
         value={size}
         onChange={(e) => setSize(e.target.value)}
-        variant="outlined"
         fullWidth
       />
       <Button
         variant="contained"
         color="primary"
         onClick={handleSearch}
-        disabled={loading || !brands.length}
+        disabled={loadingBrands || !brand || !size}
       >
         Search
       </Button>
       {error && <Typography color="error">{error}</Typography>}
+
+      {/* Results Table */}
+      {results.length > 0 && (
+        <TableContainer component={Paper} sx={{ mt: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Brand</TableCell>
+                <TableCell>Size</TableCell>
+                <TableCell>Pattern</TableCell>
+                <TableCell>Price</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {results.map((result, index) => (
+                <TableRow key={index}>
+                  <TableCell>{result.brand}</TableCell>
+                  <TableCell>{result.size}</TableCell>
+                  <TableCell>{result.pattern}</TableCell>
+                  <TableCell>{result.price}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };

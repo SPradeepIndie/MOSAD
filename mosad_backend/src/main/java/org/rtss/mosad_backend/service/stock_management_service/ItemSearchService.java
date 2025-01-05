@@ -25,6 +25,7 @@ public class ItemSearchService {
         this.rapidService = rapidService;
     }
 
+    // Search tyres by brand and size
     public List<?> searchByBrandAndSize(String brand, String size) {
         switch (brand.toLowerCase()) {
             case "atlander":
@@ -40,7 +41,12 @@ public class ItemSearchService {
         }
     }
 
+    // Get available brands
     public List<String> getAvailableBrands() {
         return List.of("Atlander", "Linglong", "Presa", "Rapid");
     }
+
+    // Get available sizes for a specific brand
+
+
 }
