@@ -188,7 +188,8 @@ const CreditPage = () => {
       incompleted: value === 'incompleted',
     });
   };
-  
+  const selectedValue = state.all ? 'all' : state.completed ? 'completed' : 'incompleted';
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -282,7 +283,7 @@ const CreditPage = () => {
           <RadioGroup
             row
             name="creditOptions"
-            value={state.all ? 'all' : state.completed ? 'completed' : 'incompleted'}
+            value={selectedValue}
             onChange={handleRadioChange}
           >
             <FormControlLabel
