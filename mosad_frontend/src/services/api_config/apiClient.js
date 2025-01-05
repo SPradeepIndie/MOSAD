@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/api/v1/',
+    baseURL: 'http://localhost:8080/api/v1',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -10,13 +10,9 @@ const apiClient = axios.create({
 apiClient.interceptors.response.use(
   response => response,
   async error => {
-    // User login unauthrized area
-    if (error.response.status === 401) {
-      alert("Unauthorized")
-    } 
     // If the error status is 401 and there is no originalRequest._retry flag,
     // it means the token has expired and we need to refresh it
-    else if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -32,7 +28,12 @@ apiClient.interceptors.response.use(
       } catch (error) {
         // Handle refresh token error or redirect to login
       }
-    }else if (error.response.status === 404) {
+    }
+    // User login unauthrized area
+    else if (error.response.status === 401) {
+      alert("Unauthorized")
+    } 
+    else if (error.response.status === 404) {
       alert(" Not found")
     }
     else if(error.response.status === 400){

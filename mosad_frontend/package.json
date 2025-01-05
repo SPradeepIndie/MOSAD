@@ -16,12 +16,21 @@
     "@mui/material": "^6.2.1",
     "axios": "^1.7.9",
     "boostrap": "^2.0.0",
+
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-material-ui-carousel": "^3.4.2",
     "react-modal": "^3.16.3",
     "react-router-dom": "^7.1.1",
-    "react-to-print": "^3.0.4"
+    "react-to-print": "^3.0.4",
+
+    "mosad_frontend": "file:",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-material-ui-carousel": "^3.4.2",
+    "react-modal": "^3.16.1",
+    "react-router-dom": "^7.0.2"
+
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
