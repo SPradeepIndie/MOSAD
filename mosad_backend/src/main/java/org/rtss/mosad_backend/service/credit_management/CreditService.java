@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.service.credit_management;
 
 import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
-import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.RepaymentDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.entity.credit.Repayment;
 import org.rtss.mosad_backend.entity.customer.Customer;
@@ -11,7 +10,6 @@ import org.rtss.mosad_backend.exceptions.RepaymentException;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,15 +25,12 @@ public class CreditService {
 
     private final CreditDTOMapper creditDTOMapper;
 
-    private final RepaymentDTOMapper repaymentDTOMapper;
-
     private final CustomerRepository customerRepository;
 
-    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, RepaymentDTOMapper repaymentDTOMapper, CustomerRepository customerRepository) {
+    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, CustomerRepository customerRepository) {
         this.creditRepository = creditRepository;
         this.repaymentRepository = repaymentRepository;
         this.creditDTOMapper = creditDTOMapper;
-        this.repaymentDTOMapper = repaymentDTOMapper;
         this.customerRepository = customerRepository;
     }
 

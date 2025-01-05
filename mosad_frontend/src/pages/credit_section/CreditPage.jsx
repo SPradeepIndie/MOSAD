@@ -310,7 +310,7 @@ const CreditPage = () => {
                 <TableCell>Credit ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
-                <TableCell align="right">Balance ($)</TableCell>
+                <TableCell align="right">Credit Amount ($)</TableCell>
                 <TableCell>Due Date</TableCell>
                 <TableCell align="right">Remaining Balance ($)</TableCell>
               </TableRow>
