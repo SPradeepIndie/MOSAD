@@ -285,89 +285,86 @@ let remainingBalance;
     <Container maxWidth="lg" sx={{ marginTop: 4 }}>
      
       <Paper elevation={3} sx={{ padding: 3 }}>
-      <FormControl component="fieldset" sx={{ width: '100%' }}>
-  {/* Top Row: Search Field and Radio Group */}
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginBottom: 2,
-    }}
-  >
-    {/* Search Field */}
-    <TextField
-      fullWidth
-      size="small"
-      label="Search By Name / Contact Number / Credit ID"
-      variant="outlined"
-      value={searchText}
-      onChange={(e) => setSearchText(e.target.value)}
-      sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
-    />
+        <FormControl component="fieldset" sx={{ width: '100%' }}>
+          {/* Top Row: Search Field and Radio Group */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 2,
+            }}
+          >
+            {/* Search Field */}
+            <TextField
+              fullWidth
+              size="small"
+              label="Search By Name / Contact Number / Credit ID"
+              variant="outlined"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
+            />
 
-    {/* Radio Buttons */}
-    <RadioGroup
-      row
-      name="creditOptions"
-      value={selectedValue}
-      onChange={handleRadioChange}
-      sx={{
-        justifyContent: 'flex-end', // Align buttons to the right
-        flex: '0 1 auto', // Prevent buttons from stretching
-      }}
-    >
-      <FormControlLabel
-        value="all"
-        control={<Radio size="small" />}
-        label={<Typography variant="body2">All Credits</Typography>}
-      />
-      <FormControlLabel
-        value="completed"
-        control={<Radio size="small" />}
-        label={<Typography variant="body2">Completed Credits</Typography>}
-      />
-      <FormControlLabel
-        value="incompleted"
-        control={<Radio size="small" />}
-        label={<Typography variant="body2">Incomplete Credits</Typography>}
-      />
-    </RadioGroup>
-  </Box>
+            {/* Radio Buttons */}
+            <RadioGroup
+              row
+              name="creditOptions"
+              value={selectedValue}
+              onChange={handleRadioChange}
+              sx={{
+                justifyContent: 'flex-end', // Align buttons to the right
+                flex: '0 1 auto', // Prevent buttons from stretching
+              }}
+            >
+              <FormControlLabel
+                value="all"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">All Credits</Typography>}
+              />
+              <FormControlLabel
+                value="completed"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">Completed Credits</Typography>}
+              />
+              <FormControlLabel
+                value="incompleted"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">Incomplete Credits</Typography>}
+              />
+            </RadioGroup>
+          </Box>
 
-  {/* Stats Section */}
-  <Box
-    sx={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: 2,
-      marginTop: 2,
-    }}
-  >
-    
-    <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
-      <Typography variant="subtitle2">Total Incomplete Credits</Typography>
-      <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
-        {rows.filter((row) => row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0) > 0).length}
-      </Typography>
-    </Box>
-    <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
-      <Typography variant="subtitle2">Total Remaining Balance</Typography>
-      <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
-        {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
-      </Typography>
-    </Box>
-    
-  </Box>
-</FormControl>
+          {/* Stats Section */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 2,
+              marginTop: 2,
+            }}
+          >
 
+            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+              <Typography variant="subtitle2">Total Incomplete Credits</Typography>
+              <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                {rows.filter((row) => row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0) > 0).length}
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+              <Typography variant="subtitle2">Total Remaining Balance</Typography>
+              <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
+              </Typography>
+            </Box>
 
-
-      
+          </Box>
+        </FormControl>
+ 
         <TableContainer sx={{ maxHeight: 400 }}>
-          <Table stickyHeader aria-label="collapsible table">
-            <TableHead>
-              <TableRow  >
+          <Table stickyHeader aria-label="collapsible table" >
+            <TableHead >
+              <TableRow  sx={{ backgroundColor: 'red' }}>
                 <TableCell />
                 <TableCell>Credit ID</TableCell>
                 <TableCell>Customer Name</TableCell>
