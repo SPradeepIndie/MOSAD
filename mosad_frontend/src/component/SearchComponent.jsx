@@ -16,7 +16,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import axios from "axios";
+import { fetchBrands } from "../services/apiStockService";
 
 const SearchComponent = ({ onSearchResult }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
@@ -26,27 +26,38 @@ const SearchComponent = ({ onSearchResult }) => {
   const [error, setError] = useState(""); // Error message for search failures
   const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
+
+  async function getBrands(){
+    return fetchBrands().then((result) => {
+        return result;
+      }).catch((error) => {
+        return null;
+      });
+  }
+
   // Fetch available brands when the component mounts
   useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        setLoadingBrands(true);
+    const loadbrands = async () => {
+    try {
+      const response = await getBrands();
+      if (response.status === 200 && Array.isArray(response.data)) {
+          // Set brands if the API response is an array
+          setBrands(response.data);
         
-        const response = await axios.get("/api/search/brands");
-        if (response.status === 200 && Array.isArray(response.data)) {
-          setBrands(response.data); // Set brands if the API response is an array
-        } else {
-          setBrands([]); // Default to an empty array if response is unexpected
-          console.error("Unexpected response from the server:", response);
-        }
-      } catch (err) {
-        console.error("Failed to fetch brands:", err);
-        setError("Failed to load brands. Please try again.");
-      } finally {
-        setLoadingBrands(false);
+      } else {
+        setBrands([]); // Default to an empty array if response is unexpected
+        console.log(response.data)
+        console.error("Unexpected response from the server:", response);
       }
-    };
-    fetchBrands();
+    } catch (err) {
+      console.error("Failed to fetch brands:", err);
+      setError("Failed to load brands. Please try again.");
+    } finally {
+      setLoadingBrands(false);
+    }
+  }   
+    loadbrands();
+    
   }, []);
 
   const handleSearch = async () => {

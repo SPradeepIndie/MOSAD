@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/api/v1/search")
 public class ItemSearchController {
 
     private final ItemSearchService itemSearchService;
@@ -22,8 +22,9 @@ public class ItemSearchController {
     }
 
     @GetMapping("/brands")
-    public ResponseEntity<List<String>> getAvailableBrands() {
+    public ResponseEntity getAvailableBrands() {
         List<String> brands = itemSearchService.getAvailableBrands();
+
         return ResponseEntity.ok(brands);
     }
 
