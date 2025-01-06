@@ -10,6 +10,14 @@ public class RepaymentRequestDTO {
     private Date date;
     private double amount;
 
+    public RepaymentRequestDTO() {}
+
+    public RepaymentRequestDTO(Long creditId, Date date, double amount) {
+        this.creditId = creditId;
+        this.date = date;
+        this.amount = amount;
+    }
+
     public Long getCreditId() {
         return creditId;
     }

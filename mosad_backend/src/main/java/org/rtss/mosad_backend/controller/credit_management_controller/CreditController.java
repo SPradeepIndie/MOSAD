@@ -32,13 +32,14 @@ public class CreditController {
 
     @PostMapping("/add-credit")
     public ResponseEntity<CreditDTO> addCredit(@RequestBody CreditDTO creditDTO) {
-        // Save the credit and return the saved DTO
-        return ResponseEntity.ok(creditService.saveCredit(creditDTO));
+        return ResponseEntity.ok(creditService.saveCredit(creditDTO)).getBody();
     }
+
 
     @PostMapping("/add-repayment")
     public ResponseEntity<RepaymentResponseDTO> addRepayment(@RequestBody RepaymentRequestDTO repaymentRequest) {
-        return creditService.addRepayment(repaymentRequest);
+
+        return ResponseEntity.ok(creditService.addRepayment(repaymentRequest).getBody());
     }
 
 }
