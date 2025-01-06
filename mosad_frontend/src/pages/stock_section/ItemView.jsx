@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsSection from "../../component/ItemDetailsSection";

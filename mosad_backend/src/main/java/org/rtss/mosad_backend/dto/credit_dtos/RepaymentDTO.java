@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.dto.credit_dtos;
 
+import org.rtss.mosad_backend.entity.credit.Credit;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ public class RepaymentDTO {
     private Date date;
     private double amount;
 
+
     public RepaymentDTO() {
 
     }
@@ -18,6 +20,7 @@ public class RepaymentDTO {
         this.repaymentId = repaymentId;
         this.date = date;
         this.amount = amount;
+
     }
 
     public Long getRepaymentId() {
@@ -43,4 +46,6 @@ public class RepaymentDTO {
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
+
 }
