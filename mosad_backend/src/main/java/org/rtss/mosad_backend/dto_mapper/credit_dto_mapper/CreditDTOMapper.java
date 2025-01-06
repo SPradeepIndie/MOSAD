@@ -32,4 +32,8 @@ public class CreditDTOMapper {
         return creditDTOS;
 
     }
+
+    public CreditDTO toDTOWithCustomer(Credit credit){
+        return new CreditDTO(credit.getCreditId(),credit.getBalance(),credit.getDueDate(),credit.getCustomer().getId());
+    }
 }
