@@ -9,7 +9,7 @@ const GeneralMessage = ({ message}) => {
         position: "fixed", // Makes the message fixed on the screen
         top: "10px", // Distance from the top
         right: "10px", // Distance from the right
-        zIndex: 1000, // Ensures it stays above other elements
+        zIndex: 1400, // Ensures it stays above other elements
       }}
     >
       {message.text}
