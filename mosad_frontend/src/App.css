@@ -1,1 +1,42 @@
 
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding: 2rem;
+  text-align: center;
+}
+@media print {
+  /* Hide the print button */
+  .print-button {
+    display: none;
+  }
+
+  /* Hide unnecessary elements (e.g., footers, headers, etc.) */
+  .no-print {
+    display: none;
+  }
+
+  /* Optional: Remove margins/padding to use more space */
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Set the table's width to fit the print page */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Remove any unnecessary borders or spacing */
+  td,
+  th {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+  }
+}
+
+
