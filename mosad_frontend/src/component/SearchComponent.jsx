@@ -31,6 +31,7 @@ const SearchComponent = ({ onSearchResult }) => {
     const fetchBrands = async () => {
       try {
         setLoadingBrands(true);
+        
         const response = await axios.get("/api/search/brands");
         if (response.status === 200 && Array.isArray(response.data)) {
           setBrands(response.data); // Set brands if the API response is an array
