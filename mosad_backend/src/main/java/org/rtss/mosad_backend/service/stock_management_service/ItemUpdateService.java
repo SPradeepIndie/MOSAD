@@ -23,7 +23,7 @@ public class ItemUpdateService {
         Optional<Item> existingItem = itemRepository.findById(itemId);
 
         if (existingItem.isEmpty()) {
-            throw new ItemUpdateException("Item with ID " + itemId + " not found.");
+            throw new ItemUpdateException("Item with ID  " + itemId + " not found.");
         }
 
         Item item = existingItem.get();

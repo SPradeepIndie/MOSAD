@@ -27,7 +27,7 @@ public class ItemUpdateContoller {
             @RequestBody ItemUpdateDTO updateDTO) {
         try {
             itemUpdateService.updateItem(itemId, updateDTO);
-            return ResponseEntity.ok("Item updated successfully.");
+            return ResponseEntity.ok("Item updated successfully...");
         } catch (ItemUpdateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

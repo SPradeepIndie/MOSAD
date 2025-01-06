@@ -6,7 +6,7 @@ public class ItemUpdateDTO {
 
     private String size;
 
-    private String brand;
+    private Brand brand;
     private String name;
     private int quantity;
     private double price;
@@ -15,7 +15,7 @@ public class ItemUpdateDTO {
     public ItemUpdateDTO() {}
 
     // Parameterized constructor
-    public ItemUpdateDTO(String name, int quantity, double price, String brand, String size) {
+    public ItemUpdateDTO(String name, int quantity, double price, Brand brand, String size) {
         this.name = name;
         this.brand = brand;
         this.size = size;
@@ -40,7 +40,7 @@ public class ItemUpdateDTO {
         return brand;
     }
 
-    public void setBrand(String brand) {
+    public void setBrand(Brand brand) {
         this.brand = brand;
     }
 
