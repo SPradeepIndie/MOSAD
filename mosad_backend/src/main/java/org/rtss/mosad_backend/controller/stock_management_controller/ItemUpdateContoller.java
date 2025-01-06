@@ -29,7 +29,7 @@ public class ItemUpdateContoller {
             itemUpdateService.updateItem(itemId, updateDTO);
             return ResponseEntity.ok("Item updated successfully...");
         } catch (ItemUpdateException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Failed to update the item.");
         }
     }
 }
