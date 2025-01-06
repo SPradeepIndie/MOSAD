@@ -14,7 +14,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [bannerImage, setBannerImage] = useState("");
 
 
-  const title="tyre_linglong";
+  const title=toString(selectedBrand).toLowerCase+"_"+toString(selectedCategory).toLowerCase;
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(title));
