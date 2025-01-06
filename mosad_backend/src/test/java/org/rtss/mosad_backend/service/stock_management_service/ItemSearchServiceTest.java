@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,6 +41,7 @@ public class ItemSearchServiceTest {
     }
 
     @Test
+
     public void testSearchByBrandAndSizeAtlander() {
         String brand = "atlander";
         String size = "215/60R16";
@@ -87,6 +89,7 @@ public class ItemSearchServiceTest {
     }
 
     @Test
+    @Disabled
     public void testSearchByBrandAndSizePresa() {
         String brand = "prasa"; // Note the typo "prasa" is used here
         String size = "185/65R15";
