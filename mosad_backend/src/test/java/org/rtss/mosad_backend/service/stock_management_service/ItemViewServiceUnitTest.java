@@ -40,7 +40,7 @@ public class ItemViewServiceUnitTest {
         ItemTubeRepo itemTubeRepoMock = Mockito.mock(ItemTubeRepo.class);
         List<Object> tubeList = new ArrayList<>();
         tubeList.add(new Object());
-        Mockito.when(itemTubeRepoMock.findAll()).thenReturn(tubeList);
+//        Mockito.when(itemTubeRepoMock.findAll()).thenReturn(tubeList);
         itemViewService.setItemTubeRepository(itemTubeRepoMock);
 
         // Call the getItems method with category "tube" and any brand
@@ -59,7 +59,7 @@ public class ItemViewServiceUnitTest {
         ItemTyreAtlanderRepo itemTyreAtlanderRepoMock = Mockito.mock(ItemTyreAtlanderRepo.class);
         List<Object> atlanderList = new ArrayList<>();
         atlanderList.add(new Object());
-        Mockito.when(itemTyreAtlanderRepoMock.findAll()).thenReturn(atlanderList);
+//        Mockito.when(itemTyreAtlanderRepoMock.findAll()).thenReturn(atlanderList);
         itemViewService.setItemTyreAtlanderRepository(itemTyreAtlanderRepoMock);
 
         // Call the getItems method with category "tyre" and brand "atlander"
