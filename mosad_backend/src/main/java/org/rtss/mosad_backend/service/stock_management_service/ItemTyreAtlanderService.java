@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
-
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreAtlanderDTO;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyreAtlander;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreAtlanderDTOMapper;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ItemTyreAtlanderService {
@@ -24,11 +24,10 @@ public class ItemTyreAtlanderService {
         this.itemTyreAtlanderDTOMapper = itemTyreAtlanderDTOMapper;
     }
 
-    public ItemTyreAtlanderDTO saveItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO){
+    public ItemTyreAtlanderDTO saveItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
         itemTyreAtlanderRepo.save(itemTyreAtlanderDTOMapper.ItemTyreAtlanderDTOToItemTyreAtlander(itemTyreAtlanderDTO));
         return itemTyreAtlanderDTO;
     }
-
 
     public List<ItemTyreAtlanderDTO> getAllItems() {
         List<ItemTyreAtlander> items = itemTyreAtlanderRepo.findAll();
@@ -40,14 +39,13 @@ public class ItemTyreAtlanderService {
 
         return itemList;
     }
-    
 
-    public ItemTyreAtlanderDTO updateItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO){
+    public ItemTyreAtlanderDTO updateItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
         itemTyreAtlanderRepo.save(itemTyreAtlanderDTOMapper.ItemTyreAtlanderDTOToItemTyreAtlander(itemTyreAtlanderDTO));
         return itemTyreAtlanderDTO;
     }
 
-    public boolean deleteItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO){
+    public boolean deleteItemTyreAtlander(ItemTyreAtlanderDTO itemTyreAtlanderDTO) {
         itemTyreAtlanderRepo.delete(itemTyreAtlanderDTOMapper.ItemTyreAtlanderDTOToItemTyreAtlander(itemTyreAtlanderDTO));
         return true;
     }
@@ -56,6 +54,6 @@ public class ItemTyreAtlanderService {
         return itemTyreAtlanderRepo.findBytyreSize(tyreSize);
     }
 
-
+    // Method to fetch available sizes for Atlander tyres
 
 }
