@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { addRepayment,fetchAllCreditDetails } from '../../services/apiCreditService';
+import {
+  Box, Container, Collapse, IconButton, Button, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Typography, Paper, TextField,
+   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle,RadioGroup, Radio, FormControl
+} from '@mui/material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import GeneralMessage from '../../component/GeneralMessage';
+import PropTypes from 'prop-types';
 
-function Row({ row, onAddRepayment }) {
+function Row({ row, onAddRepayment, setMessage,message}) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
+  
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -40,13 +32,19 @@ function Row({ row, onAddRepayment }) {
       onAddRepayment(row.creditId, newRepayment); // Call the parent callback with new repayment details
       handleDialogClose();
     } else {
-      alert('Please fill out all fields.');
+      setMessage({ type: 'error', text: 'Please fill in all fields!' });
+      setTimeout(() => setMessage(null), 2000);
     }
   };
 
+  const remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
+
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      
+      
+      
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : 'white' }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -63,10 +61,11 @@ function Row({ row, onAddRepayment }) {
         <TableCell>{row.contactNumber}</TableCell>
         <TableCell align="right">{row.balance}</TableCell>
         <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
-        <TableCell align="right">
-          {row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)}
+        <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
+          {remainingBalance}
         </TableCell>
       </TableRow>
+     
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -102,59 +101,110 @@ function Row({ row, onAddRepayment }) {
                   </TableRow>
                 </TableBody>
               </Table>
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleDialogOpen}
-                sx={{ marginTop: 2, backgroundColor: '#4CAF50', color: 'white' }}
-              >
-                Add New Repayment
-              </Button>
+              {remainingBalance != 0 &&
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleDialogOpen}
+                  sx={{ marginTop: 2, backgroundColor: '#4CAF50', color: 'white' }}
+                >
+                  Add New Repayment
+                </Button>
+              }
+
             </Box>
           </Collapse>
         </TableCell>
       </TableRow>
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Add New Repayment</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Date"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={newRepayment.date}
-            onChange={(e) => setNewRepayment({ ...newRepayment, date: e.target.value })}
-          />
+    
+
+      <Dialog 
+        open={openDialog} 
+        onClose={handleDialogClose} 
+        aria-modal="true" 
+        aria-labelledby="add-repayment-title"
+        aria-describedby="add-repayment-description"
+        
+      >
+        <DialogTitle id="add-repayment-title">Add New Repayment</DialogTitle>
+        <DialogContent id="add-repayment-description">
+         
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                label="Basic date picker"
+                value={null}
+                onChange={(newValue) =>
+                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.toISOString() : null })
+                }
+              />
+            </DemoContainer>
+          </LocalizationProvider>
           <TextField
             margin="dense"
             label="Amount"
             type="number"
             fullWidth
             variant="outlined"
+            helperText={`Remaining Balance: ${remainingBalance}`}
+            error={newRepayment.amount > remainingBalance}
             value={newRepayment.amount}
             onChange={(e) => setNewRepayment({ ...newRepayment, amount: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
-          <Button
-            onClick={handleAddRepayment}
-            variant="contained"
-            sx={{ backgroundColor: '#4CAF50', color: 'white' }}
-          >
-            Add
-          </Button>
+          { 
+            <Button
+              onClick={handleAddRepayment}
+              variant="contained"
+              disabled={!newRepayment.date || !newRepayment.amount || newRepayment.amount > remainingBalance}
+              sx={{ backgroundColor: '#4CAF50', color: 'white' }}
+            >
+              Add
+            </Button>
+    }  
         </DialogActions>
+        
       </Dialog>
+      {message && <GeneralMessage message={message} />}
+      
     </>
   );
+
+  
 }
+
 
 const CreditPage = () => {
   const [rows, setRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState(null);
+  const [state, setState] = useState({all: false ,completed: false,incompleted: true,});
+
+  const handleRadioChange = (event) => {
+    const { value } = event.target;
+
+    // Update state based on selected radio button
+    setState({
+      all: value === 'all',
+      completed: value === 'completed',
+      incompleted: value === 'incompleted',
+    });
+  };
+  let selectedValue;
+  if (state.all){
+    selectedValue = 'all';
+  }
+  else if (state.completed){
+    selectedValue = 'completed';
+  }
+  else {
+    selectedValue = 'incompleted';
+  }
+ 
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -179,6 +229,9 @@ const CreditPage = () => {
       const response = await addRepayment(creditId, repayment);
   
       console.log('Repayment added successfully:', response.data);
+
+      setMessage({ type: 'success', text: 'Repayment added successfully!' });
+      setTimeout(() => setMessage(null), 2000);
   
       // Update the rows state
       setRows((prevRows) =>
@@ -193,18 +246,30 @@ const CreditPage = () => {
       );
     } catch (error) {
       console.error('Error adding repayment:', error.response?.data || error.message);
+      setMessage({ type: 'error', text: 'Failed to add repayment!' });
+      setTimeout(() => setMessage(null), 2000);
     }
   };
   
-  
-  
 
-  const filteredRows = rows.filter(
+
+let remainingBalance;
+  const filteredRows = rows.filter((row) => {
+     remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
+
+    if (state.all) return true; // Show all credits
+    if (state.completed) return remainingBalance === 0; // Show completed credits
+    if (state.incompleted) return remainingBalance > 0; // Show incomplete credits
+    return false;
+  }).filter(
     (row) =>
       row.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
       row.contactNumber.toLowerCase().includes(searchText.toLowerCase()) ||
       row.creditId.toString().includes(searchText)
   );
+
+ 
+
 
   if (loading) {
     return (
@@ -218,31 +283,100 @@ const CreditPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 4 }}>
+     
       <Paper elevation={3} sx={{ padding: 3 }}>
-        <TextField
-          fullWidth
-          label="Search By Name / Contact Number / Credit ID"
-          variant="outlined"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          sx={{ marginBottom: 2 }}
-        />
+        <FormControl component="fieldset" sx={{ width: '100%' }}>
+          {/* Top Row: Search Field and Radio Group */}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 2,
+            }}
+          >
+            {/* Search Field */}
+            <TextField
+              fullWidth
+              size="small"
+              label="Search By Name / Contact Number / Credit ID"
+              variant="outlined"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
+            />
+
+            {/* Radio Buttons */}
+            <RadioGroup
+              row
+              name="creditOptions"
+              value={selectedValue}
+              onChange={handleRadioChange}
+              sx={{
+                justifyContent: 'flex-end', // Align buttons to the right
+                flex: '0 1 auto', // Prevent buttons from stretching
+              }}
+            >
+              <FormControlLabel
+                value="all"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">All Credits</Typography>}
+              />
+              <FormControlLabel
+                value="completed"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">Completed Credits</Typography>}
+              />
+              <FormControlLabel
+                value="incompleted"
+                control={<Radio size="small" />}
+                label={<Typography variant="body2">Incomplete Credits</Typography>}
+              />
+            </RadioGroup>
+          </Box>
+
+          {/* Stats Section */}
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 2,
+              marginTop: 2,
+            }}
+          >
+
+            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+              <Typography variant="subtitle2">Total Incomplete Credits</Typography>
+              <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                {rows.filter((row) => row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0) > 0).length}
+              </Typography>
+            </Box>
+            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+              <Typography variant="subtitle2">Total Remaining Balance</Typography>
+              <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
+                {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
+              </Typography>
+            </Box>
+
+          </Box>
+        </FormControl>
+ 
         <TableContainer sx={{ maxHeight: 400 }}>
-          <Table stickyHeader aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
+          <Table stickyHeader aria-label="collapsible table" >
+            <TableHead >
+              <TableRow  sx={{ backgroundColor: 'red' }}>
                 <TableCell />
                 <TableCell>Credit ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
-                <TableCell align="right">Balance ($)</TableCell>
+                <TableCell align="right">Credit Amount ($)</TableCell>
                 <TableCell>Due Date</TableCell>
                 <TableCell align="right">Remaining Balance ($)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredRows.map((row) => (
-                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} />
+                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} />
               ))}
             </TableBody>
           </Table>
@@ -250,6 +384,33 @@ const CreditPage = () => {
       </Paper>
     </Container>
   );
+};
+
+// Add PropTypes for validation
+Row.propTypes = {
+  row: PropTypes.shape({
+    creditId: PropTypes.number.isRequired,
+    customerName: PropTypes.string.isRequired,
+    contactNumber: PropTypes.string.isRequired,
+    balance: PropTypes.number.isRequired,
+    dueDate: PropTypes.string.isRequired,
+    repayments: PropTypes.arrayOf(
+      PropTypes.shape({
+        repaymentId: PropTypes.number.isRequired,
+        date: PropTypes.string.isRequired,
+        amount: PropTypes.number.isRequired,
+      })
+    ).isRequired,
+  }).isRequired,
+  onAddRepayment: PropTypes.func.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  message: PropTypes.oneOfType([
+    PropTypes.shape({
+      type: PropTypes.string,
+      text: PropTypes.string,
+    }),
+    PropTypes.oneOf([null]), // Allow null
+  ])
 };
 
 export default CreditPage;
