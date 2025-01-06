@@ -139,4 +139,7 @@ public class Item {
     public void setBranches(Set<Branch> branches) {
         this.branches = branches;
     }
+
+    public void setSize(String size) {
+    }
 }
