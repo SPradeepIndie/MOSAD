@@ -25,7 +25,6 @@ public class CustomerDTOMapper {
     public Customer toCustomerEntity(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
 
-        // Ensure bidirectional relationship is set correctly
         if (customer.getContacts() != null) {
             customer.getContacts().forEach(contact -> contact.setCustomer(customer));
         }

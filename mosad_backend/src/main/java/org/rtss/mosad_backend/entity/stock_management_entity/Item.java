@@ -139,4 +139,8 @@ public class Item {
     public void setBranches(Set<Branch> branches) {
         this.branches = branches;
     }
+
+    //Tire size update
+    public void setSize(String size) {
+    }
 }
