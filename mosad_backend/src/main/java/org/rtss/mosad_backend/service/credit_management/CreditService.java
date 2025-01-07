@@ -64,7 +64,21 @@ public class CreditService {
         }
     }
 
-    // Get credit details with customer name and contact number
+    //Get credit by id
+    public CreditDTO getCreditById(Long creditId) {
+        try {
+            Credit credit = creditRepository.findById(creditId)
+                    .orElseThrow(() -> new RuntimeException("Credit not found for ID: " + creditId));
+            return creditDTOMapper.toDTOWithCustomer(credit);
+        } catch (Exception ex) {
+            throw new RuntimeException("Failed to fetch credit: " + ex.getMessage());
+        }
+    }
+
+    //Get
+
+
+    // Get all credits with repayments
     public List<CreditDetailsDTO> getAllCreditDetails() {
         try {
             List<Object[]> results = creditRepository.findAllCreditDetails();
@@ -130,4 +144,6 @@ public class CreditService {
             throw new RuntimeException("Failed to add repayment: " + ex.getMessage());
         }
     }
+
+
 }

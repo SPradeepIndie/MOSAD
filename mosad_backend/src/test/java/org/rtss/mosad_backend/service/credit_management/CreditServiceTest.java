@@ -120,4 +120,51 @@ class CreditServiceTest {
 
         assertEquals("Failed to add repayment: Credit not found for ID: 1", exception.getMessage());
     }
+
+    @Test
+    void testGetCreditById_Success() {
+        // Arrange
+        Long creditId = 1L;
+
+        Credit credit = new Credit();
+        credit.setCreditId(creditId);
+        Customer customer = new Customer();
+        customer.setId(2L);
+        credit.setCustomer(customer);
+
+        CreditDTO creditDTO = new CreditDTO();
+        creditDTO.setCreditId(creditId);
+        creditDTO.setCustomerId(2L);
+
+        when(creditRepository.findById(creditId)).thenReturn(Optional.of(credit));
+        when(creditDTOMapper.toDTOWithCustomer(credit)).thenReturn(creditDTO);
+
+        // Act
+        CreditDTO result = creditService.getCreditById(creditId);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(creditId, result.getCreditId());
+        assertEquals(2L, result.getCustomerId());
+        verify(creditRepository, times(1)).findById(creditId);
+        verify(creditDTOMapper, times(1)).toDTOWithCustomer(credit);
+    }
+
+    @Test
+    void testGetCreditById_CreditNotFound() {
+        // Arrange
+        Long creditId = 1L;
+
+        when(creditRepository.findById(creditId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            creditService.getCreditById(creditId);
+        });
+
+        assertEquals("Failed to fetch credit: Credit not found for ID: " + creditId, exception.getMessage());
+        verify(creditRepository, times(1)).findById(creditId);
+        verifyNoInteractions(creditDTOMapper);
+    }
+
 }
