@@ -18,17 +18,17 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}    
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}    
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
           />
         </Stack>
 
@@ -37,17 +37,17 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
           />
           <Tile
             title="Atlander"
             icon={<AccountTreeIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
           />
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}   
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}   
           />
         </Stack>
 
