@@ -7,7 +7,10 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { Outlet } from 'react-router-dom';
 
-function StockPage() {
+function StockPage({isFromBranch}) {
+  if (typeof isFromBranch !== 'boolean') {
+    throw new Error('isFromBranch prop must be a boolean');
+  }
   return (
     <>
     <Outlet/>
@@ -18,17 +21,17 @@ function StockPage() {
           <Tile
             title="Tyre"
             icon={<DescriptionIcon fontSize="large" />}
-            link="/stock/brand"
+            link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
           />
           <Tile
             title="Tube"
             icon={<InventoryIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
           />
           <Tile
             title="Tape"
             icon={<StorefrontIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
           />
         </Stack>
 
@@ -38,7 +41,7 @@ function StockPage() {
           <Tile
             title="Battery"
             icon={<CreditCardIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
           />
         </Stack>
 
