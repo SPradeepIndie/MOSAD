@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import org.rtss.mosad_backend.entity.credit.Credit;
 
 import java.util.List;
@@ -16,7 +17,12 @@ public class Customer {
     private String name;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @NotEmpty(message = "A customer must have at least one contact number.")
     private List<CustomerContact> contacts;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CustomerType customerType;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Credit> credits;
@@ -24,11 +30,12 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Long id, String name, List<CustomerContact> contacts, List<Credit> credits) {
+    public Customer(Long id, String name, List<CustomerContact> contacts, List<Credit> credits, CustomerType customerType) {
         this.id = id;
         this.name = name;
         this.contacts = contacts;
         this.credits = credits;
+        this.customerType = customerType;
     }
 
     public Long getId() {
@@ -63,6 +70,14 @@ public class Customer {
         this.credits = credits;
     }
 
+    public CustomerType getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(CustomerType customerType) {
+        this.customerType = customerType;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -70,6 +85,7 @@ public class Customer {
                 ", name='" + name + '\'' +
                 ", contacts=" + contacts +
                 ", credits=" + credits +
+                ", customerType=" + customerType +
                 '}';
     }
 }

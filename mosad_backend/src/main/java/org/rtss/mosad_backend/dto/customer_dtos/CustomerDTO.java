@@ -7,8 +7,11 @@ import java.util.List;
 public class CustomerDTO {
     private Long id;
     private String name;
+    @NotEmpty(message = "A customer must have at least one contact.")
     private List<CustomerContactDTO> contacts;
     private List<CreditDTO> credits;
+
+    private String customerType;
 
     // Getters and Setters
     public Long getId() {
@@ -33,6 +36,14 @@ public class CustomerDTO {
 
     public void setContacts(List<CustomerContactDTO> contacts) {
         this.contacts = contacts;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
     public List<CreditDTO> getCredits() {

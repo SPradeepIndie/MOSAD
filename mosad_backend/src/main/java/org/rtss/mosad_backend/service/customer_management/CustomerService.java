@@ -6,6 +6,7 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOM
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
+import org.rtss.mosad_backend.entity.customer.CustomerType;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,14 @@ public class CustomerService {
 
     // Save a new customer
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+        if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
+            throw new RuntimeException("A customer must have at least one contact.");
+        }
         Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
         Customer savedCustomer = customerRepository.save(customer);
         return customerDTOMapper.toCustomerDTO(savedCustomer);
     }
+
 
     // Get all customers
     public List<CustomerDTO> getAllCustomers() {
@@ -52,13 +57,14 @@ public class CustomerService {
         Customer existingCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + id));
 
-        // Update the fields of the existing customer
         existingCustomer.setName(customerDTO.getName());
+        existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
         existingCustomer.setContacts(customerDTOMapper.toCustomerEntity(customerDTO).getContacts());
 
         Customer updatedCustomer = customerRepository.save(existingCustomer);
         return customerDTOMapper.toCustomerDTO(updatedCustomer);
     }
+
 
     // Delete a customer by ID
     public void deleteCustomer(Long id) {
