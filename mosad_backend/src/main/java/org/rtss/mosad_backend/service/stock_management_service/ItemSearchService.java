@@ -25,13 +25,14 @@ public class ItemSearchService {
         this.rapidService = rapidService;
     }
 
+    // Search tyres by brand and size
     public List<?> searchByBrandAndSize(String brand, String size) {
         switch (brand.toLowerCase()) {
             case "atlander":
                 return atlanderService.searchBySize(size);
             case "linglong":
                 return linglongService.searchBySize(size);
-            case "prasa":
+            case "presa":
                 return presaService.searchBySize(size);
             case "rapid":
                 return rapidService.searchBySize(size);
@@ -39,4 +40,13 @@ public class ItemSearchService {
                 throw new IllegalArgumentException("Invalid brand name: " + brand);
         }
     }
+
+    // Get available brands
+    public List<String> getAvailableBrands() {
+        return List.of("Atlander", "Linglong", "Presa", "Rapid");
+    }
+
+    // Get available sizes for a specific brand
+
+
 }
