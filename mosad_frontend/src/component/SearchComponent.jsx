@@ -16,9 +16,9 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { fetchBrands } from "../services/apiStockService";
+import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
 
-const SearchComponent = ({ onSearchResult }) => {
+const SearchComponent = ({ onSearchResult, onAddToBill }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
@@ -29,6 +29,14 @@ const SearchComponent = ({ onSearchResult }) => {
 
   async function getBrands(){
     return fetchBrands().then((result) => {
+        return result;
+      }).catch((error) => {
+        return null;
+      });
+  }
+
+  async function getBrandAndSizeData(){
+    return fetchBrandAndSizeData().then((result) => {
         return result;
       }).catch((error) => {
         return null;
@@ -63,9 +71,8 @@ const SearchComponent = ({ onSearchResult }) => {
   const handleSearch = async () => {
     try {
       setError(""); // Clear any previous error
-      const response = await axios.get("/api/search/tyres", {
-        params: { brand, size },
-      });
+      const response = await getBrandAndSizeData();
+      
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
         onSearchResult(response.data); // Pass results to parent if needed
@@ -74,9 +81,20 @@ const SearchComponent = ({ onSearchResult }) => {
         setError("No results found.");
       }
     } catch (err) {
-      console.error("Search request failed:", err);
+      //console.error("Search request failed:", err);
       setError("Failed to fetch search results. Please check your inputs.");
     }
+  };
+
+  const handleAddToBill = (row) => {
+    onAddToBill({ 
+      description: `${brand} ${row.pattern}`, 
+      unitPrice: row.officialSellingPrice, 
+      quantity: 1, 
+      subtotal: row.officialSellingPrice 
+    });
+    return <SearchComponent onSearchResult={setSearchResults} onAddToBill={handleAddToBill} />;
+
   };
 
   return (
@@ -135,10 +153,19 @@ const SearchComponent = ({ onSearchResult }) => {
             <TableBody>
               {results.map((result, index) => (
                 <TableRow key={index}>
-                  <TableCell>{result.brand}</TableCell>
-                  <TableCell>{result.size}</TableCell>
+                  <TableCell>{brand}</TableCell>
+                  <TableCell>{result.tyreSize}</TableCell>
                   <TableCell>{result.pattern}</TableCell>
-                  <TableCell>{result.price}</TableCell>
+                  <TableCell>{result.officialSellingPrice}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleAddToBill(result)}
+                    >
+                      Add
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -147,6 +174,9 @@ const SearchComponent = ({ onSearchResult }) => {
       )}
     </Box>
   );
+
+
+
 };
 
 export default SearchComponent;

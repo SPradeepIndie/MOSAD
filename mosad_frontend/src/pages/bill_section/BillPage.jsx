@@ -18,6 +18,7 @@ import "../../App.css";
 import { useReactToPrint } from "react-to-print";
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 
+
 function ccyFormat(num) {
   return num.toFixed(2);
 }
@@ -27,6 +28,19 @@ const BillPage = () => {
     Array(5).fill({ description: "", unitPrice: "", quantity: "", subtotal: 0 })
   );
   const [advance, setAdvance] = React.useState(0);
+
+  const handleAddToBill = (item) => {
+    setRows((prevRows) => [
+      ...prevRows,
+      {
+        description: item.description || "",
+        unitPrice: parseFloat(item.unitPrice) || 0,
+        quantity: parseInt(item.quantity, 10) || 1,
+        subtotal: (parseFloat(item.unitPrice) || 0) * (parseInt(item.quantity, 10) || 1),
+      },
+    ]);
+  };
+
 
   const handleInputChange = (index, field, value) => {
     setRows((prevRows) => {
@@ -82,7 +96,7 @@ const BillPage = () => {
 
       {/* Search Component */}
       <Box sx={{ mb: 4 }}>
-        <SearchComponent />
+        <SearchComponent onAddToBill={handleAddToBill} />
       </Box>
 
       {/* Bill Content */}
