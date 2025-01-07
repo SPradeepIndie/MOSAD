@@ -1,0 +1,71 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #eaffea;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .search-bar {
+    flex: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .search-btn {
+    background-color: #28a745;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  .repayment-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .data-table th,
+  .data-table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .data-table th {
+    background-color: #f2f2f2;
+  }
