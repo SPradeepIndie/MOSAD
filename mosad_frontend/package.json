@@ -12,17 +12,20 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.2.1",
-    "@mui/material": "^6.3.0",
-    "@mui/x-date-pickers": "latest",
-    "dayjs": "^1.11.13",
+    "@mui/icons-material": "^6.3.1",
+    "@mui/material": "^6.3.1",
+    "@mui/x-date-pickers": "^7.23.3",
     "axios": "^1.7.9",
     "boostrap": "^2.0.0",
+    "dayjs": "^1.11.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-material-ui-carousel": "^3.4.2",
-    "react-modal": "^3.16.1",
-    "react-router-dom": "^7.0.2"
+    "react-modal": "^3.16.3",
+    "react-router-dom": "^7.1.1",
+    "react-to-print": "^3.0.4"
+    
+
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

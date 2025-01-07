@@ -41,7 +41,8 @@ public class SecurityConfig {
                     //Configure Cross Origin configuration
                     .cors((cors)->cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests((request) -> request
-                       .requestMatchers("/api/v1/login").permitAll()
+                       //.requestMatchers("/api/v1/login").permitAll()
+                            .requestMatchers("/api/v1/login", "/api/v1/user/register").permitAll()
                        .anyRequest().authenticated()
                     )
                     //disabled the csrf token
