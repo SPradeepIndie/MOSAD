@@ -68,32 +68,6 @@ const UserManagement=()=>{
     };
 
     
-    //Handle editing
-    const [editMode, setEditMode] = useState(false);
-
-    //Handle user detials view
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission (add or update user)
-        if (editMode) {
-        // Update user logic
-        } else {
-        // Add user logic 
-        }
-    };
-    
-    const handleEdit = (userId) => {
-        // Fetch user details by userId (e.g., API call)
-        // Set editMode to true
-        // Set selectedUserId
-    };
-    
-    const handleCancel = () => {
-        setEditMode(false);
-    };
     useEffect(() => {
             // Fetch user details if there is token is saved
             if (auth.success) {

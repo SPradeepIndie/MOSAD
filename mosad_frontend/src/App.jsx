@@ -1,31 +1,44 @@
 import './App.css'
+import React,{useEffect} from 'react';
+import { Route,Routes,Navigate,useLocation} from 'react-router-dom';
+import { Box, Container } from '@mui/material'
+import RoutesProtector from './RoutesProtector'
+import useAuth  from "./hooks/useAuth";
+
 import HomePage from './pages/home/HomePage'
 import BillPage from './pages/bill_section/BillPage'
 import CreditPage from './pages/credit_section/CreditPage'
-import StockPage from './pages/stock_section/StockPage'
-import StockPageLayout from './pages/stock_section/StockPageLayout'
-import BranchPageLayout from './pages/branch_section/BranchPageLayout'
 import DackPage from './pages/dack_section/DackPage'
 import EmployeePage from './pages/employee_section/EmployeePage'
 import ReportPredictionPage from './pages/prediction_report_section/ReportPredictionPage'
 import RetailPage from './pages/retail_section/RetailPage'
 import ServicesPage from './pages/services_section/ServicesPage'
-import LoginPage from './pages/LoginPage'
-import Footer from './component/Footer';
-import HeaderBar from './component/Header';
+import UserManagement from './pages/users_section/UserManagement'
+
+import StockPageLayout from './pages/stock_section/StockPageLayout'
+import StockPage from './pages/stock_section/StockPage'
 import BrandPage from './pages/stock_section/BrandPage'
 import ItemView from './pages/stock_section/ItemView'
-import { Route,Routes} from 'react-router-dom';
-import { Box, Container } from '@mui/material'
-import UserManagement from './pages/users_section/UserManagement'
+
+import LoginPage from './pages/LoginPage'
 import backgroundImage from './assets/bg-image.jpg';
-import RoutesProtector from './RoutesProtector'
-import useAuth  from "./hooks/useAuth";
+
+import Footer from './component/Footer';
+import HeaderBar from './component/Header';
+
+import BranchPageLayout from './pages/branch_section/BranchPageLayout'
 import BranchPage from './pages/branch_section/BranchPage'
+import BranchStockLayout from './pages/branch_section/BranchStockLayout';
 
 function App() {
-  
-  const {auth}=useAuth()  
+  const {auth}=useAuth();
+
+  //Scroll to top of the page alway wehn 
+  //use location hook had change
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, [location]);  
 
   return (
     <Container maxWidth="xl" disableGutters sx={{
@@ -34,25 +47,33 @@ function App() {
       backgroundSize: 'cover', 
       backgroundPosition: 'center' ,
       height:'100vh'}}>
-      <Box maxWidth="xl">
+     <Box maxWidth="xl">
         { auth.success && <HeaderBar/>} 
       </Box>
       
-      <Box  sx={{ p: 3,minHeight: '100vh'}} >
+      <Box  sx={{ p: 2,minHeight: '100vh'}} >
         <Routes>
-          <Route path='/' element={<LoginPage/>} /> 
+        <Route path='/' element={auth.success ? <Navigate to="/home" replace /> : <LoginPage/>} /> 
           <Route element={<RoutesProtector />}>
             <Route path="/home" element={ <HomePage />} />
 
             <Route path="/stock" element={ <StockPageLayout />} > 
-              <Route index element={<StockPage />}/>
-              <Route path="brand" element={<BrandPage />}/>
+              <Route index element={<StockPage isFromBranch={false}/>}/>
+              <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
               <Route path="item-view" element={<ItemView />} /> 
             </Route>
 
             <Route path="/branch" element={ <BranchPageLayout />} >
               <Route index element={<BranchPage/>}/>
+              <Route path="bill-history" element={<BillPage />}/>
+              <Route path="stock" element={<BranchStockLayout />}>
+                <Route index element={<StockPage isFromBranch={true}/>}/>
+                <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
+                <Route path="item-view" element={<ItemView />}/>
+              </Route>
+              <Route path="employee-view" element={<EmployeePage />}/>
             </Route>
+
             <Route path="/credit" element={ <CreditPage />} />
             <Route path="/bill" element={ <BillPage />} />
             <Route path="/dack" element={ <DackPage />} />

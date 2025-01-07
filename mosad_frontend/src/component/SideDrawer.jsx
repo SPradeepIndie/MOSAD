@@ -21,7 +21,7 @@ export default function SideDrawer() {
   };
 
   const drawerItems = [
-    { title: 'Home', link: '/',icon: <HomeIcon /> },
+    { title: 'Home', link: '/home',icon: <HomeIcon /> },
     { title: 'User Management', link: '/user', icon: <PeopleIcon /> },
   ];
   return (

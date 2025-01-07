@@ -9,7 +9,7 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 
-function BrandPage() {
+function BrandPage({isFromBranch}) {
  
   return (
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -18,17 +18,17 @@ function BrandPage() {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link="/stock/brand/item-view"      
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}    
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
           />
         </Stack>
 
@@ -37,17 +37,17 @@ function BrandPage() {
           <Tile
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
           />
           <Tile
             title="Atlander"
             icon={<AccountTreeIcon fontSize="large" />}
-            link=""
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
           />
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            link=""   
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}   
           />
         </Stack>
 
