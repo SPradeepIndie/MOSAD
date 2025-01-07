@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
-import axios from "axios";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsSection from "../../component/ItemDetailsSection";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
-import setItemAddFromFields from "../..//utils/setItemAddFromFields";
+import setItemAddFromFields from "../../utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import useGlobalAccess from "../../hooks/useGlobalAccess";
+import { fetchItems } from "../../services/apiStockService";
+import atlander_baner from "../../assets/atlander.png";
+import presa_baner from "../../assets/presa.png";
+import default_baner from "../../assets/default.png"
+import dsi_baner from "../../assets/dsi.png"
+import rapid_baner from "../../assets/rapid.jpg"
+import linglong_baner from "../../assets/linglong.png"
 
+const ItemView = () => {
+  const { selectedCategory, selectedBrand } = useGlobalAccess();
 
-const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
 
 
-  const title="tyre_linglong";
+  //const title="tyre_linglong";
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState(setItemAddFromFields(title));
+  const [formData, setFormData] = useState(setItemAddFromFields());
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
 
@@ -68,46 +76,41 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       return;
     }
 
-    const request = currentItem
-      ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemID}`, formData)
-      : axios.post(`http://localhost:8080/api/v1/stock/${title}`, formData);
+    // const request = currentItem
+    //   ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemID}`, formData)
+    //   : axios.post(`http://localhost:8080/api/v1/stock/${title}`, formData);
 
-    request
-      .then(() => {
-        fetchItems();
-        closeDialog();
-        setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
-        setTimeout(() => setMessage(null), 3000);
-      })
-      .catch((error) => {
-        setMessage(currentItem ? { type: "error", text: "Failed to update item!" } : { type: "error", text: "Failed to add item!" });
-        setTimeout(() => setMessage(null), 3000);
-      });
+    // request
+    //   .then(() => {
+    //     fetchItems();
+    //     closeDialog();
+    //     setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
+    //     setTimeout(() => setMessage(null), 3000);
+    //   })
+    //   .catch((error) => {
+    //     setMessage(currentItem ? { type: "error", text: "Failed to update item!" } : { type: "error", text: "Failed to add item!" });
+    //     setTimeout(() => setMessage(null), 3000);
+    //   });
   };
 
   useEffect(() => {
+    const brandImages = {
+      atlander: atlander_baner,
+      presa: presa_baner,
+      dsi: dsi_baner,
+      linglong: linglong_baner,
+      rapid: rapid_baner
+    };
+    
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
+   
     if (selectedCategory && selectedBrand) {
-      fetch(
-
-        `http://localhost:8080/api/v1/item-view?category=${selectedCategory}&brand=${selectedBrand}`
-
-      )
-        .then((response) => response.json())
-        .then((data) => setRows(data))
+      fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
+        .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
     }
   }, [selectedCategory, selectedBrand]);
 
-  useEffect(() => {
-    const brandImages = {
-      atlander: "/assets/atlander.png",
-      presa: "/assets/presa.png",
-      dsi: "/assets/dsi.png",
-      linglong: "/assets/linglong.png",
-      rapid: "/assets/rapid.png",
-    };
-    setBannerImage(brandImages[selectedBrand] || "/assets/default.png");
-  }, [selectedBrand]);
 
   const handleRowClick = (id) => setSelectedRowId(id);
 
@@ -138,9 +141,9 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
               >
                 <td>{row.pattern}</td>
                 <td>{row.tyreSize}</td>
-                <td>{row.pr}</td>
-                <td>{row.price}</td>
-                <td>{row.stock}</td>
+                <td>{row.ply}</td>
+                <td>{row.officialSellingPrice}</td>
+                <td>{row.tyreCount}</td>
               </tr>
             ))}
           </tbody>

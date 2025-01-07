@@ -1,10 +1,17 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import useGlobalAccess from "../hooks/useGlobalAccess";
 
-function Tile({ title, icon, link}) {
+function Tile({ title, icon, link , catN ,brandN}) {
+  const { setSelectedCategory, setSelectedBrand } = useGlobalAccess();
+
+  const hadleCatBrand = () =>{
+    setSelectedCategory(catN);
+    setSelectedBrand(brandN);
+  }
   return (
-    <Card component={Link} to={link}
+    <Card component={Link} to={link} onClick={ hadleCatBrand }
       sx={{
         height: 'auto',
         width: '15em',

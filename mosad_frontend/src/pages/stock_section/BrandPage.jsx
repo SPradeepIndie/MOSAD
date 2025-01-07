@@ -18,17 +18,24 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}    
+            link={`${isFromBranch? "/branch/tock/item-view" :"/stock/item-view"}`} 
+            catN={"Tyre"}   
+            brandN={"CEAT"}
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
+            catN={"Tyre"} 
+            brandN={"PRESA"}
+
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
+            catN={"Tyre"} 
+            brandN={"LINGLONG"}
           />
         </Stack>
 
@@ -37,17 +44,23 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
+            catN={"Tyre"} 
+            brandN={"RAPID"}
           />
           <Tile
             title="Atlander"
             icon={<AccountTreeIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}
+            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
+            catN={"Tyre"} 
+            brandN={"Atlander"}
           />
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/brand/item-view"}`}   
+            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
+            catN={"Tyre"} 
+            brandN={"Brand 6"}   
           />
         </Stack>
 
@@ -56,8 +69,10 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="Brand 7"
             icon={<AssessmentIcon fontSize="large" />}
+            catN={"Tyre"} 
+            brandN={"Brand 7"} 
             onClick={() => handleTileClick('')}
-          />
+          /> 
         </Stack>
       </Box>
   );
