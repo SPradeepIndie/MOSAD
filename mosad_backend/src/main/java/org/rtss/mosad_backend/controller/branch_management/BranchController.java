@@ -11,12 +11,12 @@ public class BranchController {
 
     @DeleteMapping("/delete/{branchId}")
     public ResponseEntity<String> deleteBranch(@PathVariable("branchId") Long branchId) {
-        return ResponseEntity.ok("Deleted Branch: " + branchId);
+        return ResponseEntity.ok("Deleted Branch: ");
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createBranch(Branch branch) {
-        return ResponseEntity.ok("Created Branch: " + branch);
+        return ResponseEntity.ok("Created Branch: ");
     }
 
     @GetMapping("/view/all")
@@ -33,6 +33,6 @@ public class BranchController {
     @PutMapping("/update/{branchId}")
     public ResponseEntity<String> updateBranchById(@PathVariable("branchId") Long branchId,
                                                    @RequestBody Branch branch) {
-        return ResponseEntity.ok("Updated Branch: " + branchId+branch);
+        return ResponseEntity.ok("Updated Branch: ");
     }
 }
