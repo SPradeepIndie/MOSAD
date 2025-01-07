@@ -20,6 +20,7 @@ public class Customer {
     @NotEmpty(message = "A customer must have at least one contact number.")
     private List<CustomerContact> contacts;
 
+    //new attribute
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;

@@ -55,7 +55,7 @@ public class CustomerService {
     // Update an existing customer
     public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
         Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Customer not found with ID : " + id));
 
         existingCustomer.setName(customerDTO.getName());
         existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
@@ -69,7 +69,7 @@ public class CustomerService {
     // Delete a customer by ID
     public void deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
-            throw new RuntimeException("Customer not found with ID: " + id);
+            throw new RuntimeException(" Customer not found with ID: " + id);
         }
         customerRepository.deleteById(id);
     }

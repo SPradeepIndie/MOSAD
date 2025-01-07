@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.dto.customer_dtos;
 
+import jakarta.validation.constraints.NotEmpty;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 
 import java.util.List;
