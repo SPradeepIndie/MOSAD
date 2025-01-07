@@ -3,6 +3,7 @@ package org.rtss.mosad_backend.controller.branch_management;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/api/v1/branch")
@@ -14,8 +15,8 @@ public class BranchController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createBranch(String branchId) {
-        return ResponseEntity.ok("Created Branch: " + branchId);
+    public ResponseEntity<String> createBranch(Branch branch) {
+        return ResponseEntity.ok("Created Branch: " + branch);
     }
 
     @GetMapping("/view/all")
@@ -25,12 +26,13 @@ public class BranchController {
 
     @GetMapping("/view/name")
     public ResponseEntity<String> getBranchByName(String branchName) {
-        return ResponseEntity.ok("Branch: " + branchName);
+        String escapedBranchName = HtmlUtils.htmlEscape(branchName);
+        return ResponseEntity.ok("Branch: " + escapedBranchName);
     }
 
     @PutMapping("/update/{branchId}")
     public ResponseEntity<String> updateBranchById(@PathVariable("branchId") Long branchId,
                                                    @RequestBody Branch branch) {
-        return ResponseEntity.ok("Updated Branch: " + branchId);
+        return ResponseEntity.ok("Updated Branch: " + branchId+branch);
     }
 }
