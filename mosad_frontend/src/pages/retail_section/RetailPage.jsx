@@ -2,95 +2,75 @@ import React from 'react';
 import { Box, Stack, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './RetailHomePage.css';
+import  retailCustomerBaner from '../../assets/retailCustomer.jpg';
+import { Grid2 } from '@mui/material';
+
+import PaymentIcon from '@mui/icons-material/Payment';
+import HistoryIcon from '@mui/icons-material/History';
+import WarningIcon from '@mui/icons-material/Warning';
+import PeopleIcon from '@mui/icons-material/People';
+import Tile from "../../component/Tile"; 
+
+
 
 const RetailPage = ({ isOwner }) => {
   const navigate = useNavigate();
+  isOwner = true;
+
+  const tiles = [
+    {
+      title: 'Payment History',
+      icon: <PaymentIcon style={{ fontSize: '40px', color: 'white' }} />,
+      link: '/payment-history',
+      catN: 'payment',
+      brandN: 'all',
+    },
+    {
+      title: 'Purchase History',
+      icon: <HistoryIcon style={{ fontSize: '40px', color: 'white' }} />,
+      link: '/purchase-history',
+      catN: 'purchase',
+      brandN: 'all',
+    },
+    {
+      title: 'Incomplete Transactions',
+      icon: <WarningIcon style={{ fontSize: '40px', color: 'white' }} />,
+      link: '/incomplete-transactions',
+      catN: 'incomplete',
+      brandN: 'all',
+    },
+  ];
+
+  if (isOwner) {
+    tiles.push({
+      title: 'Retail Customer Details',
+      icon: <PeopleIcon style={{ fontSize: '40px', color: 'white' }} />,
+      link: '/customer-details',
+      catN: 'customer',
+      brandN: 'all',
+    });
+  }
 
   return (
-    <Box className="retail-homepage" sx={{ textAlign: 'center', padding: '20px' }}>
-      {/* Image Section */}
-      <Box className="image-section" sx={{ marginBottom: '20px' }}>
-        <img
-          src="/assets/retailCustomer.jpg" 
-          alt="Retail Workspace"
-          style={{ width: '100%', borderRadius: '10px', maxHeight: '300px', objectFit: 'cover' }}
-        />
-      </Box>
-
-      {/* Button Section */}
-      <Stack
-        spacing={3}
-        direction="row"
-        sx={{
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: 2,
-          marginBottom: 2,
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: '#4CAF50',
-            color: '#fff',
-            minWidth: '200px',
-            height: '50px',
-          }}
-          onClick={() => navigate('/payment-history')}
-        >
-          Payment History
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: '#4CAF50',
-            color: '#fff',
-            minWidth: '200px',
-            height: '50px',
-          }}
-          onClick={() => navigate('/purchase-history')}
-        >
-          Purchase History
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: '#4CAF50',
-            color: '#fff',
-            minWidth: '200px',
-            height: '50px',
-          }}
-          onClick={() => navigate('/incomplete-transactions')}
-        >
-          Incomplete Transactions
-        </Button>
-      </Stack>
-
-      {/* Conditional Rendering for Owner */}
-      {isOwner && (
-        <Stack
-          direction="row"
-          justifyContent="center"
-          spacing={2}
-          sx={{
-            flexWrap: 'wrap',
-          }}
-        >
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: '#4CAF50',
-              color: '#fff',
-              minWidth: '200px',
-              height: '50px',
-            }}
-            onClick={() => navigate('/customer-details')}
-          >
-            Retail Customer Details
-          </Button>
-        </Stack>
-      )}
-    </Box>
+    <Grid2
+      container
+      spacing={3}
+      columns={2}
+      justifyContent="center"
+      sx={{ marginBottom: 2 }}
+    >
+      {tiles.map((tile, index) => (
+        <Grid2 item xs={1} key={index}>
+          <Tile 
+            title={tile.title} 
+            icon={tile.icon} 
+            link={tile.link} 
+            catN={tile.catN} 
+            brandN={tile.brandN} 
+          />
+        </Grid2>
+      ))}
+    </Grid2>
   );
 };
 

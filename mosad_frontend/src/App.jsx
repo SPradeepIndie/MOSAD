@@ -30,6 +30,11 @@ import BranchPageLayout from './pages/branch_section/BranchPageLayout'
 import BranchPage from './pages/branch_section/BranchPage'
 import BranchStockLayout from './pages/branch_section/BranchStockLayout';
 
+import PaymentHistory from './pages/retail_section/PaymentHistory';
+import PurchaseHistory from './pages/retail_section/PurchaseHistory';
+import IncompleteTransactions from './pages/retail_section/IncompleteTransactions';
+import RetailCustomerDetails from './pages/retail_section/RetailCustomerDetails';
+
 function App() {
   const {auth}=useAuth();
 
@@ -77,7 +82,13 @@ function App() {
             <Route path="/credit" element={ <CreditPage />} />
             <Route path="/bill" element={ <BillPage />} />
             <Route path="/dack" element={ <DackPage />} />
-            <Route path="/retail" element={ <RetailPage />} />
+
+            <Route path="/retail" element={ <RetailPage />} >
+               <Route path="payment-history" element={ <PaymentHistory />} />
+               <Route path="purchase-history" element={ <PurchaseHistory />} />
+               <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+               <Route path="customer-details" element={ <RetailCustomerDetails />} />
+            </Route>
             <Route path="/future" element={ <ReportPredictionPage />} />
             <Route path="/employee" element={ <EmployeePage />} />
             <Route path="/services" element={ <ServicesPage />} />
