@@ -87,15 +87,14 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
   };
 
   const handleAddToBill = (row) => {
-    onAddToBill({ 
-      description: `${brand} ${row.pattern}`, 
-      unitPrice: row.officialSellingPrice, 
-      quantity: 1, 
-      subtotal: row.officialSellingPrice 
+    onAddToBill({
+      description: `${row.tyreSize} ${brand}`,
+      unitPrice: parseFloat(row.officialSellingPrice) || 0,
+      quantity: 1,
+      subtotal: parseFloat(row.officialSellingPrice) || 0,
     });
-    return <SearchComponent onSearchResult={setSearchResults} onAddToBill={handleAddToBill} />;
-
   };
+  
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
@@ -148,6 +147,7 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
                 <TableCell>Size</TableCell>
                 <TableCell>Pattern</TableCell>
                 <TableCell>Price</TableCell>
+                <TableCell>Store Count</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -157,6 +157,16 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
                   <TableCell>{result.tyreSize}</TableCell>
                   <TableCell>{result.pattern}</TableCell>
                   <TableCell>{result.officialSellingPrice}</TableCell>
+                  <TableCell>{result.tyreCount}</TableCell>
+                  <TableCell>
+              <TextField
+                type="number"
+                size="small"
+                variant="outlined"
+                placeholder="Qty"
+                onChange={(e) => handleQuantityChange(index, e.target.value)} // Handle quantity change
+              />
+            </TableCell>
                   <TableCell>
                     <Button
                       variant="contained"

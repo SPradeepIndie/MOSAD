@@ -33,14 +33,14 @@ const BillPage = () => {
     setRows((prevRows) => [
       ...prevRows,
       {
-        description: item.description || "",
-        unitPrice: parseFloat(item.unitPrice) || 0,
-        quantity: parseInt(item.quantity, 10) || 1,
-        subtotal: (parseFloat(item.unitPrice) || 0) * (parseInt(item.quantity, 10) || 1),
+        description: item.description,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        subtotal: item.subtotal,
       },
     ]);
   };
-
+   
 
   const handleInputChange = (index, field, value) => {
     setRows((prevRows) => {
