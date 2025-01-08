@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-function Tile({ title, icon, link}) {
+function Tile({ title, icon, link,state}) {
   return (
-    <Card component={Link} to={link}
+    <Card component={Link} to={link} state={state}
       sx={{
         height: 'auto',
         width: '15em',

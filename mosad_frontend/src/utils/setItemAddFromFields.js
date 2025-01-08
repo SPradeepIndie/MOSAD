@@ -1,17 +1,21 @@
+import { Category } from "@mui/icons-material";
+
 //set Add Item form fields
-const setItemAddFromFields = (title) => {
-    console.log(title);
-    switch (title) {
-      case "CEAT":
+const setItemAddFromFields = (cat_and_brand) => {
+    
+    //const cat_and_brand=(title.category+"_"+title.brand).toLowerCase();
+    //console.log(cat_and_brand);
+    switch (cat_and_brand) {
+      case "tyre_ceat":
        
         return {
           itemID: "",
           size: "",
           pattern: "",
           pr: 0,
-          availableQty: 0,
-          osp: 0,
-          cp:0
+          tyreCount: 0,
+          officialSellingPrice: 0,
+          vehicleType: "",
         };
       case "tyre_presa":
         return {
