@@ -11,8 +11,11 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +42,7 @@ public class AccountManagementService {
     //delete a given user
     public ResponseDTO deleteUser(String username) {
         Users user = usersRepo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User with username '" + username + "' not found."));
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username"));
         usersRepo.delete(user);
         return new ResponseDTO(true,"Successfully deleted "+username);
     }
@@ -48,7 +51,7 @@ public class AccountManagementService {
     public ResponseDTO updateUser(String username, UserDetailsDTO userUpdateDto){
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User with username '" + username + "' not found.");
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username");
         }
         dtoValidator.validate(userUpdateDto);
         UserDTO userDto=userUpdateDto.getUserDto();
@@ -95,7 +98,7 @@ public class AccountManagementService {
     public UserDetailsDTO getUser(String username) {
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User with username '" + username + "' not found.");
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username");
         }
         Users user = userOptional.get();
         UserDTO userDto=userDTOMapper.usersToUserDTO(user);
