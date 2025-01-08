@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Box, Button, Paper, TextField, Typography,Stack,Grid2 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { fetchBranchDetailsByName,fetchAllBranchNames } from '../../services/apiBranchService';
+
 
 const initialBranchDetails={
     branchName:"",
@@ -11,19 +11,19 @@ const initialBranchDetails={
 
 const BranchPage=()=>{
     const userRole="admin";
-    const [allBranchName,setallBranchName]=useState([]);
+    const [allBranchName,setAllBranchName]=useState([]);
 
     //load the all branch names at the rendering
     useEffect(() => {
-        //const respone=fetchAllBranchNames();
-        setallBranchName(["branch1","branch2"])
-    }, [allBranchName]);
+        setAllBranchName(["branch1","branch2"])
+    }, []);
+    /*
+    * Don't use dependency as 'allBranchName' in useEffect
+    * Bevuase it tendss to create a infinite loop and freeze the whole process 
+    */
 
     //load a branch detials accrdgin to the branch name
-    const fetchBranchDetail=(branchName)=>{
-        //const respone=fetchBranchDetailsByName(branchName);
-        console.log("fetched")
-    }
+    
 
     const BranchPaper = styled(Paper)(({ theme }) => ({
         width: '10rem',
