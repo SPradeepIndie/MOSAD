@@ -50,11 +50,6 @@ const BillPage = () => {
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
 
-  const printRef = useRef();
-  // const handlePrint = useReactToPrint({
-  //   content: () => printRef.current,
-  // });
-
   const handleKeyPress = (index, e) => {
     if (e.key === "Enter") {
       const lastRow = rows[index];
@@ -83,7 +78,6 @@ const BillPage = () => {
 
       {/* Bill Content */}
       <Box
-        ref={printRef}
         sx={{
           background: "#f9f9f9",
           borderRadius: "8px",

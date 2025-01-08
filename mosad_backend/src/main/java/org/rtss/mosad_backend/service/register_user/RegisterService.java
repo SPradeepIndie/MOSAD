@@ -85,7 +85,9 @@ public class RegisterService {
         checkUserRoleByName(userRoleDTO.getRoleName());
         UserRoles userRoles= convertToUserRoles(userRoleDTO);
 
-        users.setUserRoles(userRolesRepo.findUserRolesByRoleName(userRoles.getRoleName()).get());
+        users.setUserRoles(userRolesRepo.findUserRolesByRoleName(userRoles.getRoleName()).orElseThrow(
+                ()-> new ObjectNotValidException(new HashSet<>(List.of("Unable to find defined user role")))
+        ));
 
         ArrayList<UserContactDTO> userContactDtoS=extractUserContactDTO(userRegistrationDto);
         for(UserContactDTO userContactDto:userContactDtoS){

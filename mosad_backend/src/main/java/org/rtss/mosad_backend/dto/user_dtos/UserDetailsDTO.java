@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.dto.user_dtos;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserDetailsDTO {
     @NotNull(message = "User details object can not be null")
@@ -12,12 +12,12 @@ public class UserDetailsDTO {
     private UserRoleDTO userRoleDto;
 
     @NotNull(message = "User contact object can not be null")
-    private ArrayList<UserContactDTO> userContactDto;
+    private List<UserContactDTO> userContactDto;
 
     public UserDetailsDTO() {
     }
 
-    public UserDetailsDTO(UserDTO userDto, UserRoleDTO userRoleDto, ArrayList<UserContactDTO> userContactDto) {
+    public UserDetailsDTO(UserDTO userDto, UserRoleDTO userRoleDto, List<UserContactDTO> userContactDto) {
         this.userDto = userDto;
         this.userRoleDto = userRoleDto;
         this.userContactDto = userContactDto;
@@ -39,11 +39,11 @@ public class UserDetailsDTO {
         this.userRoleDto = userRoleDto;
     }
 
-    public @NotNull(message = "User contact object can not be null") ArrayList<UserContactDTO> getUserContactDto() {
+    public @NotNull(message = "User contact object can not be null") List<UserContactDTO> getUserContactDto() {
         return userContactDto;
     }
 
-    public void setUserContactDto(@NotNull(message = "User contact object can not be null") ArrayList<UserContactDTO> userContactDto) {
+    public void setUserContactDto(@NotNull(message = "User contact object can not be null") List<UserContactDTO> userContactDto) {
         this.userContactDto = userContactDto;
     }
 }

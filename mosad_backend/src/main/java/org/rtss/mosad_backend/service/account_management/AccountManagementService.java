@@ -8,12 +8,11 @@ import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -23,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class AccountManagementService {
 
+    public static final String USERNAME_NOT_FOUND_MSG = "Invalid request parameter value with username";
     private final UsersRepo usersRepo;
     private final UserDTOMapper userDTOMapper;
     private final UserContactDTOMapper userContactDTOMapper;
@@ -42,7 +42,7 @@ public class AccountManagementService {
     //delete a given user
     public ResponseDTO deleteUser(String username) {
         Users user = usersRepo.findByUsername(username)
-                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username"));
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG));
         usersRepo.delete(user);
         return new ResponseDTO(true,"Successfully deleted "+username);
     }
@@ -51,35 +51,42 @@ public class AccountManagementService {
     public ResponseDTO updateUser(String username, UserDetailsDTO userUpdateDto){
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username");
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG);
         }
         dtoValidator.validate(userUpdateDto);
         UserDTO userDto=userUpdateDto.getUserDto();
         dtoValidator.validate(userDto);
         Users user=userDTOMapper.userDtoToUsers(userDto);
 
-        user.setPassword(userOptional.get().getPassword());
+        //Get the current user details
+        Users currentUser=userOptional.get();
+        user.setUserId(currentUser.getUserId());
+        user.setPassword(currentUser.getPassword());
 
         UserRoleDTO userRoleDTO=userUpdateDto.getUserRoleDto();
         dtoValidator.validate(userRoleDTO);
         UserRoles userRoles= userRoleDTOMapper.userRoleDTOToUserRoles(userRoleDTO);
-        user.setUserRoles(userRolesRepo.findUserRolesByRoleName(userRoles.getRoleName()).get());
+        user.setUserRoles(userRolesRepo.findUserRolesByRoleName(userRoles.getRoleName()).orElseThrow(
+                () -> new ObjectNotValidException(new HashSet<>(List.of("Unable to find defined user role")))
+        ));
 
-        ArrayList<UserContactDTO> userContactDtoS=userUpdateDto.getUserContactDto();
+        List<UserContactDTO> userContactDtoS=userUpdateDto.getUserContactDto();
         for(UserContactDTO userContactDto:userContactDtoS){
             dtoValidator.validate(userContactDto);
         }
-        user.setUserContacts(convertToUserContacts(userContactDtoS));
+        user.setUserContacts(convertToUserContacts(userContactDtoS,currentUser));
         usersRepo.saveAndFlush(user);
 
         return new ResponseDTO(true, "Successfully updated " + username);
 
     }
     //map to the UserContactDto entity.
-    private Set<UserContacts> convertToUserContacts(ArrayList<UserContactDTO> userContactDtoList) {
+    private Set<UserContacts> convertToUserContacts(List<UserContactDTO> userContactDtoList,Users user) {
         Set<UserContacts> userContactsSet = new HashSet<>();
         for(UserContactDTO userContactDto:userContactDtoList){
-            userContactsSet.add(userContactDTOMapper.userContactsDTOToUserContacts(userContactDto));
+            UserContacts userContact=userContactDTOMapper.userContactsDTOToUserContacts(userContactDto);
+            userContact.setUser(user);
+            userContactsSet.add(userContact);
         }
         return userContactsSet;
     }
@@ -98,7 +105,7 @@ public class AccountManagementService {
     public UserDetailsDTO getUser(String username) {
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request parameter value with username");
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG);
         }
         Users user = userOptional.get();
         UserDTO userDto=userDTOMapper.usersToUserDTO(user);

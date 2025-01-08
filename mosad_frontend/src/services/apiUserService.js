@@ -1,5 +1,4 @@
 import apiClient from './api_config/apiClient';
-import useAuth from '../hooks/useAuth';
 
 
 
@@ -11,19 +10,16 @@ export const registerUser=(data)=>{
     return apiClient.post('/user/register',JSON.stringify(data));
 }
 
-export const updateUserDetails=()=>{
-    // const {auth}=useAuth();
-    return apiClient.put('/user/update',{param:{username:"auth.username"}});
+export const updateUserDetails=(data)=>{
+    return apiClient.put('/user/update',data);
 }
 
 export const deleteUser=()=>{
-    // const {auth}=useAuth();
-    return apiClient.delete('/user/delete',{param:{username:"auth.username"}})
+    return apiClient.delete('/user/delete',data)
 }
 
 export const getUserDetailsByUsername=()=>{
-    // const {auth}=useAuth();
-    return apiClient.get('/user/view',{param:{username:"auth.username"}})
+    return apiClient.get('/user/view',data)
 }
 
 export const getAllUsername=()=>{
