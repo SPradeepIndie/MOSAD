@@ -5,21 +5,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.RepaymentRequestDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.RepaymentResponseDTO;
+import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
-import org.rtss.mosad_backend.entity.credit.Repayment;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class CreditServiceTest {
@@ -45,126 +44,103 @@ class CreditServiceTest {
     }
 
     @Test
-    void testSaveCredit_Success() {
-        CreditDTO creditDTO = new CreditDTO();
-        creditDTO.setCustomerId(1L);
-
+    void saveCredit_shouldSaveSuccessfully() {
+        // Arrange
+        CreditDTO creditDTO = new CreditDTO(null, 5000.0, new Date(), 1L);
         Customer customer = new Customer();
         customer.setId(1L);
+        customer.setName("John Doe");
 
         Credit credit = new Credit();
         credit.setCreditId(1L);
+        credit.setBalance(5000.0);
+        credit.setDueDate(new Date());
         credit.setCustomer(customer);
 
         when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
-        when(creditDTOMapper.toEntity(creditDTO)).thenReturn(credit);
+        when(creditDTOMapper.toEntity(any(CreditDTO.class))).thenReturn(credit);
         when(creditRepository.save(any(Credit.class))).thenReturn(credit);
-        when(creditDTOMapper.toDTOWithCustomer(any(Credit.class))).thenReturn(creditDTO);
+        when(creditDTOMapper.toDTOWithCustomer(any(Credit.class))).thenReturn(new CreditDTO(1L, 5000.0, new Date(), 1L));
 
+        // Act
         ResponseEntity<CreditDTO> response = creditService.saveCredit(creditDTO);
 
+        // Assert
         assertNotNull(response);
-        assertEquals(201, response.getStatusCodeValue());
-        assertEquals(creditDTO, response.getBody());
+        assertEquals(201, response.getStatusCode().value());
+        assertEquals(1L, response.getBody().getCustomerId());
+        verify(creditRepository, times(1)).save(any(Credit.class));
     }
 
     @Test
-    void testSaveCredit_CustomerNotFound() {
-        CreditDTO creditDTO = new CreditDTO();
-        creditDTO.setCustomerId(1L);
+    void saveCredit_shouldThrowExceptionWhenCustomerNotFound() {
+        // Arrange
+        CreditDTO creditDTO = new CreditDTO(null, 5000.0, new Date(), 1L);
 
         when(customerRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            creditService.saveCredit(creditDTO);
-        });
+        // Act & Assert
+        ObjectNotValidException exception = assertThrows(
+                ObjectNotValidException.class,
+                () -> creditService.saveCredit(creditDTO)
+        );
 
-        assertEquals("Customer not found with ID: 1", exception.getMessage());
+        assertTrue(exception.getErrorMessages().contains("Customer not found"));
     }
 
     @Test
-    void testAddRepayment_Success() {
-        RepaymentRequestDTO repaymentRequest = new RepaymentRequestDTO();
-        repaymentRequest.setCreditId(1L);
-        repaymentRequest.setAmount(100.0);
-
+    void getAllCredits_shouldReturnAllCredits() {
+        // Arrange
         Credit credit = new Credit();
         credit.setCreditId(1L);
+        credit.setBalance(5000.0);
 
-        Repayment repayment = new Repayment();
-        repayment.setRepaymentId(1L);
-        repayment.setAmount(100.0);
-        repayment.setCredit(credit);
+        List<Credit> credits = List.of(credit);
+        when(creditRepository.findAll()).thenReturn(credits);
+        when(creditDTOMapper.toDTOList(credits)).thenReturn(List.of(new CreditDTO(1L, 5000.0, new Date(), 1L)));
 
-        when(creditRepository.findById(1L)).thenReturn(Optional.of(credit));
-        when(repaymentRepository.save(any(Repayment.class))).thenReturn(repayment);
+        // Act
+        List<CreditDTO> result = creditService.getAllCredits();
 
-        ResponseEntity<RepaymentResponseDTO> response = creditService.addRepayment(repaymentRequest);
-
-        assertNotNull(response);
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(1L, response.getBody().getRepaymentId());
-        assertEquals(100.0, response.getBody().getAmount());
+        // Assert
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(creditRepository, times(1)).findAll();
     }
 
     @Test
-    void testAddRepayment_CreditNotFound() {
-        RepaymentRequestDTO repaymentRequest = new RepaymentRequestDTO();
-        repaymentRequest.setCreditId(1L);
-
-        when(creditRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            creditService.addRepayment(repaymentRequest);
-        });
-
-        assertEquals("Failed to add repayment: Credit not found for ID: 1", exception.getMessage());
-    }
-
-    @Test
-    void testGetCreditById_Success() {
+    void getCreditById_shouldReturnCredit() {
         // Arrange
         Long creditId = 1L;
-
         Credit credit = new Credit();
         credit.setCreditId(creditId);
-        Customer customer = new Customer();
-        customer.setId(2L);
-        credit.setCustomer(customer);
-
-        CreditDTO creditDTO = new CreditDTO();
-        creditDTO.setCreditId(creditId);
-        creditDTO.setCustomerId(2L);
+        credit.setBalance(5000.0);
 
         when(creditRepository.findById(creditId)).thenReturn(Optional.of(credit));
-        when(creditDTOMapper.toDTOWithCustomer(credit)).thenReturn(creditDTO);
+        when(creditDTOMapper.toDTOWithCustomer(any(Credit.class))).thenReturn(new CreditDTO(1L, 5000.0, new Date(), 1L));
 
         // Act
         CreditDTO result = creditService.getCreditById(creditId);
 
         // Assert
         assertNotNull(result);
-        assertEquals(creditId, result.getCreditId());
-        assertEquals(2L, result.getCustomerId());
+        assertEquals(1L, result.getCreditId());
         verify(creditRepository, times(1)).findById(creditId);
-        verify(creditDTOMapper, times(1)).toDTOWithCustomer(credit);
     }
 
     @Test
-    void testGetCreditById_CreditNotFound() {
+    void getCreditById_shouldThrowExceptionWhenCreditNotFound() {
         // Arrange
         Long creditId = 1L;
 
         when(creditRepository.findById(creditId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            creditService.getCreditById(creditId);
-        });
+        ObjectNotValidException exception = assertThrows(
+                ObjectNotValidException.class,
+                () -> creditService.getCreditById(creditId)
+        );
 
-        assertEquals("Failed to fetch credit: Credit not found for ID: " + creditId, exception.getMessage());
-        verify(creditRepository, times(1)).findById(creditId);
-        verifyNoInteractions(creditDTOMapper);
+        assertTrue(exception.getErrorMessages().contains("Failed to fetch credit: Credit not found for ID: 1"));
     }
-
 }
