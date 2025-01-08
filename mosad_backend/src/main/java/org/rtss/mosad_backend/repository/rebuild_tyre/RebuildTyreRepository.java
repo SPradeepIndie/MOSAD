@@ -1,6 +1,6 @@
-package org.rtss.mosad_backend.repository.tyre_rebuild;
+package org.rtss.mosad_backend.repository.rebuild_tyre;
 
-import org.rtss.mosad_backend.entity.tyre_rebuild.RebuildTyre;
+import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

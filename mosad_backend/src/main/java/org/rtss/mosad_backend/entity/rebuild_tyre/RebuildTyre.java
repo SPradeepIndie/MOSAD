@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.entity.tyre_rebuild;
+package org.rtss.mosad_backend.entity.rebuild_tyre;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;

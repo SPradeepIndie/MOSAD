@@ -1,7 +1,7 @@
 package org.rtss.mosad_backend.service.rebuild_tyre_management;
 
-import org.rtss.mosad_backend.entity.tyre_rebuild.RebuildTyre;
-import org.rtss.mosad_backend.repository.tyre_rebuild.RebuildTyreRepository;
+import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
+import org.rtss.mosad_backend.repository.rebuild_tyre.RebuildTyreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

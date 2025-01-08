@@ -1,6 +1,6 @@
 package org.rtss.mosad_backend.controller.rebuild_tyre;
 
-import org.rtss.mosad_backend.entity.tyre_rebuild.RebuildTyre;
+import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
 import org.rtss.mosad_backend.service.rebuild_tyre_management.RebuildTyreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
