@@ -44,7 +44,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
       
       
       
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : 'white' }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : '' }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -345,13 +345,13 @@ let remainingBalance;
             }}
           >
 
-            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+            <Box sx={{ textAlign: 'center', backgroundColor: '#c4c4c4', padding: 1, borderRadius: 10 }}>
               <Typography variant="subtitle2">Total Incomplete Credits</Typography>
               <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
                 {rows.filter((row) => row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0) > 0).length}
               </Typography>
             </Box>
-            <Box sx={{ textAlign: 'center', backgroundColor: '#f5f5f5', padding: 1, borderRadius: 1 }}>
+            <Box sx={{ textAlign: 'center', backgroundColor: '#f28fb0', padding: 1, borderRadius: 10 }}>
               <Typography variant="subtitle2">Total Remaining Balance</Typography>
               <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
                 {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
@@ -361,12 +361,12 @@ let remainingBalance;
           </Box>
         </FormControl>
  
-        <TableContainer sx={{ maxHeight: 400 }}>
+        <TableContainer >
           <Table stickyHeader aria-label="collapsible table" >
             <TableHead >
-              <TableRow  sx={{ backgroundColor: 'red' }}>
+              <TableRow  >
                 <TableCell />
-                <TableCell>Credit ID</TableCell>
+                <TableCell >Credit ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
                 <TableCell align="right">Credit Amount ($)</TableCell>
