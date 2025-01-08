@@ -152,7 +152,7 @@ public class RegisterService {
         return userRegistrationDTO.getUserContactDto();
     }
 
-    //map to the UserRoles entity.
+    //map to the UserContactDto entity.
     private Set<UserContacts> convertToUserContacts(ArrayList<UserContactDTO> userContactDtoList) {
         Set<UserContacts> userContactsSet = new HashSet<>();
         for(UserContactDTO userContactDto:userContactDtoList){
