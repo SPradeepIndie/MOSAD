@@ -1,10 +1,7 @@
-import { Category } from "@mui/icons-material";
-
 //set Add Item form fields
 const setItemAddFromFields = (cat_and_brand) => {
     
-    //const cat_and_brand=(title.category+"_"+title.brand).toLowerCase();
-    //console.log(cat_and_brand);
+    
     switch (cat_and_brand) {
       case "tyre_ceat":
        

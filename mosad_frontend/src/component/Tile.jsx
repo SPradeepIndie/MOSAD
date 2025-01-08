@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function Tile({ title, icon, link,state}) {
   return (
@@ -50,5 +51,14 @@ function Tile({ title, icon, link,state}) {
     </Card>
   );
 }
+
+
+
+Tile.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
+  link: PropTypes.string.isRequired,
+  state: PropTypes.object,
+};
 
 export default Tile;
