@@ -7,3 +7,12 @@ export const fetchItems=()=>{
 export const fetchBrands=()=>{
     return apiClient.get('/search/brands');
 }
+
+
+export const addItem=(data)=>{
+    return apiClient.post('/stock',data);//need to update after implementing the backend
+}
+
+export const updateItem=(data)=>{
+    return apiClient.put('/stock',data);//need to update after implementing the backend
+}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
-import axios from "axios";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsSection from "../../component/ItemDetailsSection";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../..//utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { addItem,updateItem } from "../../services/apiStockService";
 
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
@@ -14,7 +14,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [bannerImage, setBannerImage] = useState("");
 
 
-  const title="tyre_linglong";
+  const title=toString(selectedBrand).toLowerCase+"_"+toString(selectedCategory).toLowerCase;
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(title));
@@ -69,8 +69,8 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     }
 
     const request = currentItem
-      ? axios.put(`http://localhost:8080/api/v1/stock/${title}/${formData.itemID}`, formData)
-      : axios.post(`http://localhost:8080/api/v1/stock/${title}`, formData);
+      ? addItem(formData)
+      : updateItem(formData);
 
     request
       .then(() => {
