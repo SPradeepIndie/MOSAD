@@ -57,7 +57,7 @@ function Tile({ title, icon, link,state}) {
 Tile.propTypes = {
   title: PropTypes.string.isRequired,
   icon: PropTypes.node.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string,
   state: PropTypes.object,
 };
 

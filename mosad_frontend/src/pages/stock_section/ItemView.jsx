@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
-import ItemDetailsSection from "../../component/ItemDetailsSection";
+import ItemDetailsForm from "../../forms/ItemDetailsForm";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../..//utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
@@ -168,15 +168,15 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
         <DialogContent>
         
-          <form onSubmit={handleSubmit}>
-            <ItemDetailsSection
+          
+            <ItemDetailsForm
               formData={formData}
               setFormData={setFormData}
               errors={inputFieldErrors}
               handleChange={validateAddForm}
             />
             <PriceDetailsSection />
-          </form>
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog} color="secondary">Cancel</Button>
