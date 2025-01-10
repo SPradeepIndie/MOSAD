@@ -1,62 +1,26 @@
 //set Add Item form fields
-const setItemAddFromFields = (title) => {
-    console.log(title);
-    switch (title) {
-      case "CEAT":
+const setItemAddFromFields = (cat_and_brand) => {
+
+  let defaultItemFields = {itemID: "",availableQty:0,officialSellingPrice: 0,companyPrice:0,discountPrice:0};
+    
+  let defaultTyreFields = {itemID: "",size: "",pattern: "",tyreCount: 0,officialSellingPrice: 0,vehicleType: ""};
+    
+    switch (cat_and_brand) {
+      case "tyre_ceat":
        
-        return {
-          itemID: "",
-          size: "",
-          pattern: "",
-          pr: 0,
-          availableQty: 0,
-          osp: 0,
-          cp:0
-        };
+        return {...defaultTyreFields,pr:0};
+        
       case "tyre_presa":
-        return {
-          itemID: "",
-          tyreSize: "",
-          pattern: "",
-          ply: 0,
-          tyreCount: 0,
-          officialSellingPrice: 0,
-          vehicleType: "",
-        };
+        return {...defaultTyreFields,ply:0};
       case "tyre_rapid":
-        return {
-          itemID: "",
-          tyreSize: "",
-          pattern: "",
-          tyreCount: 0,
-          officialSellingPrice: 0,
-          vehicleType: "",
-        };
+        return defaultTyreFields;
       case "tyre_linglong":
-        return {
-          itemID: "",
-          tyreSize: "",
-          pattern: "",
-          tyreCount: null,
-          officialSellingPrice: null,
-          vehicleType: "",
-        };
+        return defaultTyreFields;
       case "tyre_atlander":
-        return {
-          itemID: "",
-          tyreSize: "",
-          pattern: "",
-          tyreCount: 0,
-          officialSellingPrice: 0,
-          vehicleType: "",
-        };
+        return defaultTyreFields;
         
       default:
-        return {
-          itemID: "",
-          field1: "",
-          field2: "",
-        };
+        return defaultItemFields;
     }
   };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import {React} from 'react';
 import Tile from '../../component/Tile';
 import { Box, Stack } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -14,7 +14,9 @@ function StockPage({isFromBranch}) {
   return (
     <>
     <Outlet/>
+    
     <h1>Select a Category</h1>
+    
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* First Row: Three Tiles */}
         <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
@@ -22,16 +24,19 @@ function StockPage({isFromBranch}) {
             title="Tyre"
             icon={<DescriptionIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
+            state={{ category: "Tyre" }}
           />
           <Tile
             title="Tube"
             icon={<InventoryIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
+            state={{ category: "Tube" }}
           />
           <Tile
             title="Tape"
             icon={<StorefrontIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
+            state={{ category: "Tape" }}
           />
         </Stack>
 
@@ -42,6 +47,7 @@ function StockPage({isFromBranch}) {
             title="Battery"
             icon={<CreditCardIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand" : "/stock/brand"}`}
+            state={{ category: "Battery" }}
           />
         </Stack>
 
