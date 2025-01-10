@@ -1,10 +1,11 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-function Tile({ title, icon, link}) {
+function Tile({ title, icon, link,state}) {
   return (
-    <Card component={Link} to={link}
+    <Card component={Link} to={link} state={state}
       sx={{
         height: 'auto',
         width: '15em',
@@ -50,5 +51,14 @@ function Tile({ title, icon, link}) {
     </Card>
   );
 }
+
+
+
+Tile.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
+  link: PropTypes.string,
+  state: PropTypes.object,
+};
 
 export default Tile;

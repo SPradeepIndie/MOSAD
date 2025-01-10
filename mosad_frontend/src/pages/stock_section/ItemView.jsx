@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
-import ItemDetailsSection from "../../component/ItemDetailsSection";
+import ItemDetailsForm from "../../forms/ItemDetailsForm";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../..//utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { addItem,updateItem } from "../../services/apiStockService";
+import { useLocation } from "react-router-dom";
 
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
+
+  //Store passed Category and Brand using Link state & useLocation
+  const location=useLocation();
+  const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
+  console.log(states);
+
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
 
 
-  const title=toString(selectedBrand).toLowerCase+"_"+toString(selectedCategory).toLowerCase;
+  const cat_and_brand=(states.category+"_"+states.brand).toLowerCase(); 
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState(setItemAddFromFields(title));
+  const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
 
@@ -27,12 +34,13 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       setFormData(item);
     } else {
       setCurrentItem(null);
-      setFormData(setItemAddFromFields(title));
+      setFormData(setItemAddFromFields(cat_and_brand));
     }
     setIsDialogOpen(true);
   };
 
   const closeDialog = () => {
+    setinputFieldErrors({});
     setIsDialogOpen(false);
   };
 
@@ -43,7 +51,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
     if (!value) {
       fieldError = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
-    } else if (key === "tyreCount" && !Number.isInteger(Number(value))) {
+    } else if ((key === "tyreCount" || key==="ply") && !Number.isInteger(Number(value))) {
       fieldError = "Tyre Count must be a valid integer.";
     } else if (key === "officialSellingPrice" && !/^(-?\d+(\.\d+)?)$/.test(value)) {
       fieldError = "Official Selling Price must be a valid number.";
@@ -69,17 +77,18 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     }
 
     const request = currentItem
-      ? addItem(formData)
-      : updateItem(formData);
+      ? addItem(cat_and_brand,formData)
+      : updateItem(cat_and_brand,formData);
 
     request
       .then(() => {
-        fetchItems();
+        //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
         setTimeout(() => setMessage(null), 3000);
       })
       .catch((error) => {
+        console.log("Error adding/updating item:", error);
         setMessage(currentItem ? { type: "error", text: "Failed to update item!" } : { type: "error", text: "Failed to add item!" });
         setTimeout(() => setMessage(null), 3000);
       });
@@ -113,6 +122,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
   return (
     <>
+    {message && <GeneralMessage message={message} />}
       <div className="item-view-container">
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
@@ -157,16 +167,16 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
         <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
         <DialogContent>
-        {message && <GeneralMessage message={message} />}
-          <form onSubmit={handleSubmit}>
-            <ItemDetailsSection
+        
+          
+            <ItemDetailsForm
               formData={formData}
               setFormData={setFormData}
               errors={inputFieldErrors}
               handleChange={validateAddForm}
             />
             <PriceDetailsSection />
-          </form>
+          
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog} color="secondary">Cancel</Button>
