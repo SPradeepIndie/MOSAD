@@ -13,10 +13,10 @@ export const fetchBrandAndSizeData=(brand,size)=>{
 }
 
 
-export const addItem=(data)=>{
-    return apiClient.post('/stock',data);//need to update after implementing the backend
+export const addItem=(cat_brand,data)=>{
+    return apiClient.post(`/stock/${cat_brand}`,data);//need to update after implementing the backend
 }
 
-export const updateItem=(data)=>{
-    return apiClient.put('/stock',data);//need to update after implementing the backend
+export const updateItem=(cat_brand,data)=>{
+    return apiClient.put(`/stock/${cat_brand}`,data);//need to update after implementing the backend
 }

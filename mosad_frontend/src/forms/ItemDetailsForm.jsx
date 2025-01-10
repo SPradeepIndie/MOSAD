@@ -1,13 +1,13 @@
 import React from "react";
 import { TextField, Box, Typography } from "@mui/material";
-import { useState } from "react";
 
  
   
 
-const ItemDetailsSection = ({ formData,handleChange,errors }) => {
+const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
 
   return (
+    <form onSubmit={onSubmit}>
     <Box
       id="itemdetails"
       sx={{
@@ -23,7 +23,7 @@ const ItemDetailsSection = ({ formData,handleChange,errors }) => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: "45% 45%",
+          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
           gap: "15px",
         }}
       >
@@ -51,7 +51,8 @@ const ItemDetailsSection = ({ formData,handleChange,errors }) => {
         ))}
       </Box>
     </Box>
+    </form>
   );
 };
 
-export default ItemDetailsSection;
+export default ItemDetailsForm;
