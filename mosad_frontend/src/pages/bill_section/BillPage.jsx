@@ -67,9 +67,9 @@ const BillPage = () => {
   const balance = total - advance;
 
   const printRef = useRef();
-  const handlePrint = useReactToPrint({
+  /*const handlePrint = useReactToPrint({
     content: () => printRef.current,
-  });
+  });*/
 
   return (
     <Box sx={{ p: 4 }}>

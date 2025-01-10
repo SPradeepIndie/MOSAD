@@ -31,12 +31,12 @@ const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity 
     return fetchBrands().then((result) => {
         return result;
       }).catch((error) => {
-        return null;
+        return null; 
       });
   }
 
   async function getBrandAndSizeData(){
-    return fetchBrandAndSizeData().then((result) => {
+    return fetchBrandAndSizeData(brand,size).then((result) => {
         return result;
       }).catch((error) => {
         return null;
@@ -75,13 +75,13 @@ const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity 
       
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
-        onSearchResult(response.data); // Pass results to parent if needed
+        
       } else {
         setResults([]); // Clear results if no content
         setError("No results found.");
       }
     } catch (err) {
-      //console.error("Search request failed:", err);
+      console.error("Search request failed:", err);
       setError("Failed to fetch search results. Please check your inputs.");
     }
   };

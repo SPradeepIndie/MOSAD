@@ -9,7 +9,7 @@ export const fetchBrands=()=>{
 }
 
 export const fetchBrandAndSizeData=(brand,size)=>{
-    return apiClient.get('/search/brand?brand=atlander&size=100x90x17');
+    return apiClient.get('/search/brand',{params:{brand:brand,size:size}});
 }
 
 
