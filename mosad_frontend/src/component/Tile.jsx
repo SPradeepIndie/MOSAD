@@ -1,17 +1,11 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
-import useGlobalAccess from "../hooks/useGlobalAccess";
+import PropTypes from 'prop-types';
 
-function Tile({ title, icon, link , catN ,brandN}) {
-  const { setSelectedCategory, setSelectedBrand } = useGlobalAccess();
-
-  const hadleCatBrand = () =>{
-    setSelectedCategory(catN);
-    setSelectedBrand(brandN);
-  }
+function Tile({ title, icon, link,state}) {
   return (
-    <Card component={Link} to={link} onClick={ hadleCatBrand }
+    <Card component={Link} to={link} state={state}
       sx={{
         height: 'auto',
         width: '15em',
@@ -57,5 +51,14 @@ function Tile({ title, icon, link , catN ,brandN}) {
     </Card>
   );
 }
+
+
+
+Tile.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
+  link: PropTypes.string,
+  state: PropTypes.object,
+};
 
 export default Tile;

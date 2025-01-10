@@ -54,6 +54,9 @@ function StockPage({ isFromBranch }) {
           ))}
         </Grid2>
       </Box>
+
+    {/* Searching part  */}
+    
     </>
   );
 }

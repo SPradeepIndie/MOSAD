@@ -8,9 +8,15 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import { useLocation} from 'react-router-dom';
 
 function BrandPage({isFromBranch}) {
- 
+  const location=useLocation();
+  const states=location.state;
+  console.log(states);
+
+
+
   return (
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* First Row: Three Tiles */}
@@ -18,24 +24,20 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/tock/item-view" :"/stock/item-view"}`} 
-            catN={"Tyre"}   
-            brandN={"CEAT"}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"CEAT"}}
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
-            catN={"Tyre"} 
-            brandN={"PRESA"}
-
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"PRESA"}}
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
-            catN={"Tyre"} 
-            brandN={"LINGLONG"}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"LINGLONG"}}
           />
         </Stack>
 
@@ -44,23 +46,20 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
-            catN={"Tyre"} 
-            brandN={"RAPID"}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"RAPID"}}
           />
           <Tile
             title="Atlander"
             icon={<AccountTreeIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
-            catN={"Tyre"} 
-            brandN={"Atlander"}
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"Atlander"}}
           />
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/item-view" : "/stock/item-view"}`}
-            catN={"Tyre"} 
-            brandN={"Brand 6"}   
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"Brand 6"}}
           />
         </Stack>
 
@@ -69,10 +68,8 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="Brand 7"
             icon={<AssessmentIcon fontSize="large" />}
-            catN={"Tyre"} 
-            brandN={"Brand 7"} 
             onClick={() => handleTileClick('')}
-          /> 
+          />
         </Stack>
       </Box>
   );
