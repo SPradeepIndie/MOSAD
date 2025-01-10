@@ -7,113 +7,66 @@
     Select, 
     MenuItem, 
     Paper,
-    Button
+    IconButton,
+    Button,
+   
  } from '@mui/material';
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import AddIcon from '@mui/icons-material/Add';
+import { blue } from '@mui/material/colors';
+import PropTypes from "prop-types";
 
 
-const initialUserDto={
-    username:"",
-    firstName:"",
-    lastName:"",
-    email:""
-}
-
-const initialPassword={
-    password:""
-}
 const initialPwds={
     pwd_1:"",
     pwd_2:""
 }
-const initialUserRoleDto={
-    roleName:""
-}
 
-const initialUserContactDto=[{
-    contactNum:""
-}]
+export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUserUpdateData}){
+    let location = useLocation();
 
+    const[pwds,setPwds]=useState(initialPwds);
+    const handlePwds = (event) => {
+            const { name, value } = event.target;
+            setPwds({ [name]: value });
+            pwds.pwd_2===pwds.pwd_1 ? setUserUpdateData(...userUpdateData,(pwds.pwd_1)) :alert("Password doesn't match");
+    };
 
-export default function UserDetailsForm({onSubmit,loggedUserDetails}){
-    let location = useLocation()
-
-    //Handle editing
-    const [editMode, setEditMode] = useState(false);
-
-    const[pwds,setPwds]=useState(initialPwds)
-    const [password, setPassword] = useState(initialPassword); 
-    const [userDto, setUserDto] = useState(loggedUserDetails?.userDto || initialUserDto); 
-    const [userRoleDto, setUserRoleDto] = useState(loggedUserDetails?.userRoleDto || initialUserRoleDto);
-    const [userContactDto, setUserContactDto] = useState(loggedUserDetails?.userContactDto || initialUserContactDto);
-
-    //Form user inputs  handling
     const handleUserDtoChange = (event) => {
         const { name, value } = event.target;
-        setUserDto({ ...userDto, [name]: value });
+        setUserUpdateData({
+            ...userUpdateData, 
+            userDto: {
+                ...userUpdateData.userDto,
+                [name]: value 
+            }
+        });
     };
+
     const handleUserRoleDtoChange = (event) => {
         const { name, value } = event.target;
-        setUserRoleDto({ ...userRoleDto, [name]: value });
-    };
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value); 
-    };
-    const handleUserContactDtoChange = (event) => {
-        const { name, value, index } = event.target; 
-        const updatedContact = [...userContactDto]; 
-        updatedContact[index] = { ...updatedContact[index], [name]: value }; 
-        setUserContactDto(updatedContact);
-        
-    };
-
-    //user paswords  handling
-    const handlePwds = (event) => {
-        const { name, value } = event.target;
-        setPwds({ [name]: value });
-        pwds.pwd_2===pwds.pwd_1 ? setPassword(pwds.pwd_1) :alert("Password doesn't match");
-    };
-
-    // Function to replace null properties with empty strings
-    const replaceNullWithEmptyString = (Dto) => {
-        for (const key in Dto) {
-            if (Dto[key] === null) {
-                Dto[key] = ""; // Replace null with empty string
+        setUserUpdateData({
+            ...userUpdateData,
+            userRoleDto: {
+                ...userUpdateData.userRoleDto,
+                [name]: value
             }
-        }
-        return Dto;
+        });
     };
 
-    
-    const dataSubmitToParent=(event)=>{
-        // Update the initialUserDto
-        const updatedUserDto = replaceNullWithEmptyString(userDto);
-        const updatedUserContactDto = replaceNullWithEmptyString(userContactDto[0]);
-        console.log(userContactDto[0])
-        event.preventDefault();
-        if (editMode) {
-            onSubmit({
-                userDto: updatedUserDto,
-                userRoleDto: userRoleDto,
-                userContactDto: updatedUserContactDto
-            });
-            setEditMode(false);
-         } else {
-            setEditMode(true);
-         }
-        
-           
+    const [contactNum,setContactNum]=useState({contactNum:""});
+    const handleUserContactNumChange=(event)=>{
+        setContactNum({...contactNum,[event.target.name]:event.target.value})
     }
-    const reset=(event)=>{
-        setUserDto(loggedUserDetails?.userDto || initialUserDto)
-        setUserContactDto(loggedUserDetails?.userContactDto || initialUserContactDto)
-        setUserRoleDto(loggedUserDetails?.userRoleDto || initialUserRoleDto)
-        setEditMode(false)
+    const addNewContact=(event)=>{
+        setUserUpdateData({
+            ...userUpdateData,
+            userContactDto: [
+                ...userUpdateData.userContactDto,contactNum]})
     }
-
     return(
-        <form onSubmit={dataSubmitToParent} >
+        <form onSubmit={onSubmit} >
             {/* User details view */}
             <Paper elevation={1} sx={{p:2,m:2}}>
                 <Grid container spacing={2} >
@@ -124,7 +77,7 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                         label="First name" 
                         variant="standard" 
                         name="firstName" 
-                        value={userDto.firstName || ''} 
+                        value={userUpdateData.userDto.firstName || ''} 
                         onChange={handleUserDtoChange} 
                         fullWidth
                         sx={{
@@ -140,7 +93,7 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                         label="Last name" 
                         variant="standard" 
                         name="lastName" 
-                        value={userDto.lastName || ''} 
+                        value={userUpdateData.userDto.lastName || ''} 
                         onChange={handleUserDtoChange} 
                         fullWidth
                         sx={{
@@ -158,7 +111,7 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                             label="Username" 
                             variant="standard" 
                             name="username" 
-                            value={userDto.username || ''} 
+                            value={userUpdateData.userDto.username || ''} 
                             onChange={handleUserDtoChange} 
                             fullWidth 
                             sx={{
@@ -175,7 +128,7 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                         label="Email" 
                         variant="standard" 
                         name="email" 
-                        value={userDto.email || ''} 
+                        value={userUpdateData.userDto.email || ''} 
                         onChange={handleUserDtoChange} 
                         fullWidth
                         sx={{
@@ -185,14 +138,14 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                         }} 
                     />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid size={{ xs: 10,sm:6}}>
                         <TextField
                         disabled={!editMode} 
                         label="User contact" 
                         variant="standard" 
                         name="contactNum" 
-                        value={userContactDto[0]?.contactNum || ''} 
-                        onChange={handleUserContactDtoChange} 
+                        value={contactNum.contactNum|| ''} 
+                        onChange={handleUserContactNumChange} 
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
@@ -200,6 +153,23 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                           },
                         }} 
                         />
+                    </Grid>
+                    <Grid size={{ xs: 2,sm:6}} alignContent={"end"}>
+                        <IconButton disabled={!editMode} aria-label="delete" onClick={addNewContact}>
+                            <AddIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid size={{ xs: "auto" }}>
+                    {userUpdateData.userContactDto.map((item, index) => (
+                        item.contactNum==""?
+                        <Paper key={index} sx={{ backgroundColor:  blue[100],textAlign:"center" }} component={Button} >
+                            No saved contact numbers
+                        </Paper>
+                        :
+                        <Paper key={index} sx={{ backgroundColor:  blue[100],textAlign:"center",p:1,mr:2}} component={Button} >
+                            {item.contactNum}
+                        </Paper>
+                    ))}
                     </Grid>
                 </Grid>
             </Paper>
@@ -219,7 +189,7 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
                         name="roleName"
                         labelId="role-label" 
                         id="role" 
-                        value={userRoleDto.roleName} 
+                        value={userUpdateData.userRoleDto.roleName} 
                         onChange={handleUserRoleDtoChange} 
                         label="Role"
                         sx={{
@@ -241,53 +211,73 @@ export default function UserDetailsForm({onSubmit,loggedUserDetails}){
 
             {/* User password */}
             {location.pathname === '/user/view-all' &&
-                <Paper elevation={1} sx={{p:2,m:2}}>
-                <Grid container spacing={2} >
+            <Paper elevation={1} sx={{p:2,m:2}}>
+            <Grid container spacing={2} >
+            <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                    required
+                    type='password'
+                    label="Password" 
+                    variant="standard" 
+                    name="pwd_1" 
+                    value={pwds.pwd_1} 
+                    onChange={handlePwds} 
+                    fullWidth 
+                />
+                </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField
-                        required
-                        type='password'
-                        label="Password" 
-                        variant="standard" 
-                        name="pwd_1" 
-                        value={pwds.pwd_1} 
-                        onChange={handlePwds} 
-                        fullWidth 
-                    />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
-                    <TextField 
-                        required
-                        type='password'
-                        label="Re-enter Password" 
-                        variant="standard" 
-                        name="pwd_2" 
-                        value={pwds.pwd_2} 
-                        onChange={handlePwds} 
-                        fullWidth 
-                    />
-                    </Grid>
-                    </Grid>
-                </Paper>
+                <TextField 
+                    required
+                    type='password'
+                    label="Re-enter Password" 
+                    variant="standard" 
+                    name="pwd_2" 
+                    value={pwds.pwd_2} 
+                    onChange={handlePwds} 
+                    fullWidth 
+                />
+                </Grid>
+                </Grid>
+            </Paper>
             }
 
-            {/* form handling buttons */}
-            {location.pathname === '/user' &&
-            <Grid container spacing={2} justifyContent="end">
-                <Grid size={{xs:"auto"}}>
-                <Button type="submit" variant="contained" color="primary" onClick={dataSubmitToParent}>
-                    {editMode ? 'Save' : 'Edit'}
-                </Button>
-                </Grid>
-                <Grid size={{xs:"auto"}}>
-                {editMode && (
-                    <Button variant="outlined" onClick={reset}>
-                        Cancel
-                    </Button>
-                )}
-                </Grid>
-            </Grid>
-            }
+           
         </form>
     );
+}
+
+UserDetailsForm.prototype={
+    onSubmit:PropTypes.func.isRequired,
+    userUpdateData:PropTypes.shape({
+        userDto:PropTypes.shape({
+            username:PropTypes.string,
+            firstName:PropTypes.string,
+            lastName:PropTypes.string,
+            email:PropTypes.string
+        }),
+        userRoleDto:PropTypes.shape({
+            roleName:PropTypes.string
+        }),
+        userContactDto:PropTypes.arrayOf(PropTypes.shape({
+            contactNum:PropTypes.string
+        }))
+    }),
+    editMode:PropTypes.bool.isRequired,
+    setUserUpdateData:PropTypes.func,
+    userAddData:PropTypes.shape({
+        userDto:PropTypes.shape({
+            username:PropTypes.string,
+            firstName:PropTypes.string,
+            lastName:PropTypes.string,
+            email:PropTypes.string
+        }),
+        password:PropTypes.string,
+        userRoleDto:PropTypes.shape({
+            roleName:PropTypes.string
+        }),
+        userContactDto:PropTypes.arrayOf(PropTypes.shape({
+            contactNum:PropTypes.string
+        }))
+    }),
+    setuserAddData:PropTypes.func
 }
