@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
 
-const SearchComponent = ({ onSearchResult, onAddToBill }) => {
+const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
@@ -90,7 +90,7 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
     onAddToBill({
       description: `${row.tyreSize} ${brand}`,
       unitPrice: parseFloat(row.officialSellingPrice) || 0,
-      quantity: 1,
+      quantity: quantity,
       subtotal: parseFloat(row.officialSellingPrice) || 0,
     });
   };
@@ -99,7 +99,7 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
-        Search Tyres
+        Search 
       </Typography>
       {loadingBrands ? (
         <Typography>Loading brands...</Typography>
@@ -148,6 +148,7 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
                 <TableCell>Pattern</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Store Count</TableCell>
+                <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -164,7 +165,8 @@ const SearchComponent = ({ onSearchResult, onAddToBill }) => {
                 size="small"
                 variant="outlined"
                 placeholder="Qty"
-                onChange={(e) => handleQuantityChange(index, e.target.value)} // Handle quantity change
+                value={quantity}
+                onChange={(event) => setQuantity(event.target.value)}  // Update state on change
               />
             </TableCell>
                   <TableCell>
