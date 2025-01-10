@@ -1,7 +1,7 @@
 import apiClient from './api_config/apiClient';
 
-export const fetchItems=()=>{
-    return apiClient.get();
+export const fetchItems=(data)=>{
+    return apiClient.get('/item-view',data);
 }
 
 export const fetchBrands=()=>{
