@@ -1,7 +1,7 @@
 import apiClient from './api_config/apiClient';
 
-export const fetchItems=()=>{
-    return apiClient.get();
+export const fetchItems=(data)=>{
+    return apiClient.get('/item-view',data);
 }
 
 export const fetchBrands=()=>{
@@ -16,3 +16,4 @@ export const addItem=(data)=>{
 export const updateItem=(data)=>{
     return apiClient.put('/stock',data);//need to update after implementing the backend
 }
+

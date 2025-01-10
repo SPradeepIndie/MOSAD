@@ -14,12 +14,18 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.3.1",
     "@mui/material": "^6.3.1",
+    "@mui/x-data-grid": "^7.23.5",
     "@mui/x-date-pickers": "^7.23.3",
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-material-ui-carousel": "^3.4.2",
+<<<<<<< HEAD
     "react-router-dom": "^7.1.1"
+=======
+    "react-router-dom": "^7.1.1",
+    "react-to-print": "^3.0.4"
+>>>>>>> 51ba3564fbf07581fc2be34cfcf052be5f83f3d2
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
