@@ -22,22 +22,22 @@ public class AccountManagerController {
         this.validateHtmlPathVariable = validateHtmlPathVariable;
     }
 
-    @PutMapping("/update/{username}")
+    @PutMapping("/update")
     public ResponseEntity<ResponseDTO> updateInfo(
-            @PathVariable("username") String username,
+            @RequestParam String username,
             @RequestBody UserDetailsDTO userDetailsDto){
         ResponseDTO responseDTO= accountManagementService.updateUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username),userDetailsDto);
         return ResponseEntity.accepted().body(responseDTO);
     }
 
-    @DeleteMapping("/delete/{username}")
-    public ResponseEntity<ResponseDTO> deleteAccount(@PathVariable("username") String username){
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDTO> deleteAccount(@RequestParam String username){
         ResponseDTO responseDTO= accountManagementService.deleteUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username));
         return ResponseEntity.accepted().body(responseDTO);
     }
 
-    @GetMapping("/view/{username}")
-    public ResponseEntity<UserDetailsDTO> viewUserInfo(@PathVariable("username") String username) {
+    @GetMapping("/view")
+    public ResponseEntity<UserDetailsDTO> viewUserInfo(@RequestParam String username) {
         UserDetailsDTO userDetailsDto =accountManagementService.getUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username));
         return ResponseEntity.accepted().body(userDetailsDto);
     }

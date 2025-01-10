@@ -13,7 +13,10 @@ import EmployeePage from './pages/employee_section/EmployeePage'
 import ReportPredictionPage from './pages/prediction_report_section/ReportPredictionPage'
 import RetailPage from './pages/retail_section/RetailPage'
 import ServicesPage from './pages/services_section/ServicesPage'
-import UserManagement from './pages/users_section/UserManagement'
+
+import UserDetailsView from './pages/users_section/UserDetailsView'
+import UserManagementLayout from './pages/users_section/UserManagementLayout';
+import AllUsersView from './pages/users_section/AllUsersView';
 
 import StockPageLayout from './pages/stock_section/StockPageLayout'
 import StockPage from './pages/stock_section/StockPage'
@@ -82,7 +85,10 @@ function App() {
             <Route path="/employee" element={ <EmployeePage />} />
             <Route path="/services" element={ <ServicesPage />} />
             
-            <Route path="/user" element={ <UserManagement />} />
+            <Route path="/user" element={ <UserManagementLayout />} >
+              <Route index element={<UserDetailsView/>}/>
+              <Route path="view-all" element={<AllUsersView />}/>
+            </Route>
           </Route>
         </Routes>
       </Box>
