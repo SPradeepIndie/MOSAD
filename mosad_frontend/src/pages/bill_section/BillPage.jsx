@@ -12,10 +12,6 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import HeaderBar from "../../component/Header";
-import Footer from "../../component/Footer";
-import "../../App.css";
-import { useReactToPrint } from "react-to-print";
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 
 
@@ -84,7 +80,6 @@ const BillPage = () => {
 
       {/* Bill Content */}
       <Box
-        ref={printRef}
         sx={{
           background: "#f9f9f9",
           borderRadius: "8px",
@@ -284,7 +279,7 @@ const BillPage = () => {
 
       {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={handlePrint}>
+        <Button variant="contained" color="primary" onClick={()=>console.log("printing")}>
           Print Bill
         </Button>
       </Box>

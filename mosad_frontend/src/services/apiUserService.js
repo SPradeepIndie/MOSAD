@@ -1,5 +1,7 @@
 import apiClient from './api_config/apiClient';
 
+
+
 export const loginRequest=(data)=>{
     return apiClient.post('/login',JSON.stringify(data));
 }
@@ -9,13 +11,17 @@ export const registerUser=(data)=>{
 }
 
 export const updateUserDetails=(data)=>{
-    return apiClient.post('/user/update',JSON.stringify(data));
+    return apiClient.put('/user/update',data);
 }
 
-export const deleteUser=(data)=>{
-    return apiClient.post('/user/delete',JSON.stringify(data))
+export const deleteUser=()=>{
+    return apiClient.delete('/user/delete',data)
 }
 
-export const getUserbyUsername=(data)=>{
-    return apiClient.post('/user/view',JSON.stringify(data))
+export const getUserDetailsByUsername=()=>{
+    return apiClient.get('/user/view',data)
+}
+
+export const getAllUsername=()=>{
+    return apiClient.get('user/view/all');
 }
