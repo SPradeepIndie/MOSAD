@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.controller;
+package org.rtss.mosad_backend.controller.stock_management_controller;
 
 import org.rtss.mosad_backend.service.stock_management_service.ItemViewService;
 import org.springframework.beans.factory.annotation.Autowired;

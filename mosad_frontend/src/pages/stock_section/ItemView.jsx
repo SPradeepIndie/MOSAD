@@ -16,7 +16,6 @@ import linglong_baner from "../../assets/linglong.png"
 
 const ItemView = () => {
   const { selectedCategory, selectedBrand } = useGlobalAccess();
-
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
