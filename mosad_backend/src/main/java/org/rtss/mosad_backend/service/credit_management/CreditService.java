@@ -5,8 +5,7 @@ import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.entity.credit.Repayment;
 import org.rtss.mosad_backend.entity.customer.Customer;
-import org.rtss.mosad_backend.exceptions.CreditException;
-import org.rtss.mosad_backend.exceptions.RepaymentException;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
@@ -43,7 +42,7 @@ public class CreditService {
 
         // Fetch the Customer entity using customer_id from the DTO
         Customer customer = customerRepository.findById(creditDTO.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + creditDTO.getCustomerId()));
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found"))));
 
         // Map the CreditDTO to a Credit entity
         Credit credit=creditDTOMapper.toEntity(creditDTO);
@@ -62,11 +61,25 @@ public class CreditService {
         try {
             return creditDTOMapper.toDTOList(creditRepository.findAll());
         } catch (Exception ex) {
-            throw new CreditException("Failed to fetch credits: " + ex.getMessage());
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to fetch credits: " + ex.getMessage())));
         }
     }
 
-    // Get credit details with customer name and contact number
+    //Get credit by id
+    public CreditDTO getCreditById(Long creditId) {
+        try {
+            Credit credit = creditRepository.findById(creditId)
+                    .orElseThrow(() -> new RuntimeException("Credit not found for ID: " + creditId));
+            return creditDTOMapper.toDTOWithCustomer(credit);
+        } catch (Exception ex) {
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to fetch credit: " + ex.getMessage())));
+        }
+    }
+
+    //Get
+
+
+    // Get all credits with repayments
     public List<CreditDetailsDTO> getAllCreditDetails() {
         try {
             List<Object[]> results = creditRepository.findAllCreditDetails();
@@ -103,7 +116,7 @@ public class CreditService {
 
             return new ArrayList<>(creditDetailsMap.values());
         } catch (Exception ex) {
-            throw new CreditException("Failed to get credit details: " + ex.getMessage());
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to fetch credit details: " + ex.getMessage())));
         }
     }
 
@@ -111,7 +124,7 @@ public class CreditService {
     public ResponseEntity<RepaymentResponseDTO> addRepayment(RepaymentRequestDTO repaymentRequest) {
         try {
             Credit credit = creditRepository.findById(repaymentRequest.getCreditId())
-                    .orElseThrow(() -> new CreditException("Credit not found for ID: " + repaymentRequest.getCreditId()));
+                    .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Credit not found"))));
 
             Repayment repayment = new Repayment();
             repayment.setDate(repaymentRequest.getDate());
@@ -128,10 +141,10 @@ public class CreditService {
             );
 
             return ResponseEntity.ok(responseDTO);
-        } catch (CreditException ex) {
-            throw ex; // Custom exception already defined
         } catch (Exception ex) {
-            throw new RepaymentException("Failed to process repayment: " + ex.getMessage());
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to add repayment: " + ex.getMessage())));
         }
     }
+
+
 }

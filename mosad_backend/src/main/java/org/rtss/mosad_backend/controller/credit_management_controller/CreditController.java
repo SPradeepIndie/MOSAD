@@ -24,11 +24,18 @@ public class CreditController {
     public List<CreditDTO> getAllCredits() {
         return creditService.getAllCredits();
     }
+
+    //all credits with repayments
     @GetMapping("/all-credit-details")
     public List<CreditDetailsDTO> getAllCreditDetails() {
         return creditService.getAllCreditDetails();
     }
 
+    //get credit by id
+    @GetMapping("/{creditId}")
+    public CreditDTO getCreditById(@PathVariable Long creditId) {
+        return creditService.getCreditById(creditId);
+    }
 
     @PostMapping("/add-credit")
     public ResponseEntity<CreditDTO> addCredit(@RequestBody CreditDTO creditDTO) {

@@ -1,13 +1,17 @@
 package org.rtss.mosad_backend.dto.credit_dtos;
 
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class RepaymentRequestDTO {
+    @NotEmpty(message = "Credit ID is required")
     private Long creditId; // ID of the associated credit
+    @NotEmpty(message = "Date is required")
     private Date date;
+    @NotEmpty(message = "Amount is required")
     private double amount;
 
     public RepaymentRequestDTO() {}

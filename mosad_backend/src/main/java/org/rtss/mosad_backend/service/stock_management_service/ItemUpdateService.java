@@ -1,12 +1,14 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemUpdateDTO;
-import org.rtss.mosad_backend.exceptions.ItemUpdateException;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +25,7 @@ public class ItemUpdateService {
         Optional<Item> existingItem = itemRepository.findById(itemId);
 
         if (existingItem.isEmpty()) {
-            throw new ItemUpdateException("Item with ID  " + itemId + " not found.");
+            throw new ObjectNotValidException(new HashSet<>(List.of("Item not found")));
         }
 
         Item item = existingItem.get();
