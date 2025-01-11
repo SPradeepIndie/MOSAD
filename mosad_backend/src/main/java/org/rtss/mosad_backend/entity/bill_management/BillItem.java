@@ -67,5 +67,17 @@ public class BillItem {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "BillItem{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                ", subtotal=" + subtotal +
+                ", bill=" + bill +
+                '}';
+    }
 }
 

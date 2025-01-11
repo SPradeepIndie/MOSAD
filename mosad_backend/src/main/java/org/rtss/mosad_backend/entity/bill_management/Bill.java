@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.credit.Credit;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class Bill {
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<BillItem> items = new ArrayList<>();
+
 
     // Getters and Setters
 

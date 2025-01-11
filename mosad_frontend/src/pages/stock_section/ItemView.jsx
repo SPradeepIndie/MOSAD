@@ -24,6 +24,8 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
   //console.log(states);
+  selectedCategory=states.category;
+  selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -170,33 +172,17 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </div>
       </div>
 
-      {/* <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
-        <DialogContent>
-
-            <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-              onSubmit={handleSubmit}
-              closeDialog={closeDialog}
-            />
-            
-          
-        </DialogContent>
-
-      </Dialog> */}
+      
 
       <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} Buttons={false}>
         <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-              onSubmit={handleSubmit}
-              closeDialog={closeDialog}
-            />
+          formData={formData}
+          setFormData={setFormData}
+          errors={inputFieldErrors}
+          handleChange={validateAddForm}
+          onSubmit={handleSubmit}
+          closeDialog={closeDialog}
+        />
       </PopUp>
     </>
   );

@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.credit;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.customer.Customer;
 
 import java.util.Date;
@@ -23,6 +24,10 @@ public class Credit {
 
     @OneToMany(mappedBy = "credit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Repayment> repayments;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bill_id",referencedColumnName = "id")
+    private Bill bill;
 
     public Credit() {
     }

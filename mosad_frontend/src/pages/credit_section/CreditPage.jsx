@@ -216,7 +216,7 @@ const CreditPage = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -275,7 +275,7 @@ let remainingBalance;
     return (
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
         <Typography variant="h4" align="center">
-          Loading...
+          Loading Credits...
         </Typography>
       </Container>
     );
