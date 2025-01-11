@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import {
   Box,
   TextField,
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
 
-const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity }) => {
+const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
@@ -87,13 +88,17 @@ const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity 
   };
 
   const handleAddToBill = (row) => {
-    onAddToBill({
-      description: `${row.tyreSize} ${brand}`,
-      unitPrice: parseFloat(row.officialSellingPrice) || 0,
-      quantity: quantity,
-      subtotal: parseFloat(row.officialSellingPrice) || 0,
-    });
-  };
+    if (quantity > 0) {
+        const unitPrice = parseFloat(row.officialSellingPrice) || 0;
+        onAddToBill({
+            description: `${row.tyreSize} ${brand}`,
+            unitPrice: unitPrice,
+            quantity: quantity,
+            subtotal: unitPrice * quantity,
+        });
+    }
+};
+
   
 
   return (
@@ -165,7 +170,7 @@ const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity 
                 size="small"
                 variant="outlined"
                 placeholder="Qty"
-                value={quantity}
+                value={quantity} 
                 onChange={(event) => setQuantity(event.target.value)}  // Update state on change
               />
             </TableCell>
@@ -187,8 +192,32 @@ const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity 
     </Box>
   );
 
-
-
 };
+
+SearchComponent.propTypes = {
+  //onSearchResult: PropTypes.func.isRequired,  // A required function for handling search results
+  onAddToBill: PropTypes.func.isRequired,    // A required function for adding to the bill
+  
+ 
+  quantity: (props, propName, componentName) => {
+    const value = props[propName];
+
+  // Allow null values
+  if (value === null) {
+    return null;
+  }
+
+  // Check if the number is positive
+  if (value !== null && value < 0) {
+    return new Error(
+      `${propName} in ${componentName} must be a positive number. Received: ${value}`
+    );
+  }
+
+  return null; 
+  },   
+  setQuantity: PropTypes.func.isRequired,    // A required function for setting the quantity
+};
+
 
 export default SearchComponent;
