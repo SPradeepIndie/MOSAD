@@ -1,8 +1,9 @@
 import {Link, Outlet } from "react-router-dom";
-import React,{useState} from "react"; 
+import React,{useState,Suspense} from "react"; 
 import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+
 
 const UserManagementLayout=()=>{
     const [value, setValue] = useState(0);
@@ -35,7 +36,10 @@ const UserManagementLayout=()=>{
                     {renderTabs()}
                 </Tabs>
             </Box>
-            <Outlet/>
+            <Suspense fallback={<h1>Loading....</h1>}>
+              <Outlet/>
+            </Suspense>
+            
         </>
      
     )

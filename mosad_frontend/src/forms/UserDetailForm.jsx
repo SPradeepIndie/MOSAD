@@ -18,20 +18,8 @@ import { blue } from '@mui/material/colors';
 import PropTypes from "prop-types";
 
 
-const initialPwds={
-    pwd_1:"",
-    pwd_2:""
-}
-
-export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUserUpdateData}){
+export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds}){
     let location = useLocation();
-
-    const[pwds,setPwds]=useState(initialPwds);
-    const handlePwds = (event) => {
-            const { name, value } = event.target;
-            setPwds({ [name]: value });
-            pwds.pwd_2===pwds.pwd_1 ? setUserUpdateData(...userUpdateData,(pwds.pwd_1)) :alert("Password doesn't match");
-    };
 
     const handleUserDtoChange = (event) => {
         const { name, value } = event.target;
@@ -65,6 +53,8 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
             userContactDto: [
                 ...userUpdateData.userContactDto,contactNum]})
     }
+
+    
     return(
         <form onSubmit={onSubmit} >
             {/* User details view */}
@@ -161,14 +151,15 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                     </Grid>
                     <Grid size={{ xs: "auto" }}>
                     {userUpdateData.userContactDto.map((item, index) => (
-                        item.contactNum==""?
-                        <Paper key={index} sx={{ backgroundColor:  blue[100],textAlign:"center" }} component={Button} >
-                            No saved contact numbers
-                        </Paper>
-                        :
-                        <Paper key={index} sx={{ backgroundColor:  blue[100],textAlign:"center",p:1,mr:2}} component={Button} >
-                            {item.contactNum}
-                        </Paper>
+                        item.contactNum === "" ? (
+                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
+                              No saved contact numbers
+                            </Paper>
+                          ) : (
+                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
+                              {item.contactNum}
+                            </Paper>
+                          )
                     ))}
                     </Grid>
                 </Grid>
@@ -264,20 +255,5 @@ UserDetailsForm.prototype={
     }),
     editMode:PropTypes.bool.isRequired,
     setUserUpdateData:PropTypes.func,
-    userAddData:PropTypes.shape({
-        userDto:PropTypes.shape({
-            username:PropTypes.string,
-            firstName:PropTypes.string,
-            lastName:PropTypes.string,
-            email:PropTypes.string
-        }),
-        password:PropTypes.string,
-        userRoleDto:PropTypes.shape({
-            roleName:PropTypes.string
-        }),
-        userContactDto:PropTypes.arrayOf(PropTypes.shape({
-            contactNum:PropTypes.string
-        }))
-    }),
-    setuserAddData:PropTypes.func
+
 }
