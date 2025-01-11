@@ -99,6 +99,9 @@ const AllUsersView=()=>{
       
             resetTheForm(); // Reset the form after successful submission
             setOpenPopup(false)
+            
+            // Update table data after successful registration
+            await loadAllUsers(); // Fetch updated user data
           } catch (error) {
             console.log(userRegData)
             console.error('Error during registration:', error);
