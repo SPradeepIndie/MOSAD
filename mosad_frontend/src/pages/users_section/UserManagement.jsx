@@ -9,7 +9,7 @@ import {
 import React,{ useState, useEffect } from "react";
 import PopUp from '../../component/PopUp'
 import useAuth from "../../hooks/useAuth"
-import { getUserbyUsername } from "../../services/apiUserService";
+import { getUserDetailsByUsername } from "../../services/apiUserService";
 
 const initialUser={
     userDto:{
@@ -67,37 +67,36 @@ const UserManagement=()=>{
         setUserData({ ...userData, password: event.target.value }); 
     };
 
-    
-    //Handle editing
-    const [editMode, setEditMode] = useState(false);
+     //Handle editing
+     const [editMode, setEditMode] = useState(false);
 
-    //Handle user detials view
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission (add or update user)
-        if (editMode) {
-        // Update user logic
-        } else {
-        // Add user logic 
-        }
-    };
-    
-    const handleEdit = (userId) => {
-        // Fetch user details by userId (e.g., API call)
-        // Set editMode to true
-        // Set selectedUserId
-    };
-    
-    const handleCancel = () => {
-        setEditMode(false);
-    };
+     //Handle user detials view
+     const [selectedUserId, setSelectedUserId] = useState(null);
+     
+     
+     const handleSubmit = (event) => {
+         event.preventDefault();
+         // Handle form submission (add or update user)
+         if (editMode) {
+         // Update user logic
+         } else {
+         // Add user logic 
+         }
+     };
+     
+     const handleEdit = (userId) => {
+         // Fetch user details by userId (e.g., API call)
+         // Set editMode to true
+         // Set selectedUserId
+     };
+     
+     const handleCancel = () => {
+         setEditMode(false);
+     };
     useEffect(() => {
             // Fetch user details if there is token is saved
             if (auth.success) {
-                const response = getUserbyUsername(auth.username);
+                const response = getUserDetailsByUsername(auth.username);
                 console.log(response?.data);
             }
     }, []);

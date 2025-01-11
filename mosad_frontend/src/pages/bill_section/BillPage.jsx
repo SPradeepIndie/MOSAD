@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   TextField,
@@ -12,21 +12,30 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import HeaderBar from "../../component/Header";
-import Footer from "../../component/Footer";
-import "../../App.css";
-import { useReactToPrint } from "react-to-print";
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
+
+
 
 function ccyFormat(num) {
   return num.toFixed(2);
 }
 
 const BillPage = () => {
-  const [rows, setRows] = React.useState(
-    Array(5).fill({ description: "", unitPrice: "", quantity: "", subtotal: 0 })
-  );
+  const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToBill = (item) => {
+    setRows((prevRows) => [
+      ...prevRows,
+      {
+        description: item.description || "",
+        unitPrice: parseFloat(item.unitPrice) || 0,
+        quantity: parseInt(item.quantity, 10) || 1,
+        subtotal: (parseFloat(item.unitPrice) || 0) * (parseInt(item.quantity, 10) || 1),
+      },
+    ]);
+  };
 
   const handleInputChange = (index, field, value) => {
     setRows((prevRows) => {
@@ -40,8 +49,11 @@ const BillPage = () => {
         const unitPrice = parseFloat(updatedRows[index].unitPrice) || 0;
         const quantity = parseInt(updatedRows[index].quantity, 10) || 0;
         updatedRows[index].subtotal = unitPrice * quantity;
+      
+        if (field === "quantity") {
+          setQuantity(quantity);
+        }
       }
-
       return updatedRows;
     });
   };
@@ -55,39 +67,19 @@ const BillPage = () => {
   const balance = total - advance;
 
   const printRef = useRef();
-  const handlePrint = useReactToPrint({
+  /*const handlePrint = useReactToPrint({
     content: () => printRef.current,
-  });
-
-  const handleKeyPress = (index, e) => {
-    if (e.key === "Enter") {
-      const lastRow = rows[index];
-      if (
-        lastRow.description &&
-        lastRow.unitPrice &&
-        lastRow.quantity &&
-        index === rows.length - 1 // Ensure it's the last row
-      ) {
-        setRows((prevRows) => [
-          ...prevRows,
-          { description: "", unitPrice: "", quantity: "", subtotal: 0 },
-        ]);
-      }
-    }
-  };
+  });*/
 
   return (
     <Box sx={{ p: 4 }}>
-     
-
       {/* Search Component */}
       <Box sx={{ mb: 4 }}>
-        <SearchComponent />
+        <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity}/>
       </Box>
 
       {/* Bill Content */}
       <Box
-        ref={printRef}
         sx={{
           background: "#f9f9f9",
           borderRadius: "8px",
@@ -142,10 +134,6 @@ const BillPage = () => {
           </Typography>
         </Box>
 
-        
-
-        
-
         {/* Table and Bill */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -175,7 +163,6 @@ const BillPage = () => {
                       type="number"
                       value={row.quantity}
                       onChange={(e) => handleInputChange(index, "quantity", e.target.value)}
-                      onKeyPress={(e) => handleKeyPress(index, e)}
                       InputProps={{ style: { fontSize: "1.2rem" } }}
                       sx={{ width: "80%" }}
                     />
@@ -186,7 +173,6 @@ const BillPage = () => {
                       size="small"
                       value={row.description}
                       onChange={(e) => handleInputChange(index, "description", e.target.value)}
-                      onKeyPress={(e) => handleKeyPress(index, e)}
                       InputProps={{ style: { fontSize: "1.2rem" } }}
                       sx={{ width: "90%" }}
                     />
@@ -198,7 +184,6 @@ const BillPage = () => {
                       type="number"
                       value={row.unitPrice}
                       onChange={(e) => handleInputChange(index, "unitPrice", e.target.value)}
-                      onKeyPress={(e) => handleKeyPress(index, e)}
                       InputProps={{ style: { fontSize: "1.2rem" } }}
                       sx={{ width: "90%" }}
                     />
@@ -294,13 +279,10 @@ const BillPage = () => {
 
       {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={handlePrint}>
+        <Button variant="contained" color="primary" onClick={()=>console.log("printing")}>
           Print Bill
         </Button>
       </Box>
-
-      {/* Footer */}
-      
     </Box>
   );
 };

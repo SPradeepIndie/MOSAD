@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 
 import org.rtss.mosad_backend.dto.stock_management_dto.*;
 import org.rtss.mosad_backend.service.stock_management_service.ItemUpdateService;
-import org.rtss.mosad_backend.exceptions.ItemUpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class ItemUpdateContoller {
         try {
             itemUpdateService.updateItem(itemId, updateDTO);
             return ResponseEntity.ok("Item updated successfully...");
-        } catch (ItemUpdateException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to update the item.");
         }
     }

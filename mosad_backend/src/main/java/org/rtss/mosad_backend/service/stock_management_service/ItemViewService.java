@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.service;
+package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.rtss.mosad_backend.repository.stock_management_repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,39 @@ public class ItemViewService {
     @Autowired
     private ItemOtherAccessoriesRepo itemOtherAccessoriesRepository;
 
-        // Category Selection
+
+        public void setItemBatteryRepository(ItemBatteryRepo repo) {
+            this.itemBatteryRepository = repo;
+        }
+
+        public void setItemTubeRepository(ItemTubeRepo repo) {
+            this.itemTubeRepository = repo;
+        }
+
+        public void setItemTyreAtlanderRepository(ItemTyreAtlanderRepo repo) {
+            this.itemTyreAtlanderRepository = repo;
+        }
+
+        public void setItemTyreLinglongRepository(ItemTyreLinglongRepo repo) {
+            this.itemTyreLinglongRepository = repo;
+        }
+
+        public void setItemTyrePresaRepository(ItemTyrePresaRepo repo) {
+            this.itemTyrePresaRepository = repo;
+        }
+
+        public void setItemTyreRapidRepository(ItemTyreRapidRepo repo) {
+            this.itemTyreRapidRepository = repo;
+        }
+
+        public void setItemOtherAccessoriesRepository(ItemOtherAccessoriesRepo repo) {
+            this.itemOtherAccessoriesRepository = repo;
+        }
+
+
+
+
+    // Category Selection
     public List<?> getItems(String category, String brand) {
         switch (category.toLowerCase()) {
             case "battery":
