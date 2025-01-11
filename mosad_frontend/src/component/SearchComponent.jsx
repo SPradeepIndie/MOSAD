@@ -16,9 +16,9 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { fetchBrands } from "../services/apiStockService";
+import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
 
-const SearchComponent = ({ onSearchResult }) => {
+const SearchComponent = ({ onSearchResult, onAddToBill , quantity , setQuantity }) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
@@ -29,6 +29,14 @@ const SearchComponent = ({ onSearchResult }) => {
 
   async function getBrands(){
     return fetchBrands().then((result) => {
+        return result;
+      }).catch((error) => {
+        return null; 
+      });
+  }
+
+  async function getBrandAndSizeData(){
+    return fetchBrandAndSizeData(brand,size).then((result) => {
         return result;
       }).catch((error) => {
         return null;
@@ -63,12 +71,11 @@ const SearchComponent = ({ onSearchResult }) => {
   const handleSearch = async () => {
     try {
       setError(""); // Clear any previous error
-      const response = await axios.get("/api/search/tyres", {
-        params: { brand, size },
-      });
+      const response = await getBrandAndSizeData();
+      
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
-        onSearchResult(response.data); // Pass results to parent if needed
+        
       } else {
         setResults([]); // Clear results if no content
         setError("No results found.");
@@ -79,10 +86,20 @@ const SearchComponent = ({ onSearchResult }) => {
     }
   };
 
+  const handleAddToBill = (row) => {
+    onAddToBill({
+      description: `${row.tyreSize} ${brand}`,
+      unitPrice: parseFloat(row.officialSellingPrice) || 0,
+      quantity: quantity,
+      subtotal: parseFloat(row.officialSellingPrice) || 0,
+    });
+  };
+  
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
-        Search Tyres
+        Search 
       </Typography>
       {loadingBrands ? (
         <Typography>Loading brands...</Typography>
@@ -130,15 +147,37 @@ const SearchComponent = ({ onSearchResult }) => {
                 <TableCell>Size</TableCell>
                 <TableCell>Pattern</TableCell>
                 <TableCell>Price</TableCell>
+                <TableCell>Store Count</TableCell>
+                <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {results.map((result, index) => (
                 <TableRow key={index}>
-                  <TableCell>{result.brand}</TableCell>
-                  <TableCell>{result.size}</TableCell>
+                  <TableCell>{brand}</TableCell>
+                  <TableCell>{result.tyreSize}</TableCell>
                   <TableCell>{result.pattern}</TableCell>
-                  <TableCell>{result.price}</TableCell>
+                  <TableCell>{result.officialSellingPrice}</TableCell>
+                  <TableCell>{result.tyreCount}</TableCell>
+                  <TableCell>
+              <TextField
+                type="number"
+                size="small"
+                variant="outlined"
+                placeholder="Qty"
+                value={quantity}
+                onChange={(event) => setQuantity(event.target.value)}  // Update state on change
+              />
+            </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleAddToBill(result)}
+                    >
+                      Add
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -147,6 +186,9 @@ const SearchComponent = ({ onSearchResult }) => {
       )}
     </Box>
   );
+
+
+
 };
 
 export default SearchComponent;
