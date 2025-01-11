@@ -3,8 +3,16 @@ import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
-import setItemAddFromFields from "../..//utils/setItemAddFromFields";
+import setItemAddFromFields from "../../utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import useGlobalAccess from "../../hooks/useGlobalAccess";
+import { fetchItems } from "../../services/apiStockService";
+import atlander_baner from "../../assets/atlander.png";
+import presa_baner from "../../assets/presa.png";
+import default_baner from "../../assets/default.png"
+import dsi_baner from "../../assets/dsi.png"
+import rapid_baner from "../../assets/rapid.jpg"
+import linglong_baner from "../../assets/linglong.png"
 import { addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
@@ -15,14 +23,14 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  console.log(states);
+  //console.log(states);
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
 
 
-  const cat_and_brand=(states.category+"_"+states.brand).toLowerCase(); 
+  const cat_and_brand=(states.category+"_"+states.brand).toLowerCase();
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
@@ -83,6 +91,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
     request
       .then(() => {
+        console.log("Item Added successfully!");
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
         console.log("Item added/updated successfully!");
@@ -97,34 +106,29 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   };
 
   useEffect(() => {
+    const brandImages = {
+      atlander: atlander_baner,
+      presa: presa_baner,
+      dsi: dsi_baner,
+      linglong: linglong_baner,
+      rapid: rapid_baner
+    };
+
+    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+
     if (selectedCategory && selectedBrand) {
-      fetch(
-
-        `http://localhost:8080/api/v1/item-view?category=${selectedCategory}&brand=${selectedBrand}`
-
-      )
-        .then((response) => response.json())
-        .then((data) => setRows(data))
+      fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
+        .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
     }
   }, [selectedCategory, selectedBrand]);
 
-  useEffect(() => {
-    const brandImages = {
-      atlander: "/assets/atlander.png",
-      presa: "/assets/presa.png",
-      dsi: "/assets/dsi.png",
-      linglong: "/assets/linglong.png",
-      rapid: "/assets/rapid.png",
-    };
-    setBannerImage(brandImages[selectedBrand] || "/assets/default.png");
-  }, [selectedBrand]);
 
   const handleRowClick = (id) => setSelectedRowId(id);
 
   return (
     <>
-    {message && <GeneralMessage message={message} />}
+    {message && <GeneralMessage message={message}/>}
       <div className="item-view-container">
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
@@ -150,9 +154,9 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
               >
                 <td>{row.pattern}</td>
                 <td>{row.tyreSize}</td>
-                <td>{row.pr}</td>
-                <td>{row.price}</td>
-                <td>{row.stock}</td>
+                <td>{row.ply}</td>
+                <td>{row.officialSellingPrice}</td>
+                <td>{row.tyreCount}</td>
               </tr>
             ))}
           </tbody>

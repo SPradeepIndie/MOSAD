@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from "@mui/material";
 
@@ -11,20 +10,8 @@ const IncompleteTransactions = () => {
         { field: "date", headerName: "Date", flex: 1 }, 
         { field: "description", headerName: "Description", flex: 2 },
         { field: "creditBalance", headerName: "Credit Balance", flex: 1, type: "number" },
-        { field: "dueDate", headerName: "Due Date", flex: 1 },
+        { field: "dueDate", headerName: "Due Date", flex: 1 }
     ];
-
-
-    useEffect(() => {
-        axios
-            .get("http://localhost:8080/api/credits") 
-            .then((response) => {
-                setRows(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching credit history:", error);
-            });
-    }, []);
 
     return (
         <Box sx={{ height: "calc(100vh - 100px)", width: "100%", padding: 2 }}>

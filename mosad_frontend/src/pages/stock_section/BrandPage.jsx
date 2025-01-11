@@ -13,10 +13,10 @@ import { useLocation} from 'react-router-dom';
 function BrandPage({isFromBranch}) {
   const location=useLocation();
   const states=location.state;
-  console.log(states);
+  //console.log(states);
 
-  
- 
+
+
   return (
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* First Row: Three Tiles */}
@@ -24,20 +24,20 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="CEAT"
             icon={<DescriptionIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`} 
-            state={{...states,brand:"CEAT"}}   
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{...states,brand:"CEAT"}}
           />
           <Tile
             title="PRESA"
             icon={<InventoryIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"PRESA"}}   
+            state={{...states,brand:"PRESA"}}
           />
           <Tile
             title="LINGLONG"
             icon={<StorefrontIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"LINGLONG"}} 
+            state={{...states,brand:"LINGLONG"}}
           />
         </Stack>
 
@@ -47,7 +47,7 @@ function BrandPage({isFromBranch}) {
             title="RAPID"
             icon={<CreditCardIcon fontSize="large" />}
             link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"RAPID"}} 
+            state={{...states,brand:"RAPID"}}
           />
           <Tile
             title="Atlander"
@@ -58,7 +58,7 @@ function BrandPage({isFromBranch}) {
           <Tile
             title="Brand 6"
             icon={<PeopleIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}   
+            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
             state={{...states,brand:"Brand 6"}}
           />
         </Stack>

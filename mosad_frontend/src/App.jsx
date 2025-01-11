@@ -11,7 +11,7 @@ import CreditPage from './pages/credit_section/CreditPage'
 import DackPage from './pages/dack_section/DackPage'
 import EmployeePage from './pages/employee_section/EmployeePage'
 import ReportPredictionPage from './pages/prediction_report_section/ReportPredictionPage'
-import RetailPage from './pages/retail_section/RetailPage'
+import RetailPageLayout from './pages/retail_section/layout/RetailPageLayout'
 import ServicesPage from './pages/services_section/ServicesPage'
 import UserManagement from './pages/users_section/UserManagement'
 
@@ -29,6 +29,11 @@ import HeaderBar from './component/Header';
 import BranchPageLayout from './pages/branch_section/BranchPageLayout'
 import BranchPage from './pages/branch_section/BranchPage'
 import BranchStockLayout from './pages/branch_section/BranchStockLayout';
+
+import PaymentHistory from './pages/retail_section/PaymentHistory';
+import PurchaseHistory from './pages/retail_section/PurchaseHistory';
+import IncompleteTransactions from './pages/retail_section/IncompleteTransactions';
+import ProductAvailabilityChecker from './pages/retail_section/ProductAvailabilityChecker';
 
 function App() {
   const {auth}=useAuth();
@@ -77,7 +82,13 @@ function App() {
             <Route path="/credit" element={ <CreditPage />} />
             <Route path="/bill" element={ <BillPage />} />
             <Route path="/dack" element={ <DackPage />} />
-            <Route path="/retail" element={ <RetailPage />} />
+
+            <Route path="/retail" element={ <RetailPageLayout />} >
+               <Route index element={ <PaymentHistory />} />
+               <Route path="purchase-history" element={ <PurchaseHistory />} />
+               <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+               <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+            </Route>
             <Route path="/future" element={ <ReportPredictionPage />} />
             <Route path="/employee" element={ <EmployeePage />} />
             <Route path="/services" element={ <ServicesPage />} />
