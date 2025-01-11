@@ -22,7 +22,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  console.log(states);
+  //console.log(states);
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -90,6 +90,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
     request
       .then(() => {
+        console.log("Item Added successfully!");
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
@@ -111,7 +112,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
+    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
@@ -125,6 +126,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
   return (
     <>
+    {message && <GeneralMessage message={message}/>}
       <div className="item-view-container">
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />

@@ -11,7 +11,7 @@ import CreditPage from './pages/credit_section/CreditPage'
 import DackPage from './pages/dack_section/DackPage'
 import EmployeePage from './pages/employee_section/EmployeePage'
 import ReportPredictionPage from './pages/prediction_report_section/ReportPredictionPage'
-import RetailPage from './pages/retail_section/RetailPage'
+import RetailPageLayout from './pages/retail_section/layout/RetailPageLayout'
 import ServicesPage from './pages/services_section/ServicesPage'
 import UserManagement from './pages/users_section/UserManagement'
 
@@ -33,7 +33,7 @@ import BranchStockLayout from './pages/branch_section/BranchStockLayout';
 import PaymentHistory from './pages/retail_section/PaymentHistory';
 import PurchaseHistory from './pages/retail_section/PurchaseHistory';
 import IncompleteTransactions from './pages/retail_section/IncompleteTransactions';
-import RetailCustomerDetails from './pages/retail_section/RetailCustomerDetails';
+import ProductAvailabilityChecker from './pages/retail_section/ProductAvailabilityChecker';
 
 function App() {
   const {auth}=useAuth();
@@ -83,11 +83,11 @@ function App() {
             <Route path="/bill" element={ <BillPage />} />
             <Route path="/dack" element={ <DackPage />} />
 
-            <Route path="/retail" element={ <RetailPage />} >
-               <Route path="payment-history" element={ <PaymentHistory />} />
+            <Route path="/retail" element={ <RetailPageLayout />} >
+               <Route index element={ <PaymentHistory />} />
                <Route path="purchase-history" element={ <PurchaseHistory />} />
                <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
-               <Route path="customer-details" element={ <RetailCustomerDetails />} />
+               <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
             </Route>
             <Route path="/future" element={ <ReportPredictionPage />} />
             <Route path="/employee" element={ <EmployeePage />} />

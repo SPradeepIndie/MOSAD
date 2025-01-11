@@ -13,7 +13,7 @@ import { useLocation} from 'react-router-dom';
 function BrandPage({isFromBranch}) {
   const location=useLocation();
   const states=location.state;
-  console.log(states);
+  //console.log(states);
 
 
 

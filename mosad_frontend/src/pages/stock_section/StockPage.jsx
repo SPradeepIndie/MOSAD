@@ -12,22 +12,26 @@ function StockPage({ isFromBranch }) {
     {
       title: "Tyre",
       icon: <DescriptionIcon fontSize="large" />,
-      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`
+      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`,
+      state:{category:"Tyre"}
     },
     {
       title: "Tube",
       icon: <InventoryIcon fontSize="large" />,
-      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`
+      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`,
+      state:{category:"Tube"}
     },
     {
       title: "Tape",
       icon: <StorefrontIcon fontSize="large" />,
-      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`
+      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`,
+      state:{category:"Tape"}
     },
     {
       title: "Battery",
       icon: <CreditCardIcon fontSize="large" />,
-      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`
+      link: `${isFromBranch ? "/branch/stock/brand" : "/stock/brand"}`,
+      state:{category:"Battery"}
     }
   ];
 
@@ -49,7 +53,8 @@ function StockPage({ isFromBranch }) {
               md={4} // Three tiles per row on medium screens
               key={index}
             >
-              <Tile title={tile.title} icon={tile.icon} link={tile.link} />
+              
+              <Tile title={tile.title} icon={tile.icon} link={tile.link} state={tile.state} />
             </Grid2>
           ))}
         </Grid2>
