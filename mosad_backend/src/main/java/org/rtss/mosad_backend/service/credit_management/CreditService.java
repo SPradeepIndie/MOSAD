@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -144,6 +147,11 @@ public class CreditService {
         } catch (Exception ex) {
             throw new ObjectNotValidException(new HashSet<>(List.of("Failed to add repayment: " + ex.getMessage())));
         }
+    }
+
+    public List<Credit> getCreditsBtDueDate(String date)  {
+        Timestamp dueDate = Timestamp.valueOf(date);
+        return creditRepository.findCreditByDueDate(dueDate);
     }
 
 

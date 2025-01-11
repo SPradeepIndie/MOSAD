@@ -1,10 +1,10 @@
 import React from "react";
-import { TextField, Box, Typography } from "@mui/material";
+import { TextField, Box, Typography,DialogActions, Button } from "@mui/material";
 
  
   
 
-const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
+const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit,closeDialog }) => {
 
   return (
     <form onSubmit={onSubmit}>
@@ -51,6 +51,11 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
         ))}
       </Box>
     </Box>
+    <DialogActions>
+              <Button onClick={closeDialog} color="secondary">Cancel</Button>
+              <Button type="submit" color="primary">Submit</Button>
+            </DialogActions>
+
     </form>
   );
 };

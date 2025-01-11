@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogTitle, Typography ,Button,Paper, Box} from
 import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function PopUp({title,children,openPopup,setOpenPopup}){
+export default function PopUp({title,children,openPopup,setOpenPopup,Buttons=true}){
     return(
         <Dialog open={openPopup} maxWidth="md">
             <DialogTitle sx={{p:2}}>
@@ -17,7 +17,9 @@ export default function PopUp({title,children,openPopup,setOpenPopup}){
             </DialogTitle>
             <DialogContent dividers>
                 {children}
+                {Buttons &&
                 <Paper elevation={1} sx={{p:2,m:2}} spacing={2}>
+                    
                     <Button  variant="contained" color="primary" onClick={()=>setOpenPopup(false)}>
                         Ok
                     </Button>
@@ -26,6 +28,7 @@ export default function PopUp({title,children,openPopup,setOpenPopup}){
                     </Button>
                 
                 </Paper>
+                }
             </DialogContent>
         </Dialog>
     );

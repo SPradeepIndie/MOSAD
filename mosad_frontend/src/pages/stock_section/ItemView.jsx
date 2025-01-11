@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -7,6 +7,7 @@ import setItemAddFromFields from "../..//utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import { addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../component/PopUp";
 
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
@@ -84,6 +85,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       .then(() => {
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
+        console.log("Item added/updated successfully!");
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
         setTimeout(() => setMessage(null), 3000);
       })
@@ -164,25 +166,34 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
+      {/* <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
         <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
         <DialogContent>
-        
-          
+
             <ItemDetailsForm
               formData={formData}
               setFormData={setFormData}
               errors={inputFieldErrors}
               handleChange={validateAddForm}
+              onSubmit={handleSubmit}
+              closeDialog={closeDialog}
             />
-            <PriceDetailsSection />
+            
           
         </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="secondary">Cancel</Button>
-          <Button onClick={handleSubmit} color="primary">Submit</Button>
-        </DialogActions>
-      </Dialog>
+
+      </Dialog> */}
+
+      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} Buttons={false}>
+        <ItemDetailsForm
+              formData={formData}
+              setFormData={setFormData}
+              errors={inputFieldErrors}
+              handleChange={validateAddForm}
+              onSubmit={handleSubmit}
+              closeDialog={closeDialog}
+            />
+      </PopUp>
     </>
   );
 };

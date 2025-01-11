@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.controller;
+package org.rtss.mosad_backend.controller.customer_controller;
 
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;

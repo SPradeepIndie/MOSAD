@@ -4,11 +4,13 @@ import org.rtss.mosad_backend.dto.credit_dtos.RepaymentRequestDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.RepaymentResponseDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
+import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.service.credit_management.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -49,4 +51,10 @@ public class CreditController {
         return ResponseEntity.ok(creditService.addRepayment(repaymentRequest).getBody());
     }
 
+    @GetMapping("/get-credits-by-due-date")
+    public List<Credit> getCreditsBtDueDate(@RequestParam String date) {
+
+            return creditService.getCreditsBtDueDate(date);
+
+    }
 }

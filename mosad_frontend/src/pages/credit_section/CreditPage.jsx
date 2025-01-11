@@ -338,7 +338,7 @@ let remainingBalance;
           {/* Stats Section */}
           <Box
             sx={{
-              display: 'grid',
+              display: { xs: "none", md: "grid" }, // Hide on small screens, show on medium and larger screens
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
               gap: 2,
               marginTop: 2,
