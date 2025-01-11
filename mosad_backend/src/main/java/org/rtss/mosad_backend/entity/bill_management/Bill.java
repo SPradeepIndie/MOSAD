@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,8 +57,8 @@ public class Bill {
         this.advance = advance;
     }
 
-    public Date getDate() {
-        return date;
+    public java.sql.Date getDate() {
+        return (java.sql.Date) date;
     }
 
     public void setDate(Date date) {
@@ -73,5 +72,8 @@ public class Bill {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+
+
 }
 
