@@ -1,9 +1,30 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from "@mui/material";
+import { fetchIncompleteTransactions } from "../../services/apiRetailService";
+import useAuth from "../../hooks/useAuth";
 
-const IncompleteTransactions = () => {
+const IncompleteTransactions = () => {  
     const [rows, setRows] = useState([]);
+    const [billTransaction,setBillTransaction] =useState([])
+
+    const {auth}=useAuth();
+
+    const loadingData=async ()=>{
+        const response = await fetchIncompleteTransactions(auth.username);
+        setBillTransaction(response.data);
+
+        loadingData();
+        setRows([...rows,{
+            date:billTransaction.date,
+            description:billTransaction.description,
+            creditBalance:billTransaction.creditBalance,
+            dueDate:billTransaction.dueDate
+        }])
+        console.log(rows);
+    }
+
+    
 
 
     const columns = [
@@ -25,7 +46,7 @@ const IncompleteTransactions = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10, 20, 50]}
                 disableSelectionOnClick
-                autoHeight={false} // Ensure it adjusts height within parent container
+               
             />
         </Box>
     );
