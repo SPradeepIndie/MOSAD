@@ -1,16 +1,39 @@
-import React, {  useState } from "react";
+import React, {  useState  } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-
+import { fetchPaymentHistory } from "../../services/apiRetailService";
+import useAuth from "../../hooks/useAuth";
 
 const PaymentHistory = () => {
     const [rows, setRows] = useState([]);
+    const [billPayment,setBillPayment]=useState([]);
+
+    const {auth}=useAuth();
+    
+    const loadingData=async ()=>{
+            const response = await fetchPaymentHistory(auth.username,auth.billId);
+            
+            setBillPayment(response.data);
+
+            loadingData();
+            setRows([...rows,{
+                date:billPayment.date,
+                description:billPayment.description,
+                paymentMethod:billPayment.paymentMethod,
+                amount:billPayment.amount
+            }])
+            console.log(rows);
+        }
+
+        
+
+
 
     // Define columns for the DataGrid
     const columns = [
         { field: "date", headerName: "Date", width: 150 },
         { field: "description", headerName: "Description", width: 300 },
-        { field: "paymentMethod", headerName: "Payment Method", width: 200 },
+        { field: "paymentMethod", headerName: "Payment Status", width: 200 },
         { field: "amount", headerName: "Amount", width: 150, type: "number" }
     ];
 
