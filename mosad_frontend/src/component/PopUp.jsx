@@ -1,31 +1,34 @@
-import { Dialog, DialogContent, DialogTitle, Typography ,Button,Paper, Box} from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Typography ,Button,Grid2, Box} from "@mui/material";
 import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function PopUp({title,children,openPopup,setOpenPopup}){
+export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction}){
     return(
         <Dialog open={openPopup} maxWidth="md">
             <DialogTitle sx={{p:2}}>
                 <Box display='flex'>
                 <Typography variant="h5" component="div" flexGrow={1} sx={{pt:1,pl:3}}>
-                    {title}
+                    {popUpTitle}
                 </Typography>
-                <Button onClick={()=>setOpenPopup(false)}>
+                <Button onClick={setCancelButtonAction}>
                     <CloseIcon/>
                 </Button>
                 </Box>  
             </DialogTitle>
             <DialogContent dividers>
                 {children}
-                <Paper elevation={1} sx={{p:2,m:2}} spacing={2}>
-                    <Button  variant="contained" color="primary" onClick={()=>setOpenPopup(false)}>
+                <Grid2 container spacing={2} justifyContent="end">
+                <Grid2 size={{xs:"auto"}}>
+                    <Button  variant="contained" color="primary" onClick={setOkButtonAction}>
                         Ok
                     </Button>
-                    <Button variant="outlined" onClick={()=>setOpenPopup(false)}>
+                </Grid2>
+                <Grid2 size={{xs:"auto"}}>
+                    <Button variant="outlined" onClick={setCancelButtonAction}>
                         Cancel
                     </Button>
-                
-                </Paper>
+                </Grid2>
+            </Grid2>
             </DialogContent>
         </Dialog>
     );

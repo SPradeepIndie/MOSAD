@@ -92,13 +92,16 @@ public class AccountManagementService {
     }
 
     //Rerun all users usernames
-    public List<String> getAllUsers() {
+    public List<UserDetailsDTO> getAllUsers() {
         List<Users> users = usersRepo.findAll();
-        List<String> usernames = new ArrayList<>();
-        for (Users user : users) {
-            usernames.add(user.getUsername());
+        if(users.isEmpty()){
+            throw new RuntimeException("No users found");
         }
-        return usernames;
+        List<UserDetailsDTO> userDetails = new ArrayList<>();
+        for (Users user : users) {
+            userDetails.add(convertToUserDetailsDTO(user));
+        }
+        return userDetails;
     }
 
     //Return a specific user details
@@ -107,7 +110,11 @@ public class AccountManagementService {
         if (userOptional.isEmpty()) {
             throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG);
         }
-        Users user = userOptional.get();
+        return convertToUserDetailsDTO(userOptional.get());
+    }
+
+    //THis method convert given user to a UserDetailsDto object
+    private UserDetailsDTO convertToUserDetailsDTO(Users user) {
         UserDTO userDto=userDTOMapper.usersToUserDTO(user);
         ArrayList<UserContactDTO> userContactDTOs = user.getUserContacts()
                 .stream()
@@ -115,6 +122,5 @@ public class AccountManagementService {
                 .collect(Collectors.toCollection(ArrayList::new));
         UserRoleDTO userRoleDTO=userRoleDTOMapper.userRolesToUserRoleDTO(user.getUserRoles());
         return new UserDetailsDTO(userDto,userRoleDTO,userContactDTOs);
-
     }
 }

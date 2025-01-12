@@ -1,9 +1,6 @@
 import React from "react";
 import { TextField, Box, Typography } from "@mui/material";
 
- 
-  
-
 const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
 
   return (
