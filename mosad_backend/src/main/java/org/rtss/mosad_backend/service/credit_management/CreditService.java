@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -154,7 +155,12 @@ public class CreditService {
     }
 
     public List<Credit> getCreditsBtDueDate(String date)  {
-        Timestamp dueDate = Timestamp.valueOf(date);
+        Date dueDate = null;
+        try {
+            dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         return creditRepository.findCreditByDueDate(dueDate);
     }
 

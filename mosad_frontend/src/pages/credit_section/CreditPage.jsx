@@ -9,6 +9,7 @@ import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditSer
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import PropTypes from 'prop-types';
 
@@ -61,7 +62,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         </TableCell>
         <TableCell>{row.contactNumber}</TableCell>
         <TableCell align="right">{row.balance}</TableCell>
-        <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
+        <TableCell>{dayjs(row.dueDate).format('YYYY-MM-DD')}</TableCell>
         <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
           {remainingBalance==0? 'Completed' : remainingBalance}
         </TableCell>
@@ -86,7 +87,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
                   {row.repayments.map((repayment) => (
                     <TableRow key={repayment.repaymentId}>
                       <TableCell>{repayment.repaymentId}</TableCell>
-                      <TableCell>{new Date(repayment.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
                       <TableCell align="right">{repayment.amount}</TableCell>
                     </TableRow>
                   ))}
@@ -125,7 +126,6 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         aria-modal="true" 
         aria-labelledby="add-repayment-title"
         aria-describedby="add-repayment-description"
-        inert={openDialog ? null : true}
         
       >
         <DialogTitle id="add-repayment-title">Add New Repayment</DialogTitle>
@@ -137,8 +137,9 @@ function Row({ row, onAddRepayment, setMessage,message}) {
                 label="Basic date picker"
                 value={null}
                 onChange={(newValue) =>
-                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.toISOString() : null })
+                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : null })
                 }
+                format='YYYY/MM/DD'
               />
             </DemoContainer>
           </LocalizationProvider>

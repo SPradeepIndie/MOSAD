@@ -53,8 +53,6 @@ public class CreditController {
 
     @GetMapping("/get-credits-by-due-date")
     public List<Credit> getCreditsBtDueDate(@RequestParam String date) {
-
             return creditService.getCreditsBtDueDate(date);
-
     }
 }

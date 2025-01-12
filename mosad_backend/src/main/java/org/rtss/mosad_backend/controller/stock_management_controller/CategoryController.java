@@ -4,6 +4,7 @@ import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.CategoryDTO;
 import org.rtss.mosad_backend.service.stock_management_service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,11 +30,11 @@ public class CategoryController {
 
     @PutMapping
     public ResponseEntity<ResponseDTO> updateCategory(@RequestBody CategoryDTO categoryDTO) {
-        return ResponseEntity.ok().body(categoryService.updateCategory(categoryDTO));
+        return new ResponseEntity<>(categoryService.updateCategory(categoryDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok().body(categoryService.deleteCategory(categoryId));
+        return new ResponseEntity<>(categoryService.deleteCategory(categoryId), HttpStatus.OK);
     }
 }

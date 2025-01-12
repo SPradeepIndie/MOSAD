@@ -1,8 +1,10 @@
 package org.rtss.mosad_backend.entity.credit;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
 import java.util.Date;
 import java.util.List;
@@ -16,17 +18,23 @@ public class Credit {
 
     private double balance;
 
+    @Column(columnDefinition = "DATE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dueDate;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private Users user;
 
     @OneToMany(mappedBy = "credit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Repayment> repayments;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bill_id",referencedColumnName = "id")
+    @JoinColumn(name = "bill_id",referencedColumnName = "id", nullable = false)
     private Bill bill;
 
     public Credit() {

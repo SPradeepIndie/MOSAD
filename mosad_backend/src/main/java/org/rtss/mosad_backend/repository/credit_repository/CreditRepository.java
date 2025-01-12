@@ -31,7 +31,7 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
     List<Object[]> findAllCreditDetailsByCustomerId(Long customerId);
 
     @Query(value="SELECT * FROM credit WHERE due_date=?1 ", nativeQuery = true)
-    List<Credit> findCreditByDueDate(Timestamp date);
+    List<Credit> findCreditByDueDate(Date date);
 
 
 
