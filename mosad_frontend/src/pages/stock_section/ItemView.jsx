@@ -6,7 +6,6 @@ import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../../utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import useGlobalAccess from "../../hooks/useGlobalAccess";
-import { fetchItems } from "../../services/apiStockService";
 import atlander_baner from "../../assets/atlander.png";
 import presa_baner from "../../assets/presa.png";
 import default_baner from "../../assets/default.png"
@@ -14,6 +13,7 @@ import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
 import { addItem,updateItem } from "../../services/apiStockService";
+import { fetchItems, deleteItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 
 
@@ -76,6 +76,27 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     });
   };
 
+  const handleDelete = () => {
+    if (selectedRowId !== null) {
+        const selectedItem = rows.find((row) => row.id === selectedRowId);
+        deleteItem(selectedItem.category, selectedItem.brand, selectedItem.itemID)
+            .then(() => {
+                setMessage({ type: "success", text: "Item deleted successfully!" });
+                setRows(rows.filter((row) => row.id !== selectedRowId)); 
+                setSelectedRowId(null);
+                setTimeout(() => setMessage(null), 3000);
+            })
+            .catch((error) => {
+                console.error("Error deleting item:", error);
+                setMessage({ type: "error", text: "Failed to delete item!" });
+                setTimeout(() => setMessage(null), 3000);
+            });
+    } else {
+        setMessage({ type: "error", text: "Please select an item to delete." });
+        setTimeout(() => setMessage(null), 3000);
+    }
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Object.keys(inputFieldErrors).length > 0) {
@@ -124,6 +145,9 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
   const handleRowClick = (id) => setSelectedRowId(id);
 
+
+
+
   return (
     <>
     {message && <GeneralMessage message={message}/>}
@@ -161,7 +185,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </table>
 
         <div className="button-group">
-          <button className="btn delete">Delete</button>
+          <button className="btn delete" onClick={handleDelete}>Delete</button>
           <button className="btn update">Update</button>
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
           <button className="btn info">More Info</button>

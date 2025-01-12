@@ -20,3 +20,7 @@ export const addItem=(cat_brand,data)=>{
 export const updateItem=(cat_brand,data)=>{
     return apiClient.put(`/stock/${cat_brand}`,data);//need to update after implementing the backend
 }
+
+export const deleteItem = (category, brand, itemId) => {
+    return apiClient.delete('/api/v1/delete', { params: { category, brand, itemId } });
+};
