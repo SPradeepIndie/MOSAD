@@ -37,4 +37,11 @@ public class CategoryDTO {
         this.categoryId = categoryId;
     }
 
+    @Override
+    public String toString() {
+        return "CategoryDTO{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }
