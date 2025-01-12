@@ -102,9 +102,13 @@ public class CreditService {
                 Date repaymentDate = (Date) row[6];
                 Double repaymentAmount = (Double) row[7];
 
+                //Bill details
+                Long billId = (Long) row[8];
+
+
                 // Get or create CreditDetailsDTO
                 CreditDetailsDTO creditDetails = creditDetailsMap.computeIfAbsent(creditId, id ->
-                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>())
+                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId)
                 );
 
                 // Add repayment if not already present

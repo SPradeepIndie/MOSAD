@@ -32,11 +32,13 @@ public class Credit {
     public Credit() {
     }
 
-    public Credit(double balance, Date dueDate, Customer customer, List<Repayment> repayments) {
+    public Credit(double balance, Date dueDate, Customer customer, List<Repayment> repayments,Bill bill) {
         this.balance = balance;
         this.dueDate = dueDate;
         this.customer = customer;
         this.repayments = repayments;
+        this.bill = bill;
+
     }
 
     public Long getCreditId() {
@@ -79,6 +81,14 @@ public class Credit {
         this.repayments = repayments;
     }
 
+    public Bill getBill() {
+        return bill;
+    }
+
+    public void setBill(Bill bill) {
+        this.bill = bill;
+    }
+
     @Override
     public String toString() {
         return "Credit{" +
@@ -87,6 +97,7 @@ public class Credit {
                 ", dueDate=" + dueDate +
                 ", customer=" + customer +
                 ", repayments=" + repayments +
+                ", bill=" + bill +
                 '}';
     }
 }

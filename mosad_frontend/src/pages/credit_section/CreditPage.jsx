@@ -55,6 +55,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
           </IconButton>
         </TableCell>
         <TableCell>{row.creditId}</TableCell>
+        <TableCell>{row.billId}</TableCell>
         <TableCell component="th" scope="row">
           {row.customerName}
         </TableCell>
@@ -62,7 +63,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         <TableCell align="right">{row.balance}</TableCell>
         <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
         <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
-          {remainingBalance}
+          {remainingBalance==0? 'Completed' : remainingBalance}
         </TableCell>
       </TableRow>
      
@@ -124,6 +125,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         aria-modal="true" 
         aria-labelledby="add-repayment-title"
         aria-describedby="add-repayment-description"
+        inert={openDialog ? null : true}
         
       >
         <DialogTitle id="add-repayment-title">Add New Repayment</DialogTitle>
@@ -212,7 +214,7 @@ const CreditPage = () => {
       try {
         const response = await fetchAllCreditDetails();
         setRows(response.data);
-        //console.log(response.data);
+        console.log(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -303,7 +305,7 @@ let remainingBalance;
               variant="outlined"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
+              sx={{ flex: 1, marginRight: 2,minWidth:'25%' }} // Flex to take available space
             />
 
             {/* Radio Buttons */}
@@ -361,12 +363,13 @@ let remainingBalance;
           </Box>
         </FormControl>
  
-        <TableContainer >
+        <TableContainer sx={{maxHeight: 440}}>
           <Table stickyHeader aria-label="collapsible table" >
             <TableHead >
               <TableRow  >
                 <TableCell />
                 <TableCell >Credit ID</TableCell>
+                <TableCell >Bill ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
                 <TableCell align="right">Credit Amount ($)</TableCell>

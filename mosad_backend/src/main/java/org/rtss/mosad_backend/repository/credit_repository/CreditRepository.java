@@ -14,10 +14,11 @@ import java.util.Optional;
 
 @Repository
 public interface CreditRepository extends JpaRepository<Credit,Long> {
-    @Query("SELECT c.creditId, c.balance, c.dueDate, cu.name, cc.contactNumber, r.repaymentId, r.date, r.amount " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate, cu.name, cc.contactNumber, r.repaymentId, r.date, r.amount,b.id " +
             "FROM Credit c " +
             "JOIN c.customer cu " +
             "JOIN cu.contacts cc " +
+            "JOIN c.bill b " +
             "LEFT JOIN c.repayments r")
     List<Object[]> findAllCreditDetails();
 
@@ -31,6 +32,8 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
 
     @Query(value="SELECT * FROM credit WHERE due_date=?1 ", nativeQuery = true)
     List<Credit> findCreditByDueDate(Timestamp date);
+
+
 
 
 

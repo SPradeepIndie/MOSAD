@@ -116,7 +116,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
