@@ -17,7 +17,11 @@
     "@mui/x-data-grid": "^7.23.5",
     "@mui/x-date-pickers": "^7.23.3",
     "axios": "^1.7.9",
+<<<<<<< HEAD
     "dayjs": "^1.11.13",
+=======
+    "prop-types": "^15.8.1",
+>>>>>>> cb08934e9f0f0bd0f70503398d0547695dab4af7
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-material-ui-carousel": "^3.4.2",
