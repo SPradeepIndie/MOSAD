@@ -107,13 +107,13 @@ public class RegisterService {
 
     private void uniqueUsername(String username) {
         if(usersRepo.findByUsername(username).isPresent()){
-            throw new ObjectNotValidException(new HashSet<>(List.of("User already exists")));
+            throw new ObjectNotValidException(new HashSet<>(List.of("Username already exists")));
         }
     }
 
     private void uniqueEmail(String email) {
-        if(usersRepo.findByEmail(email).isPresent()){
-            throw new ObjectNotValidException(new HashSet<>(List.of("User already exists")));
+        if(usersRepo.findByEmail(email).isPresent() && !email.isBlank()){
+            throw new ObjectNotValidException(new HashSet<>(List.of("User email already exists")));
         }
     }
 
