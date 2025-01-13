@@ -174,7 +174,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
       
 
-      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} buttons={false}>
+      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
           formData={formData}
           setFormData={setFormData}
