@@ -47,7 +47,7 @@ const BillPage = () => {
 
       if (field === "unitPrice" || field === "quantity") {
         const unitPrice = parseFloat(updatedRows[index].unitPrice) || 0;
-        const quantity = parseInt(updatedRows[index].quantity, 10) || 0;
+        const quantity = parseInt(updatedRows[index].quantity, 10) || 1;
         updatedRows[index].subtotal = unitPrice * quantity;
       
         if (field === "quantity") {
@@ -75,7 +75,7 @@ const BillPage = () => {
     <Box sx={{ p: 4 }}>
       {/* Search Component */}
       <Box sx={{ mb: 4 }}>
-        <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity}/>
+      <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity} />
       </Box>
 
       {/* Bill Content */}

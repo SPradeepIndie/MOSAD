@@ -92,8 +92,8 @@ public class Bill {
         this.advance = advance;
     }
 
-    public Date getDate() {
-        return date;
+    public java.sql.Date getDate() {
+        return (java.sql.Date) date;
     }
 
     public void setDate(Date date) {
@@ -107,5 +107,8 @@ public class Bill {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+
+
 }
 

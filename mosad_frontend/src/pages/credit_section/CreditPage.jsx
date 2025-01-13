@@ -42,9 +42,6 @@ function Row({ row, onAddRepayment, setMessage,message}) {
 
   return (
     <>
-      
-      
-      
       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : '' }}>
         <TableCell>
           <IconButton

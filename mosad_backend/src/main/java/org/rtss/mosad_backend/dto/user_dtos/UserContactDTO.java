@@ -9,7 +9,7 @@ public class UserContactDTO{
 
     @NotNull(message = "Contact num object can not be null")
     @Pattern(
-            regexp = "^\\+?[0-9]{10,12}$",
+            regexp = "^(\\+?[0-9]{10,12})?$",
             message = "Phone number must be between 10 to 12 digits long and can optionally start with a '+' sign."
     )
     private String contactNum;

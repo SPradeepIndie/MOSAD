@@ -1,6 +1,6 @@
 import { CheckBox, LockOutlined } from "@mui/icons-material";
 import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from "../services/apiUserService";
 import useAuth from "../hooks/useAuth"
