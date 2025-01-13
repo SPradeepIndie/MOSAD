@@ -14,17 +14,19 @@ public class CreditDetailsDTO {
     private double balance;
     private Date dueDate;
     private List<RepaymentDTO> repayments;
+    private Long billId;
 
     public CreditDetailsDTO() {
     }
 
-    public CreditDetailsDTO(Long creditId, String customerName, String contactNumber, double balance, Date dueDate, List<RepaymentDTO> repayments) {
+    public CreditDetailsDTO(Long creditId, String customerName, String contactNumber, double balance, Date dueDate, List<RepaymentDTO> repayments,Long billId) {
         this.creditId = creditId;
         this.customerName = customerName;
         this.contactNumber = contactNumber;
         this.balance = balance;
         this.dueDate = dueDate;
         this.repayments = repayments;
+        this.billId = billId;
     }
 
     public Long getCreditId() {
@@ -73,6 +75,14 @@ public class CreditDetailsDTO {
 
     public void setRepayments(List<RepaymentDTO> repayments) {
         this.repayments = repayments;
+    }
+
+    public Long getBillId() {
+        return billId;
+    }
+
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 }
 

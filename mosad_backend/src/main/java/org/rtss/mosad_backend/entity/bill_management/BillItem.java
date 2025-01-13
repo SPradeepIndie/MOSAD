@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 
 @Entity
 @Table(name = "bill_items")
@@ -8,14 +9,31 @@ public class BillItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
+    @JoinColumn(name="item_id",referencedColumnName = "itemId")
+    private Item item;
     private String description;
     private Integer quantity;
     private Double unitPrice;
-    private Double subtotal;
+
 
     @ManyToOne
     @JoinColumn(name = "bill_id", nullable = false)
     private Bill bill;
+
+
+
+    public BillItem(Item item, String description, Integer quantity, Double unitPrice, Bill bill) {
+        this.item = item;
+        this.description = description;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.bill = bill;
+    }
+
+    public BillItem() {
+
+    }
 
     // Getters and Setters
 
@@ -27,13 +45,6 @@ public class BillItem {
         this.bill = bill;
     }
 
-    public Double getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(Double subtotal) {
-        this.subtotal = subtotal;
-    }
 
     public Double getUnitPrice() {
         return unitPrice;
@@ -51,13 +62,6 @@ public class BillItem {
         this.quantity = quantity;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public Long getId() {
         return id;
@@ -67,6 +71,30 @@ public class BillItem {
         this.id = id;
     }
 
+    public Item getItem() {
+        return item;
+    }
 
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    @Override
+    public String toString() {
+        return "BillItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                ", bill=" + bill +
+                '}';
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
 

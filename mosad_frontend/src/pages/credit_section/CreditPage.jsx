@@ -9,6 +9,7 @@ import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditSer
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import PropTypes from 'prop-types';
 
@@ -20,6 +21,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
+    setNewRepayment({...newRepayment,date:dayjs().format('YYYY-MM-DD')});
   };
 
   const handleDialogClose = () => {
@@ -52,14 +54,15 @@ function Row({ row, onAddRepayment, setMessage,message}) {
           </IconButton>
         </TableCell>
         <TableCell>{row.creditId}</TableCell>
+        <TableCell>{row.billId}</TableCell>
         <TableCell component="th" scope="row">
           {row.customerName}
         </TableCell>
         <TableCell>{row.contactNumber}</TableCell>
         <TableCell align="right">{row.balance}</TableCell>
-        <TableCell>{new Date(row.dueDate).toLocaleDateString()}</TableCell>
+        <TableCell>{dayjs(row.dueDate).format('YYYY-MM-DD')}</TableCell>
         <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
-          {remainingBalance}
+          {remainingBalance==0? 'Completed' : remainingBalance}
         </TableCell>
       </TableRow>
      
@@ -82,7 +85,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
                   {row.repayments.map((repayment) => (
                     <TableRow key={repayment.repaymentId}>
                       <TableCell>{repayment.repaymentId}</TableCell>
-                      <TableCell>{new Date(repayment.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
                       <TableCell align="right">{repayment.amount}</TableCell>
                     </TableRow>
                   ))}
@@ -130,10 +133,11 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Basic date picker"
-                value={null}
+                value={dayjs()}
                 onChange={(newValue) =>
-                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.toISOString() : null })
+                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : value.format('YYYY-MM-DD') })
                 }
+                format='YYYY/MM/DD'
               />
             </DemoContainer>
           </LocalizationProvider>
@@ -155,7 +159,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             <Button
               onClick={handleAddRepayment}
               variant="contained"
-              disabled={!newRepayment.date || !newRepayment.amount || newRepayment.amount > remainingBalance}
+              disabled={!newRepayment.amount || newRepayment.amount > remainingBalance}
               sx={{ backgroundColor: '#4CAF50', color: 'white' }}
             >
               Add
@@ -209,11 +213,11 @@ const CreditPage = () => {
       try {
         const response = await fetchAllCreditDetails();
         setRows(response.data);
-        //console.log(response.data);
+        console.log(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false);
+        setLoading(true);
       }
     };
 
@@ -272,7 +276,7 @@ let remainingBalance;
     return (
       <Container maxWidth="lg" sx={{ marginTop: 4 }}>
         <Typography variant="h4" align="center">
-          Loading...
+          Loading Credits...
         </Typography>
       </Container>
     );
@@ -300,7 +304,7 @@ let remainingBalance;
               variant="outlined"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              sx={{ flex: 1, marginRight: 2 }} // Flex to take available space
+              sx={{ flex: 1, marginRight: 2,minWidth:'25%' }} // Flex to take available space
             />
 
             {/* Radio Buttons */}
@@ -335,7 +339,7 @@ let remainingBalance;
           {/* Stats Section */}
           <Box
             sx={{
-              display: 'grid',
+              display: { xs: "none", md: "grid" }, // Hide on small screens, show on medium and larger screens
               gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
               gap: 2,
               marginTop: 2,
@@ -358,12 +362,13 @@ let remainingBalance;
           </Box>
         </FormControl>
  
-        <TableContainer >
+        <TableContainer sx={{maxHeight: 440}}>
           <Table stickyHeader aria-label="collapsible table" >
             <TableHead >
               <TableRow  >
                 <TableCell />
                 <TableCell >Credit ID</TableCell>
+                <TableCell >Bill ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
                 <TableCell align="right">Credit Amount ($)</TableCell>

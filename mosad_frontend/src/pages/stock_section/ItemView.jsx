@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -14,6 +14,7 @@ import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../component/PopUp";
 
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
@@ -22,6 +23,8 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
   //console.log(states);
+  selectedCategory=states.category;
+  selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -121,6 +124,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         console.log("Item Added successfully!");
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
+        console.log("Item added/updated successfully!");
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
         setTimeout(() => setMessage(null), 3000);
       })
@@ -140,7 +144,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
@@ -234,77 +238,18 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
-        <DialogContent>
 
+      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+        <ItemDetailsForm
+          formData={formData}
+          setFormData={setFormData}
+          errors={inputFieldErrors}
+          handleChange={validateAddForm}
+          onSubmit={handleSubmit}
+          closeDialog={closeDialog}
+        />
+      </PopUp>
 
-            <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-            />
-            <PriceDetailsSection />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="secondary">Cancel</Button>
-          <Button onClick={handleSubmit} color="primary">Submit</Button>
-        </DialogActions>
-      </Dialog>
-      
-      {/* Update Dialog */}
-      <Dialog open={isUpdateDialogOpen} onClose={closeUpdateDialog} fullWidth maxWidth="sm">
-                <DialogTitle>Update Item</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        label="Name"
-                        value={updateFormData.name}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, name: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Brand"
-                        value={updateFormData.brand}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, brand: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Size"
-                        value={updateFormData.size}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, size: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Quantity"
-                        type="number"
-                        value={updateFormData.quantity}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, quantity: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Price"
-                        type="number"
-                        value={updateFormData.price}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, price: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeUpdateDialog} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleUpdateSubmit} color="primary">
-                        Update
-                    </Button>
-                </DialogActions>
-      </Dialog>
     </>
   );
 };
