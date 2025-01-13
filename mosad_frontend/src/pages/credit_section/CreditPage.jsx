@@ -21,6 +21,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
+    setNewRepayment({...newRepayment,date:dayjs().format('YYYY-MM-DD')});
   };
 
   const handleDialogClose = () => {
@@ -132,9 +133,9 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Basic date picker"
-                value={null}
+                value={dayjs()}
                 onChange={(newValue) =>
-                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : null })
+                  setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : value.format('YYYY-MM-DD') })
                 }
                 format='YYYY/MM/DD'
               />
@@ -158,7 +159,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             <Button
               onClick={handleAddRepayment}
               variant="contained"
-              disabled={!newRepayment.date || !newRepayment.amount || newRepayment.amount > remainingBalance}
+              disabled={!newRepayment.amount || newRepayment.amount > remainingBalance}
               sx={{ backgroundColor: '#4CAF50', color: 'white' }}
             >
               Add
