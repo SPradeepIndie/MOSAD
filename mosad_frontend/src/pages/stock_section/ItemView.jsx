@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -14,6 +14,7 @@ import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../component/PopUp";
 
 
 const ItemView = ({ selectedCategory, selectedBrand }) => {
@@ -22,6 +23,8 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
   //console.log(states);
+  selectedCategory=states.category;
+  selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -32,13 +35,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
-  const [updateFormData, setUpdateFormData] = useState({
-    name: "",
-    brand: "",
-    size: "",
-    quantity: 0,
-    price: 0.0,
-  });
+  
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
 
@@ -112,23 +109,31 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       return;
     }
 
-    const request = currentItem
-      ? addItem(cat_and_brand,formData)
-      : updateItem(cat_and_brand,formData);
+  const request = currentItem
+    ? updateItem(cat_and_brand, formData) 
+    : addItem(cat_and_brand, formData);  
 
-    request
-      .then(() => {
-        console.log("Item Added successfully!");
-        //fetchItems(); // Implement and call this function to fetch items after adding/updating
-        closeDialog();
-        setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
-        setTimeout(() => setMessage(null), 3000);
-      })
-      .catch((error) => {
-        console.log("Error adding/updating item:", error);
-        setMessage(currentItem ? { type: "error", text: "Failed to update item!" } : { type: "error", text: "Failed to add item!" });
-        setTimeout(() => setMessage(null), 3000);
-      });
+  request
+    .then(() => {
+      console.log(currentItem ? "Item updated successfully!" : "Item added successfully!");
+      closeDialog(); 
+      setMessage(
+      currentItem
+        ? { type: "success", text: "Item updated successfully!" }
+        : { type: "success", text: "Item added successfully!" }
+      );
+      setTimeout(() => setMessage(null), 3000);
+    })
+    .catch((error) => {
+      console.error(currentItem ? "Error updating item:" : "Error adding item:", error);
+      setMessage(
+        currentItem
+          ? { type: "error", text: "Failed to update item!" }
+          : { type: "error", text: "Failed to add item!" }
+      );
+      setTimeout(() => setMessage(null), 3000);
+  });
+
   };
 
   useEffect(() => {
@@ -140,7 +145,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
@@ -228,83 +233,33 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
         <div className="button-group">
           <button className="btn delete" onClick={handleDelete}>Delete</button>
-          <button className="btn update" onClick={openUpdateDialog}>Update</button>
+
+          <button className="btn update" onClick={() => {
+            if (selectedRowId) {
+            currentItem = rows.find(row => row.id === selectedRowId);
+            openDialog(currentItem);
+            } else {
+            setMessage({ type: "error", text: "Please select an item to update!" }); 
+            setTimeout(() => setMessage(null), 2000);
+          }}}>Update</button>
+          
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
           <button className="btn info">More Info</button>
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
-        <DialogContent>
-
-
-            <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-            />
-            <PriceDetailsSection />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="secondary">Cancel</Button>
-          <Button onClick={handleSubmit} color="primary">Submit</Button>
-        </DialogActions>
-      </Dialog>
       
-      {/* Update Dialog */}
-      <Dialog open={isUpdateDialogOpen} onClose={closeUpdateDialog} fullWidth maxWidth="sm">
-                <DialogTitle>Update Item</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        label="Name"
-                        value={updateFormData.name}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, name: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Brand"
-                        value={updateFormData.brand}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, brand: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Size"
-                        value={updateFormData.size}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, size: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Quantity"
-                        type="number"
-                        value={updateFormData.quantity}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, quantity: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Price"
-                        type="number"
-                        value={updateFormData.price}
-                        onChange={(e) => setUpdateFormData({ ...updateFormData, price: e.target.value })}
-                        fullWidth
-                        margin="normal"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeUpdateDialog} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleUpdateSubmit} color="primary">
-                        Update
-                    </Button>
-                </DialogActions>
-      </Dialog>
+
+      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+        <ItemDetailsForm
+          formData={formData}
+          setFormData={setFormData}
+          errors={inputFieldErrors}
+          handleChange={validateAddForm}
+          onSubmit={handleSubmit}
+          closeDialog={closeDialog}
+        />
+      </PopUp>
     </>
   );
 };
