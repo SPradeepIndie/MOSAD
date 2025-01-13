@@ -16,17 +16,15 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
             "JOIN cu.contacts cc " +
             "JOIN c.bill b " +
             "LEFT JOIN c.repayments r")
-    List<Object[]> findAllCustomerCreditDetails();
+    List<Object[]> findAllNormalCustomerCreditDetails();
 
-    @Query("SELECT c.creditId, c.balance, c.dueDate, u.firstName, u.lastName, uc.contactNum, r.repaymentId, r.date, r.amount,b.id " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate, CONCAT(u.firstName, u.lastName) AS name , uc.contactNum AS contactNumber, r.repaymentId, r.date, r.amount,b.id " +
             "FROM Credit c " +
             "JOIN c.user u " +
             "JOIN u.userContacts uc " +
             "JOIN c.bill b " +
             "LEFT JOIN c.repayments r")
-    default List<Object[]> findAllRetailCreditDetails() {
-        return null;
-    }
+    List<Object[]> findAllRetailCustomerCreditDetails();
 
     @Query("SELECT c.creditId, c.balance, c.dueDate, cu.name, cc.contactNumber, r.repaymentId, r.date, r.amount " +
             "FROM Credit c " +

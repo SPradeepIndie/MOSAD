@@ -170,7 +170,7 @@ const ItemView = () => {
 
       
 
-      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+      <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
           formData={formData}
           setFormData={setFormData}

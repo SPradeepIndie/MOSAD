@@ -183,6 +183,7 @@ const CreditPage = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   const [state, setState] = useState({all: false ,completed: false,incompleted: true,});
+  const [CustomerType, setCustomerType] = useState('RETAIL');
 
   const handleRadioChange = (event) => {
     const { value } = event.target;
@@ -211,7 +212,7 @@ const CreditPage = () => {
     const fetchData = async () => {
     
       try {
-        const response = await fetchAllCreditDetails();
+        const response = await fetchAllCreditDetails(CustomerType);
         setRows(response.data);
         console.log(response.data);
         setLoading(false);
@@ -222,7 +223,7 @@ const CreditPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [CustomerType]);
 
   const handleAddRepayment = async (creditId, repayment) => {
   
@@ -296,6 +297,20 @@ let remainingBalance;
               marginBottom: 2,
             }}
           >
+            
+              <Button
+                variant={CustomerType === 'RETAIL' ? 'contained' : 'outlined'}
+                onClick={() => setCustomerType('RETAIL')}
+              >
+                Retail
+              </Button>
+              <Button
+                variant={CustomerType === 'NORMAL' ? 'contained' : 'outlined'}
+                onClick={() => setCustomerType('NORMAL')}
+              >
+                Normal
+              </Button>
+            
             {/* Search Field */}
             <TextField
               fullWidth
