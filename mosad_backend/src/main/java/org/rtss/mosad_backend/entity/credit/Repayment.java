@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.entity.credit;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -10,6 +11,8 @@ public class Repayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long repaymentId;
+    @Column(columnDefinition = "DATE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private double amount;
 

@@ -14,6 +14,7 @@ import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
 import { addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../component/PopUp";
 
 
 const ItemView = () => {
@@ -21,6 +22,8 @@ const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
+  selectedCategory=states.category;
+  selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -110,7 +113,7 @@ const ItemView = () => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
@@ -166,29 +169,20 @@ const ItemView = () => {
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
-        <DialogContent>
 
 
-            <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-            />
-            <PriceDetailsSection />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="secondary">Cancel</Button>
-          <Button onClick={handleSubmit} color="primary">Submit</Button>
-        </DialogActions>
-      </Dialog>
+      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+        <ItemDetailsForm
+          formData={formData}
+          setFormData={setFormData}
+          errors={inputFieldErrors}
+          handleChange={validateAddForm}
+          onSubmit={handleSubmit}
+          closeDialog={closeDialog}
+        />
+      </PopUp>
     </>
   );
 };
-
-
 
 export default ItemView;

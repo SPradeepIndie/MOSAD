@@ -3,7 +3,7 @@ import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from "prop-types";
 
-export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction}){
+export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction,buttons}){
     return(
         <Dialog open={openPopup} maxWidth="md">
             <DialogTitle sx={{p:2}}>
@@ -18,18 +18,21 @@ export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkB
             </DialogTitle>
             <DialogContent dividers>
                 {children}
-                <Grid2 container spacing={2} justifyContent="end">
-                <Grid2 size={{xs:"auto"}}>
-                    <Button  variant="contained" color="primary" onClick={setOkButtonAction}>
-                        Ok
-                    </Button>
-                </Grid2>
-                <Grid2 size={{xs:"auto"}}>
-                    <Button variant="outlined" onClick={setCancelButtonAction}>
-                        Cancel
-                    </Button>
-                </Grid2>
-            </Grid2>
+                {/*Item add form buttons are different. So I added buttons prop to remove buttons from this component */}
+                {buttons &&
+                    <Grid2 container spacing={2} justifyContent="end">
+                        <Grid2 size={{ xs: "auto" }}>
+                            <Button variant="contained" color="primary" onClick={setOkButtonAction}>
+                                Ok
+                            </Button>
+                        </Grid2>
+                        <Grid2 size={{ xs: "auto" }}>
+                            <Button variant="outlined" onClick={setCancelButtonAction}>
+                                Cancel
+                            </Button>
+                        </Grid2>
+                    </Grid2>
+                }
             </DialogContent>
         </Dialog>
     );
