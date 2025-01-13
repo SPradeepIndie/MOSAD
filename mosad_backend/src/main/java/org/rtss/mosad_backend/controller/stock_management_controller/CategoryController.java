@@ -3,7 +3,6 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.CategoryDTO;
 import org.rtss.mosad_backend.service.stock_management_service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,12 @@ import java.util.List;
 @RequestMapping("api/v1/category")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getCategories() {

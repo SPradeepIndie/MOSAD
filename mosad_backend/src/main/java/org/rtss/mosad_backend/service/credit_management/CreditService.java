@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -86,7 +84,7 @@ public class CreditService {
     // Get all credits with repayments
     public List<CreditDetailsDTO> getAllCreditDetails() {
         try {
-            List<Object[]> results = creditRepository.findAllCreditDetails();
+            List<Object[]> results = creditRepository.findAllCustomerCreditDetails();
 
             // Group repayments by creditId using a map
             Map<Long, CreditDetailsDTO> creditDetailsMap = new HashMap<>();

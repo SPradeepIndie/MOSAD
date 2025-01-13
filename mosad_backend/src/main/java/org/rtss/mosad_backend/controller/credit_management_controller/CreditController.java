@@ -17,8 +17,12 @@ import java.util.List;
 @RequestMapping("/api/v1/credit")
 public class CreditController {
 
-    @Autowired
-    private CreditService creditService;
+
+    private final CreditService creditService;
+
+    public CreditController(CreditService creditService) {
+        this.creditService = creditService;
+    }
 
 
     //get all credits

@@ -1,10 +1,7 @@
 package org.rtss.mosad_backend.dto.stock_management_dto;
 
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.stereotype.Component;
 
-
-@Component
 public class CategoryDTO {
 
     private Long categoryId;
@@ -16,6 +13,7 @@ public class CategoryDTO {
     public CategoryDTO(String categoryName) {
         this.categoryName = categoryName;
     }
+
     public CategoryDTO(Long categoryId, String categoryName) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
