@@ -12,7 +12,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brandId", nullable = false,unique = true)
     private Long brandId;
-    @Column(name = "brandName" , nullable = false)
+    @Column(name = "brandName" , nullable = false,unique = true)
     private String brandName;
 
     @ManyToMany(mappedBy = "brands")

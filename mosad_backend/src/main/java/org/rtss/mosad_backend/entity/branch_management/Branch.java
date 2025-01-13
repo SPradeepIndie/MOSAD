@@ -15,8 +15,8 @@ public class Branch {
     private Long branchId;
     @Column(name = "branchName", length = 30)
     private String branchName;
-    @Column(name = "buildingNumber", length = 30, nullable = false)
-    private String buildingNumber;
+    @Column(name = "addressNumber", length = 10, nullable = false)
+    private String addressNumber;
     @Column(name = "streetName", length = 30, nullable = false)
     private String streetName;
     @Column(name = "city",length = 30,nullable = false)
@@ -31,10 +31,10 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(Long branchId, String branchName, String buildingNumber, String streetName, String city, Set<BranchContact> branchContacts) {
+    public Branch(Long branchId, String branchName, String addressNumber, String streetName, String city, Set<BranchContact> branchContacts) {
         this.branchId = branchId;
         this.branchName = branchName;
-        this.buildingNumber = buildingNumber;
+        this.addressNumber = addressNumber;
         this.streetName = streetName;
         this.city = city;
         this.branchContacts = branchContacts;
@@ -56,12 +56,12 @@ public class Branch {
         this.branchName = branchName;
     }
 
-    public String getBuildingNumber() {
-        return buildingNumber;
+    public String getAddressNumber() {
+        return addressNumber;
     }
 
-    public void setBuildingNumber(String buildingNumber) {
-        this.buildingNumber = buildingNumber;
+    public void setAddressNumber(String addressNumber) {
+        this.addressNumber = addressNumber;
     }
 
     public String getStreetName() {

@@ -6,6 +6,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { Outlet } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function StockPage({ isFromBranch }) {
   const tileData = [
@@ -64,6 +65,10 @@ function StockPage({ isFromBranch }) {
     
     </>
   );
+}
+
+StockPage.prototype={
+  isFromBranch:PropTypes.bool.isRequired
 }
 
 export default StockPage;

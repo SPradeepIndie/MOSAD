@@ -5,7 +5,6 @@ import ItemDetailsForm from "../../forms/ItemDetailsForm";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../../utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import useGlobalAccess from "../../hooks/useGlobalAccess";
 import { fetchItems } from "../../services/apiStockService";
 import atlander_baner from "../../assets/atlander.png";
 import presa_baner from "../../assets/presa.png";
@@ -17,12 +16,11 @@ import { addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 
 
-const ItemView = ({ selectedCategory, selectedBrand }) => {
+const ItemView = () => {
 
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  //console.log(states);
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -190,5 +188,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     </>
   );
 };
+
+
 
 export default ItemView;
