@@ -12,6 +12,7 @@ public class BillItem {
     @OneToOne
     @JoinColumn(name="item_id",referencedColumnName = "itemId")
     private Item item;
+    private String description;
     private Integer quantity;
     private Double unitPrice;
 
@@ -20,14 +21,18 @@ public class BillItem {
     @JoinColumn(name = "bill_id", nullable = false)
     private Bill bill;
 
-    public BillItem() {
-    }
 
-    public BillItem(Item item, Integer quantity, Double unitPrice, Bill bill) {
+
+    public BillItem(Item item, String description, Integer quantity, Double unitPrice, Bill bill) {
         this.item = item;
+        this.description = description;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.bill = bill;
+    }
+
+    public BillItem() {
+
     }
 
     // Getters and Setters
@@ -82,6 +87,14 @@ public class BillItem {
                 ", unitPrice=" + unitPrice +
                 ", bill=" + bill +
                 '}';
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 
