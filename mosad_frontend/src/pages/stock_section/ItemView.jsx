@@ -12,8 +12,7 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem,updateItem } from "../../services/apiStockService";
-import { fetchItems, deleteItem } from "../../services/apiStockService";
+import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 
 
@@ -33,6 +32,13 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
+  const [updateFormData, setUpdateFormData] = useState({
+    name: "",
+    brand: "",
+    size: "",
+    quantity: 0,
+    price: 0.0,
+  });
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
 
@@ -75,6 +81,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       return updatedErrors;
     });
   };
+
 
   const handleDelete = () => {
     if (selectedRowId !== null) {
@@ -142,11 +149,45 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     }
   }, [selectedCategory, selectedBrand]);
 
-
   const handleRowClick = (id) => setSelectedRowId(id);
 
-
-
+  const openUpdateDialog = () => {
+    if (selectedRowId !== null) {
+        const selectedItem = rows.find((row) => row.id === selectedRowId);
+        setUpdateFormData({
+            name: selectedItem.name,
+            brand: selectedItem.brand,
+            size: selectedItem.size,
+            quantity: selectedItem.quantity,
+            price: selectedItem.price,
+        });
+        setIsUpdateDialogOpen(true);
+    } else {
+        setMessage({ type: "error", text: "Please select an item to update." });
+        setTimeout(() => setMessage(null), 3000);
+    }
+  };
+  const closeUpdateDialog = () => setIsUpdateDialogOpen(false);
+  const handleUpdateSubmit = () => {
+    if (selectedRowId !== null) {
+        updateItem(selectedRowId, updateFormData)
+            .then(() => {
+                setMessage({ type: "success", text: "Item updated successfully!" });
+                setRows((prevRows) =>
+                    prevRows.map((row) =>
+                        row.id === selectedRowId ? { ...row, ...updateFormData } : row
+                    )
+                );
+                closeUpdateDialog();
+                setTimeout(() => setMessage(null), 3000);
+            })
+            .catch((error) => {
+                console.error("Error updating item:", error);
+                setMessage({ type: "error", text: "Failed to update item." });
+                setTimeout(() => setMessage(null), 3000);
+            });
+    }
+  };
 
   return (
     <>
@@ -158,35 +199,36 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
        
 
         <table className="item-table">
-          <thead>
-            <tr>
-              <th>Pattern</th>
-              <th>Size</th>
-              <th>PR</th>
-              <th>Selling Price</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.itemID}
-                className={selectedRowId === row.id ? "selected-row" : ""}
-                onClick={() => handleRowClick(row.id)}
-              >
-                <td>{row.pattern}</td>
-                <td>{row.tyreSize}</td>
-                <td>{row.ply}</td>
-                <td>{row.officialSellingPrice}</td>
-                <td>{row.tyreCount}</td>
-              </tr>
-            ))}
-          </tbody>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows.map((row) => (
+                            <tr
+                                key={row.id}
+                                className={selectedRowId === row.id ? "selected-row" : ""}
+                                onClick={() => handleRowClick(row.id)}
+                            >
+                                <td>{row.name}</td>
+                                <td>{row.brand}</td>
+                                <td>{row.size}</td>
+                                <td>{row.quantity}</td>
+                                <td>{row.price}</td>
+                            </tr>
+                        ))}
+                    </tbody>
         </table>
+
 
         <div className="button-group">
           <button className="btn delete" onClick={handleDelete}>Delete</button>
-          <button className="btn update">Update</button>
+          <button className="btn update" onClick={openUpdateDialog}>Update</button>
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
           <button className="btn info">More Info</button>
         </div>
@@ -210,6 +252,58 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
           <Button onClick={closeDialog} color="secondary">Cancel</Button>
           <Button onClick={handleSubmit} color="primary">Submit</Button>
         </DialogActions>
+      </Dialog>
+      
+      {/* Update Dialog */}
+      <Dialog open={isUpdateDialogOpen} onClose={closeUpdateDialog} fullWidth maxWidth="sm">
+                <DialogTitle>Update Item</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Name"
+                        value={updateFormData.name}
+                        onChange={(e) => setUpdateFormData({ ...updateFormData, name: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Brand"
+                        value={updateFormData.brand}
+                        onChange={(e) => setUpdateFormData({ ...updateFormData, brand: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Size"
+                        value={updateFormData.size}
+                        onChange={(e) => setUpdateFormData({ ...updateFormData, size: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Quantity"
+                        type="number"
+                        value={updateFormData.quantity}
+                        onChange={(e) => setUpdateFormData({ ...updateFormData, quantity: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    />
+                    <TextField
+                        label="Price"
+                        type="number"
+                        value={updateFormData.price}
+                        onChange={(e) => setUpdateFormData({ ...updateFormData, price: e.target.value })}
+                        fullWidth
+                        margin="normal"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeUpdateDialog} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleUpdateSubmit} color="primary">
+                        Update
+                    </Button>
+                </DialogActions>
       </Dialog>
     </>
   );
