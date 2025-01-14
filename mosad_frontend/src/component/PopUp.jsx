@@ -38,11 +38,12 @@ export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkB
     );
 }
 
-PopUp.prototype={
-    popUpTitle:PropTypes.string.isRequired,
-    children:PropTypes.element.isRequired,
-    openPopup:PropTypes.bool.isRequired,
-    setOpenPopup:PropTypes.func.isRequired,
-    setOkButtonAction:PropTypes.func.isRequired,
-    setCancelButtonAction:PropTypes.func.isRequired
-}
+PopUp.propTypes = {
+    popUpTitle: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    openPopup: PropTypes.bool.isRequired,
+    setOpenPopup: PropTypes.func.isRequired,
+    setOkButtonAction: PropTypes.func,
+    setCancelButtonAction: PropTypes.func.isRequired,
+    buttons: PropTypes.bool
+};

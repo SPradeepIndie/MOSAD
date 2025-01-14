@@ -32,9 +32,9 @@ public class CreditController {
     }
 
     //all credits with repayments
-    @GetMapping("/all-credit-details")
-    public List<CreditDetailsDTO> getAllCreditDetails() {
-        return creditService.getAllCreditDetails();
+    @GetMapping("/all-credit-details/{customerType}")
+    public List<CreditDetailsDTO> getAllCreditDetails(@PathVariable String customerType) {
+        return creditService.getAllCreditDetails(customerType);
     }
 
     //get credit by id

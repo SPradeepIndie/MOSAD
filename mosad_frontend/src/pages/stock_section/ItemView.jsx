@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../../utils/setItemAddFromFields";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import useGlobalAccess from "../../hooks/useGlobalAccess";
 import { fetchItems } from "../../services/apiStockService";
 import atlander_baner from "../../assets/atlander.png";
 import presa_baner from "../../assets/presa.png";
@@ -12,7 +13,7 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem,updateItem } from "../../services/apiStockService";
+import {fetchItems, addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 
@@ -22,8 +23,9 @@ const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  const selectedCategory=states.category;
-  const selectedBrand=states.brand;
+
+  let selectedCategory=states.category;
+  let selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -94,6 +96,7 @@ const ItemView = () => {
         console.log("Item Added successfully!");
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
+        console.log("Item added/updated successfully!");
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
         setTimeout(() => setMessage(null), 3000);
       })
@@ -169,9 +172,9 @@ const ItemView = () => {
         </div>
       </div>
 
+      
 
-
-      <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+      <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
           formData={formData}
           setFormData={setFormData}
