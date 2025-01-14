@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Container, Collapse, IconButton, Button, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Typography, Paper, TextField,
-   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle,RadioGroup, Radio, FormControl
+  FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl,
+  CircularProgress
 } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
@@ -13,15 +14,15 @@ import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import PropTypes from 'prop-types';
 
-function Row({ row, onAddRepayment, setMessage,message}) {
+function Row({ row, onAddRepayment, setMessage, message }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
-  
+
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
-    setNewRepayment({...newRepayment,date:dayjs().format('YYYY-MM-DD')});
+    setNewRepayment({ ...newRepayment, date: dayjs().format('YYYY-MM-DD') });
   };
 
   const handleDialogClose = () => {
@@ -61,11 +62,11 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         <TableCell>{row.contactNumber}</TableCell>
         <TableCell align="right">{row.balance}</TableCell>
         <TableCell>{dayjs(row.dueDate).format('YYYY-MM-DD')}</TableCell>
-        <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black' , fontWeight: 'bold', fontSize: 20 }}>
-          {remainingBalance==0? 'Completed' : remainingBalance}
+        <TableCell align="right" sx={{ color: remainingBalance == 0 ? 'green' : 'black', fontWeight: 'bold', fontSize: 20 }}>
+          {remainingBalance == 0 ? 'Completed' : remainingBalance}
         </TableCell>
       </TableRow>
-     
+
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -116,19 +117,19 @@ function Row({ row, onAddRepayment, setMessage,message}) {
           </Collapse>
         </TableCell>
       </TableRow>
-    
 
-      <Dialog 
-        open={openDialog} 
-        onClose={handleDialogClose} 
-        aria-modal="true" 
+
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        aria-modal="true"
         aria-labelledby="add-repayment-title"
         aria-describedby="add-repayment-description"
-        
+
       >
         <DialogTitle id="add-repayment-title">Add New Repayment</DialogTitle>
         <DialogContent id="add-repayment-description">
-         
+
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
@@ -155,7 +156,7 @@ function Row({ row, onAddRepayment, setMessage,message}) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Cancel</Button>
-          { 
+          {
             <Button
               onClick={handleAddRepayment}
               variant="contained"
@@ -164,16 +165,16 @@ function Row({ row, onAddRepayment, setMessage,message}) {
             >
               Add
             </Button>
-    }  
+          }
         </DialogActions>
-        
+
       </Dialog>
       {message && <GeneralMessage message={message} />}
-      
+
     </>
   );
 
-  
+
 }
 
 
@@ -182,7 +183,8 @@ const CreditPage = () => {
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
-  const [state, setState] = useState({all: false ,completed: false,incompleted: true,});
+  const [state, setState] = useState({ all: false, completed: false, incompleted: true, });
+  const [CustomerType, setCustomerType] = useState('RETAIL');
 
   const handleRadioChange = (event) => {
     const { value } = event.target;
@@ -195,23 +197,23 @@ const CreditPage = () => {
     });
   };
   let selectedValue;
-  if (state.all){
+  if (state.all) {
     selectedValue = 'all';
   }
-  else if (state.completed){
+  else if (state.completed) {
     selectedValue = 'completed';
   }
   else {
     selectedValue = 'incompleted';
   }
- 
+
 
 
   useEffect(() => {
     const fetchData = async () => {
-    
+
       try {
-        const response = await fetchAllCreditDetails();
+        const response = await fetchAllCreditDetails(CustomerType);
         setRows(response.data);
         console.log(response.data);
         setLoading(false);
@@ -222,26 +224,26 @@ const CreditPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [CustomerType]);
 
   const handleAddRepayment = async (creditId, repayment) => {
-  
+
     try {
       const response = await addRepayment(creditId, repayment);
-  
+
       console.log('Repayment added successfully:', response.data);
 
       setMessage({ type: 'success', text: 'Repayment added successfully!' });
       setTimeout(() => setMessage(null), 2000);
-  
+
       // Update the rows state
       setRows((prevRows) =>
         prevRows.map((row) =>
           row.creditId === creditId
             ? {
-                ...row,
-                repayments: [...row.repayments, response.data], // Append the new repayment
-              }
+              ...row,
+              repayments: [...row.repayments, response.data], // Append the new repayment
+            }
             : row
         )
       );
@@ -251,12 +253,12 @@ const CreditPage = () => {
       setTimeout(() => setMessage(null), 2000);
     }
   };
-  
 
 
-let remainingBalance;
+
+  let remainingBalance;
   const filteredRows = rows.filter((row) => {
-     remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
+    remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
 
     if (state.all) return true; // Show all credits
     if (state.completed) return remainingBalance === 0; // Show completed credits
@@ -269,33 +271,53 @@ let remainingBalance;
       row.creditId.toString().includes(searchText)
   );
 
- 
+
 
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-        <Typography variant="h4" align="center">
+      <Container maxWidth="lg" sx={{ marginTop: 4, textAlign: 'center' }}>
+        <Typography variant="h5" gutterBottom color='primary'>
           Loading Credits...
         </Typography>
+      <CircularProgress />
       </Container>
     );
   }
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-     
+
       <Paper elevation={3} sx={{ padding: 3 }}>
         <FormControl component="fieldset" sx={{ width: '100%' }}>
           {/* Top Row: Search Field and Radio Group */}
           <Box
             sx={{
               display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' }, // Column for small screens
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: { sm: 'space-between' },
               marginBottom: 2,
+              gap: 1, // Add spacing for stacked layout
             }}
           >
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                variant={CustomerType === 'RETAIL' ? 'contained' : 'outlined'}
+                onClick={() => setCustomerType('RETAIL')}
+                sx={{ flex: 1 }} // Take available space
+              >
+                Retail
+              </Button>
+              <Button
+                variant={CustomerType === 'NORMAL' ? 'contained' : 'outlined'}
+                onClick={() => setCustomerType('NORMAL')}
+                sx={{ flex: 1 }} // Take available space
+              >
+                Normal
+              </Button>
+            </Box>
+
             {/* Search Field */}
             <TextField
               fullWidth
@@ -304,7 +326,11 @@ let remainingBalance;
               variant="outlined"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              sx={{ flex: 1, marginRight: 2,minWidth:'25%' }} // Flex to take available space
+              sx={{
+                flex: { xs: '1 1 100%', sm: '1' }, // Full width on small screens
+                marginTop: { xs: 1, sm: 0 }, // Add margin on small screens
+                minWidth: '25%',
+              }}
             />
 
             {/* Radio Buttons */}
@@ -315,7 +341,8 @@ let remainingBalance;
               onChange={handleRadioChange}
               sx={{
                 justifyContent: 'flex-end', // Align buttons to the right
-                flex: '0 1 auto', // Prevent buttons from stretching
+                flexWrap: 'wrap', // Allow wrapping on smaller screens
+                gap: 1, // Add spacing between radio options
               }}
             >
               <FormControlLabel
@@ -339,13 +366,12 @@ let remainingBalance;
           {/* Stats Section */}
           <Box
             sx={{
-              display: { xs: "none", md: "grid" }, // Hide on small screens, show on medium and larger screens
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fit, minmax(200px, 1fr))' }, // Stack items on small screens
               gap: 2,
               marginTop: 2,
             }}
           >
-
             <Box sx={{ textAlign: 'center', backgroundColor: '#c4c4c4', padding: 1, borderRadius: 10 }}>
               <Typography variant="subtitle2">Total Incomplete Credits</Typography>
               <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 600 }}>
@@ -358,11 +384,11 @@ let remainingBalance;
                 {rows.reduce((acc, row) => acc + (row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0)), 0)}
               </Typography>
             </Box>
-
           </Box>
         </FormControl>
- 
-        <TableContainer sx={{maxHeight: 440}}>
+
+
+        <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="collapsible table" >
             <TableHead >
               <TableRow  >

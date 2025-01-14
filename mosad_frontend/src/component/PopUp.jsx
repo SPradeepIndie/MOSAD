@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Typography ,Button,Grid2, Box} from "@mui/material";
 import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
+import PropTypes from 'prop-types';
 
 export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction,buttons}){
     return(
@@ -34,5 +35,15 @@ export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkB
                 }
             </DialogContent>
         </Dialog>
-    );
+    );  
+    
 }
+PopUp.propTypes = {
+    popUpTitle: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired,
+    openPopup: PropTypes.bool.isRequired,
+    setOpenPopup: PropTypes.func.isRequired,
+    setOkButtonAction: PropTypes.func,
+    setCancelButtonAction: PropTypes.func.isRequired,
+    buttons: PropTypes.bool
+};
