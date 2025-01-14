@@ -1,4 +1,4 @@
-import React,{useState} from "react"; 
+import React,{Suspense, useState} from "react"; 
 import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -12,8 +12,6 @@ const RetailPageLayout=()=>{
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
-
 
     const tabRoutes = [
         { path: '/retail/', label: 'Payment History', id: 'payment_history' },
@@ -42,7 +40,10 @@ const RetailPageLayout=()=>{
                         {renderTabs()}
                     </Tabs>
                 </Box>
-                <Outlet/>
+                <Suspense fallback={<h1>Loading...</h1>}>
+                    <Outlet/>
+                </Suspense>
+                
             </>
          
         )
