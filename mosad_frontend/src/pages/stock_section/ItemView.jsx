@@ -248,7 +248,6 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </div>
       </div>
 
-      
 
       <PopUp title={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
@@ -260,6 +259,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
           closeDialog={closeDialog}
         />
       </PopUp>
+
     </>
   );
 };
