@@ -1,10 +1,13 @@
 package org.rtss.mosad_backend.dto.credit_dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 
 public class RepaymentResponseDTO {
     private Long repaymentId;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date date;
     private double amount;
     private Long creditId;

@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -80,10 +82,16 @@ public class CreditService {
 
 
     // Get all credits with repayments
-    public List<CreditDetailsDTO> getAllCreditDetails() {
+    public List<CreditDetailsDTO> getAllCreditDetails(String CustomerType) {
+        System.out.println(CustomerType);
         try {
-            List<Object[]> results = creditRepository.findAllCreditDetails();
 
+            List<Object[]> results;
+            if (CustomerType.equalsIgnoreCase("Retail")) {
+                results = creditRepository.findAllRetailCustomerCreditDetails();
+            } else {
+                results = creditRepository.findAllNormalCustomerCreditDetails();
+            }
             // Group repayments by creditId using a map
             Map<Long, CreditDetailsDTO> creditDetailsMap = new HashMap<>();
 
@@ -99,9 +107,13 @@ public class CreditService {
                 Date repaymentDate = (Date) row[6];
                 Double repaymentAmount = (Double) row[7];
 
+                //Bill details
+                Long billId = (Long) row[8];
+
+
                 // Get or create CreditDetailsDTO
                 CreditDetailsDTO creditDetails = creditDetailsMap.computeIfAbsent(creditId, id ->
-                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>())
+                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId)
                 );
 
                 // Add repayment if not already present
@@ -144,6 +156,30 @@ public class CreditService {
         } catch (Exception ex) {
             throw new ObjectNotValidException(new HashSet<>(List.of("Failed to add repayment: " + ex.getMessage())));
         }
+    }
+
+    // Delete repayment by id
+    public ResponseEntity<Void> deleteRepaymentById(Long repaymentId) {
+        try {
+            Repayment repayment = repaymentRepository.findById(repaymentId)
+                    .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Repayment not found"))));
+
+            repaymentRepository.delete(repayment);
+
+            return ResponseEntity.noContent().build();
+        } catch (Exception ex) {
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to delete repayment: " + ex.getMessage())));
+        }
+    }
+
+    public List<Credit> getCreditsBtDueDate(String date)  {
+        Date dueDate = null;
+        try {
+            dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return creditRepository.findCreditByDueDate(dueDate);
     }
 
 

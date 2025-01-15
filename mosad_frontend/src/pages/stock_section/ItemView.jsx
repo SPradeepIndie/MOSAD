@@ -2,27 +2,26 @@ import React, { useState, useEffect } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
-import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../../utils/setItemAddFromFields";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import useGlobalAccess from "../../hooks/useGlobalAccess";
-import { fetchItems } from "../../services/apiStockService";
 import atlander_baner from "../../assets/atlander.png";
 import presa_baner from "../../assets/presa.png";
 import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem,updateItem } from "../../services/apiStockService";
+import {fetchItems, addItem,updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
+import PopUp from "../../component/PopUp";
 
 
-const ItemView = ({ selectedCategory, selectedBrand }) => {
+const ItemView = () => {
 
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  //console.log(states);
+ 
+  let selectedCategory=states.category;
+  let selectedBrand=states.brand;
 
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -93,6 +92,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         console.log("Item Added successfully!");
         //fetchItems(); // Implement and call this function to fetch items after adding/updating
         closeDialog();
+        console.log("Item added/updated successfully!");
         setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
         setTimeout(() => setMessage(null), 3000);
       })
@@ -112,7 +112,7 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
       rapid: rapid_baner
     };
 
-    setBannerImage(brandImages[(states.brand).toLowerCase()] || default_baner);
+    setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
@@ -168,25 +168,18 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
         </div>
       </div>
 
-      <Dialog open={isDialogOpen} onClose={closeDialog} fullWidth maxWidth="md">
-        <DialogTitle>{currentItem ? "Edit Item" : "Add New Item"}</DialogTitle>
-        <DialogContent>
+      
 
-
-            <ItemDetailsForm
-              formData={formData}
-              setFormData={setFormData}
-              errors={inputFieldErrors}
-              handleChange={validateAddForm}
-            />
-            <PriceDetailsSection />
-
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog} color="secondary">Cancel</Button>
-          <Button onClick={handleSubmit} color="primary">Submit</Button>
-        </DialogActions>
-      </Dialog>
+      <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+        <ItemDetailsForm
+          formData={formData}
+          setFormData={setFormData}
+          errors={inputFieldErrors}
+          handleChange={validateAddForm}
+          onSubmit={handleSubmit}
+          closeDialog={closeDialog}
+        />
+      </PopUp>
     </>
   );
 };

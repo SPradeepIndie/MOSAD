@@ -1,8 +1,9 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private Double totalAmount;
     private Double advance;
@@ -23,6 +23,40 @@ public class Bill {
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
     private List<BillItem> items = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id",nullable = true)
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Bill(Double totalAmount, Double advance, Double balance, Date date) {
+        this.totalAmount = totalAmount;
+        this.advance = advance;
+        this.balance = balance;
+        this.date = date;
+    }
+
+    public Bill() {}
+
 
     // Getters and Setters
 
@@ -58,8 +92,8 @@ public class Bill {
         this.advance = advance;
     }
 
-    public Date getDate() {
-        return date;
+    public java.sql.Date getDate() {
+        return (java.sql.Date) date;
     }
 
     public void setDate(Date date) {
@@ -73,5 +107,8 @@ public class Bill {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+
+
 }
 

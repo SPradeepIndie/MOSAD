@@ -1,8 +1,12 @@
 import { Outlet } from "react-router-dom";
+import { Suspense } from "react";
 
 const BranchStockLayout=()=>{
     return(
-          <Outlet/>
+        <Suspense fallback={<h1>Loading...</h1>}>
+            <Outlet/>
+        </Suspense>
+          
     );
 }
 

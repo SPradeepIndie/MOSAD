@@ -1,9 +1,30 @@
 import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-
+import { fetchPurchaseHistory } from "../../services/apiRetailService";
+import useAuth from "../../hooks/useAuth";
 const PurchaseHistory = () => {
     const [rows, setRows] = useState([]);
+    const [billPurchase,setBillPurchase]=useState([]);
+
+    const {auth}=useAuth();
+
+    const loadingData=async ()=>{
+        const response = await fetchPurchaseHistory(auth.username);
+        setBillPurchase(response.data);
+
+        loadingData();
+            setRows([...rows,{
+                date:billPurchase.date,
+                productName:billPurchase.productName,
+                quantity:billPurchase.quantity,
+                price:billPurchase.price
+            }])
+            console.log(rows);
+
+    }
+
+   
 
     // Define columns for the DataGrid
     const columns = [
