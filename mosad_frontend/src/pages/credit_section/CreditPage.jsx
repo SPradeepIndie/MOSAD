@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import PropTypes from 'prop-types';
 
-function Row({ row, onAddRepayment, setMessage, message }) {
+function Row({ row, onAddRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
@@ -54,7 +54,7 @@ function Row({ row, onAddRepayment, setMessage, message }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{row.creditId}</TableCell>
+        {columns.creditId && <TableCell>{row.creditId}</TableCell>}
         <TableCell>{row.billId}</TableCell>
         <TableCell component="th" scope="row">
           {row.customerName}
@@ -79,7 +79,7 @@ function Row({ row, onAddRepayment, setMessage, message }) {
                   <TableRow>
                     <TableCell>Repayment ID</TableCell>
                     <TableCell>Date</TableCell>
-                    <TableCell align="right">Amount ($)</TableCell>
+                    <TableCell align="right">Amount (Rs.)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -185,6 +185,7 @@ const CreditPage = () => {
   const [message, setMessage] = useState(null);
   const [state, setState] = useState({ all: false, completed: false, incompleted: true, });
   const [CustomerType, setCustomerType] = useState('RETAIL');
+  const columns = {'creditId':false,'billId':true,'customerName':true,'contactNumber':true,'balance':true,'dueDate':true,'remainingBalance':true};
 
   const handleRadioChange = (event) => {
     const { value } = event.target;
@@ -393,18 +394,18 @@ const CreditPage = () => {
             <TableHead >
               <TableRow  >
                 <TableCell />
-                <TableCell >Credit ID</TableCell>
+                {columns.creditId && <TableCell >Credit ID</TableCell>}
                 <TableCell >Bill ID</TableCell>
                 <TableCell>Customer Name</TableCell>
                 <TableCell>Contact Number</TableCell>
-                <TableCell align="right">Credit Amount ($)</TableCell>
+                <TableCell align="right">Credit Amount (Rs.)</TableCell>
                 <TableCell>Due Date</TableCell>
-                <TableCell align="right">Remaining Balance ($)</TableCell>
+                <TableCell align="right">Remaining Balance (Rs.)</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredRows.map((row) => (
-                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} />
+                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} columns={columns} />
               ))}
             </TableBody>
           </Table>
