@@ -1,11 +1,6 @@
 pipeline {
     agent any
-    
-    tools{
-        jdk 'jdk21'
-        maven 'maven3'
-    }
-    
+
     environment{
         DB_PASSWORD = 'Idon_tknow'
 		POSTGRES_HOST = '172.18.0.2'
