@@ -5,16 +5,15 @@ import jakarta.validation.constraints.Size;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BrandDto {
+public class BrandDTO {
 
     @NotBlank(message = "Brand name is mandatory")
     @Size(max = 30,message = "Brand name shouldn't be exceed 30 characters")
     private String brandName;
 
-    public BrandDto() {
+    public BrandDTO() {
     }
-
-    public BrandDto(String brandName) {
+    public BrandDTO(String brandName) {
         this.brandName = brandName;
     }
 
@@ -25,4 +24,5 @@ public class BrandDto {
     public void setBrandName(String brandName) {
         this.brandName = brandName;
     }
+
 }

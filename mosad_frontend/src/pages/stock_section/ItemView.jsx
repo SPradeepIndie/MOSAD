@@ -2,11 +2,7 @@ import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
-import PriceDetailsSection from "../../component/PriceDetailsSection";
 import setItemAddFromFields from "../../utils/setItemAddFromFields";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
-import useGlobalAccess from "../../hooks/useGlobalAccess";
-import { fetchItems } from "../../services/apiStockService";
 import atlander_baner from "../../assets/atlander.png";
 import presa_baner from "../../assets/presa.png";
 import default_baner from "../../assets/default.png"
