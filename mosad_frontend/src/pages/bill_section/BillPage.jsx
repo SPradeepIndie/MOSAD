@@ -11,10 +11,11 @@ import {
   Paper,
   Typography,
   Button,
+  IconButton,
+  Grid,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
-
-
 
 function ccyFormat(num) {
   return num.toFixed(2);
@@ -66,16 +67,15 @@ const BillPage = () => {
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
 
-  const printRef = useRef();
-  /*const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-  });*/
+  const handleDeleteRow = (index) => {
+    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
+  };
 
   return (
     <Box sx={{ p: 4 }}>
       {/* Search Component */}
       <Box sx={{ mb: 4 }}>
-      <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity} />
+        <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity} />
       </Box>
 
       {/* Bill Content */}
@@ -114,14 +114,7 @@ const BillPage = () => {
             boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "1.35rem",
-              fontWeight: "500",
-              color: "#333",
-              lineHeight: 1.6,
-            }}
-          >
+          <Typography sx={{ fontSize: "1.35rem", fontWeight: "500", color: "#333", lineHeight: 1.6 }}>
             We provide high-quality tires and tubes for motorcycles, three-wheelers, cars, vans,
             lorries, and buses. Additionally, we offer vehicle battery charging and nitrogen
             services.
@@ -133,6 +126,27 @@ const BillPage = () => {
             Contact Us: <strong>078 3918504, 0764690290, 0332274577</strong>
           </Typography>
         </Box>
+
+        {/* Customer Info */}
+        <Grid container spacing={2} sx={{ mb: 2 }}>
+          <Grid item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
+              Customer Name:
+            </Typography>
+            <TextField variant="outlined" size="small" fullWidth sx={{ fontSize: "1.2rem" }} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
+              Telephone Number:
+            </Typography>
+            <TextField variant="outlined" size="small" fullWidth sx={{ fontSize: "1.2rem" }} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "center" }}>
+              Date: {new Date().toLocaleDateString()}
+            </Typography>
+          </Grid>
+        </Grid>
 
         {/* Table and Bill */}
         <TableContainer component={Paper}>
@@ -151,6 +165,7 @@ const BillPage = () => {
                 <TableCell align="center" sx={{ width: "20%", fontWeight: "bold", fontSize: "1.2rem" }}>
                   Subtotal
                 </TableCell>
+                <TableCell align="center" sx={{ width: "10%" }}></TableCell> {/* Column for delete button */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -196,6 +211,11 @@ const BillPage = () => {
                       InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
                       sx={{ width: "90%" }}
                     />
+                  </TableCell>
+                  <TableCell align="center">
+                    <IconButton color="error" onClick={() => handleDeleteRow(index)}>
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -279,7 +299,7 @@ const BillPage = () => {
 
       {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={()=>console.log("printing")}>
+        <Button variant="contained" color="primary" onClick={() => console.log("printing")}>
           Print Bill
         </Button>
       </Box>
