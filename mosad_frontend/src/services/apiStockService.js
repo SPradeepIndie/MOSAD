@@ -17,12 +17,12 @@ export const addItem=(cat_brand,data)=>{
     return apiClient.post(`/stock/${cat_brand}`,data);//need to update after implementing the backend
 }
 
-// function to update an item
+
 export const updateItem = (itemId, data) => {
     return apiClient.put(`/api/v1/update/${itemId}`, data);
 };
 
-// function to delete an item
+
 export const deleteItem = (category, brand, itemId) => {
     return apiClient.delete('/api/v1/delete', { params: { category, brand, itemId } });
 };

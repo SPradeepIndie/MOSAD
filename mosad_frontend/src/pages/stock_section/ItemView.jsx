@@ -1,4 +1,6 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import PropTypes from 'prop-types';
+
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -156,43 +158,8 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
   const handleRowClick = (id) => setSelectedRowId(id);
 
-  const openUpdateDialog = () => {
-    if (selectedRowId !== null) {
-        const selectedItem = rows.find((row) => row.id === selectedRowId);
-        setUpdateFormData({
-            name: selectedItem.name,
-            brand: selectedItem.brand,
-            size: selectedItem.size,
-            quantity: selectedItem.quantity,
-            price: selectedItem.price,
-        });
-        setIsUpdateDialogOpen(true);
-    } else {
-        setMessage({ type: "error", text: "Please select an item to update." });
-        setTimeout(() => setMessage(null), 3000);
-    }
-  };
-  const closeUpdateDialog = () => setIsUpdateDialogOpen(false);
-  const handleUpdateSubmit = () => {
-    if (selectedRowId !== null) {
-        updateItem(selectedRowId, updateFormData)
-            .then(() => {
-                setMessage({ type: "success", text: "Item updated successfully!" });
-                setRows((prevRows) =>
-                    prevRows.map((row) =>
-                        row.id === selectedRowId ? { ...row, ...updateFormData } : row
-                    )
-                );
-                closeUpdateDialog();
-                setTimeout(() => setMessage(null), 3000);
-            })
-            .catch((error) => {
-                console.error("Error updating item:", error);
-                setMessage({ type: "error", text: "Failed to update item." });
-                setTimeout(() => setMessage(null), 3000);
-            });
-    }
-  };
+
+  
 
   return (
     <>
@@ -236,7 +203,10 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
 
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
-            currentItem = rows.find(row => row.id === selectedRowId);
+              const selectedItem = rows.find(row => row.id === selectedRowId);
+              setCurrentItem(selectedItem); 
+              openDialog(currentItem);
+            
             openDialog(currentItem);
             } else {
             setMessage({ type: "error", text: "Please select an item to update!" }); 
@@ -263,5 +233,10 @@ const ItemView = ({ selectedCategory, selectedBrand }) => {
     </>
   );
 };
+ItemView.propTypes = {
+  selectedCategory: PropTypes.string.isRequired,
+  selectedBrand: PropTypes.string.isRequired,
+};
 
 export default ItemView;
+
