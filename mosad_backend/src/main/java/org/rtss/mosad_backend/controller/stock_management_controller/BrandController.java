@@ -24,7 +24,7 @@ public class BrandController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Brand>> viewAllBrands(@RequestParam String catName) {
+    public ResponseEntity<List<BrandDTO>> viewAllBrands(@RequestParam String catName) {
         String escapedCategoryName= validateHtmlPathVariable.escapeHTMLspecailCharaters(catName);
         return ResponseEntity.ok(brandService.getAllBrands(escapedCategoryName));
     }
