@@ -53,14 +53,17 @@ public class ItemService {
         ItemTyreDTO itemTyreDTO = addTyreItemDTO.getItemTyreDTO();
         ItemBranchDTO itemBranchDTO = addTyreItemDTO.getItemBranchDTO();
 
-        //Item item= itemDTOMapper.toEntity(itemDTO); //ModelMapper confused here..
+
+        System.out.println("\n\nmappting started to Item\n\n");
+        Item item= itemDTOMapper.toEntity(itemDTO); //ModelMapper confused here..
+        System.out.println("Mapped to Item\n\n");
         //Map ItemDTO to Item entity manually
-        Item item=new Item();
-        item.setItemName(itemDTO.getItemName());
-        item.setCompanyPrice(itemDTO.getCompanyPrice());
-        item.setDiscount(itemDTO.getDiscount());
-        item.setItemDescription(itemDTO.getItemDescription());
-        item.setRetailPrice(itemDTO.getRetailPrice());
+//        Item item=new Item();
+//        item.setItemName(itemDTO.getItemName());
+//        item.setCompanyPrice(itemDTO.getCompanyPrice());
+//        item.setDiscount(itemDTO.getDiscount());
+//        item.setItemDescription(itemDTO.getItemDescription());
+//        item.setRetailPrice(itemDTO.getRetailPrice());
 
         // Fetch Category and Brand entities
         item.setCategory(categoryRepository.findById(itemDTO.getCategoryId())
@@ -68,29 +71,38 @@ public class ItemService {
         item.setBrand(brandRepository.findById(itemDTO.getBrandId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Brand ID")));
 
+        System.out.println("Before Item save "+item.getItemId()+"\n\n");
         Item savedItem=itemRepository.save(item);
-        System.out.println("Item saved");
+        System.out.println("After Item saved itemId of item "+item.getItemId()+"\n\n");
+        System.out.println("After Item saved itemId of savedItem"+savedItem.getItemId()+"\n\n");
 
         // Map ItemTyreDTO to ItemTyre entity
         ItemTyre tyre=itemTyreDTOMapper.toEntity(itemTyreDTO);
         //set item to tyre
         tyre.setItem(item);
         ItemTyre savedTyre=itemTyreRepo.save(tyre);
+        System.out.println("Tyre saved"+savedTyre.getItem().getItemId()+"\n\n");
 
         //Map to ItemBranch
-        ItemBranch itemBranch=itemBranchDTOMapper.toEntity(itemBranchDTO);
+//        ItemBranch itemBranch=itemBranchDTOMapper.toEntity(itemBranchDTO);
+//        System.out.println("ItemBranch mapped\n\n");
+        ItemBranch itemBranch=new ItemBranch();
 
         // Fetch the Branch entity
         Branch branch = branchRepository.findById(itemBranchDTO.getBranchId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Branch ID"));
 
         itemBranch.setBranch(branch);
+        System.out.println("Branch set : "+itemBranch.getBranch().getBranchId()+"\n");
 
         itemBranch.setItem(item);
-        itemBranch.setBranch(branch);
+        System.out.println("Item set : "+itemBranch.getItem().getItemId()+"\n");
         itemBranch.setAvailableQuantity(itemBranchDTO.getAvailableQuantity());
+        System.out.println("Available Quantity set : "+itemBranch.getAvailableQuantity()+"\n");
 
+        System.out.println("ItemBranch all set\n\n");
         itemBranchRepository.save(itemBranch);
+        System.out.println("ItemBranch saved\n\n");
 
         return new ResponseDTO(true, "Item added successfully");
     }
