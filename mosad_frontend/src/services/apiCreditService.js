@@ -1,8 +1,8 @@
 import apiClient from "./api_config/apiClient";
 
 
-export const fetchAllCreditDetails = () => {
-    return apiClient.get("/credit/all-credit-details");
+export const fetchAllCreditDetails = (customerType) => {
+    return apiClient.get(`/credit/all-credit-details/${customerType}`);
 };
 
 export const addRepayment = (creditId, repayment) => {

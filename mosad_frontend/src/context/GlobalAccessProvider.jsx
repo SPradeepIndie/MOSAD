@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { createContext,useState } from "react";
 
 const selectionContext = createContext({});
@@ -12,5 +13,10 @@ export const GlobalAccessProvider = ({ children }) => {
     </selectionContext.Provider>
   );
 };
+
+//Prop validation
+GlobalAccessProvider.prototype={
+  children: PropTypes.element.isRequired
+}
 
 export default selectionContext;
