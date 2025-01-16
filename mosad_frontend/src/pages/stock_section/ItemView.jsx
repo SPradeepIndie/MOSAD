@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -9,7 +10,7 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import {fetchItems, addItem,updateItem } from "../../services/apiStockService";
+import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 
@@ -32,6 +33,7 @@ const ItemView = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
+  
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
 
@@ -75,6 +77,28 @@ const ItemView = () => {
     });
   };
 
+
+  const handleDelete = () => {
+    if (selectedRowId !== null) {
+        const selectedItem = rows.find((row) => row.id === selectedRowId);
+        deleteItem(selectedItem.category, selectedItem.brand, selectedItem.itemID)
+            .then(() => {
+                setMessage({ type: "success", text: "Item deleted successfully!" });
+                setRows(rows.filter((row) => row.id !== selectedRowId)); 
+                setSelectedRowId(null);
+                setTimeout(() => setMessage(null), 3000);
+            })
+            .catch((error) => {
+                console.error("Error deleting item:", error);
+                setMessage({ type: "error", text: "Failed to delete item!" });
+                setTimeout(() => setMessage(null), 3000);
+            });
+    } else {
+        setMessage({ type: "error", text: "Please select an item to delete." });
+        setTimeout(() => setMessage(null), 3000);
+    }
+};
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (Object.keys(inputFieldErrors).length > 0) {
@@ -83,24 +107,31 @@ const ItemView = () => {
       return;
     }
 
-    const request = currentItem
-      ? addItem(cat_and_brand,formData)
-      : updateItem(cat_and_brand,formData);
+  const request = currentItem
+    ? updateItem(cat_and_brand, formData) 
+    : addItem(cat_and_brand, formData);  
 
-    request
-      .then(() => {
-        console.log("Item Added successfully!");
-        //fetchItems(); // Implement and call this function to fetch items after adding/updating
-        closeDialog();
-        console.log("Item added/updated successfully!");
-        setMessage(currentItem ? { type: "success", text: "Item updated successfully!" } : { type: "success", text: "Item added successfully!" });
-        setTimeout(() => setMessage(null), 3000);
-      })
-      .catch((error) => {
-        console.log("Error adding/updating item:", error);
-        setMessage(currentItem ? { type: "error", text: "Failed to update item!" } : { type: "error", text: "Failed to add item!" });
-        setTimeout(() => setMessage(null), 3000);
-      });
+  request
+    .then(() => {
+      console.log(currentItem ? "Item updated successfully!" : "Item added successfully!");
+      closeDialog(); 
+      setMessage(
+      currentItem
+        ? { type: "success", text: "Item updated successfully!" }
+        : { type: "success", text: "Item added successfully!" }
+      );
+      setTimeout(() => setMessage(null), 3000);
+    })
+    .catch((error) => {
+      console.error(currentItem ? "Error updating item:" : "Error adding item:", error);
+      setMessage(
+        currentItem
+          ? { type: "error", text: "Failed to update item!" }
+          : { type: "error", text: "Failed to add item!" }
+      );
+      setTimeout(() => setMessage(null), 3000);
+  });
+
   };
 
   useEffect(() => {
@@ -121,8 +152,10 @@ const ItemView = () => {
     }
   }, [selectedCategory, selectedBrand]);
 
-
   const handleRowClick = (id) => setSelectedRowId(id);
+
+
+  
 
   return (
     <>
@@ -134,41 +167,53 @@ const ItemView = () => {
        
 
         <table className="item-table">
-          <thead>
-            <tr>
-              <th>Pattern</th>
-              <th>Size</th>
-              <th>PR</th>
-              <th>Selling Price</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.itemID}
-                className={selectedRowId === row.id ? "selected-row" : ""}
-                onClick={() => handleRowClick(row.id)}
-              >
-                <td>{row.pattern}</td>
-                <td>{row.tyreSize}</td>
-                <td>{row.ply}</td>
-                <td>{row.officialSellingPrice}</td>
-                <td>{row.tyreCount}</td>
-              </tr>
-            ))}
-          </tbody>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th>Size</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows.map((row) => (
+                            <tr
+                                key={row.id}
+                                className={selectedRowId === row.id ? "selected-row" : ""}
+                                onClick={() => handleRowClick(row.id)}
+                            >
+                                <td>{row.name}</td>
+                                <td>{row.brand}</td>
+                                <td>{row.size}</td>
+                                <td>{row.quantity}</td>
+                                <td>{row.price}</td>
+                            </tr>
+                        ))}
+                    </tbody>
         </table>
 
+
         <div className="button-group">
-          <button className="btn delete">Delete</button>
-          <button className="btn update">Update</button>
+          <button className="btn delete" onClick={handleDelete}>Delete</button>
+
+          <button className="btn update" onClick={() => {
+            if (selectedRowId) {
+              const selectedItem = rows.find(row => row.id === selectedRowId);
+              setCurrentItem(selectedItem); 
+              openDialog(currentItem);
+            
+            openDialog(currentItem);
+            } else {
+            setMessage({ type: "error", text: "Please select an item to update!" }); 
+            setTimeout(() => setMessage(null), 2000);
+          }}}>Update</button>
+          
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
           <button className="btn info">More Info</button>
         </div>
       </div>
 
-      
 
       <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
@@ -180,8 +225,14 @@ const ItemView = () => {
           closeDialog={closeDialog}
         />
       </PopUp>
+
     </>
   );
 };
+ItemView.propTypes = {
+  selectedCategory: PropTypes.string.isRequired,
+  selectedBrand: PropTypes.string.isRequired,
+};
 
 export default ItemView;
+
