@@ -48,19 +48,19 @@ public class ItemService {
     //Add item Tyre with branch
     public ResponseDTO addTyreItem(AddTyreItemDTO addTyreItemDTO) {
 
-        //extraction from addTyreItemDTO
-//        Item item= itemDTOMapper.toEntity(addTyreItemDTO.getItemDTO());
-//        ItemTyre tyre=itemTyreDTOMapper.toEntity(addTyreItemDTO.getItemTyreDTO());
-//        ItemBranch branch=itemBranchDTOMapper.toEntity(addTyreItemDTO.getItemBranchDTO());
-//
-//        item.setCategory(categoryRepo.findById(addTyreItemDTO.getItemDTO().getCategoryId()));
-
         // Extract individual DTOs
         ItemDTO itemDTO = addTyreItemDTO.getItemDTO();
         ItemTyreDTO itemTyreDTO = addTyreItemDTO.getItemTyreDTO();
         ItemBranchDTO itemBranchDTO = addTyreItemDTO.getItemBranchDTO();
 
-        Item item= itemDTOMapper.toEntity(itemDTO);
+        //Item item= itemDTOMapper.toEntity(itemDTO); //ModelMapper confused here..
+        //Map ItemDTO to Item entity manually
+        Item item=new Item();
+        item.setItemName(itemDTO.getItemName());
+        item.setCompanyPrice(itemDTO.getCompanyPrice());
+        item.setDiscount(itemDTO.getDiscount());
+        item.setItemDescription(itemDTO.getItemDescription());
+        item.setRetailPrice(itemDTO.getRetailPrice());
 
         // Fetch Category and Brand entities
         item.setCategory(categoryRepository.findById(itemDTO.getCategoryId())
@@ -69,6 +69,7 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Brand ID")));
 
         Item savedItem=itemRepository.save(item);
+        System.out.println("Item saved");
 
         // Map ItemTyreDTO to ItemTyre entity
         ItemTyre tyre=itemTyreDTOMapper.toEntity(itemTyreDTO);
@@ -90,15 +91,6 @@ public class ItemService {
         itemBranch.setAvailableQuantity(itemBranchDTO.getAvailableQuantity());
 
         itemBranchRepository.save(itemBranch);
-
-
-
-
-
-
-
-
-
 
         return new ResponseDTO(true, "Item added successfully");
     }
