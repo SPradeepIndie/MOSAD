@@ -12,10 +12,10 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brandId", nullable = false,unique = true)
     private Long brandId;
-    @Column(name = "brandName" , nullable = false)
+    @Column(name = "brandName" , nullable = false,unique = true)
     private String brandName;
 
-    @ManyToMany(mappedBy = "brands")
+    @ManyToMany(mappedBy = "brands", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "brand")

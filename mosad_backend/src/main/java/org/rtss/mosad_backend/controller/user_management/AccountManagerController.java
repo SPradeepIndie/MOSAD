@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.controller.user_management;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserDetailsDTO;
-import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.service.account_management.AccountManagementService;
 import org.rtss.mosad_backend.validator.ValidateHtmlPathVariable;
 import org.springframework.http.ResponseEntity;
@@ -51,4 +50,6 @@ public class AccountManagerController {
 
 
     //TODO Forgot password
+
+    //TODO Add user roles
 }

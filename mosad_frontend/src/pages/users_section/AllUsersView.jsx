@@ -101,7 +101,7 @@ const AllUsersView=()=>{
             setOpenPopup(false)
             
             // Update table data after successful registration
-            await loadAllUsers(); // Fetch updated user data
+            loadAllUsers(); // Fetch updated user data
           } catch (error) {
             console.log(userRegData)
             console.error('Error during registration:', error);

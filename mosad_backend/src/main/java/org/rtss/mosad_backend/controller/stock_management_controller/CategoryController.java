@@ -3,6 +3,7 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.CategoryDTO;
 import org.rtss.mosad_backend.service.stock_management_service.CategoryService;
+import org.rtss.mosad_backend.validator.ValidateHtmlPathVariable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +14,17 @@ import java.util.List;
 @RequestMapping("api/v1/category")
 public class CategoryController {
 
-
     private final CategoryService categoryService;
+    private final ValidateHtmlPathVariable validateHtmlPathVariable;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, ValidateHtmlPathVariable validateHtmlPathVariable) {
         this.categoryService = categoryService;
+        this.validateHtmlPathVariable = validateHtmlPathVariable;
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getCategories() {
         return ResponseEntity.ok().body(categoryService.getAllCategories());
-
     }
 
     @PostMapping
@@ -32,12 +33,13 @@ public class CategoryController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDTO> updateCategory(@RequestBody CategoryDTO categoryDTO) {
-        return new ResponseEntity<>(categoryService.updateCategory(categoryDTO), HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> updateCategory(@RequestParam String oldCatName, @RequestBody CategoryDTO categoryDTO) {
+        String escapedOldCatName = validateHtmlPathVariable.escapeHTMLspecailCharaters(oldCatName);
+        return ResponseEntity.ok(categoryService.updateCategory(categoryDTO,escapedOldCatName));
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<ResponseDTO> deleteCategory(@PathVariable Long categoryId) {
-        return new ResponseEntity<>(categoryService.deleteCategory(categoryId), HttpStatus.OK);
+    @DeleteMapping
+    public ResponseEntity<ResponseDTO> deleteCategory(@RequestBody CategoryDTO categoryDto) {
+        return ResponseEntity.ok(categoryService.deleteCategory(categoryDto));
     }
 }
