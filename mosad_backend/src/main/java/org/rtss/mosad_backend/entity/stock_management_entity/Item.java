@@ -13,8 +13,6 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "itemId",nullable = false,unique = true)
     private Long itemId;
-    @Column(name = "availableQuantity")
-    private Integer availableQuantity;
     @Column(name = "itemName")
     private String itemName;
     @Column(name = "itemDescription")
@@ -34,22 +32,17 @@ public class Item {
     @JoinColumn(name = "brandId")
     private Brand brand;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "item_branch",
-            joinColumns = @JoinColumn(name = "itemId"),
-            inverseJoinColumns = @JoinColumn(name = "branchId")
-    )
-    private Set<Branch> branches;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<ItemBranch> itemBranches;
 
-    //TODO Create Many to many relation ship with Bill
-    //TODO Create all args constructor
+
+
 
     public Item() {
     }
 
-    public Item(Integer availableQuantity, String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, Category category, Brand brand, Set<Branch> branches) {
-        this.availableQuantity = availableQuantity;
+    public Item(String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, Category category, Brand brand, Set<ItemBranch> itemBranches) {
+
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.companyPrice = companyPrice;
@@ -57,7 +50,7 @@ public class Item {
         this.discount = discount;
         this.category = category;
         this.brand = brand;
-        this.branches = branches;
+        this.itemBranches = itemBranches;
     }
 
     public Long getItemId() {
@@ -68,13 +61,6 @@ public class Item {
         this.itemId = itemId;
     }
 
-    public Integer getAvailableQuantity() {
-        return availableQuantity;
-    }
-
-    public void setAvailableQuantity(Integer availableQuantity) {
-        this.availableQuantity = availableQuantity;
-    }
 
     public String getItemName() {
         return itemName;
@@ -132,13 +118,14 @@ public class Item {
         this.brand = brand;
     }
 
-    public Set<Branch> getBranches() {
-        return branches;
+    public Set<ItemBranch> getItemBranches() {
+        return itemBranches;
     }
 
-    public void setBranches(Set<Branch> branches) {
-        this.branches = branches;
+    public void setItemBranches(Set<ItemBranch> itemBranches) {
+        this.itemBranches = itemBranches;
     }
+
 
     //Tire size update
     public void setSize(String size) {

@@ -2,6 +2,7 @@ package org.rtss.mosad_backend.entity.branch_management;
 
 import jakarta.persistence.*;
 import org.rtss.mosad_backend.entity.stock_management_entity.Item;
+import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
 
 import java.util.Set;
 
@@ -25,19 +26,23 @@ public class Branch {
     @OneToMany(mappedBy = "branch",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<BranchContact> branchContacts;
 
-    @ManyToMany(mappedBy = "branches")
-    private Set<Item> items;
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    private Set<ItemBranch> itemBranches;
+
+
+
 
     public Branch() {
     }
 
-    public Branch(Long branchId, String branchName, String buildingNumber, String streetName, String city, Set<BranchContact> branchContacts) {
+    public Branch(Long branchId, String branchName, String buildingNumber, String streetName, String city, Set<BranchContact> branchContacts,Set<ItemBranch> itemBranches) {
         this.branchId = branchId;
         this.branchName = branchName;
         this.buildingNumber = buildingNumber;
         this.streetName = streetName;
         this.city = city;
         this.branchContacts = branchContacts;
+        this.itemBranches = itemBranches;
     }
 
     public Long getBranchId() {
@@ -86,5 +91,13 @@ public class Branch {
 
     public void setBranchContacts(Set<BranchContact> branchContacts) {
         this.branchContacts = branchContacts;
+    }
+
+    public Set<ItemBranch> getItemBranches() {
+        return itemBranches;
+    }
+
+    public void setItemBranches(Set<ItemBranch> itemBranches) {
+        this.itemBranches = itemBranches;
     }
 }
