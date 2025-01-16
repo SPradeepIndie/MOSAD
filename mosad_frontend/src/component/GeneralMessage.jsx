@@ -1,5 +1,4 @@
 import Alert from "@mui/material/Alert";
-import PropTypes from "prop-types";
 
 const GeneralMessage = ({ message}) => {
   return (
@@ -17,12 +16,5 @@ const GeneralMessage = ({ message}) => {
     </Alert>
   );
 };
-
-GeneralMessage.prototype={
-  message: PropTypes.shape({
-    type:PropTypes.string.isRequired,
-    text:PropTypes.string.isRequired
-  })
-}
 
 export default GeneralMessage;

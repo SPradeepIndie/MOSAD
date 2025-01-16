@@ -1,8 +1,10 @@
 import React from "react";
-import { TextField, Box, Typography } from "@mui/material";
-import PropTypes from "prop-types";
+import { TextField, Box, Typography, DialogActions, Button } from "@mui/material";
 
-const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
+
+
+
+const ItemDetailsForm = ({ formData, handleChange, errors, onSubmit, closeDialog }) => {
 
   return (
     <form onSubmit={onSubmit}>
@@ -57,12 +59,5 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
     </form>
   );
 };
-
-ItemDetailsForm.prototype={
-  formData:PropTypes.object,
-  handleChange:PropTypes.func,
-  errors:PropTypes.object,
-  onSubmit:PropTypes.func
-}
 
 export default ItemDetailsForm;

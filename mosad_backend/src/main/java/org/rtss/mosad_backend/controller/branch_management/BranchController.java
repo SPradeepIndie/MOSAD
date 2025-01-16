@@ -1,30 +1,21 @@
 package org.rtss.mosad_backend.controller.branch_management;
 
-import org.rtss.mosad_backend.dto.branch_dtos.BranchDTO;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
-import org.rtss.mosad_backend.validator.ValidateHtmlPathVariable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/api/v1/branch")
 public class BranchController {
 
-    private final ValidateHtmlPathVariable validateHtmlPathVariable;
-
-
-    public BranchController(ValidateHtmlPathVariable validateHtmlPathVariable) {
-        this.validateHtmlPathVariable = validateHtmlPathVariable;
-    }
-
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteBranch(@RequestParam Long branchId) {
+    @DeleteMapping("/delete/{branchId}")
+    public ResponseEntity<String> deleteBranch(@PathVariable("branchId") Long branchId) {
         return ResponseEntity.ok("Deleted Branch: ");
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createBranch(@RequestBody BranchDTO branchDto) {
+    public ResponseEntity<String> createBranch(Branch branch) {
         return ResponseEntity.ok("Created Branch: ");
     }
 
@@ -33,16 +24,15 @@ public class BranchController {
         return ResponseEntity.ok("All Branches");
     }
 
-    @GetMapping("/view")
-    public ResponseEntity<String> getBranchByName(@RequestParam String branchName) {
-        String escapedBranchName = validateHtmlPathVariable.escapeHTMLspecailCharaters(branchName);
+    @GetMapping("/view/name")
+    public ResponseEntity<String> getBranchByName(String branchName) {
+        String escapedBranchName = HtmlUtils.htmlEscape(branchName);
         return ResponseEntity.ok("Branch: " + escapedBranchName);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> updateBranchById(@RequestParam Long branchId,
+    @PutMapping("/update/{branchId}")
+    public ResponseEntity<String> updateBranchById(@PathVariable("branchId") Long branchId,
                                                    @RequestBody Branch branch) {
-        String escapedBranchId = validateHtmlPathVariable.escapeHTMLspecailCharaters("branchId");
         return ResponseEntity.ok("Updated Branch: ");
     }
 }

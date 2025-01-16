@@ -9,11 +9,13 @@ import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useLocation} from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 function BrandPage({isFromBranch}) {
   const location=useLocation();
   const states=location.state;
+  //console.log(states);
+
+
 
   return (
       <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -71,10 +73,6 @@ function BrandPage({isFromBranch}) {
         </Stack>
       </Box>
   );
-}
-
-BrandPage.prototype={
-  isFromBranch:PropTypes.bool.isRequired
 }
 
 export default BrandPage;

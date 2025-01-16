@@ -11,41 +11,28 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useNavigate } from 'react-router-dom';
 
+
 function HomePage() {
   const navigate = useNavigate();
 
   const handleTileClick = (title) => {
     if (title === 'Stock') {
-      navigate('/stock');
+      navigate('/stock'); // Redirect to /stock
     } else if (title === 'Bill Generate') {
-      navigate('/BillGenerator');
-    } else if (title === 'Credit') {
+      navigate('/BillGenerator'); // Example for other tiles
+    }
+    else if(title=="Credit"){
       navigate('/credits');
     }
+    // Add more conditions for other tiles as needed
   };
 
   return (
     <>
       <Slideshow />
-      <Box
-        sx={{
-          marginTop: { xs: 2, sm: 3, md: 4, lg: 5, xl: 6 },
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: { xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }, // Reduced padding for responsiveness
-        }}
-      >
-        
-        <Stack
-          direction="row"
-          sx={{
-            gap: { xs: '8px', sm: '20px', md: '50px', lg: '100px', xl: '120px' }, // Reduced gap for responsiveness
-            marginBottom: { xs: 2, sm: 3, md: 4, lg: 5, xl: 6 },
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}
-        >
+      <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* First Row: Three Tiles */}
+        <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
           <Tile
             title="Bill Generate"
             icon={<DescriptionIcon fontSize="large" />}
@@ -61,7 +48,10 @@ function HomePage() {
             icon={<StorefrontIcon fontSize="large" />}
             link="/retail"
           />
+        </Stack>
 
+        {/* Second Row: Three Tiles */}
+        <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
           <Tile
             title="Credit"
             icon={<CreditCardIcon fontSize="large" />}
@@ -77,12 +67,15 @@ function HomePage() {
             icon={<PeopleIcon fontSize="large" />}
             link="/employee"
           />
+        </Stack>
 
+        {/* Last Row: Centered Tile */}
+        <Stack direction="row" justifyContent="center">
           <Tile
             title="Reports"
             icon={<AssessmentIcon fontSize="large" />}
             link="/future"
-          />
+           />
         </Stack>
       </Box>
     </>

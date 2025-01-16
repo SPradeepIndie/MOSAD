@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class UserDTO{
 
     @NotBlank(message = "Username is Mandatory")
-    @Size(min = 3,max = 30,message = "Username should between 6 and 30 characters long.")
+    @Size(min = 3,max = 30,message = "Username should between 6 and 50 characters long.")
     private String username;
 
     @NotBlank(message = "Firstname is Mandatory")
