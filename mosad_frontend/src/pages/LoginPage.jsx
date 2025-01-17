@@ -135,17 +135,8 @@ const LoginPage = () => {
                     </Grid2>
                 </Grid2>
             </Paper>
-        <PopUp popUpTitle="Reset Your Password"  openPopup={openForgotPasswordPopup} setOpenPopup={setOpenForgotPasswordPopup} setCancelButtonAction={handleCancelButtonAction} isDefaultButtonsDisplay={false}
-            children={
-                <ForgotPasswordForm
-                />
-            }
-            />
-             
+            <PopUp popUpTitle="Reset Your Password"  openPopup={openForgotPasswordPopup} setOpenPopup={setOpenForgotPasswordPopup} setCancelButtonAction={handleCancelButtonAction} isDefaultButtonsDisplay={false} children={<ForgotPasswordForm/>}/>
         </Container>
-
     )
-
 }
-
 export default LoginPage;

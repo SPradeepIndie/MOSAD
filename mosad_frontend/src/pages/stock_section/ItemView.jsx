@@ -202,9 +202,5 @@ const ItemView = () => {
     </>
   );
 };
-ItemView.propTypes = {
-  selectedCategory: PropTypes.string.isRequired,
-  selectedBrand: PropTypes.string.isRequired,
-};
 export default ItemView;
 
