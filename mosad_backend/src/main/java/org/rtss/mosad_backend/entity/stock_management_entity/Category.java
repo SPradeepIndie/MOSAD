@@ -12,7 +12,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "categoryId", nullable = false,unique = true)
     private Long categoryId;
-    @Column(name = "categoryName", nullable = false)
+    @Column(name = "categoryName", nullable = false,unique = true)
     private String categoryName;
 
     @ManyToMany

@@ -1,8 +1,7 @@
 {
   "name": "mosad_frontend",
   "private": true,
-  "version": "2.1.11",
-
+  "version": "2.1.10",
   "type": "module",
   "scripts": {
     "dev": "vite",

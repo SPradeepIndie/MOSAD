@@ -13,11 +13,11 @@ public class CategoryDTOMapper {
         this.modelMapper = modelMapper;
     }
 
-    public CategoryDTO toDTO(Category category) {
+    public CategoryDTO categoryToDTO(Category category) {
         return modelMapper.map(category, CategoryDTO.class);
     }
 
-    public Category toEntity(CategoryDTO categoryDTO) {
+    public Category categoryDtoToEntity(CategoryDTO categoryDTO) {
         return modelMapper.map(categoryDTO,Category.class);
     }
 
