@@ -15,8 +15,10 @@ import org.rtss.mosad_backend.entity.stock_management_entity.ItemTyre;
 import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
 import org.rtss.mosad_backend.repository.stock_management_repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ItemService {
     private final ItemRepo itemRepository;
     private final ItemBranchRepository itemBranchRepository;
