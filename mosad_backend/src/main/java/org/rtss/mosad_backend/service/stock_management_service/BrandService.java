@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class BrandService {
@@ -41,7 +40,7 @@ public class BrandService {
         // Check if the brand already exists
         Optional<Brand> existingBrandOpt = brandRepo.findByBrandName(addBrandDto.getBrandDTO().getBrandName());
 
-        Set<Category> validCategories = ValidCategories(addBrandDto.getCategories());
+        Set<Category> validCategories = validCategories(addBrandDto.getCategories());
 
         try {
             if (existingBrandOpt.isPresent()) {
@@ -91,7 +90,7 @@ public class BrandService {
                 .toList();
         return brands.stream()
                 .map(brandDTOMapper::BrandToBrandDto)
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
@@ -105,7 +104,7 @@ public class BrandService {
     }
 
     //Check the categories are valid
-    private Set<Category> ValidCategories(@NotNull(message = "Category can not be nul") Set<CategoryDTO> categoryDtos){
+    private Set<Category> validCategories(@NotNull(message = "Category can not be nul") Set<CategoryDTO> categoryDtos){
         Set<Category> categories = new HashSet<>();
         for(CategoryDTO categoryDto: categoryDtos){
             Category oldCategory=categoryRepo.findCategoryByCategoryName(categoryDto.getCategoryName()).orElseThrow(
@@ -137,9 +136,7 @@ public class BrandService {
     private ResponseDTO createNewBrand(AddBrandDTO addBrandDto, Set<Category> validCategories) {
         Brand newBrand = brandDTOMapper.BrandDtoToBrand(addBrandDto.getBrandDTO());
 
-        validCategories.forEach(category -> {
-            category.setBrands(new HashSet<>(List.of(newBrand)));
-        });
+        validCategories.forEach(category -> category.setBrands(new HashSet<>(List.of(newBrand))));
 
         newBrand.setCategories(validCategories);
         brandRepo.saveAndFlush(newBrand);

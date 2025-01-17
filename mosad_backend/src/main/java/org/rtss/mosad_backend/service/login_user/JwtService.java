@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
@@ -18,16 +17,18 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private String secretKey;
+    private final String secretKey;
+    private final long accessTokenExpirationTime=1000*60*15;//15min
+    private final long refreshTokenExpirationTime=1000*60*60*24*7;//30days
 
-    //Generate Secret key when OBJECT is created
+    //Generate Secret key, when OBJECT is created
     //For each object generating key is different
     public JwtService() {
         KeyGenerator keyGene = null;
         try {
             keyGene = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGene.generateKey();
-            secretKey= Base64.getEncoder().encodeToString(sk.getEncoded());
+            SecretKey accessSK = keyGene.generateKey();
+            secretKey = Base64.getEncoder().encodeToString(accessSK.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -36,15 +37,28 @@ public class JwtService {
     /*-----------------------------
      * Services for generate token
      * -----------------------------*/
-    public String generateToken(String username) {
+    public String generateToken(String username,String role) {
         Map<String, Object> claims=new HashMap<>();
+        claims.put("role",role);
+        return buildToken(claims,username,accessTokenExpirationTime);
+    }
 
+    //In refresh has not claims. It will live long
+    public String generateRefreshToken(String username) {
+        return buildToken(new HashMap<>(),username,refreshTokenExpirationTime);
+    }
+
+    private String buildToken(
+            Map<String, Object> claims,
+            String username,
+            long expirationTime
+    ){
         return Jwts.builder()
                 .claims()
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .expiration(new Date(System.currentTimeMillis()+expirationTime))
                 .and()
                 .signWith(getKey()) //sign the token with generated key
                 .compact();
