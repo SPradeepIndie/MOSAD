@@ -6,6 +6,7 @@ import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
 
 import LoginPage from './pages/LoginPage'
+
 import backgroundImage from './assets/bg-image.jpg'
 
 import HomePage from './pages/home/HomePage'

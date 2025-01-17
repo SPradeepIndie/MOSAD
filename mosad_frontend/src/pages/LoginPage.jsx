@@ -1,16 +1,31 @@
 import { CheckBox, LockOutlined } from "@mui/icons-material";
 import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from "../services/apiUserService";
 import useAuth from "../hooks/useAuth"
-
+import PopUp from "../component/PopUp";
+import ForgotPasswordForm from "../forms/ForgotPasswordForm";
 
 const LoginPage = () => {
     const{setAuth}= useAuth();
 
+    const [openForgotPasswordPopup,setOpenForgotPasswordPopup]=useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+
+
+    
+    const forgotPasswordFormRef = useRef();
+
+  const handleCancelButtonAction = () => {
+    
+    if (forgotPasswordFormRef.current?.resetForm) {
+      forgotPasswordFormRef.current.resetForm();
+    }
+    setOpenForgotPasswordPopup(false); 
+    window.location.reload(); 
+  };
 
     //Request data inital state
     const initalLoginState = {
@@ -98,9 +113,10 @@ const LoginPage = () => {
                                     />
                                 </Grid2>
                                 <Grid2 size={{xs:6}}>
-                                    <Typography>
-                                        Forgot password
-                                    </Typography>
+                                <Button variant="text" size="small" 
+                                    onClick={(e)=>(setOpenForgotPasswordPopup(true))}>
+                                    Forgot passowrd
+                                </Button>
                                 </Grid2>
                                 <Grid2 size={{xs:12}} >
                                     <Button
@@ -120,10 +136,10 @@ const LoginPage = () => {
                     </Grid2>
                 </Grid2>
             </Paper>
+            <PopUp popUpTitle="Reset Your Password"  openPopup={openForgotPasswordPopup} setOpenPopup={setOpenForgotPasswordPopup} setCancelButtonAction={handleCancelButtonAction} isDefaultButtonsDisplay={false}>
+                <ForgotPasswordForm/>
+            </PopUp>
         </Container>
-
     )
-
 }
-
 export default LoginPage;
