@@ -52,17 +52,17 @@ function App() {
   return (
     <Container maxWidth="xl" disableGutters sx={{
       width:'100vw',
-      backgroundImage: `url(${!auth.success && backgroundImage})`, // Apply background only on login page
+      backgroundImage: `url(${!auth.Authenticated && backgroundImage})`, // Apply background only on login page
       backgroundSize: 'cover', 
       backgroundPosition: 'center' ,
       height:'100vh'}}>
      <Box maxWidth="xl">
-        { auth.success && <HeaderBar/>} 
+        { auth.Authenticated && <HeaderBar/>} 
       </Box>
       
       <Box  sx={{ p: 2,minHeight: '100vh'}} >
         <Routes>
-        <Route path='/' element={auth.success ? <Navigate to="/home" replace /> : <LoginPage/>} /> 
+        <Route path='/' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} /> 
         <Route element={<RoutesProtector />}>
           <Route path="/home" element={ <HomePage />} />
 
@@ -106,7 +106,7 @@ function App() {
       </Box>
 
       <Box maxWidth="xl">
-        {auth.success && <Footer />}
+        {auth.Authenticated && <Footer />}
       </Box>
     </Container>
   )

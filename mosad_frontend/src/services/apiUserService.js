@@ -23,3 +23,7 @@ export const getUserDetailsByUsername=(data)=>{
 export const getAllUsername=()=>{
     return apiClient.get('user/view/all');
 }
+
+export const logout=()=>{
+    return apiClient.get('/logout');
+}

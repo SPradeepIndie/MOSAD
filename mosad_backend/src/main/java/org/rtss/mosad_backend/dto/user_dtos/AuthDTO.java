@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthDTO {
 
-    @JsonProperty("Authenticated:")
+    @JsonProperty("Authenticated")
     private boolean authenticated;
     @JsonProperty("access_token")
     private String accessToken;

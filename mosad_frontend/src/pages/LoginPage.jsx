@@ -27,9 +27,10 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await loginRequest(loginData);
-        const { success, message } = response.data;
-        localStorage.setItem("token",message)
-        setAuth({message,success,username:loginData.username})
+        const { Authenticated, access_token,refresh_token } = response.data;
+        localStorage.setItem("token",access_token)
+        localStorage.setItem("refresh_token",refresh_token)
+        setAuth({refresh_token,Authenticated,username:loginData.username})
         navigate('/home', { replace: true }); // Used replace to prevent back navigation
        
     }

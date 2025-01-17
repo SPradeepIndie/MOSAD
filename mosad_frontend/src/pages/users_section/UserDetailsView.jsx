@@ -48,7 +48,7 @@ const UserDetailsView=()=>{
     
     // Fetch user details if there is token is saved
     useEffect(() => {
-        if (auth.success) {
+        if (auth.Authenticated) {
             setIsLoading(true);
             loadData();
         }

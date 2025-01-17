@@ -6,6 +6,7 @@ import { React } from 'react';
 import { Link ,useNavigate} from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import useAuth from "../hooks/useAuth"
+import { logout } from '../services/apiUserService';
 
 
 function HeaderBar() {
@@ -13,11 +14,14 @@ function HeaderBar() {
   const{setAuth}= useAuth();
 
   const handleLogout = () => {
-    setAuth({message:"",success:false,username:""})
+    setAuth({refresh_token:"",Authenticated:false,username:""}) 
     // Remove token from local storage
     localStorage.removeItem('token');
-    // Redirect to login page
-    navigate('/', { replace: true });
+
+    //send logout request to db
+    logout();
+   
+    navigate('/', { replace: true }); // Redirect to login page
   };
 
   return (
