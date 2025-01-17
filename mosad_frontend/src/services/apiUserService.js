@@ -23,3 +23,5 @@ export const getUserDetailsByUsername=(data)=>{
 export const getAllUsername=()=>{
     return apiClient.get('user/view/all');
 }
+
+//TODO Should have to create endpoint for  forgotpassword email , otp

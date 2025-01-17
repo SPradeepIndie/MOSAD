@@ -3,7 +3,7 @@ import React from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 
-export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction,buttons}){
+export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkButtonAction,setCancelButtonAction,isDefaultButtonsDisplay}){
     return(
         <Dialog open={openPopup} maxWidth="md">
             <DialogTitle sx={{p:2}}>
@@ -18,8 +18,8 @@ export default function PopUp({popUpTitle,children,openPopup,setOpenPopup,setOkB
             </DialogTitle>
             <DialogContent dividers>
                 {children}
-                {/*Item add form buttons are different. So I added buttons prop to remove buttons from this component */}
-                {buttons &&
+                {/*Item add form buttons are different. buttons prop to remove buttons from this component */}
+                {isDefaultButtonsDisplay &&
                     <Grid2 container spacing={2} justifyContent="end">
                         <Grid2 size={{ xs: "auto" }}>
                             <Button variant="contained" color="primary" onClick={setOkButtonAction}>
@@ -45,5 +45,5 @@ PopUp.propTypes = {
     setOpenPopup: PropTypes.func.isRequired,
     setOkButtonAction: PropTypes.func,
     setCancelButtonAction: PropTypes.func.isRequired,
-    buttons: PropTypes.bool
+    isDefaultButtonsDisplay: PropTypes.bool
 };

@@ -3,7 +3,6 @@ import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Link, Outlet } from "react-router-dom";
-import "./branchPage.css";
 
 
 const BranchPageLayout=()=>{
