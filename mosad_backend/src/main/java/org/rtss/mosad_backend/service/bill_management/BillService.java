@@ -23,6 +23,7 @@ public class BillService {
         return billRepository.findAll();
     }
 
+
     // Additional methods like getBillById, deleteBill, etc.
 }
 
