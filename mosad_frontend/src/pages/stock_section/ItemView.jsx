@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -13,7 +12,6 @@ import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
-
 const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
