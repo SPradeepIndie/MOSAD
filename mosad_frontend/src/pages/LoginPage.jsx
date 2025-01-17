@@ -1,12 +1,11 @@
 import { CheckBox, LockOutlined } from "@mui/icons-material";
-import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography,Link } from "@mui/material";
+import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
 import { useState, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from "../services/apiUserService";
 import useAuth from "../hooks/useAuth"
 import PopUp from "../component/PopUp";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
-
 
 const LoginPage = () => {
     const{setAuth}= useAuth();
@@ -139,8 +138,6 @@ const LoginPage = () => {
         <PopUp popUpTitle="Reset Your Password"  openPopup={openForgotPasswordPopup} setOpenPopup={setOpenForgotPasswordPopup} setCancelButtonAction={handleCancelButtonAction} isDefaultButtonsDisplay={false}
             children={
                 <ForgotPasswordForm
-                
-                
                 />
             }
             />

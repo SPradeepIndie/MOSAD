@@ -1,8 +1,6 @@
-import { Typography, Button, TextField, Box, Alert } from "@mui/material";
+import { Typography, Button, TextField, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
-
 const ForgotPasswordForm = () =>{
-
     const [step, setStep] = useState(1); // Step management: 1 - Email, 2 - OTP, 3 - New Password, 4 - Success
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
@@ -12,28 +10,19 @@ const ForgotPasswordForm = () =>{
     const [timer, setTimer] = useState(30); // Countdown timer for OTP
     const [isResendDisabled, setIsResendDisabled] = useState(true);
     const [passwordStrength, setPasswordStrength] = useState("");
-
-
-    
     const handleEmailSubmit = () => {
         // Simulating a backend response
         const emailExists = true; // Replace with backend call result
-      
         if (email.includes(' ')) {
           setErrorMessage('Email cannot contain spaces.');
           return false;
         }
         if (!email) {
           setErrorMessage("Email cannot be empty.");
-          
-
         }
         else if (!email.includes("@")) {
-          setErrorMessage("Enter a valid email.");
-          
-        }
-        
-        
+          setErrorMessage("Enter a valid email.");          
+        }               
         else if (!emailExists){
           setErrorMessage("Email does not exist.");
         }
@@ -42,23 +31,18 @@ const ForgotPasswordForm = () =>{
           setErrorMessage("");
           startTimer();
         }     
-
       };
 
-
       const handleOtpSubmit = () => {
-        const otpIsValid = true; // Replace with backend call result
-        
+        const otpIsValid = true; // Replace with backend call result       
         if (!otp) {
           setErrorMessage("OTP cannot be empty.");
           return;
         }
-
         if (!/^\d+$/.test(otp)) {
           setErrorMessage("OTP must contain only numbers.");
           return;
         }
-
         if (!/^\d{6}$/.test(otp)) {
           setErrorMessage("OTP must have only 6 digit.");
           return;
@@ -104,28 +88,19 @@ const ForgotPasswordForm = () =>{
         }, 1000);
       };
 
-
-
-
-
-
       const handlePasswordSubmit = () => {
-
         if (newPassword.length < 8) {
           setErrorMessage("Password must be at least 8 characters long.");
           return;
         }
-
         if (newPassword.includes(' ')) {
           setErrorMessage('Password cannot contain spaces.');
           return false;
-        }
-        
+        }       
         if (!/\d/.test(newPassword)) {
           setErrorMessage("Password must contain at least one number.");
           return;
         }
-
         if (newPassword === confirmPassword) {
           setStep(4);
           setErrorMessage("");
@@ -133,16 +108,13 @@ const ForgotPasswordForm = () =>{
           setErrorMessage("Passwords do not match.");
         }
       };
-
       const handlePasswordChange = (password) => {
         setNewPassword(password);
-
         if (password === "") {
-          setPasswordStrength(""); // Reset password strength if empty
+          setPasswordStrength(""); 
           return;
-        }
-    
-        // Check password strength
+        }    
+        
         const hasUpperCase = /[A-Z]/.test(password);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         if (hasUpperCase && hasSpecialChar) {
@@ -151,16 +123,10 @@ const ForgotPasswordForm = () =>{
           setPasswordStrength("weak");
         }
       };
-
-
-
       const handleContinueToLogin = () => {
         window.location.reload();
       };
-
-
-
-
+      
       useEffect(() => {
         let interval;
         if (timer > 0) {
@@ -174,18 +140,9 @@ const ForgotPasswordForm = () =>{
         return () => clearInterval(interval); // Cleanup interval on component unmount
       }, [timer]);
 
-     
-      
-    
-
-    return(
-  
-      
+    return(      
         <Box>
-
-            {/* Email Entering section */}
-            {step === 1 && (     
-
+            {/* Email Entering section */}{step === 1 && (     
                 <Box>
                     <Typography variant="h5" gutterBottom>
                       Forgot Password
@@ -214,22 +171,15 @@ const ForgotPasswordForm = () =>{
                     >
                       Continue
                     </Button>
-                </Box>
-            )}
-
-
-            {/* OTP Entering Section */}
-
-            {step === 2 && (
-
+                </Box>)}
+            {/* OTP Entering Section */}{step === 2 && (
                 <Box>
                     <Typography variant="h5" gutterBottom>
                         Verification
                     </Typography>
                     <Typography variant="body1" gutterBottom>
                         Enter your OTP code that you received on your email.
-                    </Typography>
-                    
+                    </Typography> 
                     <TextField
                         fullWidth
                         label="Enter OTP"
@@ -266,15 +216,8 @@ const ForgotPasswordForm = () =>{
                         Resend Code
                          </Button>
                     </Typography>
-                </Box>
-                )
-            }
-
-
-            {/* New Password Create */}
-
-
-            {step === 3 && (
+                </Box>)}
+{/* New Password Create */}{step === 3 && (
             <Box>
                 <Typography variant="h5" gutterBottom>
                     New Password
@@ -295,7 +238,6 @@ const ForgotPasswordForm = () =>{
                     }}
                     margin="normal"
                 />
-
                       {newPassword && (
                         <Typography
                           color={passwordStrength === "strong" ? "success.main" : "warning.main"}
@@ -303,7 +245,6 @@ const ForgotPasswordForm = () =>{
                           Password is {passwordStrength}.
                         </Typography>
                       )}
-
                 <TextField
                     fullWidth
                     label="Confirm password"
@@ -326,14 +267,8 @@ const ForgotPasswordForm = () =>{
                 >
                     Update Password
                 </Button>
-            </Box>
-             )}
-
-
-
-             {/* Success */}
-
-             {step === 4 && (
+            </Box>)}
+{/* Success */}{step === 4 && (
                 <Box textAlign="center">
                     <Typography variant="h5" gutterBottom>
                         Successfully
@@ -344,18 +279,6 @@ const ForgotPasswordForm = () =>{
                     <Button variant="contained" fullWidth onClick={handleContinueToLogin}>
                         Continue to Login
                     </Button>
-                </Box>
-      )}
-
-
-
-
-
-        </Box>
-      
-      
-  
-    );
-}
-
+                </Box>)}
+   </Box>    );}
 export default ForgotPasswordForm;

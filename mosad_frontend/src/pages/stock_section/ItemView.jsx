@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
-
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -15,29 +14,21 @@ import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiS
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 
-
 const ItemView = () => {
-
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-
   let selectedCategory=states.category;
   let selectedBrand=states.brand;
-
   const [rows, setRows] = useState([]);
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
-
-
   const cat_and_brand=(states.category+"_"+states.brand).toLowerCase();
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(cat_and_brand));
-  
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
-
   const openDialog = (item) => {
     if (item) {
       setCurrentItem(item);
@@ -56,9 +47,7 @@ const ItemView = () => {
 
   const validateAddForm = (key, value) => {
     setFormData((prevData) => ({ ...prevData, [key]: value }));
-
     let fieldError = "";
-
     if (!value) {
       fieldError = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
     } else if ((key === "tyreCount" || key==="ply") && !Number.isInteger(Number(value))) {
@@ -77,7 +66,6 @@ const ItemView = () => {
       return updatedErrors;
     });
   };
-
 
   const handleDelete = () => {
     if (selectedRowId !== null) {
@@ -132,7 +120,6 @@ const ItemView = () => {
       );
       setTimeout(() => setMessage(null), 3000);
   });
-
   };
 
   useEffect(() => {
@@ -145,18 +132,13 @@ const ItemView = () => {
     };
 
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
-
     if (selectedCategory && selectedBrand) {
       fetchItems({params:{category:selectedCategory,brand:selectedBrand}})
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
     }
   }, [selectedCategory, selectedBrand]);
-
   const handleRowClick = (id) => setSelectedRowId(id);
-
-
-  
 
   return (
     <>
@@ -165,8 +147,6 @@ const ItemView = () => {
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
         </section>
-       
-
         <table className="item-table">
                     <thead>
                         <tr>
@@ -193,29 +173,22 @@ const ItemView = () => {
                         ))}
                     </tbody>
         </table>
-
-
         <div className="button-group">
           <button className="btn delete" onClick={handleDelete}>Delete</button>
-
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
               const selectedItem = rows.find(row => row.id === selectedRowId);
               setCurrentItem(selectedItem); 
-              openDialog(currentItem);
-            
+              openDialog(currentItem);  
             openDialog(currentItem);
             } else {
             setMessage({ type: "error", text: "Please select an item to update!" }); 
             setTimeout(() => setMessage(null), 2000);
-          }}}>Update</button>
-          
+          }}}>Update</button>          
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
           <button className="btn info">More Info</button>
         </div>
       </div>
-
-
       <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
         <ItemDetailsForm
           formData={formData}
@@ -226,7 +199,6 @@ const ItemView = () => {
           closeDialog={closeDialog}
         />
       </PopUp>
-
     </>
   );
 };
@@ -234,6 +206,5 @@ ItemView.propTypes = {
   selectedCategory: PropTypes.string.isRequired,
   selectedBrand: PropTypes.string.isRequired,
 };
-
 export default ItemView;
 
