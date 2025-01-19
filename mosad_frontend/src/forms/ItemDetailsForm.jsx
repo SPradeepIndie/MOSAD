@@ -1,8 +1,8 @@
 import React from "react";
-import { TextField, Box, Typography } from "@mui/material";
+import { TextField, Box, Typography,DialogActions,Button } from "@mui/material";
 import PropTypes from "prop-types";
 
-const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
+const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit,closeDialog }) => {
 
   return (
     <form onSubmit={onSubmit}>

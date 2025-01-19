@@ -48,7 +48,7 @@ public class ItemService {
     }
 
     //Add item Tyre with branch
-    public ResponseDTO addTyreItem(AddTyreItemDTO addTyreItemDTO) {
+    public ResponseDTO addItemTyre(AddTyreItemDTO addTyreItemDTO) {
 
         // Extract individual DTOs
         ItemDTO itemDTO = addTyreItemDTO.getItemDTO();
@@ -108,5 +108,87 @@ public class ItemService {
 
         return new ResponseDTO(true, "Item added successfully");
     }
+
+    public ResponseDTO updateItemTyre(AddTyreItemDTO updateTyreItemDTO) {
+        // Extract individual DTOs
+        ItemDTO itemDTO = updateTyreItemDTO.getItemDTO();
+        ItemTyreDTO itemTyreDTO = updateTyreItemDTO.getItemTyreDTO();
+        ItemBranchDTO itemBranchDTO = updateTyreItemDTO.getItemBranchDTO();
+
+        // Fetch the existing Item entity using itemId from ItemDTO
+        Long itemId = itemDTO.getItemId();
+        if (itemId == null) {
+            throw new IllegalArgumentException("Item ID is required for updating an item.");
+        }
+
+        Item existingItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + itemId));
+
+        // Update fields in the Item entity
+        existingItem.setItemName(itemDTO.getItemName());
+        existingItem.setCompanyPrice(itemDTO.getCompanyPrice());
+        existingItem.setRetailPrice(itemDTO.getRetailPrice());
+        existingItem.setDiscount(itemDTO.getDiscount());
+        existingItem.setItemDescription(itemDTO.getItemDescription());
+        existingItem.setCategory(categoryRepository.findById(itemDTO.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Category ID")));
+        existingItem.setBrand(brandRepository.findById(itemDTO.getBrandId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Brand ID")));
+
+        // Save updated Item entity
+        Item savedItem = itemRepository.save(existingItem);
+
+        ItemTyre existingTyre = itemTyreRepo.findByItem(existingItem);
+
+        // Update fields in the ItemTyre entity
+        existingTyre.setItem(savedItem);
+        existingTyre.setTyreSize(itemTyreDTO.getTyreSize());
+        existingTyre.setPattern(itemTyreDTO.getPattern());
+        existingTyre.setVehicleType(itemTyreDTO.getVehicleType());
+
+        // Save updated ItemTyre entity
+        itemTyreRepo.save(existingTyre);
+
+        // Fetch the existing ItemBranch entity using itemId and branchId
+        Long branchId = itemBranchDTO.getBranchId();
+        if (branchId == null) {
+            throw new IllegalArgumentException("Branch ID is required for updating item branch information.");
+        }
+
+        ItemBranch existingItemBranch = itemBranchRepository.findByItemIdAndBranchId(itemId, branchId);
+        if (existingItemBranch == null) {
+            throw new IllegalArgumentException("ItemBranch not found for Item ID: " + itemId +
+                    " and Branch ID: " + branchId);
+        }
+
+        // Update fields in the ItemBranch entity
+        existingItemBranch.setAvailableQuantity(itemBranchDTO.getAvailableQuantity());
+        existingItemBranch.setBranch(branchRepository.findById(branchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Branch ID")));
+
+        // Save updated ItemBranch entity
+        itemBranchRepository.save(existingItemBranch);
+
+        return new ResponseDTO(true, "ItemTyre updated successfully");
+    }
+
+    public ResponseDTO deleteItemTyre(Long itemId) {
+        // Validate itemId
+        if (itemId == null) {
+            throw new IllegalArgumentException("Item ID is required for deletion.");
+        }
+
+        // Fetch and delete the Item entity
+        Item existingItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + itemId));
+        itemTyreRepo.deleteItemTyreByItem(existingItem);
+        System.out.println("\nItem Tyre Deleted..!\n");
+        itemRepository.delete(existingItem);
+        System.out.println("\nItem Deleted\n");
+
+        return new ResponseDTO(true, "ItemTyre and associated records deleted successfully.");
+    }
+
+
 
 }

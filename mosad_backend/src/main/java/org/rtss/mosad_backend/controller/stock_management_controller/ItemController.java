@@ -17,6 +17,16 @@ public class ItemController {
 
     @PostMapping("/add-tyre")
     public ResponseDTO addTyreItem(@RequestBody AddTyreItemDTO addTyreItemDTO) {
-        return itemService.addTyreItem(addTyreItemDTO);
+        return itemService.addItemTyre(addTyreItemDTO);
+    }
+
+    @PutMapping("/update-tyre")
+    public ResponseDTO updateTyreItem(@RequestBody AddTyreItemDTO updateTyreItemDTO) {
+        return itemService.updateItemTyre(updateTyreItemDTO);
+    }
+
+    @DeleteMapping("/delete-tyre/{itemId}")
+    public ResponseDTO deleteTyreItem(@PathVariable Long itemId) {
+        return itemService.deleteItemTyre(itemId);
     }
 }

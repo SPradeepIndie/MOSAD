@@ -24,11 +24,11 @@ public class Item {
     @Column(name = "discount")
     private double discount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "categoryId")
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "brandId")
     private Brand brand;
 
