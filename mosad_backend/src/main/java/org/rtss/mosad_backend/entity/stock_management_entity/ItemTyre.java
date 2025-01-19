@@ -22,6 +22,15 @@ public class ItemTyre {
     public ItemTyre() {
     }
 
+
+    public ItemTyre(Item item, String tyreSize, String pattern, String vehicleType) {
+        this.item = item;
+        this.tyreSize = tyreSize;
+        this.pattern = pattern;
+        this.vehicleType = vehicleType;
+    }
+
+
     public Long getId() {
         return id;
     }

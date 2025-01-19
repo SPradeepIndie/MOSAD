@@ -1,8 +1,6 @@
 package org.rtss.mosad_backend.entity.stock_management_entity;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.entity.branch_management.Branch;
-
 import java.util.Set;
 
 @Entity
@@ -126,8 +124,4 @@ public class Item {
         this.itemBranches = itemBranches;
     }
 
-
-    //Tire size update
-    public void setSize(String size) {
-    }
 }

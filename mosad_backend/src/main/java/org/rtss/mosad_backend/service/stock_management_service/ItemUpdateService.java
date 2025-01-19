@@ -33,7 +33,7 @@ public class ItemUpdateService {
         //item.setAvailableQuantity(updateDTO.getQuantity());
         item.setRetailPrice(updateDTO.getPrice());
         item.setBrand(updateDTO.getBrand());
-        item.setSize(updateDTO.getSize());
+        //item.setSize(updateDTO.getSize());
 
         itemRepository.save(item);
     }

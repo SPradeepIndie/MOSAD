@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.entity.branch_management;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
 
 import java.util.Set;
@@ -35,7 +34,7 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(Long branchId, String branchName, String addressNumber, String streetName, String city, Set<BranchContact> branchContacts) {
+    public Branch(Long branchId, String branchName, String addressNumber, String streetName, String city, Set<BranchContact> branchContacts, Set<ItemBranch> itemBranches) {
         this.branchId = branchId;
         this.branchName = branchName;
         this.addressNumber = addressNumber;
