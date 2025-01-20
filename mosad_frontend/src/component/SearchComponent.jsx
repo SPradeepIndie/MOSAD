@@ -91,6 +91,8 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
     if (quantity > 0) {
         const unitPrice = parseFloat(row.officialSellingPrice) || 0;
         onAddToBill({
+            brand: brand,
+            tyreSize:row.tyreSize,
             description: `${row.tyreSize} ${brand}`,
             unitPrice: unitPrice,
             quantity: quantity,

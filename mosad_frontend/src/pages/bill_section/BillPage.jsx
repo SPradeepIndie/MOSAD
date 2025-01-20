@@ -25,11 +25,16 @@ const BillPage = () => {
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [customerName, setCustomerName] = useState("");
+  const [telephone, setTelephone] = useState("");
+
 
   const handleAddToBill = (item) => {
     setRows((prevRows) => [
       ...prevRows,
       {
+        brand: item.brand || "N/A",
+        tyreSize: item.tyreSize || "N/A",
         description: item.description || "",
         unitPrice: parseFloat(item.unitPrice) || 0,
         quantity: parseInt(item.quantity, 10) || 1,
@@ -37,6 +42,8 @@ const BillPage = () => {
       },
     ]);
   };
+  
+  
 
   const handleInputChange = (index, field, value) => {
     setRows((prevRows) => {
@@ -60,9 +67,14 @@ const BillPage = () => {
   };
 
   const handleAdvanceChange = (e) => {
-    const value = parseFloat(e.target.value) || 0;
-    setAdvance(value);
+    const value = e.target.value;
+    if (value === "") {
+      setAdvance(""); // Allow the input to be empty temporarily
+    } else {
+      setAdvance(parseFloat(value) || 0); // Otherwise, parse the value
+    }
   };
+  
 
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
@@ -72,41 +84,37 @@ const BillPage = () => {
   };
 
   const handlePrint = () => {
-    // Gather rows data
-    const details = rows
-      .map((row, index) => {
-        return `Item ${index + 1}:
-          - Brand: ${row.brand || "N/A"}
-          - Size: ${row.size || "N/A"}
-          - Quantity: ${row.quantity || "N/A"}
-          - Unit Price: ${ccyFormat(row.unitPrice || 0)}
-          - Subtotal: ${ccyFormat(row.subtotal || 0)}`;
-      })
-      .join("\n\n");
+  const details = rows
+    .map((row, index) => {
+      return `Item ${index + 1}:
+        - Brand: ${row.brand || "N/A"}
+        - Size: ${row.tyreSize || "N/A"}
+        - Quantity: ${row.quantity || "N/A"}
+        - Unit Price: ${ccyFormat(row.unitPrice || 0)}
+        - Subtotal: ${ccyFormat(row.subtotal || 0)};`;
+    })
+    .join("\n\n");
+
+  const alertMessage = `
+    Rashmi Tyre Center - Bill Details
+
+    Date : ${new Date().toLocaleDateString()}
+    Customer Name: ${customerName || "N/A"}
+    Telephone: ${telephone || "N/A"}
+    Total: ${ccyFormat(total)}
+    Advance: ${ccyFormat(advance)}
+    Balance: ${ccyFormat(balance)}
+
+    Items:
+    ${details}
+
+    Thank you for your business!
+  `;
+
+  alert(alertMessage);
+};
+
   
-    // Customer details (You may want to capture these values from controlled inputs)
-    const customerName = document.querySelector('[placeholder="Customer Name"]')?.value || "N/A";
-    const telephone = document.querySelector('[placeholder="Telephone Number"]')?.value || "N/A";
-  
-    // Prepare the alert message
-    const alertMessage = `
-      Rashmi Tyre Center - Bill Details
-  
-      Customer Name: ${customerName}
-      Telephone: ${telephone}
-      Total: ${ccyFormat(total)}
-      Advance: ${ccyFormat(advance)}
-      Balance: ${ccyFormat(balance)}
-  
-      Items:
-      ${details}
-  
-      Thank you for your business!
-    `;
-  
-    // Display alert
-    alert(alertMessage);
-  };
   
 
   return (
@@ -167,24 +175,60 @@ const BillPage = () => {
 
         {/* Customer Info */}
         <Grid container spacing={2} sx={{ mb: 2 }}>
-          <Grid item xs={12} sm={4}>
-            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
-              Customer Name:
-            </Typography>
-            <TextField variant="outlined" size="small" fullWidth sx={{ fontSize: "1.2rem" }} />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
-              Telephone Number:
-            </Typography>
-            <TextField variant="outlined" size="small" fullWidth sx={{ fontSize: "1.2rem" }} />
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "center" }}>
-              Date: {new Date().toLocaleDateString()}
-            </Typography>
-          </Grid>
-        </Grid>
+  <Grid item xs={12} sm={4}>
+    <Typography
+      sx={{
+        fontSize: "1.2rem",
+        fontWeight: "500",
+        color: "#333",
+        textAlign: "left",
+      }}
+    >
+      Customer Name:
+    </Typography>
+    <TextField
+      variant="outlined"
+      size="small"
+      fullWidth
+      sx={{ fontSize: "1.2rem" }}
+      value={customerName} // Bind to state
+      onChange={(e) => setCustomerName(e.target.value)} // Update state on input
+    />
+  </Grid>
+  <Grid item xs={12} sm={4}>
+    <Typography
+      sx={{
+        fontSize: "1.2rem",
+        fontWeight: "500",
+        color: "#333",
+        textAlign: "left",
+      }}
+    >
+      Telephone Number:
+    </Typography>
+    <TextField
+      variant="outlined"
+      size="small"
+      fullWidth
+      sx={{ fontSize: "1.2rem" }}
+      value={telephone} // Bind to state
+      onChange={(e) => setTelephone(e.target.value)} // Update state on input
+    />
+  </Grid>
+  <Grid item xs={12} sm={4}>
+    <Typography
+      sx={{
+        fontSize: "1.2rem",
+        fontWeight: "500",
+        color: "#333",
+        textAlign: "center",
+      }}
+    >
+      Date: {new Date().toLocaleDateString()}
+    </Typography>
+  </Grid>
+</Grid>
+
 
         {/* Table and Bill */}
         <TableContainer component={Paper}>
@@ -281,7 +325,7 @@ const BillPage = () => {
                   Advance
                 </TableCell>
                 <TableCell align="center">
-                  <TextField
+                <TextField
                     variant="outlined"
                     size="small"
                     type="number"
@@ -290,6 +334,7 @@ const BillPage = () => {
                     InputProps={{ style: { fontSize: "1.2rem" } }}
                     sx={{ width: "90%" }}
                   />
+
                 </TableCell>
               </TableRow>
               <TableRow>

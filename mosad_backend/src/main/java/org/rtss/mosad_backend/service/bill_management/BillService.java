@@ -1,6 +1,8 @@
 package org.rtss.mosad_backend.service.bill_management;
 
 import jakarta.transaction.Transactional;
+import org.rtss.mosad_backend.dto.ResponseDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.stock_management_entity.Item;
@@ -22,6 +24,10 @@ public class BillService {
         this.billRepository = billRepository;
         this.billItemRepository = billItemRepository;
         this.itemRepository = itemRepository;
+    }
+
+    public static ResponseDTO addBill(BillDTO billDTO) {
+        return null;
     }
 
     @Transactional

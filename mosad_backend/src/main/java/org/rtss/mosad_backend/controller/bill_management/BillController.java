@@ -1,5 +1,8 @@
 package org.rtss.mosad_backend.controller.bill_management;
 
+import org.rtss.mosad_backend.dto.ResponseDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
+import org.rtss.mosad_backend.dto.user_dtos.UserRegistrationDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.service.bill_management.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,12 @@ public class BillController {
     @Autowired
     private BillService billService;
 
-    @PostMapping
-    public ResponseEntity<Bill> createBill(@RequestBody Bill bill) {
-        Bill savedBill = billService.saveBill(bill);
-        return new ResponseEntity<>(savedBill, HttpStatus.CREATED);
+    @PostMapping("/add")
+    private ResponseEntity<ResponseDTO> addBills(
+            @RequestBody BillDTO billDTO)
+    {
+        ResponseDTO responseDTO=BillService.addBill(billDTO);
+        return ResponseEntity.accepted().body(responseDTO);
     }
 
     @GetMapping
@@ -26,11 +31,7 @@ public class BillController {
         return ResponseEntity.ok(billService.getAllBills());
     }
 
-    // Endpoint to print the bill and update item quantities
-    @PostMapping("/{billId}/print")
-    public ResponseEntity<Bill> printBill(@PathVariable Long billId) {
-        Bill printedBill = billService.printBill(billId);
-        return ResponseEntity.ok(printedBill); // You can return the updated bill or a custom message
-    }
+
+
 }
 
