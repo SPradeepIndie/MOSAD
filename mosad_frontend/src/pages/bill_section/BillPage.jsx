@@ -71,6 +71,44 @@ const BillPage = () => {
     setRows((prevRows) => prevRows.filter((_, i) => i !== index));
   };
 
+  const handlePrint = () => {
+    // Gather rows data
+    const details = rows
+      .map((row, index) => {
+        return `Item ${index + 1}:
+          - Brand: ${row.brand || "N/A"}
+          - Size: ${row.size || "N/A"}
+          - Quantity: ${row.quantity || "N/A"}
+          - Unit Price: ${ccyFormat(row.unitPrice || 0)}
+          - Subtotal: ${ccyFormat(row.subtotal || 0)}`;
+      })
+      .join("\n\n");
+  
+    // Customer details (You may want to capture these values from controlled inputs)
+    const customerName = document.querySelector('[placeholder="Customer Name"]')?.value || "N/A";
+    const telephone = document.querySelector('[placeholder="Telephone Number"]')?.value || "N/A";
+  
+    // Prepare the alert message
+    const alertMessage = `
+      Rashmi Tyre Center - Bill Details
+  
+      Customer Name: ${customerName}
+      Telephone: ${telephone}
+      Total: ${ccyFormat(total)}
+      Advance: ${ccyFormat(advance)}
+      Balance: ${ccyFormat(balance)}
+  
+      Items:
+      ${details}
+  
+      Thank you for your business!
+    `;
+  
+    // Display alert
+    alert(alertMessage);
+  };
+  
+
   return (
     <Box sx={{ p: 4 }}>
       {/* Search Component */}
@@ -299,9 +337,10 @@ const BillPage = () => {
 
       {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
-        <Button variant="contained" color="primary" onClick={() => console.log("printing")}>
-          Print Bill
-        </Button>
+      <Button variant="contained" color="primary" onClick={handlePrint}>
+        Print Bill
+      </Button>
+
       </Box>
     </Box>
   );

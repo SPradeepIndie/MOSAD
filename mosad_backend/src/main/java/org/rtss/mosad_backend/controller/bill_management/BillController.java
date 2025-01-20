@@ -26,11 +26,11 @@ public class BillController {
         return ResponseEntity.ok(billService.getAllBills());
     }
 
-    /*@GetMapping("/{id}")
-    public ResponseEntity<Bill> getBillById(@PathVariable Long id) {
-        return billService.getBillById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }*/
+    // Endpoint to print the bill and update item quantities
+    @PostMapping("/{billId}/print")
+    public ResponseEntity<Bill> printBill(@PathVariable Long billId) {
+        Bill printedBill = billService.printBill(billId);
+        return ResponseEntity.ok(printedBill); // You can return the updated bill or a custom message
+    }
 }
 
