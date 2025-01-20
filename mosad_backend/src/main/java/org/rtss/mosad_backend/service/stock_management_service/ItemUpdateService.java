@@ -30,10 +30,8 @@ public class ItemUpdateService {
 
         Item item = existingItem.get();
         item.setItemName(updateDTO.getName());
-        //item.setAvailableQuantity(updateDTO.getQuantity());
         item.setRetailPrice(updateDTO.getPrice());
         item.setBrand(updateDTO.getBrand());
-        //item.setSize(updateDTO.getSize());
 
         itemRepository.save(item);
     }
