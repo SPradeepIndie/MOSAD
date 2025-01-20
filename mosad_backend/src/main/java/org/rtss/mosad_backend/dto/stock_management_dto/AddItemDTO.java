@@ -1,10 +1,11 @@
 package org.rtss.mosad_backend.dto.stock_management_dto;
 
 
-public class AddTyreItemDTO {
+public class AddItemDTO {
 
     private ItemDTO itemDTO;
     private ItemTyreDTO itemTyreDTO;
+    private ItemBatteryDTO itemBatteryDTO;
     private ItemBranchDTO itemBranchDTO;
 
     // Getters and Setters
@@ -30,5 +31,13 @@ public class AddTyreItemDTO {
 
     public void setItemBranchDTO(ItemBranchDTO itemBranchDTO) {
         this.itemBranchDTO = itemBranchDTO;
+    }
+
+    public ItemBatteryDTO getItemBatteryDTO() {
+        return itemBatteryDTO;
+    }
+
+    public void setItemBatteryDTO(ItemBatteryDTO itemBatteryDTO) {
+        this.itemBatteryDTO = itemBatteryDTO;
     }
 }

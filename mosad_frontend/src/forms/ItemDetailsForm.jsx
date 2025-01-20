@@ -58,11 +58,12 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit,closeDialog }) 
   );
 };
 
-ItemDetailsForm.prototype={
-  formData:PropTypes.object,
-  handleChange:PropTypes.func,
-  errors:PropTypes.object,
-  onSubmit:PropTypes.func
-}
+ItemDetailsForm.propTypes = {
+  formData: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  closeDialog: PropTypes.func.isRequired
+};
 
 export default ItemDetailsForm;

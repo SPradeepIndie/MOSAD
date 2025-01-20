@@ -1,7 +1,7 @@
 package org.rtss.mosad_backend.controller.stock_management_controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.AddTyreItemDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
 import org.rtss.mosad_backend.service.stock_management_service.ItemService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,17 +15,17 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    @PostMapping("/add-tyre")
-    public ResponseDTO addTyreItem(@RequestBody AddTyreItemDTO addTyreItemDTO) {
-        return itemService.addItemTyre(addTyreItemDTO);
+    @PostMapping("/add")
+    public ResponseDTO addTyreItem(@RequestBody AddItemDTO addItemDTO) {
+        return itemService.addItemTyre(addItemDTO);
     }
 
-    @PutMapping("/update-tyre")
-    public ResponseDTO updateTyreItem(@RequestBody AddTyreItemDTO updateTyreItemDTO) {
-        return itemService.updateItemTyre(updateTyreItemDTO);
+    @PutMapping("/update")
+    public ResponseDTO updateTyreItem(@RequestBody AddItemDTO updateItemDTO) {
+        return itemService.updateItemTyre(updateItemDTO);
     }
 
-    @DeleteMapping("/delete-tyre/{itemId}")
+    @DeleteMapping("/delete/{itemId}")
     public ResponseDTO deleteTyreItem(@PathVariable Long itemId) {
         return itemService.deleteItemTyre(itemId);
     }

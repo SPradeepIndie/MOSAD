@@ -184,7 +184,7 @@ const CreditPage = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   const [state, setState] = useState({ all: false, completed: false, incompleted: true, });
-  const [CustomerType, setCustomerType] = useState('RETAIL');
+  const [customerType, setCustomerType] = useState('RETAIL');
   const columns = {'creditId':false,'billId':true,'customerName':true,'contactNumber':true,'balance':true,'dueDate':true,'remainingBalance':true};
 
   const handleRadioChange = (event) => {
@@ -214,7 +214,7 @@ const CreditPage = () => {
     const fetchData = async () => {
 
       try {
-        const response = await fetchAllCreditDetails(CustomerType);
+        const response = await fetchAllCreditDetails(customerType);
         setRows(response.data);
         console.log(response.data);
         setLoading(false);
@@ -225,7 +225,7 @@ const CreditPage = () => {
     };
 
     fetchData();
-  }, [CustomerType]);
+  }, [customerType]);
 
   const handleAddRepayment = async (creditId, repayment) => {
 
@@ -304,14 +304,14 @@ const CreditPage = () => {
           >
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
-                variant={CustomerType === 'RETAIL' ? 'contained' : 'outlined'}
+                variant={customerType === 'RETAIL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('RETAIL')}
                 sx={{ flex: 1 }} // Take available space
               >
                 Retail
               </Button>
               <Button
-                variant={CustomerType === 'NORMAL' ? 'contained' : 'outlined'}
+                variant={customerType === 'NORMAL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('NORMAL')}
                 sx={{ flex: 1 }} // Take available space
               >
@@ -419,6 +419,7 @@ const CreditPage = () => {
 Row.propTypes = {
   row: PropTypes.shape({
     creditId: PropTypes.number.isRequired,
+    billId: PropTypes.number.isRequired,
     customerName: PropTypes.string.isRequired,
     contactNumber: PropTypes.string.isRequired,
     balance: PropTypes.number.isRequired,
@@ -439,7 +440,10 @@ Row.propTypes = {
       text: PropTypes.string,
     }),
     PropTypes.oneOf([null]), // Allow null
-  ])
+  ]),
+  columns: PropTypes.shape({
+    creditId: PropTypes.number.isRequired
+  }).isRequired
 };
 
 export default CreditPage;

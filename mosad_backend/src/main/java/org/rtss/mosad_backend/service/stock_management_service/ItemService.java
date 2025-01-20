@@ -1,11 +1,10 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.AddTyreItemDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemBranchDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreDTO;
-import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemBranchDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreDTOMapper;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
@@ -28,9 +27,8 @@ public class ItemService {
     private final ItemTyreRepo itemTyreRepo;
     private final ItemDTOMapper itemDTOMapper;
     private final ItemTyreDTOMapper itemTyreDTOMapper;
-    private final ItemBranchDTOMapper itemBranchDTOMapper;
 
-    public ItemService(ItemRepo itemRepository, ItemBranchRepository itemBranchRepository, CategoryRepo categoryRepository, BrandRepo brandRepository, BranchRepo branchRepository, ItemTyreRepo itemTyreRepo, ItemDTOMapper itemDTOMapper, ItemTyreDTOMapper itemTyreDTOMapper, ItemBranchDTOMapper itemBranchDTOMapper) {
+    public ItemService(ItemRepo itemRepository, ItemBranchRepository itemBranchRepository, CategoryRepo categoryRepository, BrandRepo brandRepository, BranchRepo branchRepository, ItemTyreRepo itemTyreRepo, ItemDTOMapper itemDTOMapper, ItemTyreDTOMapper itemTyreDTOMapper) {
         this.itemRepository = itemRepository;
         this.itemBranchRepository = itemBranchRepository;
         this.categoryRepository = categoryRepository;
@@ -39,7 +37,6 @@ public class ItemService {
         this.itemTyreRepo = itemTyreRepo;
         this.itemDTOMapper = itemDTOMapper;
         this.itemTyreDTOMapper = itemTyreDTOMapper;
-        this.itemBranchDTOMapper = itemBranchDTOMapper;
     }
 
     //get item qty in a branch
@@ -48,16 +45,16 @@ public class ItemService {
     }
 
     //Add item Tyre with branch
-    public ResponseDTO addItemTyre(AddTyreItemDTO addTyreItemDTO) {
+    public ResponseDTO addItemTyre(AddItemDTO addItemDTO) {
 
         // Extract individual DTOs
-        ItemDTO itemDTO = addTyreItemDTO.getItemDTO();
-        ItemTyreDTO itemTyreDTO = addTyreItemDTO.getItemTyreDTO();
-        ItemBranchDTO itemBranchDTO = addTyreItemDTO.getItemBranchDTO();
+        ItemDTO itemDTO = addItemDTO.getItemDTO();
+        ItemTyreDTO itemTyreDTO = addItemDTO.getItemTyreDTO();
+        ItemBranchDTO itemBranchDTO = addItemDTO.getItemBranchDTO();
 
 
         System.out.println("\n\nmappting started to Item\n\n");
-        Item item= itemDTOMapper.toEntity(itemDTO); //ModelMapper confused here..
+        Item item= itemDTOMapper.toEntity(itemDTO); //ModelMapper confused here with setItemId()
         System.out.println("Mapped to Item\n\n");
         //Map ItemDTO to Item entity manually
 //        Item item=new Item();
@@ -109,7 +106,7 @@ public class ItemService {
         return new ResponseDTO(true, "Item added successfully");
     }
 
-    public ResponseDTO updateItemTyre(AddTyreItemDTO updateTyreItemDTO) {
+    public ResponseDTO updateItemTyre(AddItemDTO updateTyreItemDTO) {
         // Extract individual DTOs
         ItemDTO itemDTO = updateTyreItemDTO.getItemDTO();
         ItemTyreDTO itemTyreDTO = updateTyreItemDTO.getItemTyreDTO();
