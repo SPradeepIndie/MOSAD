@@ -16,7 +16,7 @@ public class UserRoles {
     @Column(name = "roleName", nullable = false, length = 20)
     private String roleName;
 
-    @OneToMany(mappedBy = "userRoles")
+    @OneToMany(mappedBy = "userRoles",fetch = FetchType.LAZY)
     private Set<Users> users;
 
     public UserRoles(Integer roleId, String roleName, Set<Users> users) {
@@ -57,7 +57,6 @@ public class UserRoles {
         return "UserRoles{" +
                 "roleId=" + roleId +
                 ", roleName='" + roleName + '\'' +
-                ", users=" + users +
                 '}';
     }
 }

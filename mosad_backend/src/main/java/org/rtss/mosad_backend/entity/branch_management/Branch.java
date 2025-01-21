@@ -13,7 +13,7 @@ public class Branch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "branchId", unique = true, nullable = false)
     private Long branchId;
-    @Column(name = "branchName", length = 30)
+    @Column(name = "branchName", length = 30,unique = true, nullable = false)
     private String branchName;
     @Column(name = "addressNumber", length = 10, nullable = false)
     private String addressNumber;
@@ -31,13 +31,14 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(Long branchId, String branchName, String addressNumber, String streetName, String city, Set<BranchContact> branchContacts) {
+    public Branch(Long branchId, String branchName, String addressNumber, String streetName, String city, Set<BranchContact> branchContacts, Set<Item> items) {
         this.branchId = branchId;
         this.branchName = branchName;
         this.addressNumber = addressNumber;
         this.streetName = streetName;
         this.city = city;
         this.branchContacts = branchContacts;
+        this.items = items;
     }
 
     public Long getBranchId() {
@@ -86,5 +87,13 @@ public class Branch {
 
     public void setBranchContacts(Set<BranchContact> branchContacts) {
         this.branchContacts = branchContacts;
+    }
+
+    public Set<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
     }
 }

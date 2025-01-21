@@ -20,16 +20,14 @@ class UserDTOMapperTest {
     //Testing Service
     private UserDTOMapper userDTOMapper;
 
-    //Declare model mapper
-    private ModelMapper modelMapper;
-
     //Reference for user Roles and user contacts for Users object
     private UserRoles userRoles;
     private UserContacts userContacts;
 
     @BeforeEach
     void setUp() {
-        modelMapper=new ModelMapper();
+        //Declare model mapper
+        ModelMapper modelMapper = new ModelMapper();
         userDTOMapper=new UserDTOMapper(modelMapper);
 
         //Create UserRoles object for pass to the Users object

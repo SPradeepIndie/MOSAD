@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Box, Typography } from "@mui/material";
+import { TextField, Box, Typography,Button,DialogActions } from "@mui/material";
 import PropTypes from "prop-types";
 
 const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
@@ -53,7 +53,7 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
         <Button onClick={closeDialog} color="secondary">Cancel</Button>
         <Button type="submit" color="primary">Submit</Button>
       </DialogActions>
-
+      
     </form>
   );
 };
