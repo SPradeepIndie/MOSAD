@@ -14,60 +14,40 @@ public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Double totalAmount;
     private Double advance;
     private Double balance;
 
+    @Temporal(TemporalType.DATE)
     @Column(nullable = false, updatable = false)
     private Date date;
+    
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillItem> items = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id",nullable = true)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
-    }
-
-    public Bill(Double totalAmount, Double advance, Double balance, Date date) {
+    // Constructors
+    public Bill(Double totalAmount, Double advance, Double balance, Date date, String customerName, String customerContact, Users user, Customer customer) {
         this.totalAmount = totalAmount;
         this.advance = advance;
         this.balance = balance;
         this.date = date;
+        this.user = user;
+        this.customer = customer;
     }
 
     public Bill() {}
 
-
     // Getters and Setters
-
-    public List<BillItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<BillItem> items) {
-        this.items = items;
-    }
-
     public Long getId() {
         return id;
     }
@@ -92,14 +72,6 @@ public class Bill {
         this.advance = advance;
     }
 
-    public java.sql.Date getDate() {
-        return (java.sql.Date) date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public Double getBalance() {
         return balance;
     }
@@ -108,7 +80,36 @@ public class Bill {
         this.balance = balance;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
 
+    public List<BillItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BillItem> items) {
+        this.items = items;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
-

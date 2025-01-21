@@ -26,9 +26,57 @@ public class BillService {
         this.itemRepository = itemRepository;
     }
 
-    public static ResponseDTO addBill(BillDTO billDTO) {
-        return null;
+    @Transactional
+    public ResponseDTO addBill(BillDTO billDTO) {
+        try {
+            // Create a new Bill entity from BillDTO
+            Bill bill = new Bill();
+            bill.setCustomerName(billDTO.getCustomerName());
+            bill.setCustomerContact(billDTO.getCustomerContact());
+            bill.setAdvance(billDTO.getAdvance());
+            bill.setTotalAmount(billDTO.getTotal());
+            bill.setBalance(billDTO.getBalance());
+            bill.setDate(billDTO.getDate());
+
+            // Map BillItemDTOs to BillItems and associate them with the Bill
+            List<BillItem> billItems = billDTO.getItems().stream().map(billItemDTO -> {
+                BillItem billItem = new BillItem();
+                billItem.setQuantity(billItemDTO.getQuantity());
+                billItem.setPrice(billItemDTO.getUnitPrice());
+
+                // Find the item in the database and associate it with the bill item
+                Item item = itemRepository.findById(billItemDTO.getItemId())
+                        .orElseThrow(() -> new RuntimeException("Item not found with ID: " + billItemDTO.getItemId()));
+                billItem.setItem(item);
+                billItem.setBill(bill); // Associate the bill item with the bill
+
+                return billItem;
+            }).toList();
+
+            // Save the bill items to the Bill entity
+            bill.setItems(billItems);
+
+            // Save the Bill (this will cascade and save the items if properly mapped in JPA)
+            Bill savedBill = saveBill(bill);
+
+            // Create a response DTO
+            ResponseDTO response = new ResponseDTO();
+            response.setSuccess(true);
+            response.setMessage("Bill added successfully");
+            response.setData(savedBill); // You can customize the response further if needed
+
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Error while adding bill: " + e.getMessage(), e); // Rethrow exception
+
+            // Handle exceptions and return an error response
+            /*ResponseDTO response = new ResponseDTO();
+            response.setSuccess(false);
+            response.setMessage("Failed to add bill: " + e.getMessage());
+            return response;*/
+        }
     }
+
 
     @Transactional
     public Bill saveBill(Bill bill) {

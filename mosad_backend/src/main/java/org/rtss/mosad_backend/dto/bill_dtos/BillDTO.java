@@ -1,5 +1,8 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class BillDTO {
@@ -9,6 +12,7 @@ public class BillDTO {
     private Double advance;
     private Double total;
     private Double balance;
+    private LocalDate date; // Date of the bill
     private List<BillItemDTO> items; // List of bill items
 
     // Getters and Setters
@@ -60,6 +64,27 @@ public class BillDTO {
         this.balance = balance;
     }
 
+    // Getter for date (returns java.util.Date)
+    public Date getDate() {
+        if (date == null) {
+            return null; // Handle null case
+        }
+        // Convert LocalDate to java.util.Date
+        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    // Setter for date (accepts java.util.Date)
+    public void setDate(Date date) {
+        if (date != null) {
+            // Convert java.util.Date to LocalDate
+            this.date = date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } else {
+            this.date = null;
+        }
+    }
+
     public List<BillItemDTO> getItems() {
         return items;
     }
@@ -68,4 +93,3 @@ public class BillDTO {
         this.items = items;
     }
 }
-

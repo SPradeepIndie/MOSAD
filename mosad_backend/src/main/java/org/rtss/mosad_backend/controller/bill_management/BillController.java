@@ -15,14 +15,18 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bills")
 public class BillController {
-    @Autowired
-    private BillService billService;
+
+    private final BillService billService;
+
+    public BillController(BillService billService) {
+        this.billService = billService;
+    }
 
     @PostMapping("/add")
     private ResponseEntity<ResponseDTO> addBills(
             @RequestBody BillDTO billDTO)
     {
-        ResponseDTO responseDTO=BillService.addBill(billDTO);
+        ResponseDTO responseDTO=billService.addBill(billDTO);
         return ResponseEntity.accepted().body(responseDTO);
     }
 
