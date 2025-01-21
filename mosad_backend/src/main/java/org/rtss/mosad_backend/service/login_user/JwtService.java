@@ -18,15 +18,14 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final String secretKey;
-    private final long accessTokenExpirationTime=1000*60*1;//1min
-    private final long refreshTokenExpirationTime=1000*60*60*24*7;//7days
+    private static final long accessTokenExpirationTime=1000L*60;//1min
+    private static final long refreshTokenExpirationTime=1000L*60*60*24*7;//7days
 
     //Generate Secret key, when OBJECT is created
     //For each object generating key is different
     public JwtService() {
-        KeyGenerator keyGene = null;
         try {
-            keyGene = KeyGenerator.getInstance("HmacSHA256");
+            KeyGenerator keyGene = KeyGenerator.getInstance("HmacSHA256");
             SecretKey accessSK = keyGene.generateKey();
             secretKey = Base64.getEncoder().encodeToString(accessSK.getEncoded());
         } catch (NoSuchAlgorithmException e) {
@@ -34,6 +33,7 @@ public class JwtService {
         }
 
     }
+
     /*-----------------------------
      * Services for generate token
      * -----------------------------*/
@@ -48,6 +48,7 @@ public class JwtService {
         return buildToken(new HashMap<>(),username,refreshTokenExpirationTime);
     }
 
+    //Private method for building the token
     private String buildToken(
             Map<String, Object> claims,
             String username,

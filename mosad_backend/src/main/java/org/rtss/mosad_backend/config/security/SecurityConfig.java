@@ -53,12 +53,12 @@ public class SecurityConfig {
                     .httpBasic(Customizer.withDefaults())
                     //enable custom jwtFilter before the UPA Filter
                     .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
-                    .logout((logout) -> logout
+                    .logout(logout -> logout
                             .logoutUrl("/api/v1/logout")
                             .addLogoutHandler(logoutHandler)
-                            .logoutSuccessHandler((request, response, authentication) -> {
-                                SecurityContextHolder.clearContext();
-                            }));
+                            .logoutSuccessHandler((request, response, authentication) ->
+                                    SecurityContextHolder.clearContext()
+                            ));
        return http.build();
    }
 

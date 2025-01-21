@@ -3,7 +3,6 @@ package org.rtss.mosad_backend.service.login_user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.AuthDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
 import org.rtss.mosad_backend.entity.user_management.Users;
@@ -14,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -69,8 +65,8 @@ public class LoginService {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String username;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Request header doesn't contain necessary keyword");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Invalid request header");
         }
         refreshToken = authHeader.substring(7);
         username = jwtService.extractUsernameFromToken(refreshToken);
@@ -82,13 +78,17 @@ public class LoginService {
             if(jwtService.validateToken(refreshToken,userDetails)){
                 String role=((Users)userDetails).getUserRoles().getRoleName();
                 var accessToken = jwtService.generateToken(username,role);
-                //revokeAllUserTokens(user);
-                //saveUserToken(user, accessToken);
                 authDTO.setAccessToken(accessToken);
                 authDTO.setRefreshToken(refreshToken);
                 authDTO.setAuthenticated(true);
                 new ObjectMapper().writeValue(response.getOutputStream(), authDTO);
             }
+            else{
+                throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"Invalid refresh token");
+            }
+        }
+        else{
+            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"Invalid refresh token");
         }
     }
 

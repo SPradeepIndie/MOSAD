@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.controller.user_management;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.AuthDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
 import org.rtss.mosad_backend.service.login_user.LoginService;

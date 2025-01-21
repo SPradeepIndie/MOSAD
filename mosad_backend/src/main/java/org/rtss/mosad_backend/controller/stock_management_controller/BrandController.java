@@ -3,7 +3,6 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.AddBrandDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.BrandDTO;
-import org.rtss.mosad_backend.entity.stock_management_entity.Brand;
 import org.rtss.mosad_backend.service.stock_management_service.BrandService;
 import org.rtss.mosad_backend.validator.ValidateHtmlPathVariable;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class BrandController {
 
     @GetMapping
     public ResponseEntity<List<BrandDTO>> viewAllBrands(@RequestParam String catName) {
-        String escapedCategoryName= validateHtmlPathVariable.escapeHTMLspecailCharaters(catName);
+        String escapedCategoryName= validateHtmlPathVariable.escapeHTMLSpecialCharacters(catName);
         return ResponseEntity.ok(brandService.getAllBrands(escapedCategoryName));
     }
 

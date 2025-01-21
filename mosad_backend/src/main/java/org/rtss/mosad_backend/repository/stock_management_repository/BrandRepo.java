@@ -15,8 +15,4 @@ import java.util.Set;
 public interface BrandRepo extends JpaRepository<Brand, Long> {
     Optional<Brand> findByBrandName(String brandName);
 
-//    @Query(
-//            "SELECT * from public."
-//    )
-//    Set<Brand> findBrandsByCategoryName(Category category);
 }

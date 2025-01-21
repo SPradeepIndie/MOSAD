@@ -4,7 +4,6 @@ import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.CategoryDTO;
 import org.rtss.mosad_backend.service.stock_management_service.CategoryService;
 import org.rtss.mosad_backend.validator.ValidateHtmlPathVariable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,7 @@ public class CategoryController {
 
     @PutMapping
     public ResponseEntity<ResponseDTO> updateCategory(@RequestParam String oldCatName, @RequestBody CategoryDTO categoryDTO) {
-        String escapedOldCatName = validateHtmlPathVariable.escapeHTMLspecailCharaters(oldCatName);
+        String escapedOldCatName = validateHtmlPathVariable.escapeHTMLSpecialCharacters(oldCatName);
         return ResponseEntity.ok(categoryService.updateCategory(categoryDTO,escapedOldCatName));
     }
 

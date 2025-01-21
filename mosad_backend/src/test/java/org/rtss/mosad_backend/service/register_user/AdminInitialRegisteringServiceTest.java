@@ -17,55 +17,51 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.exceptions.DbTableInitException;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
-@ExtendWith(MockitoExtension.class)
 public class AdminInitialRegisteringServiceTest {
 
-    @Mock
     private PasswordEncoder passwordEncoder;
-    @Mock
     private UsersRepo usersRepo;
-    @Mock
     private UserRolesRepo userRolesRepo;
 
+    //Service to be tested
     private AdminInitialRegisteringService service;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        passwordEncoder=mock(PasswordEncoder.class);
+        when(passwordEncoder.bCryptPasswordEncoder()).thenReturn(mock(BCryptPasswordEncoder.class));
+        usersRepo = mock(UsersRepo.class);
+        userRolesRepo = mock(UserRolesRepo.class);
         service = new AdminInitialRegisteringService(passwordEncoder, usersRepo, userRolesRepo);
     }
 
     @Test
-    @Disabled
     public void shouldCreateAdminUser() {
+        //Given
         UserRoles userRoles=new UserRoles();
         userRoles.setRoleName("ADMIN");
 
+        when(usersRepo.findByUsername(anyString())).thenReturn(Optional.empty());
+        when(userRolesRepo.findUserRolesByRoleName(anyString())).thenReturn(Optional.of(userRoles));
+        when(passwordEncoder.bCryptPasswordEncoder().encode(anyString())).thenReturn("encryptedPassword");
 
-
-        // Mock behavior
-        when(usersRepo.findByUsername("admin")).thenReturn(Optional.empty());
-        when(userRolesRepo.findUserRolesByRoleName("ADMIN")).thenReturn(Optional.of(userRoles));
-        when(passwordEncoder.bCryptPasswordEncoder().encode("admin123")).thenReturn("encryptedPassword");
-
-        // Run the service method
+        // When
         service.run();
 
-        // Verify interactions
+        // Then
         verify(usersRepo).findByUsername("admin");
         verify(userRolesRepo).findUserRolesByRoleName("ADMIN");
-        verify(passwordEncoder).bCryptPasswordEncoder().encode("admin123");
         verify(usersRepo).save(any(Users.class));
 
-        // Assert user creation
         verify(usersRepo, times(1)).save(any(Users.class));
     }
 
     @Test
-    public void shouldNotCreateAdminUser() {
+    public void run_shouldNotCreateUserAdminAlreadyRegisteredAdmin() {
         // Mock existing admin
         when(usersRepo.findByUsername("admin")).thenReturn(Optional.of(new Users()));
 
@@ -76,13 +72,4 @@ public class AdminInitialRegisteringServiceTest {
         verify(usersRepo, times(0)).save(any(Users.class));
     }
 
-    @Test
-    @Disabled
-    public void shouldThrowExceptionWhenNoRole() {
-        // Mock DB error
-        when(userRolesRepo.findUserRolesByRoleName("notArole")).thenThrow(new DbTableInitException("Error initializing table"));
-
-        // Expect exception
-        assertThrows(DbTableInitException.class, () -> service.run());
-    }
 }

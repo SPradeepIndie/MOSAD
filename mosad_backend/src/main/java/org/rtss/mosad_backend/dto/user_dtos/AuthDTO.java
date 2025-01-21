@@ -45,4 +45,13 @@ public class AuthDTO {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
+
+    @Override
+    public String toString() {
+        return "AuthDTO{" +
+                "authenticated=" + authenticated +
+                ", accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
+    }
 }

@@ -14,7 +14,7 @@ public class UserContacts {
     @Column(name = "contactNum")
     private String contactNum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false)
     private Users user;
 
@@ -47,7 +47,6 @@ public class UserContacts {
     @Override
     public String toString() {
         return "UserContacts{" +
-                "user=" + user +
                 ", contactNum='" + contactNum + '\'' +
                 '}';
     }

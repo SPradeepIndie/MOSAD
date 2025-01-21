@@ -9,16 +9,16 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+
 class UserContactDTOMapperTest {
 
     private UserContactDTOMapper userContactDTOMapper;
 
-    //Declare model mapper
-    private ModelMapper modelMapper;
-
     @BeforeEach
     void setUp() {
-        modelMapper = new ModelMapper();
+        //Declare model mapper
+        ModelMapper modelMapper = new ModelMapper();
         userContactDTOMapper = new UserContactDTOMapper(modelMapper);
     }
 
