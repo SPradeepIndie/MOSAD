@@ -24,7 +24,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class LoginServiceTest {
+class LoginServiceTest {
 
     //Service to be tested
     private LoginService loginService;
@@ -35,7 +35,6 @@ public class LoginServiceTest {
     private UserLoginDTO userLoginDto;
     private Authentication authentication;
 
-    private ObjectMapper objectMapper;
     private UsersRepo usersRepo;
     private AuthDTO authDTO;
 
@@ -142,7 +141,6 @@ public class LoginServiceTest {
         authDTO.setAuthenticated(true);
 
         //test that output stream has written
-
 
         //When
         loginService.refreshToken(request, response);

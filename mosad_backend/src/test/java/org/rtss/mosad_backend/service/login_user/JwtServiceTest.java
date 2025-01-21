@@ -13,7 +13,6 @@ class JwtServiceTest {
     //service to be tested
     private JwtService jwtService;
 
-
     @BeforeEach
     void setUp() {
         jwtService = new JwtService();

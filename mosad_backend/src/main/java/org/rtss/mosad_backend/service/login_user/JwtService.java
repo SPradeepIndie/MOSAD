@@ -18,8 +18,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private final String secretKey;
-    private static final long accessTokenExpirationTime=1000L*60;//1min
-    private static final long refreshTokenExpirationTime=1000L*60*60*24*7;//7days
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME =1000L*60;//1min
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME =1000L*60*60*24*7;//7days
 
     //Generate Secret key, when OBJECT is created
     //For each object generating key is different
@@ -40,12 +40,12 @@ public class JwtService {
     public String generateToken(String username,String role) {
         Map<String, Object> claims=new HashMap<>();
         claims.put("role",role);
-        return buildToken(claims,username,accessTokenExpirationTime);
+        return buildToken(claims,username, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
     //In refresh has not claims. It will live long
     public String generateRefreshToken(String username) {
-        return buildToken(new HashMap<>(),username,refreshTokenExpirationTime);
+        return buildToken(new HashMap<>(),username, REFRESH_TOKEN_EXPIRATION_TIME);
     }
 
     //Private method for building the token

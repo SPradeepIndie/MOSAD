@@ -130,16 +130,16 @@ class RegisterServiceTest {
     @Test
     void addUser_ShouldThrowExceptionForDuplicateUsername() {
         // Given
-        UserRegistrationDTO userRegistrationDto = new UserRegistrationDTO();
-        UserDTO userDto = new UserDTO();
-        userDto.setUsername("duplicateUser");
-        userRegistrationDto.setUserDto(userDto);
+        UserRegistrationDTO invalidUserRegistrationDto = new UserRegistrationDTO();
+        UserDTO invalidUserDto = new UserDTO();
+        invalidUserDto.setUsername("duplicateUser");
+        invalidUserRegistrationDto.setUserDto(invalidUserDto);
 
         when(usersRepo.findByUsername("duplicateUser")).thenReturn(Optional.of(new Users()));
 
         // When & Then
         ObjectNotValidException exception = assertThrows(ObjectNotValidException.class, () -> {
-            registerService.addUser(userRegistrationDto);
+            registerService.addUser(invalidUserRegistrationDto);
         });
 
         assertEquals("Username already exists", exception.getErrorMessages().iterator().next());
@@ -148,16 +148,16 @@ class RegisterServiceTest {
     @Test
     void addUser_ShouldThrowExceptionForDuplicateEmail() {
         // Given
-        UserRegistrationDTO userRegistrationDto = new UserRegistrationDTO();
-        UserDTO userDto = new UserDTO();
-        userDto.setEmail("duplicate@example.com");
-        userRegistrationDto.setUserDto(userDto);
+        UserRegistrationDTO invalidUserRegistrationDto = new UserRegistrationDTO();
+        UserDTO invalidUserDto = new UserDTO();
+        invalidUserDto.setEmail("duplicate@example.com");
+        invalidUserRegistrationDto.setUserDto(invalidUserDto);
 
         when(usersRepo.findByEmail("duplicate@example.com")).thenReturn(Optional.of(new Users()));
 
         // When & Then
         ObjectNotValidException exception = assertThrows(ObjectNotValidException.class, () -> {
-            registerService.addUser(userRegistrationDto);
+            registerService.addUser(invalidUserRegistrationDto);
         });
 
         assertEquals("User email already exists", exception.getErrorMessages().iterator().next());

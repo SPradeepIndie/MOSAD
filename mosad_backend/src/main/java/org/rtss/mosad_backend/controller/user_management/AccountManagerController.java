@@ -48,8 +48,9 @@ public class AccountManagerController {
         return ResponseEntity.ok().body(users);
     }
 
+    @PostMapping("/forgot")
+    public ResponseEntity<String> forgotPassword(){
+        return ResponseEntity.ok().body("Implementing");
+    }
 
-    //TODO Forgot password
-
-    //TODO Add user roles
 }

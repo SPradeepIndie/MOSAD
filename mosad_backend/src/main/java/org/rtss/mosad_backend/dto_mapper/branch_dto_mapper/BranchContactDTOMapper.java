@@ -13,14 +13,14 @@ public class BranchContactDTOMapper {
         this.modelMapper = modelMapper;
     }
 
-    public BranchContact BranchContactDTOToBranchContact(BranchContactDTO branchContactDTO) {
+    public BranchContact branchContactDTOToBranchContact(BranchContactDTO branchContactDTO) {
         if (branchContactDTO == null) {
             throw new IllegalArgumentException("branchContactDTO cannot be null");
         }
         return modelMapper.map(branchContactDTO, BranchContact.class);
     }
 
-    public BranchContactDTO BranchContactToBranchContactDTO(BranchContact branchContact) {
+    public BranchContactDTO branchContactToBranchContactDTO(BranchContact branchContact) {
         if(branchContact == null) {
             throw new IllegalArgumentException("branchContact cannot be null");
         }

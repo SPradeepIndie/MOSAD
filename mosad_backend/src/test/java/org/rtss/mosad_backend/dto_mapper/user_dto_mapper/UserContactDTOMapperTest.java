@@ -9,8 +9,6 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-
 class UserContactDTOMapperTest {
 
     private UserContactDTOMapper userContactDTOMapper;

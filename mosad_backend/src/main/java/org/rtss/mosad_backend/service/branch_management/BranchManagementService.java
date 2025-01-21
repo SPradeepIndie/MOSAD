@@ -10,6 +10,7 @@ import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.branch_management.BranchContact;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
+import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,14 @@ public class BranchManagementService {
     private final DtoValidator dtoValidator;
     private final BranchDTOMapper branchDTOMapper;
     private final BranchContactDTOMapper branchContactDTOMapper;
+    private final UsersRepo usersRepo;
 
-    public BranchManagementService(BranchRepo branchRepo, DtoValidator dtoValidator, BranchDTOMapper branchDTOMapper, BranchContactDTOMapper branchContactDTOMapper) {
+    public BranchManagementService(BranchRepo branchRepo, DtoValidator dtoValidator, BranchDTOMapper branchDTOMapper, BranchContactDTOMapper branchContactDTOMapper, UsersRepo usersRepo) {
         this.branchRepo = branchRepo;
         this.dtoValidator = dtoValidator;
         this.branchDTOMapper = branchDTOMapper;
         this.branchContactDTOMapper = branchContactDTOMapper;
+        this.usersRepo = usersRepo;
     }
 
     //Delete the branch when branch name gave
@@ -52,7 +55,7 @@ public class BranchManagementService {
             // Transform and set the branch contacts
             Set<BranchContact> branchContacts =branchDetailsDto.getBranchContactDtos()
                     .stream()
-                    .map(branchContactDTOMapper::BranchContactDTOToBranchContact)
+                    .map(branchContactDTOMapper::branchContactDTOToBranchContact)
                     .collect(Collectors.toSet());
 
             // Associate each contact with the updated branch
@@ -77,7 +80,7 @@ public class BranchManagementService {
         try{
             Branch branch=getBranchByName(branchName);
             BranchDTO branchDTO=branchDTOMapper.branchtoBranchDTO(branch);
-            List<BranchContactDTO> branchContactDTO=branch.getBranchContacts().stream().map(branchContactDTOMapper::BranchContactToBranchContactDTO).toList();
+            List<BranchContactDTO> branchContactDTO=branch.getBranchContacts().stream().map(branchContactDTOMapper::branchContactToBranchContactDTO).toList();
             return new BranchDetailsDTO(branchDTO,branchContactDTO);
         }catch (Exception e){
             return new BranchDetailsDTO(null,null);
@@ -95,7 +98,7 @@ public class BranchManagementService {
             // Transform and set the branch contacts
             Set<BranchContact> branchContacts = branchDetailsDto.getBranchContactDtos()
                     .stream()
-                    .map(branchContactDTOMapper::BranchContactDTOToBranchContact)
+                    .map(branchContactDTOMapper::branchContactDTOToBranchContact)
                     .collect(Collectors.toSet());
 
             // Associate each contact with the updated branch
@@ -114,7 +117,10 @@ public class BranchManagementService {
 
     //Return the Branch details according to the branch name
     public BranchDetailsDTO getBranchByUsername(String username) {
-        return new BranchDetailsDTO();
+        if(usersRepo.findByUsername(username).isPresent()){
+            return new BranchDetailsDTO();
+        }
+        return null;
     }
 
     //Check the branchDetailsDTO is valid

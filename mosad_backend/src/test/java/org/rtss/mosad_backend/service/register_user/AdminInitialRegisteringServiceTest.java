@@ -1,27 +1,20 @@
 package org.rtss.mosad_backend.service.register_user;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.rtss.mosad_backend.config.security.PasswordEncoder;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
-import org.rtss.mosad_backend.exceptions.DbTableInitException;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
-public class AdminInitialRegisteringServiceTest {
+class AdminInitialRegisteringServiceTest {
 
     private PasswordEncoder passwordEncoder;
     private UsersRepo usersRepo;
@@ -31,7 +24,7 @@ public class AdminInitialRegisteringServiceTest {
     private AdminInitialRegisteringService service;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         passwordEncoder=mock(PasswordEncoder.class);
         when(passwordEncoder.bCryptPasswordEncoder()).thenReturn(mock(BCryptPasswordEncoder.class));
         usersRepo = mock(UsersRepo.class);
@@ -40,7 +33,7 @@ public class AdminInitialRegisteringServiceTest {
     }
 
     @Test
-    public void shouldCreateAdminUser() {
+    void shouldCreateAdminUser() {
         //Given
         UserRoles userRoles=new UserRoles();
         userRoles.setRoleName("ADMIN");
@@ -61,7 +54,7 @@ public class AdminInitialRegisteringServiceTest {
     }
 
     @Test
-    public void run_shouldNotCreateUserAdminAlreadyRegisteredAdmin() {
+    void run_shouldNotCreateUserAdminAlreadyRegisteredAdmin() {
         // Mock existing admin
         when(usersRepo.findByUsername("admin")).thenReturn(Optional.of(new Users()));
 

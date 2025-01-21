@@ -27,7 +27,7 @@ class BranchContactDTOMapperTest {
         );
 
         //When
-        BranchContact branchContact=branchContactDTOMapper.BranchContactDTOToBranchContact(branchContactDTO);
+        BranchContact branchContact=branchContactDTOMapper.branchContactDTOToBranchContact(branchContactDTO);
 
         //Then
         assertNotNull(branchContact);
@@ -41,7 +41,7 @@ class BranchContactDTOMapperTest {
     void shouldThrowIllegalArgumentExceptionWhenBranchContactDTOIsNull() {
         //Given -> When & Then
         assertThrows(IllegalArgumentException.class
-                , ()->branchContactDTOMapper.BranchContactDTOToBranchContact(null),
+                , ()->branchContactDTOMapper.branchContactDTOToBranchContact(null),
                 "branchContactDTO cannot be null");
     }
 
@@ -56,7 +56,7 @@ class BranchContactDTOMapperTest {
         );
 
         //When
-        BranchContactDTO branchContactDTO=branchContactDTOMapper.BranchContactToBranchContactDTO(branchContact);
+        BranchContactDTO branchContactDTO=branchContactDTOMapper.branchContactToBranchContactDTO(branchContact);
 
         //Then
         assertNotNull(branchContactDTO);
@@ -69,7 +69,7 @@ class BranchContactDTOMapperTest {
     void shouldThrowIllegalArgumentExceptionWhenBranchContactIsNull() {
         //Given -> When & Then
         assertThrows(IllegalArgumentException.class
-                , ()->branchContactDTOMapper.BranchContactToBranchContactDTO(null),
+                , ()->branchContactDTOMapper.branchContactToBranchContactDTO(null),
                 "branchContact cannot be null");
     }
 }
