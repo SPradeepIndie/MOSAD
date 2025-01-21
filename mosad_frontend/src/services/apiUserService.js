@@ -24,6 +24,9 @@ export const getAllUsername=()=>{
     return apiClient.get('user/view/all');
 }
 
-
+export const logout=()=>{
+    return apiClient.get('/logout');
+}
 
 //Should have to create endpoint for  forgotpassword email , otp
+

@@ -15,17 +15,17 @@ public class BranchDTO {
     private String addressNumber;
     @NotBlank(message = "Street number is mandatory")
     @Size(max = 10)
-    private String streetNumber;
+    private String streetName;
     @NotBlank(message = "City name is mandatory")
     private String city;
 
     public BranchDTO() {
     }
 
-    public BranchDTO(String branchName, String addressNumber, String streetNumber, String city) {
+    public BranchDTO(String branchName, String addressNumber, String streetName, String city) {
         this.branchName = branchName;
         this.addressNumber = addressNumber;
-        this.streetNumber = streetNumber;
+        this.streetName = streetName;
         this.city = city;
     }
 
@@ -45,12 +45,12 @@ public class BranchDTO {
         this.addressNumber = addressNumber;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public String getStreetName() {
+        return streetName;
     }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 
     public String getCity() {

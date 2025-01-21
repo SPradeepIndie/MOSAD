@@ -18,12 +18,10 @@ class UserRoleDTOMapperTest {
     //Testing Service
     private UserRoleDTOMapper userRoleDTOMapper;
 
-    //Declare model mapper
-    private ModelMapper modelMapper;
-
     @BeforeEach
     void setUp() {
-        modelMapper=new ModelMapper();
+        //Declare model mapper
+        ModelMapper modelMapper = new ModelMapper();
         userRoleDTOMapper=new UserRoleDTOMapper(modelMapper);
     }
 

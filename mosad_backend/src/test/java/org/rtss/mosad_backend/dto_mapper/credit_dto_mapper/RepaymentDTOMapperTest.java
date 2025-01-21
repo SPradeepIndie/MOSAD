@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.dto_mapper.credit_dto_mapper;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

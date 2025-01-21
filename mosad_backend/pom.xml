@@ -10,7 +10,8 @@
 	</parent>
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
-	<version>2.1.6</version>
+<!--	MOSAD project version up here-->
+	<version>2.1.8</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
@@ -90,7 +91,6 @@
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 
