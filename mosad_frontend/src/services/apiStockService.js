@@ -13,9 +13,9 @@ export const fetchBrandAndSizeData=(brand,size)=>{
 }
 
 
-export const addItem=(cat_brand,data)=>{
-    return apiClient.post(`/stock/${cat_brand}`,data);//need to update after implementing the backend
-}
+// export const addItem=(cat_brand,data)=>{
+//     return apiClient.post(`/stock/${cat_brand}`,data);//need to update after implementing the backend
+// }
 
 
 export const updateItem = (itemId, data) => {
@@ -26,3 +26,21 @@ export const updateItem = (itemId, data) => {
 export const deleteItem = (category, brand, itemId) => {
     return apiClient.delete('/api/v1/delete', { params: { category, brand, itemId } });
 };
+
+//stock redesign
+export const fetchCategories =()=>{
+    return apiClient.get('/category');
+};
+
+export const getBrands =(category)=>{
+    return apiClient.get(`/brand?catName=${category}`);
+};
+
+export const addCategory =(categoryName) => {
+    return apiClient.post('/category', { categoryName });
+  };
+
+  export const addItem=(data)=>{
+    return apiClient.post('/item/add',data);//need to update after implementing the backend
+} 
+

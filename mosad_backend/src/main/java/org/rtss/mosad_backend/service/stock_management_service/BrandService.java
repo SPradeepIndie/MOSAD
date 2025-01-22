@@ -71,9 +71,9 @@ public class BrandService {
 
     //get all brands
     public List<Brand> getAllBrands(String catName) {
-        Category category=categoryRepo.findCategoryByCategoryName(catName).orElseThrow(
-                ()-> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Given category name is not valid")
-        );
+//        Category category=categoryRepo.findCategoryByCategoryName(catName).orElseThrow(
+//                ()-> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Given category name is not valid")
+//        );
        // List<BrandDTO> brandDTOS =new ArrayList<>();
 //        for (Brand brand : brandRepo.findAll()) {
 //            brand.getCategories().

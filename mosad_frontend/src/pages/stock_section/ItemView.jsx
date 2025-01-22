@@ -16,6 +16,7 @@ const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
+  console.log(states);
   let selectedCategory=states.category;
   let selectedBrand=states.brand;
   const [rows, setRows] = useState([]);
@@ -94,9 +95,32 @@ const ItemView = () => {
       return;
     }
 
+  console.log("Form Data:", formData);  
+  const formatedData = {
+    "itemDTO": {
+      "itemName": formData.itemName,
+      "itemDescription": formData.itemDescription,
+      "companyPrice": parseFloat(formData.companyPrice),
+      "retailPrice": parseFloat(formData.retailPrice),
+      "discount": parseFloat(formData.discount),
+      "categoryId": selectedCategory === "Tyre" ? 1 : 2, // Adjust based on your category IDs
+      "brandId": selectedBrand === "Presa" ? 2 : 1 // Adjust based on your brand IDs
+    },
+    "itemTyreDTO": {
+      "tyreSize": formData.tyreSize,
+      "pattern": formData.pattern,
+      "vehicleType": formData.vehicleType
+    },
+    "itemBranchDTO": {
+      "branchId": 1, // Adjust based on your branch ID
+      "availableQuantity": parseInt(formData.availableQuantity)
+    }
+  };
+
+  console.log(formatedData);
   const request = currentItem
-    ? updateItem(cat_and_brand, formData) 
-    : addItem(cat_and_brand, formData);  
+    ? updateItem(cat_and_brand, formatedData) 
+    : addItem(formatedData);  
 
   request
     .then(() => {

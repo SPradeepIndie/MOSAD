@@ -3,7 +3,7 @@ const setItemAddFromFields = (cat_and_brand) => {
 
   let defaultItemFields = {itemID: "",availableQty:null,officialSellingPrice: null,companyPrice:null,discountPrice:null};
     
-  let defaultTyreFields = {itemID: "",tyreSize: "",pattern: "",tyreCount: null,officialSellingPrice: null,vehicleType: ""};
+  let defaultTyreFields = {itemID: "",itemName:"",itemDescription:"",companyPrice:null,retailPrice:null,discount:null,tyreSize: "",pattern: "",availableQuantity: null,officialSellingPrice: null,vehicleType: ""};
     
     switch (cat_and_brand) {
       case "tyre_ceat":
