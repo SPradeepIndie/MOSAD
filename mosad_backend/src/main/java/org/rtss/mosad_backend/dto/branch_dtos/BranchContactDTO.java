@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.stereotype.Component;
 
-@Component
 public class BranchContactDTO {
 
     @NotNull(message = "Contact num object can not be null")
