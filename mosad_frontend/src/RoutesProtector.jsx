@@ -4,7 +4,7 @@ import useAuth from "./hooks/useAuth"
 
 const RoutesProtector = () => {
   const{ auth }= useAuth()
-  if (!auth.success) return <Navigate to="/" />;
+  if (!auth.Authenticated) return <Navigate to="/" />;
   return (
     <Suspense fallback={<h1>Loading...</h1>}>
       <Outlet />

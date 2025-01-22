@@ -40,7 +40,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             username = jwtService.extractUsernameFromToken(jwtToken);
         }
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            //Getting CustomeUserDetialsService without raising the circular dependency.
+            //Getting CustomUserDetailsService without raising the circular dependency.
             UserDetails userDetails=applicationContext.getBean(CustomUserDetailsService.class).loadUserByUsername(username);
 
             //validateToken method validate the token with the token and the userDetails

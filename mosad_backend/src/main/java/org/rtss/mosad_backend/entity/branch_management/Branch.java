@@ -13,7 +13,7 @@ public class Branch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "branchId", unique = true, nullable = false)
     private Long branchId;
-    @Column(name = "branchName", length = 30)
+    @Column(name = "branchName", length = 30,unique = true, nullable = false)
     private String branchName;
     @Column(name = "addressNumber", length = 10, nullable = false)
     private String addressNumber;

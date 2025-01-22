@@ -26,19 +26,19 @@ public class AccountManagerController {
     public ResponseEntity<ResponseDTO> updateInfo(
             @RequestParam String username,
             @RequestBody UserDetailsDTO userDetailsDto){
-        ResponseDTO responseDTO= accountManagementService.updateUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username),userDetailsDto);
+        ResponseDTO responseDTO= accountManagementService.updateUser(validateHtmlPathVariable.escapeHTMLSpecialCharacters(username),userDetailsDto);
         return ResponseEntity.accepted().body(responseDTO);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDTO> deleteAccount(@RequestParam String username){
-        ResponseDTO responseDTO= accountManagementService.deleteUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username));
+        ResponseDTO responseDTO= accountManagementService.deleteUser(validateHtmlPathVariable.escapeHTMLSpecialCharacters(username));
         return ResponseEntity.accepted().body(responseDTO);
     }
 
     @GetMapping("/view")
     public ResponseEntity<UserDetailsDTO> viewUserInfo(@RequestParam String username) {
-        UserDetailsDTO userDetailsDto =accountManagementService.getUser(validateHtmlPathVariable.escapeHTMLspecailCharaters(username));
+        UserDetailsDTO userDetailsDto =accountManagementService.getUser(validateHtmlPathVariable.escapeHTMLSpecialCharacters(username));
         return ResponseEntity.accepted().body(userDetailsDto);
     }
 
@@ -48,8 +48,9 @@ public class AccountManagerController {
         return ResponseEntity.ok().body(users);
     }
 
+    @PostMapping("/forgot")
+    public ResponseEntity<String> forgotPassword(){
+        return ResponseEntity.ok().body("Implementing");
+    }
 
-    //TODO Forgot password
-
-    //TODO Add user roles
 }
