@@ -17,12 +17,11 @@ import java.util.List;
 public class BillService {
 
     private final BillRepository billRepository;
-    private final BillItemRepository billItemRepository;
+
     private final ItemRepository itemRepository; // Assuming you have a repository for Item entity
 
     public BillService(BillRepository billRepository, BillItemRepository billItemRepository, ItemRepository itemRepository) {
         this.billRepository = billRepository;
-        this.billItemRepository = billItemRepository;
         this.itemRepository = itemRepository;
     }
 
@@ -31,30 +30,13 @@ public class BillService {
         try {
             // Create a new Bill entity from BillDTO
             Bill bill = new Bill();
-            bill.setCustomerName(billDTO.getCustomerName());
-            bill.setCustomerContact(billDTO.getCustomerContact());
+            bill.setCustomer(billDTO.getCustomerId());
             bill.setAdvance(billDTO.getAdvance());
-            bill.setTotalAmount(billDTO.getTotal());
+            bill.setTotalAmount(billDTO.getTotalAmount());
             bill.setBalance(billDTO.getBalance());
             bill.setDate(billDTO.getDate());
 
-            // Map BillItemDTOs to BillItems and associate them with the Bill
-            List<BillItem> billItems = billDTO.getItems().stream().map(billItemDTO -> {
-                BillItem billItem = new BillItem();
-                billItem.setQuantity(billItemDTO.getQuantity());
-                billItem.setPrice(billItemDTO.getUnitPrice());
 
-                // Find the item in the database and associate it with the bill item
-                Item item = itemRepository.findById(billItemDTO.getItemId())
-                        .orElseThrow(() -> new RuntimeException("Item not found with ID: " + billItemDTO.getItemId()));
-                billItem.setItem(item);
-                billItem.setBill(bill); // Associate the bill item with the bill
-
-                return billItem;
-            }).toList();
-
-            // Save the bill items to the Bill entity
-            bill.setItems(billItems);
 
             // Save the Bill (this will cascade and save the items if properly mapped in JPA)
             Bill savedBill = saveBill(bill);

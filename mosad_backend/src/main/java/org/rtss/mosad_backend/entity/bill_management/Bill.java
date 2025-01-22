@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.user_management.Users;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "bills")
 public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,10 +21,6 @@ public class Bill {
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, updatable = false)
     private Date date;
-    
-
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BillItem> items = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -36,7 +31,7 @@ public class Bill {
     private Customer customer;
 
     // Constructors
-    public Bill(Double totalAmount, Double advance, Double balance, Date date, String customerName, String customerContact, Users user, Customer customer) {
+    public Bill(Double totalAmount, Double advance, Double balance, Date date, Users user, Customer customer) {
         this.totalAmount = totalAmount;
         this.advance = advance;
         this.balance = balance;
@@ -86,15 +81,6 @@ public class Bill {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-
-    public List<BillItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<BillItem> items) {
-        this.items = items;
     }
 
     public Users getUser() {

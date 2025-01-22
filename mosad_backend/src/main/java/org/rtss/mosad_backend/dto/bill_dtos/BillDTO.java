@@ -1,5 +1,7 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
+import org.rtss.mosad_backend.entity.customer.Customer;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -7,8 +9,7 @@ import java.util.List;
 
 public class BillDTO {
     private Long id; // Unique identifier for the bill
-    private String customerName; // Optional, if needed
-    private String customerContact; // Optional, if needed
+    private String customerName; // Customer name
     private Double advance;
     private Double total;
     private Double balance;
@@ -24,20 +25,12 @@ public class BillDTO {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerContact() {
-        return customerContact;
-    }
-
-    public void setCustomerContact(String customerContact) {
-        this.customerContact = customerContact;
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
 
     public Double getAdvance() {
@@ -48,11 +41,11 @@ public class BillDTO {
         this.advance = advance;
     }
 
-    public Double getTotal() {
+    public Double getTotalAmount() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotalAmount(Double total) {
         this.total = total;
     }
 
@@ -83,13 +76,5 @@ public class BillDTO {
         } else {
             this.date = null;
         }
-    }
-
-    public List<BillItemDTO> getItems() {
-        return items;
-    }
-
-    public void setItems(List<BillItemDTO> items) {
-        this.items = items;
     }
 }
