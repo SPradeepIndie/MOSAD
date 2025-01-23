@@ -1,25 +1,21 @@
 package org.rtss.mosad_backend.dto.stock_management_dto;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
-@Component
 public class AddBrandDTO {
 
     @NotNull(message = "Brand can not be null")
     private BrandDTO brandDTO;
 
     @NotNull(message = "Category can not be nul")
-    private Set<CategoryDTO> categories;
+    private CategoryDTO category;
 
     public AddBrandDTO() {
     }
 
-    public AddBrandDTO(BrandDTO brandDTO, Set<CategoryDTO> categories) {
+    public AddBrandDTO(BrandDTO brandDTO, CategoryDTO category) {
         this.brandDTO = brandDTO;
-        this.categories = categories;
+        this.category = category;
     }
 
     public @NotNull(message = "Brand can not be null") BrandDTO getBrandDTO() {
@@ -30,11 +26,11 @@ public class AddBrandDTO {
         this.brandDTO = brandDTO;
     }
 
-    public @NotNull(message = "Category can not be nul") Set<CategoryDTO> getCategories() {
-        return categories;
+    public @NotNull(message = "Category can not be nul") CategoryDTO getCategory() {
+        return category;
     }
 
-    public void setCategories(@NotNull(message = "Category can not be nul") Set<CategoryDTO> categories) {
-        this.categories = categories;
+    public void setCategory(@NotNull(message = "Category can not be nul") CategoryDTO category) {
+        this.category = category;
     }
 }

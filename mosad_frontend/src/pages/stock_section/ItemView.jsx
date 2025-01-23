@@ -12,6 +12,7 @@ import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
+
 const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
