@@ -92,8 +92,8 @@ public class Bill {
         this.advance = advance;
     }
 
-    public java.sql.Date getDate() {
-        return (java.sql.Date) date;
+    public java.util.Date getDate() {
+        return date;
     }
 
     public void setDate(Date date) {

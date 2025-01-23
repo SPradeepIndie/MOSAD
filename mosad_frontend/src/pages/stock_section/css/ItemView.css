@@ -32,6 +32,9 @@ body {
   object-fit: contain;
 }
 
+
+
+
 /* Table */
 .item-table {
   width: 100%;
@@ -60,6 +63,39 @@ body {
 .item-table tr:hover {
   background-color: #f1f1f1;
 }
+
+.item-table tbody tr {
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.item-table tbody tr {
+  background-color: white; /* Default row color */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.item-table tbody tr:hover {
+  background-color: lightgray; /* Highlight row on hover */
+}
+
+.selected-row {
+  background-color: yellow; /* Color for the selected row */
+  font-weight: bold; /* Make it visually distinct */
+}
+
+
+
+/* .item-table tbody tr.selected-row {
+  background-color: yellow;
+}
+
+/* Non-selected row */
+.item-table tbody tr:hover {
+  background-color: lightgray;
+}
+
 
 .selected-row {
   background-color: #ffc107;
