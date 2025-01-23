@@ -13,11 +13,6 @@ export const fetchBrandAndSizeData=(brand,size)=>{
 }
 
 
-// export const addItem=(cat_brand,data)=>{
-//     return apiClient.post(`/stock/${cat_brand}`,data);//need to update after implementing the backend
-// }
-
-
 export const updateItem = (itemId, data) => {
     return apiClient.put(`/api/v1/update/${itemId}`, data);
 };
@@ -41,6 +36,6 @@ export const addCategory =(categoryName) => {
   };
 
   export const addItem=(data)=>{
-    return apiClient.post('/item/add',data);//need to update after implementing the backend
+    return apiClient.post('/item/add',data);
 } 
 

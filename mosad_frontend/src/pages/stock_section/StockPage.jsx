@@ -71,12 +71,12 @@ function StockPage({ isFromBranch }) {
       <h1 style={{ textAlign: 'center' }}>Select a Category</h1>
       <Box sx={{ marginTop: 4 }}>
         <Grid2 container spacing={4} justifyContent="center">
-          {categories.map((category, index) => (
+          {categories.map((category) => (
             <Grid2
               xs={12}
               sm={6}
               md={4}
-              key={index}
+              key={category.categoryName}
             >
               <Tile
                 title={category.categoryName}
