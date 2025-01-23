@@ -48,7 +48,7 @@ class LoginServiceTest {
         authDTO=new AuthDTO();
         userLoginDto = new UserLoginDTO("testUser", "testPassword");
 
-        loginService=new LoginService(authenticationManager,jwtService,authDTO,dtoValidator,usersRepo);
+        loginService=new LoginService(authenticationManager,jwtService,dtoValidator,usersRepo);
     }
 
     //**********************
@@ -112,7 +112,7 @@ class LoginServiceTest {
     // access token refresh
     //*********************
     @Test
-    void shouldGenerateAccessTokenWhenHeaderIsValidAndRefreshTokenIsValid() throws IOException {
+    void shouldGenerateAccessTokenWhenHeaderIsValidAndRefreshTokenIsValid(){
         //Given
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -142,7 +142,11 @@ class LoginServiceTest {
         //test that output stream has written
 
         //When
-        loginService.refreshToken(request, response);
+        try {
+            loginService.refreshToken(request, response);
+        } catch (IOException e) {
+            fail("IOException should not have been thrown: " + e.getMessage());
+        }
 
         //Then
         verify(jwtService).extractUsernameFromToken(refreshToken);
@@ -188,7 +192,7 @@ class LoginServiceTest {
     }
 
     @Test
-    void shouldFailToRefreshTokenWhenTokenInvalid() throws IOException {
+    void shouldFailToRefreshTokenWhenTokenInvalid(){
         //Given
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -224,7 +228,7 @@ class LoginServiceTest {
     }
 
     @Test
-    void shouldFailToRefreshTokenWhenUsernameIsNull() throws IOException {
+    void shouldFailToRefreshTokenWhenUsernameIsNull(){
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         String refreshToken = "testRefreshToken";

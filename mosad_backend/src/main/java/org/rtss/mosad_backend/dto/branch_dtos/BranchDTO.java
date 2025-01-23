@@ -2,8 +2,6 @@ package org.rtss.mosad_backend.dto.branch_dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 public class BranchDTO {
 

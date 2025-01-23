@@ -1,11 +1,7 @@
 package org.rtss.mosad_backend.dto.stock_management_dto;
 
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
-@Component
 public class AddBrandDTO {
 
     @NotNull(message = "Brand can not be null")
