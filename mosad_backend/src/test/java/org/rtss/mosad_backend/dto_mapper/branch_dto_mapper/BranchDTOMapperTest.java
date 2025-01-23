@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.branch_dtos.BranchDTO;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.branch_management.BranchContact;
-import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
 
 import java.util.HashSet;

@@ -62,17 +62,16 @@ public class ItemService {
         item.setBrand(brandRepository.findById(itemDTO.getBrandId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Brand ID")));
 
-        Item savedItem=itemRepository.save(item);
+        itemRepository.save(item);
 
         // Map ItemTyreDTO to ItemTyre entity
         ItemTyre tyre=itemTyreDTOMapper.toEntity(itemTyreDTO);
         //set item to tyre
         tyre.setItem(item);
-        ItemTyre savedTyre=itemTyreRepo.save(tyre);
+        itemTyreRepo.save(tyre);
 
         //Map to ItemBranch
-//        ItemBranch itemBranch=itemBranchDTOMapper.toEntity(itemBranchDTO);
-//        System.out.println("ItemBranch mapped\n\n");
+
         ItemBranch itemBranch=new ItemBranch();
 
         // Fetch the Branch entity
@@ -161,9 +160,8 @@ public class ItemService {
         Item existingItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Item not found with ID: " + itemId));
         itemTyreRepo.deleteItemTyreByItem(existingItem);
-        System.out.println("\nItem Tyre Deleted..!\n");
+
         itemRepository.delete(existingItem);
-        System.out.println("\nItem Deleted\n");
 
         return new ResponseDTO(true, "ItemTyre and associated records deleted successfully.");
     }

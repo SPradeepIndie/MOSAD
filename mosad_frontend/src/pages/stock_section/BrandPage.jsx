@@ -20,6 +20,7 @@ const iconMap = {
 function BrandPage({ isFromBranch }) {
   const location = useLocation();
   const states = location.state;
+  console.log(states);
 
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ function BrandPage({ isFromBranch }) {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await getBrands(states.Category);
+        const response = await getBrands(states.category);
         
         setBrands(response.data);
       } catch (err) {
@@ -53,9 +54,9 @@ function BrandPage({ isFromBranch }) {
     <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {/* Display the brands in rows dynamically */}
       <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={4}>
-        {brands.map((brand, index) => (
+        {brands.map((brand) => (
           <Tile
-            key={index}
+            key={brand.brandName}
             title={brand.brandName} // Assume API response has a `brandName` field
             icon={iconMap[brand.brandName] || <DescriptionIcon fontSize="large" />} // Default icon if not mapped
             link={`${isFromBranch ? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
