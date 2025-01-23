@@ -38,7 +38,8 @@ public class CategoryController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ResponseDTO> deleteCategory(@RequestBody CategoryDTO categoryDto) {
-        return ResponseEntity.ok(categoryService.deleteCategory(categoryDto));
+    public ResponseEntity<ResponseDTO> deleteCategory(@RequestParam String catName) {
+        String escapedCatName = validateHtmlPathVariable.escapeHTMLSpecialCharacters(catName);
+        return ResponseEntity.ok(categoryService.deleteCategory(escapedCatName));
     }
 }
