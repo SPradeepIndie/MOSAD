@@ -29,7 +29,7 @@ public class RetailService {
     }
 
     //Payment history
-    public List<PaymentHistoryDTO> getPaymentHistory(String username, Long billId) {
+    /*public List<PaymentHistoryDTO> getPaymentHistory(String username, Long billId) {
         Optional<Users> retailUser = userRepository.findByUsername(username);
         if (retailUser.isEmpty()) {
             throw new IllegalArgumentException("User is not a retail user");
@@ -110,6 +110,6 @@ public class RetailService {
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate dueDate = localDate.plusDays(30);
         return (Date) Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
+    }*/
 
 }

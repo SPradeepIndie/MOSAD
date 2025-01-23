@@ -1,18 +1,14 @@
 package org.rtss.mosad_backend.service.customer_management;
 
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
-import org.rtss.mosad_backend.entity.customer.CustomerType;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CustomerService {
@@ -29,61 +25,39 @@ public class CustomerService {
     @Autowired
     private CustomerContactDTOMapper customerContactDTOMapper;
 
-    // Save a new customer
-    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
-        if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
-            throw new RuntimeException("A customer must have at least one contact.");
+    // Method to update customer details and contact information
+    public CustomerDTO updateCustomerDetails(Long customerId, String customerName, String contactNumber) {
+        // Find the customer by ID
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + customerId));
+
+        // Update the customer name
+        customer.setName(customerName);
+
+        // Check if the contact number exists or needs to be added
+        CustomerContact customerContact = customer.getContacts().stream()
+                .filter(contact -> contact.getContactNumber().equals(contactNumber))
+                .findFirst()
+                .orElse(null);
+
+        if (customerContact == null) {
+            // If contact does not exist, create a new one
+            customerContact = new CustomerContact();
+            customerContact.setCustomer(customer);
+            customerContact.setContactNumber(contactNumber);
+            customer.getContacts().add(customerContact);
+        } else {
+            // If contact exists, update the contact number (optional if you want to change)
+            customerContact.setContactNumber(contactNumber);
         }
-        Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
-        Customer savedCustomer = customerRepository.save(customer);
-        return customerDTOMapper.toCustomerDTO(savedCustomer);
-    }
 
-
-    // Get all customers
-    public List<CustomerDTO> getAllCustomers() {
-        return customerDTOMapper.toCustomerDTOList(customerRepository.findAll());
-    }
-
-    // Get a specific customer by ID
-    public CustomerDTO getCustomerById(Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + id));
+        // Save the updated customer and contact
+        customerRepository.save(customer);
         return customerDTOMapper.toCustomerDTO(customer);
     }
 
-    // Update an existing customer
-    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
-        Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID : " + id));
+    public Customer getCustomerByNameAndContact(String name, String contactNumber) {
+        return customerRepository.findByNameAndContact(name, contactNumber);
 
-        existingCustomer.setName(customerDTO.getName());
-        existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
-        existingCustomer.setContacts(customerDTOMapper.toCustomerEntity(customerDTO).getContacts());
-
-        Customer updatedCustomer = customerRepository.save(existingCustomer);
-        return customerDTOMapper.toCustomerDTO(updatedCustomer);
-    }
-
-
-    // Delete a customer by ID
-    public void deleteCustomer(Long id) {
-        if (!customerRepository.existsById(id)) {
-            throw new RuntimeException(" Customer not found with ID: " + id);
-        }
-        customerRepository.deleteById(id);
-    }
-
-    public List<CustomerContactDTO> getCustomerByContact(String contactNumber) {
-        System.out.println("\n Service ekata Awa  "+contactNumber);
-        List<CustomerContact> customers= customerContactRepository.findCustomerContactsByContactNumber(contactNumber);
-        System.out.println("\n Customers are \n"+customers+"\n\n");
-        return customerContactDTOMapper.toCustomerDTOList(customers);
-    }
-    public List<CustomerDTO> getCustomersByContact(String contactNumber){
-
-        List<Customer> customers=customerContactRepository.findCustomersByContactNumber(contactNumber);
-
-        return customerDTOMapper.toCustomerDTOList(customers);
     }
 }

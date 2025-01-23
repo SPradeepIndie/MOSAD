@@ -13,7 +13,6 @@ public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Double totalAmount;
     private Double advance;
     private Double balance;

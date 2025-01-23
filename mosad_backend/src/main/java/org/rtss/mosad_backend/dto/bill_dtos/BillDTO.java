@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
 import org.rtss.mosad_backend.entity.customer.Customer;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -9,12 +8,12 @@ import java.util.List;
 
 public class BillDTO {
     private Long id; // Unique identifier for the bill
-    private String customerName; // Customer name
     private Double advance;
     private Double total;
     private Double balance;
     private LocalDate date; // Date of the bill
     private List<BillItemDTO> items; // List of bill items
+    private Customer customer; // Customer object instead of String
 
     // Getters and Setters
     public Long getId() {
@@ -29,7 +28,7 @@ public class BillDTO {
         return customer;
     }
 
-    public void setCustomer(String customer) {
+    public void setCustomer(Customer customer) { // Accept Customer object
         this.customer = customer;
     }
 
