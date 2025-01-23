@@ -3,9 +3,15 @@ import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/materia
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-function Tile({ title, icon, link,state}) {
+function Tile({ title, icon, link, state, onClick }) {
+  const isClickable = Boolean(onClick) || Boolean(link);
+
   return (
-    <Card component={Link} to={link} state={state}
+    <Card
+      component={isClickable && !onClick ? Link : 'div'} // Use 'div' if onClick is present
+      to={link}
+      state={state}
+      onClick={onClick} // Trigger the onClick handler for non-link actions
       sx={{
         height: 'auto',
         width: '15em',
@@ -15,15 +21,17 @@ function Tile({ title, icon, link,state}) {
         alignItems: 'center',
         boxShadow: 3,
         borderRadius: 2,
-        cursor: 'pointer',
-        backgroundColor: '#2E8B58', 
-        ':hover': { 
-          backgroundColor: '#FFC220', 
-          boxShadow: 6 
-        },
+        cursor: isClickable ? 'pointer' : 'default', // Ensure pointer cursor only when clickable
+        backgroundColor: '#2E8B58',
+        ':hover': isClickable
+          ? { backgroundColor: '#FFC220', boxShadow: 6 }
+          : undefined, // Disable hover effect if not clickable
       }}
     >
-      <CardActionArea sx={{ height: '100%', width: '100%', textAlign: 'center' }}>
+      <CardActionArea
+        sx={{ height: '100%', width: '100%', textAlign: 'center' }}
+        onClick={onClick} // Ensure onClick is handled properly
+      >
         <CardContent>
           <Box
             sx={{
@@ -39,7 +47,6 @@ function Tile({ title, icon, link,state}) {
           <Typography
             variant="h6"
             sx={{
-              //fontWeight: 'bold',
               color: 'white',
               fontSize: '18px',
             }}
@@ -52,13 +59,12 @@ function Tile({ title, icon, link,state}) {
   );
 }
 
-
-
 Tile.propTypes = {
   title: PropTypes.string.isRequired,
   icon: PropTypes.node.isRequired,
   link: PropTypes.string,
   state: PropTypes.object,
+  onClick: PropTypes.func, // Allow onClick for tiles that trigger actions instead of navigation
 };
 
 export default Tile;
