@@ -1,7 +1,5 @@
 //set Add Item form fields
 const setItemAddFromFields = (cat_and_brand) => {
-
-  let defaultItemFields = {itemID: "",availableQty:null,officialSellingPrice: null,companyPrice:null,discountPrice:null};
     
   let defaultTyreFields = {itemID: "",itemName:"",itemDescription:"",companyPrice:null,retailPrice:null,discount:null,tyreSize: "",pattern: "",availableQuantity: null,officialSellingPrice: null,vehicleType: ""};
     
