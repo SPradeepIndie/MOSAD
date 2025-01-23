@@ -160,8 +160,25 @@ const ItemView = () => {
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
     }
+
+
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".item-table")) {
+        setSelectedRowId(null); // Deselect row when clicking outside the table
+      }
+    };
+  
+    document.addEventListener("click", handleOutsideClick);
+  
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+
+
   }, [selectedCategory, selectedBrand]);
-  const handleRowClick = (id) => setSelectedRowId(id);
+  const handleRowClick = (id) => {
+    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
+  };
 
   return (
     <>
