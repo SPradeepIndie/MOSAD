@@ -175,7 +175,7 @@ class RegisterServiceTest {
         UserRoles invaliduserRoles=new UserRoles();
         userRoles.setRoleName("Invalid Roles");
 
-        Users InvalidUser =new Users();
+        Users invalidUser =new Users();
         user.setUsername(TEST_USERNAME);
         user.setPassword(TEST_PASSWORD);
         user.setFirstName(TEST_FIRST_NAME);
@@ -186,7 +186,7 @@ class RegisterServiceTest {
         doNothing().when(dtoValidator).validate(any());
         when(usersRepo.findByUsername(any())).thenReturn(Optional.empty());
         when(usersRepo.findByEmail(any())).thenReturn(Optional.empty());
-        when(userDTOMapper.userDtoToUsers(any())).thenReturn(InvalidUser);
+        when(userDTOMapper.userDtoToUsers(any())).thenReturn(invalidUser);
         when(passwordEncoder.bCryptPasswordEncoder().encode(anyString())).thenReturn("encodedPassword");
         when(userRolesRepo.findUserRolesByRoleName("InvalidRole")).thenReturn(Optional.empty());
 

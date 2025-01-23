@@ -2,9 +2,7 @@ package org.rtss.mosad_backend.dto.branch_dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.stereotype.Component;
 
-@Component
 public class BranchDTO {
 
     @NotBlank(message = "Branch name is mandatory")
@@ -18,6 +16,7 @@ public class BranchDTO {
     private String streetName;
     @NotBlank(message = "City name is mandatory")
     private String city;
+
 
     public BranchDTO() {
     }
