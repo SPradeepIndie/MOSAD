@@ -1,16 +1,25 @@
 import { Box, Typography, TextField, Divider } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect, useCallback  } from "react";
+import PropTypes from "prop-types";
 
-const PriceDetailsSection = () => {
-  const [officialSellingPrice, setOfficialSellingPrice] = useState("");
-  const [discount, setDiscount] = useState("");
+const PriceDetailsSection = ({ officialSellingPrice: initialOSP, discount: initialDiscount }) => {
+  const [officialSellingPrice, setOfficialSellingPrice] = useState(initialOSP || "");
+  const [discount, setDiscount] = useState(initialDiscount || "");
   const [companyPrice, setCompanyPrice] = useState("");
   const [discountPrice, setDiscountPrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [profit, setProfit] = useState("");
 
+  useEffect(() => {
+    if (initialOSP !== undefined) {
+      handleFieldChange("officialSellingPrice", initialOSP);
+    }
+    if (initialDiscount !== undefined) {
+      handleFieldChange("discount", initialDiscount);
+    }
+  }, [initialOSP, initialDiscount,]);
   // Update and calculate fields dynamically
-  const handleFieldChange = (key, value) => {
+  const handleFieldChange = useCallback((key, value) => {
     const numericValue = parseFloat(value) || 0;
 
     if (key === "officialSellingPrice") {
@@ -32,7 +41,15 @@ const PriceDetailsSection = () => {
       setSellingPrice(sp.toFixed(2));
       setProfit((sp - companyPrice).toFixed(2)); // Profit = Selling Price - Company Price
     }
-  };
+  }, [officialSellingPrice, discount]);  
+  useEffect(() => {
+    if (initialOSP !== undefined) {
+      handleFieldChange("officialSellingPrice", initialOSP);
+    }
+    if (initialDiscount !== undefined) {
+      handleFieldChange("discount", initialDiscount);
+    }
+  }, [initialOSP, initialDiscount, handleFieldChange]);
 
   return (
     <Box
@@ -128,5 +145,10 @@ const PriceDetailsSection = () => {
     </Box>
   );
 };
+PriceDetailsSection.propTypes = {
+  officialSellingPrice: PropTypes.number,
+  discount: PropTypes.number,
+};
 
 export default PriceDetailsSection;
+

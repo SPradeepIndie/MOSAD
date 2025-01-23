@@ -14,12 +14,12 @@ export const fetchBrandAndSizeData=(brand,size)=>{
 
 
 export const updateItem = (itemId, data) => {
-    return apiClient.put(`/api/v1/update/${itemId}`, data);
+    return apiClient.put(`/update/${itemId}`, data);
 };
 
 
 export const deleteItem = (category, brand, itemId) => {
-    return apiClient.delete('/api/v1/delete', { params: { category, brand, itemId } });
+    return apiClient.delete('/delete', { params: { category, brand, itemId } });
 };
 
 //stock redesign
