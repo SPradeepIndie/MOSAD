@@ -11,7 +11,9 @@ import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.stock_management_repository.BrandRepo;
 import org.rtss.mosad_backend.repository.stock_management_repository.CategoryRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.*;
 
@@ -34,7 +36,7 @@ public class BrandService {
     public ResponseDTO addBrand(AddBrandDTO addBrandDto) {
         validateDtoS(addBrandDto);
         //check category is in db
-        Category Category=checkRegisteredCategory(addBrandDto.getCategory().getCategoryName());
+        Category category=checkRegisteredCategory(addBrandDto.getCategory().getCategoryName());
 
         // Check if the brand already exists
         Optional<Brand> existingBrandOpt = brandRepo.findByBrandName(addBrandDto.getBrandDTO().getBrandName());
@@ -42,12 +44,12 @@ public class BrandService {
         try {
             if (existingBrandOpt.isPresent()) {
                 Brand existingBrand = existingBrandOpt.get();
-                updateExistingBrandCategories(existingBrand,Category);
+                updateExistingBrandCategories(existingBrand,category);
                 return new ResponseDTO(true, "Successfully updated brand: " + existingBrand.getBrandName());
             } else {
                 // Create a new brand
                 Brand newBrand=brandDTOMapper.BrandDtoToBrand(addBrandDto.getBrandDTO());
-                createNewBrand(newBrand,Category);
+                createNewBrand(newBrand,category);
                 return new ResponseDTO(true, "Successfully added new brand: " + newBrand.getBrandName());
             }
         } catch (ObjectNotValidException e) {
@@ -119,7 +121,7 @@ public class BrandService {
 
         // Add new category to the existing ones
         if(existingCategories.contains(category)){
-            throw new RuntimeException("Brand already exists");
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Brand already exists");
         }
 
         category.getBrands().add(existingBrand);

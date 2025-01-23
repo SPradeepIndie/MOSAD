@@ -24,17 +24,16 @@ public class LoginService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final AuthDTO authDTO;
+    private final AuthDTO authDTO=new AuthDTO();
     /*-----------------------------
        * Inject the DtoValidator
        ------------------------------*/
     private final DtoValidator dtoValidator;
     private final UsersRepo usersRepo;
 
-    public LoginService( AuthenticationManager authenticationManager, JwtService jwtService, AuthDTO authDTO, DtoValidator dtoValidator, UsersRepo usersRepo) {
+    public LoginService( AuthenticationManager authenticationManager, JwtService jwtService,DtoValidator dtoValidator, UsersRepo usersRepo) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        this.authDTO = authDTO;
         this.dtoValidator = dtoValidator;
         this.usersRepo = usersRepo;
     }
