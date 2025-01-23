@@ -49,10 +49,9 @@ public class CategoryService {
     }
 
     //Delete category
-    public ResponseDTO deleteCategory(CategoryDTO categoryDto) {
-        dtoValidator.validate(categoryDto);
-        Category oldCategory=categoryRepo.findCategoryByCategoryName(categoryDto.getCategoryName()).orElseThrow(
-                ()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Couldn't find category name called: "+categoryDto.getCategoryName())
+    public ResponseDTO deleteCategory(String catName) {
+        Category oldCategory=categoryRepo.findCategoryByCategoryName(catName).orElseThrow(
+                ()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Couldn't find category name called: "+catName)
         );
         categoryRepo.delete(oldCategory);
         return new ResponseDTO(true,"Category deleted successfully");

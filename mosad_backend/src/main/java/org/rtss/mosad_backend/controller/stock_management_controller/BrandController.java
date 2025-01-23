@@ -29,12 +29,16 @@ public class BrandController {
     }
 
     @PutMapping
-    public ResponseEntity<ResponseDTO> updateBrand(@RequestBody BrandDTO brandDto) {
-        return ResponseEntity.ok(brandService.updateBrand(brandDto));
+    public ResponseEntity<ResponseDTO> updateBrandName(@RequestParam String newBrandName, @RequestParam String oldBrandName) {
+        String escapedNewBrandName= validateHtmlPathVariable.escapeHTMLSpecialCharacters(newBrandName);
+        String escapedOldBrandName= validateHtmlPathVariable.escapeHTMLSpecialCharacters(oldBrandName);
+        return ResponseEntity.ok(brandService.updateBrandName(escapedNewBrandName,escapedOldBrandName));
     }
+
     @DeleteMapping
-    public ResponseEntity<ResponseDTO> deleteBrand(@RequestBody AddBrandDTO addBrandDto) {
-        return ResponseEntity.ok(brandService.deleteBrand(addBrandDto));
+    public ResponseEntity<ResponseDTO> deleteBrand(@RequestParam String brandName) {
+        String escapedBrandName= validateHtmlPathVariable.escapeHTMLSpecialCharacters(brandName);
+        return ResponseEntity.ok(brandService.deleteBrand(escapedBrandName));
     }
 
     @PostMapping
