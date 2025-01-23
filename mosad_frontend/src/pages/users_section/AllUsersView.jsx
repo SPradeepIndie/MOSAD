@@ -161,6 +161,7 @@ const AllUsersView=()=>{
                     handlePwds={handlePwds}
                     pwds={pwds}/>
             }
+            isDefaultButtonsDisplay={true}
             setOpenPopup={setOpenPopup}
             setOkButtonAction={setOkButtonAction}
             setCancelButtonAction={setCancelButtonAction}/>
