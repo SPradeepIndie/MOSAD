@@ -2,7 +2,7 @@ import React from "react";
 import { TextField, Box, Typography,Button,DialogActions } from "@mui/material";
 import PropTypes from "prop-types";
 
-const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
+const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit,closeDialog }) => {
 
   return (
     <form onSubmit={onSubmit}>
@@ -58,11 +58,12 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit }) => {
   );
 };
 
-ItemDetailsForm.prototype={
-  formData:PropTypes.object,
-  handleChange:PropTypes.func,
-  errors:PropTypes.object,
-  onSubmit:PropTypes.func
-}
+ItemDetailsForm.propTypes = {
+  formData: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  closeDialog: PropTypes.func.isRequired
+};
 
 export default ItemDetailsForm;
