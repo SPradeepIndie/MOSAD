@@ -20,7 +20,7 @@ const setItemAddFromFields = (cat_and_brand) => {
         return defaultTyreFields;
         
       default:
-        return defaultItemFields;
+        return defaultTyreFields;
     }
   };
 
