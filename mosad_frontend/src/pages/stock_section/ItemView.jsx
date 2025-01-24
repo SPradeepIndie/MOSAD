@@ -12,6 +12,7 @@ import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
+import PriceDetailsSection from "../../component/PriceDetailsSection";
 
 const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
@@ -31,8 +32,8 @@ const ItemView = () => {
   const [formData, setFormData] = useState(setItemAddFromFields(selectedCategory,selectedBrand));
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setinputFieldErrors] = useState({});
-
-
+  const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
+  const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
   const openDialog = (item) => {
     if (item) {
       console.log("Item to edit:", item);
@@ -281,7 +282,19 @@ const ItemView = () => {
             }
           }}>Update</button>
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
-          <button className="btn info">More Info</button>
+          <button className="btn info"onClick={() => {
+            if (selectedRowId) {
+              const selectedItem = rows.find((row) => row.id === selectedRowId);
+              setSelectedItemPriceDetails({
+                officialSellingPrice: selectedItem.price,
+                discount: selectedItem.discount || 0,
+              });
+              setIsPriceDetailsPopupOpen(true);
+            }else {
+              setMessage({ type: "error", text: "Please select an item to view price details!" });
+              setTimeout(() => setMessage(null), 2000);
+            }
+          }}>More Info</button>
         </div>
       </div>
       <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} isDefaultButtonsDisplay={false}>
@@ -293,6 +306,20 @@ const ItemView = () => {
           onSubmit={handleSubmit}
           closeDialog={closeDialog}
         />
+
+      </PopUp>
+      <PopUp
+        popUpTitle="Price Details"
+        openPopup={isPriceDetailsPopupOpen}
+         setOpenPopup={setIsPriceDetailsPopupOpen}
+         onSubmit={() => setIsPriceDetailsPopupOpen(false)} 
+        setCancelButtonAction={() => setIsPriceDetailsPopupOpen(false)} 
+        isDefaultButtonsDisplay={false} 
+      >
+        <PriceDetailsSection
+        officialSellingPrice={selectedItemPriceDetails?.officialSellingPrice || ""}
+        discount={selectedItemPriceDetails?.discount || ""}
+      />
       </PopUp>
     </>
   );
