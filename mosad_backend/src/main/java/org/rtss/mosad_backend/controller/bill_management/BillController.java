@@ -1,33 +1,45 @@
 package org.rtss.mosad_backend.controller.bill_management;
 
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
+import org.rtss.mosad_backend.dto_mapper.BillDTOMapper;
+import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.service.bill_management.BillService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/v1/bills")
+@RequestMapping("/api/bills")
 public class BillController {
 
-    private final BillService billService;
+    @Autowired
+    private BillService billService;
 
-    public BillController(BillService billService) {
-        this.billService = billService;
+    @PostMapping("/create")
+    public BillDTO createBill(@RequestBody BillDTO billDTO) {
+        // Create the Bill entity
+        Bill bill = BillDTOMapper.toEntity(billDTO);
+
+        // Set the current date
+        bill.setDate(LocalDate.now());
+
+        // Calculate balance
+        bill.setBalance(bill.getTotalAmount() - bill.getAdvance());
+
+        // Save the bill
+        Bill savedBill = billService.saveBill(bill);
+
+        // Return the saved bill as DTO
+        return BillDTOMapper.toDTO(savedBill);
     }
 
-    @PostMapping
-    public BillDTO addBill(@RequestParam Long customerId,
-                           @RequestParam String customerName,
-                           @RequestParam String contactNumber,
-                           @RequestBody BillDTO billDTO) {
-        // Add the bill and update customer details
-        return billService.addBill(customerId, customerName, contactNumber, billDTO);
-    }
-
-    @GetMapping
-    public List<BillDTO> getAllBills() {
-        // Get all bills
-        return billService.getAllBills();
+    @GetMapping("/{billId}")
+    public BillDTO getBill(@PathVariable Long billId) {
+        Bill bill = billService.findBillById(billId);
+        if (bill != null) {
+            return BillDTOMapper.toDTO(bill);
+        }
+        return null;
     }
 }

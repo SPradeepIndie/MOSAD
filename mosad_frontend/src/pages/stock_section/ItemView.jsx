@@ -17,6 +17,7 @@ const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location=useLocation();
   const states=location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
+  console.log(states);
   let selectedCategory=states.category;
   let selectedBrand=states.brand;
   const [rows, setRows] = useState([]);
@@ -95,9 +96,32 @@ const ItemView = () => {
       return;
     }
 
+  console.log("Form Data:", formData);  
+  const formatedData = {
+    "itemDTO": {
+      "itemName": formData.itemName,
+      "itemDescription": formData.itemDescription,
+      "companyPrice": parseFloat(formData.companyPrice),
+      "retailPrice": parseFloat(formData.retailPrice),
+      "discount": parseFloat(formData.discount),
+      "categoryId": selectedCategory === "Tyre" ? 1 : 2, // Adjust based on your category IDs
+      "brandId": selectedBrand === "Presa" ? 2 : 1 // Adjust based on your brand IDs
+    },
+    "itemTyreDTO": {
+      "tyreSize": formData.tyreSize,
+      "pattern": formData.pattern,
+      "vehicleType": formData.vehicleType
+    },
+    "itemBranchDTO": {
+      "branchId": 1, // Adjust based on your branch ID
+      "availableQuantity": parseInt(formData.availableQuantity)
+    }
+  };
+
+  console.log(formatedData);
   const request = currentItem
-    ? updateItem(cat_and_brand, formData) 
-    : addItem(cat_and_brand, formData);  
+    ? updateItem(cat_and_brand, formatedData) 
+    : addItem(formatedData);  
 
   request
     .then(() => {
@@ -136,8 +160,25 @@ const ItemView = () => {
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
     }
+
+
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".item-table")) {
+        setSelectedRowId(null); // Deselect row when clicking outside the table
+      }
+    };
+  
+    document.addEventListener("click", handleOutsideClick);
+  
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+
+
   }, [selectedCategory, selectedBrand]);
-  const handleRowClick = (id) => setSelectedRowId(id);
+  const handleRowClick = (id) => {
+    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
+  };
 
   return (
     <>
@@ -188,7 +229,7 @@ const ItemView = () => {
           <button className="btn info">More Info</button>
         </div>
       </div>
-      <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} buttons={false}>
+      <PopUp popUpTitle={currentItem ? "Edit Item" : "Add New Item"} openPopup={isDialogOpen} setOpenPopup={setIsDialogOpen} onSubmit={handleSubmit} setCancelButtonAction={closeDialog} isDefaultButtonsDisplay={false}>
         <ItemDetailsForm
           formData={formData}
           setFormData={setFormData}

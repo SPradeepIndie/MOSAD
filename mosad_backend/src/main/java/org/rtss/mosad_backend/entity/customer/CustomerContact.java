@@ -9,12 +9,19 @@ public class CustomerContact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,length = 10,unique = true)
+    @Column(nullable = false, unique = true)
     private String contactNumber;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
+
+    public CustomerContact() {}
+
+    public CustomerContact(String contactNumber, Customer customer) {
+        this.contactNumber = contactNumber;
+        this.customer = customer;
+    }
 
     // Getters and Setters
     public Long getId() {

@@ -11,7 +11,7 @@
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
 <!--	MOSAD project version up here-->
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
@@ -85,7 +85,7 @@
 			<version>0.12.6</version>
 		</dependency>
 
-<!--	For testing -->
+		<!--	For testing -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useState ,useEffect } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from "@mui/material";
 import { fetchIncompleteTransactions } from "../../services/apiRetailService";
@@ -6,34 +6,34 @@ import useAuth from "../../hooks/useAuth";
 
 const IncompleteTransactions = () => {  
     const [rows, setRows] = useState([]);
-    const [billTransaction,setBillTransaction] =useState([])
-
     const {auth}=useAuth();
-
-    const loadingData=async ()=>{
-        const response = await fetchIncompleteTransactions(auth.username);
-        setBillTransaction(response.data);
-
-        loadingData();
-        setRows([...rows,{
-            date:billTransaction.date,
-            description:billTransaction.description,
-            creditBalance:billTransaction.creditBalance,
-            dueDate:billTransaction.dueDate
-        }])
-        console.log(rows);
-    }
-
+    const loadingData = async () => {
+        try {
+            const response = await fetchIncompleteTransactions(auth.username); // Fetching data using `auth`
     
-
+            // Update rows with id for DataGrid
+            const updatedRows = response.data.map((transaction, index) => ({
+                id: index, // Unique id for each row
+                date: transaction.date,
+                description: transaction.description,
+                balance: transaction.balance,
+                dueDate: transaction.dueDate
+            }));
+            setRows(updatedRows); // Set rows with the new data
+        } catch (error) {
+            console.error("Error fetching incomplete transactions:", error);
+        }
+    };
+    useEffect(() => {
+        loadingData();
+    }, []); 
 
     const columns = [
         { field: "date", headerName: "Date", flex: 1 }, 
         { field: "description", headerName: "Description", flex: 2 },
-        { field: "creditBalance", headerName: "Credit Balance", flex: 1, type: "number" },
+        { field: "balance", headerName: "Credit Balance", flex: 1, type: "number" },
         { field: "dueDate", headerName: "Due Date", flex: 1 }
     ];
-
     return (
         <Box sx={{ height: "calc(100vh - 100px)", width: "100%", padding: 2 }}>
             <Typography variant="h4" gutterBottom>
@@ -51,5 +51,4 @@ const IncompleteTransactions = () => {
         </Box>
     );
 };
-
 export default IncompleteTransactions;

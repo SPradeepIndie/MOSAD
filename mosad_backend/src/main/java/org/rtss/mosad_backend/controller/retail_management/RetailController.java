@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.controller.retail_management;
+/*package org.rtss.mosad_backend.controller.retail_management;
 
 import org.rtss.mosad_backend.dto.retail_management.IncompleteTransactionsDTO;
 import org.rtss.mosad_backend.dto.retail_management.PurchaseHistoryDTO;
@@ -21,17 +21,18 @@ public class RetailController {
     }
 
     @GetMapping("/paymentHistory")
-    public List<PaymentHistoryDTO> getPaymentHistory(@RequestParam String username,Long billId) {
-        return retailService.getPaymentHistory(username,billId);
+    public List<PaymentHistoryDTO> getPaymentHistory(@RequestParam String username) {
+        return retailService.getPaymentHistory(username);
     }
 
     @GetMapping("/purchaseHistory")
     public List<PurchaseHistoryDTO> getPurchaseHistory(@RequestParam String username){
         return retailService.getPurchaseHistory(username);
     }
-    @GetMapping("/incompleteTransactions")
+    @GetMapping("/incompleteTransaction")
     public List<IncompleteTransactionsDTO> getIncompleteTransactions(@RequestParam String username){
         return retailService.getIncompleteTransactions(username);
     }
 
 }
+*/

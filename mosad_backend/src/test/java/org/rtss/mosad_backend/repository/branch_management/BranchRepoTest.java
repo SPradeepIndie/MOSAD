@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.branch_management.BranchContact;
 import org.rtss.mosad_backend.entity.stock_management_entity.Item;
+import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
+import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -18,6 +20,10 @@ class BranchRepoTest {
 
     @Autowired
     private BranchRepo branchRepo;
+    @Autowired
+    private ItemRepo itemRepo;
+
+
 
     @Test
     void shouldFindBranchByBranchName() {
@@ -32,8 +38,16 @@ class BranchRepoTest {
         branchContact.setContactNumber("1234567890");
         branchContact.setBranch(branch);
 
+        Item item=new Item();
+        itemRepo.save(item); // Save the item before creating ItemBranch
+
+        ItemBranch itemBranch=new ItemBranch();
+        itemBranch.setItem(item);
+        itemBranch.setBranch(branch);
+        itemBranch.setAvailableQuantity(200);
+
         branch.setBranchContacts(new HashSet<>(List.of(branchContact)));
-        branch.setItems(new HashSet<>(List.of(new Item())));
+        branch.setItemBranches(new HashSet<>(List.of(itemBranch)));
         branchRepo.save(branch);
 
         //When

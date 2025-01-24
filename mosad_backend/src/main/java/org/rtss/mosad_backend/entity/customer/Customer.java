@@ -1,9 +1,6 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import org.rtss.mosad_backend.entity.credit.Credit;
-
 import java.util.List;
 
 @Entity
@@ -17,28 +14,15 @@ public class Customer {
     private String name;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotEmpty(message = "A customer must have at least one contact number.")
     private List<CustomerContact> contacts;
 
-    //new attribute
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CustomerType customerType;
+    public Customer() {}
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Credit> credits;
-
-    public Customer() {
-    }
-
-    public Customer(Long id, String name, List<CustomerContact> contacts, List<Credit> credits, CustomerType customerType) {
-        this.id = id;
+    public Customer(String name) {
         this.name = name;
-        this.contacts = contacts;
-        this.credits = credits;
-        this.customerType = customerType;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -61,32 +45,5 @@ public class Customer {
 
     public void setContacts(List<CustomerContact> contacts) {
         this.contacts = contacts;
-    }
-
-    public List<Credit> getCredits() {
-        return credits;
-    }
-
-    public void setCredits(List<Credit> credits) {
-        this.credits = credits;
-    }
-
-    public CustomerType getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(CustomerType customerType) {
-        this.customerType = customerType;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", contacts=" + contacts +
-                ", credits=" + credits +
-                ", customerType=" + customerType +
-                '}';
     }
 }

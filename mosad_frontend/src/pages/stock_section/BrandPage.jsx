@@ -1,81 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Tile from '../../component/Tile';
 import { Box, Stack } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import PeopleIcon from '@mui/icons-material/People';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { getBrands } from '../../services/apiStockService';
 
-function BrandPage({isFromBranch}) {
-  const location=useLocation();
-  const states=location.state;
+// Icon mapping for dynamic brands (can be expanded)
+const iconMap = {
+  CEAT: <DescriptionIcon fontSize="large" />,
+  PRESA: <InventoryIcon fontSize="large" />,
+  LINGLONG: <StorefrontIcon fontSize="large" />,
+  RAPID: <CreditCardIcon fontSize="large" />,
+};
+
+function BrandPage({ isFromBranch }) {
+  const location = useLocation();
+  const states = location.state;
+  console.log(states);
+
+  const [brands, setBrands] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await getBrands(states.category);
+        
+        setBrands(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrands();
+  }, []);
+
+  if (loading) {
+    return <h2 style={{ textAlign: 'center' }}>Loading brands...</h2>;
+  }
+
+  if (error) {
+    return <h2 style={{ textAlign: 'center', color: 'red' }}>Error: {error}</h2>;
+  }
 
   return (
-      <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {/* First Row: Three Tiles */}
-        <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
+    <Box sx={{ marginTop: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      {/* Display the brands in rows dynamically */}
+      <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={4}>
+        {brands.map((brand) => (
           <Tile
-            title="CEAT"
-            icon={<DescriptionIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"CEAT"}}
+            key={brand.brandName}
+            title={brand.brandName} // Assume API response has a `brandName` field
+            icon={iconMap[brand.brandName] || <DescriptionIcon fontSize="large" />} // Default icon if not mapped
+            link={`${isFromBranch ? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
+            state={{ ...states, brand: brand.brandName }}
           />
-          <Tile
-            title="PRESA"
-            icon={<InventoryIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"PRESA"}}
-          />
-          <Tile
-            title="LINGLONG"
-            icon={<StorefrontIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"LINGLONG"}}
-          />
-        </Stack>
-
-        {/* Second Row: Three Tiles */}
-        <Stack direction="row" sx={{ gap: '184px', marginBottom: 4 }}>
-          <Tile
-            title="RAPID"
-            icon={<CreditCardIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"RAPID"}}
-          />
-          <Tile
-            title="Atlander"
-            icon={<AccountTreeIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"Atlander"}}
-          />
-          <Tile
-            title="Brand 6"
-            icon={<PeopleIcon fontSize="large" />}
-            link={`${isFromBranch? "/branch/stock/brand/item-view" : "/stock/item-view"}`}
-            state={{...states,brand:"Brand 6"}}
-          />
-        </Stack>
-
-        {/* Last Row: Centered Tile */}
-        <Stack direction="row" justifyContent="center">
-          <Tile
-            title="Brand 7"
-            icon={<AssessmentIcon fontSize="large" />}
-            onClick={() => handleTileClick('')}
-          />
-        </Stack>
-      </Box>
+        ))}
+      </Stack>
+    </Box>
   );
 }
 
-BrandPage.prototype={
-  isFromBranch:PropTypes.bool.isRequired
-}
+BrandPage.propTypes = {
+  isFromBranch: PropTypes.bool.isRequired,
+};
 
 export default BrandPage;
-

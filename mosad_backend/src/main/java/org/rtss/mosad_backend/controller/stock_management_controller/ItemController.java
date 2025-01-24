@@ -1,55 +1,33 @@
 package org.rtss.mosad_backend.controller.stock_management_controller;
 
-import org.rtss.mosad_backend.entity.stock_management_entity.Item;
+import org.rtss.mosad_backend.dto.ResponseDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
 import org.rtss.mosad_backend.service.stock_management_service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/items")
+@RequestMapping("/api/v1/item")
 public class ItemController {
 
     private final ItemService itemService;
 
-    @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
-    // Get all items
-    @GetMapping
-    public ResponseEntity<List<Item>> getAllItems() {
-        return ResponseEntity.ok(itemService.getAllItems());
+
+    @PostMapping("/add")
+    public ResponseDTO addTyreItem(@RequestBody AddItemDTO addItemDTO) {
+        return itemService.addItemTyre(addItemDTO);
     }
 
-    // Get item by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Item> getItemById(@PathVariable Long id) {
-        return itemService.getItemById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/update")
+    public ResponseDTO updateTyreItem(@RequestBody AddItemDTO updateItemDTO) {
+        return itemService.updateItemTyre(updateItemDTO);
     }
 
-    // Create or update item
-    @PostMapping
-    public ResponseEntity<Item> saveItem(@RequestBody Item item) {
-        return ResponseEntity.ok(itemService.saveItem(item));
-    }
-
-    // Delete item
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
-        itemService.deleteItem(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    // Update available quantity
-    @PutMapping("/{id}/update-quantity")
-    public ResponseEntity<Void> updateQuantity(@PathVariable Long id, @RequestParam int quantityChange) {
-        itemService.updateAvailableQuantity(id, quantityChange);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/delete/{itemId}")
+    public ResponseDTO deleteTyreItem(@PathVariable Long itemId) {
+        return itemService.deleteItemTyre(itemId);
     }
 }

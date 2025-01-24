@@ -1,35 +1,30 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
-import org.rtss.mosad_backend.entity.customer.Customer;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
 
 public class BillDTO {
-    private Long id; // Unique identifier for the bill
+
+    private Long billId;
+    private Double totalAmount;
     private Double advance;
-    private Double total;
     private Double balance;
-    private LocalDate date; // Date of the bill
-    private List<BillItemDTO> items; // List of bill items
-    private Customer customer; // Customer object instead of String
+    private LocalDate date;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getBillId() {
+        return billId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setCustomer(Customer customer) { // Accept Customer object
-        this.customer = customer;
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public Double getAdvance() {
@@ -40,14 +35,6 @@ public class BillDTO {
         this.advance = advance;
     }
 
-    public Double getTotalAmount() {
-        return total;
-    }
-
-    public void setTotalAmount(Double total) {
-        this.total = total;
-    }
-
     public Double getBalance() {
         return balance;
     }
@@ -56,24 +43,11 @@ public class BillDTO {
         this.balance = balance;
     }
 
-    // Getter for date (returns java.util.Date)
-    public Date getDate() {
-        if (date == null) {
-            return null; // Handle null case
-        }
-        // Convert LocalDate to java.util.Date
-        return Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    public LocalDate getDate() {
+        return date;
     }
 
-    // Setter for date (accepts java.util.Date)
-    public void setDate(Date date) {
-        if (date != null) {
-            // Convert java.util.Date to LocalDate
-            this.date = date.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
-        } else {
-            this.date = null;
-        }
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

@@ -1,24 +1,21 @@
-package org.rtss.mosad_backend.controller.customer_controller;
+/*package org.rtss.mosad_backend.controller.customer_controller;
 
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.service.customer_management.CustomerService;
+import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
-    private final CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
+    @PostMapping
+    public Customer createCustomer(@RequestParam String name, @RequestParam List<String> contactNumbers) {
+        return customerService.saveCustomer(name, contactNumbers);
     }
-
-    // Other existing methods
-
-    @PutMapping("/{id}/update-details")
-    public CustomerDTO updateCustomerDetails(@PathVariable Long id, @RequestParam String customerName, @RequestParam String contactNumber) {
-        // Update customer and contact details
-        return customerService.updateCustomerDetails(id, customerName, contactNumber);
-    }
-}
+}*/
