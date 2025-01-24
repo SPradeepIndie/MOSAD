@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.service.branch_management;
 
+import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.branch_dtos.BranchContactDTO;
 import org.rtss.mosad_backend.dto.branch_dtos.BranchDTO;
@@ -37,6 +38,7 @@ public class BranchManagementService {
     }
 
     //Delete the branch when branch name gave
+    @Transactional
     public ResponseDTO deleteBranch(String branchName) {
         try {
             Branch branch=getBranchByName(branchName);
@@ -48,25 +50,23 @@ public class BranchManagementService {
     }
 
     //New branch adding
+    @Transactional
     public ResponseDTO addBranch(BranchDetailsDTO branchDetailsDto) {
-        try{
-            checkBranchDetailsValidity(branchDetailsDto);
-            Branch newBranch=branchDTOMapper.branchDTOToBranch(branchDetailsDto.getBranchDto());
-            // Transform and set the branch contacts
-            Set<BranchContact> branchContacts =branchDetailsDto.getBranchContactDtos()
-                    .stream()
-                    .map(branchContactDTOMapper::branchContactDTOToBranchContact)
-                    .collect(Collectors.toSet());
+        checkBranchDetailsValidity(branchDetailsDto);
+        Branch newBranch=branchDTOMapper.branchDTOToBranch(branchDetailsDto.getBranchDto());
+        // Transform and set the branch contacts
+        Set<BranchContact> branchContacts =branchDetailsDto.getBranchContactDTOList()
+                .stream()
+                .map(branchContactDTOMapper::branchContactDTOToBranchContact)
+                .collect(Collectors.toSet());
 
-            // Associate each contact with the updated branch
-            branchContacts.forEach(branchContact -> branchContact.setBranch(newBranch));
-            newBranch.setBranchContacts(branchContacts);
-            // Save the new branch details
-            branchRepo.saveAndFlush(newBranch);
-            return new ResponseDTO(true, "Branch added successfully");
-        }catch (Exception e){
-            return new ResponseDTO(false, e.getMessage());
-        }
+        // Associate each contact with the updated branch
+        branchContacts.forEach(branchContact -> branchContact.setBranch(newBranch));
+        newBranch.setBranchContacts(branchContacts);
+        // Save the new branch details
+        branchRepo.saveAndFlush(newBranch);
+        return new ResponseDTO(true, "Branch added successfully");
+
     }
 
     //Return list of registered branches
@@ -77,42 +77,35 @@ public class BranchManagementService {
 
     //Return branch details and contact number for a specific branch
     public BranchDetailsDTO getBranchDetailsByName(String branchName) {
-        try{
-            Branch branch=getBranchByName(branchName);
-            BranchDTO branchDTO=branchDTOMapper.branchtoBranchDTO(branch);
-            List<BranchContactDTO> branchContactDTO=branch.getBranchContacts().stream().map(branchContactDTOMapper::branchContactToBranchContactDTO).toList();
-            return new BranchDetailsDTO(branchDTO,branchContactDTO);
-        }catch (Exception e){
-            return new BranchDetailsDTO(null,null);
-        }
+        Branch branch=getBranchByName(branchName);
+        BranchDTO branchDTO=branchDTOMapper.branchtoBranchDTO(branch);
+        List<BranchContactDTO> branchContactDTO=branch.getBranchContacts().stream().map(branchContactDTOMapper::branchContactToBranchContactDTO).toList();
+        return new BranchDetailsDTO(branchDTO,branchContactDTO);
+
 
     }
 
     //Update the branch Details by  branch username
+    @Transactional
     public ResponseDTO updateBranch(String branchName,BranchDetailsDTO branchDetailsDto) {
-        try{
-            checkBranchDetailsValidity(branchDetailsDto);
-            Branch oldBranchDetails=getBranchByName(branchName);
-            Branch newBranchDetails=branchDTOMapper.branchDTOToBranch(branchDetailsDto.getBranchDto());
-            newBranchDetails.setBranchId(oldBranchDetails.getBranchId());
-            // Transform and set the branch contacts
-            Set<BranchContact> branchContacts = branchDetailsDto.getBranchContactDtos()
-                    .stream()
-                    .map(branchContactDTOMapper::branchContactDTOToBranchContact)
-                    .collect(Collectors.toSet());
+        checkBranchDetailsValidity(branchDetailsDto);
+        Branch oldBranch=getBranchByName(branchName);
+        Branch newBranch=branchDTOMapper.branchDTOToBranch(branchDetailsDto.getBranchDto());
+        newBranch.setBranchId(oldBranch.getBranchId());
+        // convert branchContactDTO to branchContact set
+        Set<BranchContact> branchContacts = branchDetailsDto.getBranchContactDTOList()
+                .stream()
+                .map(branchContactDTOMapper::branchContactDTOToBranchContact)
+                .collect(Collectors.toSet());
 
-            // Associate each contact with the updated branch
-            branchContacts.forEach(branchContact -> branchContact.setBranch(newBranchDetails));
-            newBranchDetails.setBranchContacts(branchContacts);
+        // Associate each contact with the updated branch
+        branchContacts.forEach(branchContact -> branchContact.setBranch(newBranch));
+        newBranch.setBranchContacts(branchContacts);
 
-            // Save the updated branch details
-            branchRepo.save(newBranchDetails);
+        // Save the updated branch details
+        branchRepo.saveAndFlush(newBranch);
 
-            return new ResponseDTO(true, "Branch updated successfully");
-        }catch (Exception e){
-            return new ResponseDTO(false, "Branch update failed: " + e.getMessage());
-        }
-
+        return new ResponseDTO(true, "Branch updated successfully");
     }
 
     //Return the Branch details according to the branch name
@@ -127,7 +120,7 @@ public class BranchManagementService {
     private void checkBranchDetailsValidity(BranchDetailsDTO branchDetailsDto) {
         dtoValidator.validate(branchDetailsDto);
         dtoValidator.validate(branchDetailsDto.getBranchDto());
-        branchDetailsDto.getBranchContactDtos().forEach(dtoValidator::validate);
+        branchDetailsDto.getBranchContactDTOList().forEach(dtoValidator::validate);
     }
 
     //Return the Branch by the name

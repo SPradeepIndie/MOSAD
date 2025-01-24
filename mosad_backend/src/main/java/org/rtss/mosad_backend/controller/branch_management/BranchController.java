@@ -30,7 +30,7 @@ public class BranchController {
     }
 
     //Create a new branch
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ResponseDTO> createBranch(@RequestBody BranchDetailsDTO branchDetailsDto) {
         return ResponseEntity.ok(branchManagementService.addBranch(branchDetailsDto));
     }
@@ -49,7 +49,7 @@ public class BranchController {
     }
 
     //Update a branch details
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<ResponseDTO> updateBranchById(@RequestParam String branchName,
                                                    @RequestBody BranchDetailsDTO branchDetailsDto) {
         String escapedBranchName = validateHtmlPathVariable.escapeHTMLSpecialCharacters(branchName);

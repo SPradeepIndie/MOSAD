@@ -9,14 +9,14 @@ public class BranchDetailsDTO {
     @NotNull(message = "BranchDTO can not be bull")
     private BranchDTO branchDto;
     @NotNull(message = "Branch contacts can not be null")
-    private List<BranchContactDTO> branchContactDtos;
+    private List<BranchContactDTO> branchContactDTOList;
 
     public BranchDetailsDTO() {
     }
 
-    public BranchDetailsDTO(BranchDTO branchDto, List<BranchContactDTO> branchContactDtos) {
+    public BranchDetailsDTO(BranchDTO branchDto, List<BranchContactDTO> branchContactDTOList) {
         this.branchDto = branchDto;
-        this.branchContactDtos = branchContactDtos;
+        this.branchContactDTOList = branchContactDTOList;
     }
 
     public BranchDTO getBranchDto() {
@@ -27,11 +27,11 @@ public class BranchDetailsDTO {
         this.branchDto = branchDto;
     }
 
-    public List<BranchContactDTO> getBranchContactDtos() {
-        return branchContactDtos;
+    public List<BranchContactDTO> getBranchContactDTOList() {
+        return branchContactDTOList;
     }
 
-    public void setBranchContactDtos(List<BranchContactDTO> branchContactDtos) {
-        this.branchContactDtos = branchContactDtos;
+    public void setBranchContactDTOList(List<BranchContactDTO> branchContactDTOList) {
+        this.branchContactDTOList = branchContactDTOList;
     }
 }
