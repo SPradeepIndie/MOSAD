@@ -17,4 +17,9 @@ public class ItemTyreDTOMapper {
     public ItemTyre toEntity(ItemTyreDTO itemTyreDTO){
         return  modelMapper.map(itemTyreDTO,ItemTyre.class);
     }
+
+    //to DTO
+    public ItemTyreDTO toDTO (ItemTyre itemTyre){
+        return modelMapper.map(itemTyre,ItemTyreDTO.class);
+    }
 }
