@@ -1,7 +1,10 @@
 import apiClient from './api_config/apiClient';
 
+
+
+
 export const fetchItems=(data)=>{
-    return apiClient.get('/item-view',data);
+    return apiClient.get('/item/view',data);
 }
 
 export const fetchBrands=()=>{
@@ -13,29 +16,46 @@ export const fetchBrandAndSizeData=(brand,size)=>{
 }
 
 
-export const updateItem = (itemId, data) => {
-    return apiClient.put(`/update/${itemId}`, data);
+
+export const deleteItem = (itemId) => {
+    return apiClient.delete('/item/delete', { params: { itemId } });
 };
 
-
-export const deleteItem = (category, brand, itemId) => {
-    return apiClient.delete('/delete', { params: { category, brand, itemId } });
-};
 
 //stock redesign
+
+
 export const fetchCategories =()=>{
     return apiClient.get('/category');
-};
-
-export const getBrands =(category)=>{
-    return apiClient.get(`/brand?catName=${category}`);
 };
 
 export const addCategory =(categoryName) => {
     return apiClient.post('/category', { categoryName });
   };
 
-  export const addItem=(data)=>{
+export const getBrands =(category)=>{
+    return apiClient.get(`/brand?catName=${category}`);
+};
+
+export const addBrand =(categoryName,brandName)=>{
+    const payload = {
+        brandDTO: {
+          brandName: brandName,
+        },
+        category: {
+          categoryName: categoryName,
+        },
+      };
+    
+      return apiClient.post('/brand', payload);
+};
+
+export const addItem=(data)=>{
     return apiClient.post('/item/add',data);
 } 
+
+export const updateItem=(data)=>{
+    return apiClient.put('/item/update',data);
+} 
+
 

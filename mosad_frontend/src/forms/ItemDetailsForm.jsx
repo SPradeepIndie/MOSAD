@@ -34,8 +34,8 @@ const ItemDetailsForm = ({ formData,handleChange,errors,onSubmit,closeDialog }) 
               onChange={(e) =>
                 handleChange(key, e.target.value)
               }
-              required={key !== "itemID"} // Mark all fields except 'itemID' as required
-              disabled={key === "itemID"} // Disable the 'itemID' field
+              required={key !== "itemId"} // Mark all fields except 'itemId' as required
+              disabled={key==="itemId"} // Disable the 'itemId' field
               error={!!errors[key]} // Highlight the field in red if it has an error
               helperText={errors[key] || ""} // Show error message if available
               fullWidth

@@ -68,7 +68,20 @@ function StockPage({ isFromBranch }) {
   return (
     <>
       <Outlet />
-      <h1 style={{ textAlign: 'center' }}>Select a Category</h1>
+      <h1 style={{ textAlign: 'center',color:'black' }}>Select a Category</h1>
+
+    {/* Success or Error Messages */}
+    {successMessage && (
+        <Alert severity="success" sx={{ marginTop: 2,zIndex:1300 }}>
+          {successMessage}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ marginTop: 2,zIndex:1300 }}>
+          {error}
+        </Alert>
+      )}
+
       <Box sx={{ marginTop: 4 }}>
         <Grid2 container spacing={4} justifyContent="center">
           {categories.map((category) => (
@@ -125,17 +138,7 @@ function StockPage({ isFromBranch }) {
         </DialogActions>
       </Dialog>
 
-      {/* Success or Error Messages */}
-      {successMessage && (
-        <Alert severity="success" sx={{ marginTop: 2,zIndex:1300 }}>
-          {successMessage}
-        </Alert>
-      )}
-      {error && (
-        <Alert severity="error" sx={{ marginTop: 2,zIndex:1300 }}>
-          {error}
-        </Alert>
-      )}
+      
     </>
   );
 }

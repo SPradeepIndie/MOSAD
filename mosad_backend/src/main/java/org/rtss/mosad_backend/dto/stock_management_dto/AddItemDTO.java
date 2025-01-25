@@ -5,8 +5,17 @@ public class AddItemDTO {
 
     private ItemDTO itemDTO;
     private ItemTyreDTO itemTyreDTO;
-    private ItemBatteryDTO itemBatteryDTO;
     private ItemBranchDTO itemBranchDTO;
+
+    public AddItemDTO(){}
+
+    public AddItemDTO(ItemDTO itemDTO, ItemTyreDTO itemTyreDTO, ItemBranchDTO itemBranchDTO) {
+        this.itemDTO = itemDTO;
+        this.itemTyreDTO = itemTyreDTO;
+        this.itemBranchDTO = itemBranchDTO;
+    }
+
+
 
     // Getters and Setters
     public ItemDTO getItemDTO() {
@@ -33,11 +42,4 @@ public class AddItemDTO {
         this.itemBranchDTO = itemBranchDTO;
     }
 
-    public ItemBatteryDTO getItemBatteryDTO() {
-        return itemBatteryDTO;
-    }
-
-    public void setItemBatteryDTO(ItemBatteryDTO itemBatteryDTO) {
-        this.itemBatteryDTO = itemBatteryDTO;
-    }
 }

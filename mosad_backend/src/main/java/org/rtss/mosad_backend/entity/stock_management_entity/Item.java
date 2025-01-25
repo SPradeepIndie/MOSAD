@@ -33,6 +33,9 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private Set<ItemBranch> itemBranches;
 
+    @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
+    private ItemTyre itemTyre;
+
 
 
 

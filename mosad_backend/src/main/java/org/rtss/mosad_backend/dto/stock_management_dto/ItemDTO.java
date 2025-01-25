@@ -21,23 +21,23 @@ public class ItemDTO {
     @Max(value = 100, message = "Discount cannot be greater than 100")
     private double discount;
 
-    @NotNull(message = "Category ID cannot be null")
-    private Long categoryId;
+    @NotNull(message = "Category  cannot be null")
+    private String category;
 
-    @NotNull(message = "Brand ID cannot be null")
-    private Long brandId;
+    @NotNull(message = "Brand  cannot be null")
+    private String brand;
 
     public ItemDTO() {}
 
-    public ItemDTO(Long itemId, String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, Long categoryId, Long brandId) {
+    public ItemDTO(Long itemId, String itemName, String itemDescription, double companyPrice, double retailPrice, double discount, String category, String brand) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.companyPrice = companyPrice;
         this.retailPrice = retailPrice;
         this.discount = discount;
-        this.categoryId = categoryId;
-        this.brandId = brandId;
+        this.category = category;
+        this.brand = brand;
     }
 
     // Getters and Setters
@@ -87,19 +87,19 @@ public class ItemDTO {
         this.discount = discount;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public Long getBrandId() {
-        return brandId;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setBrandId(Long brandId) {
-        this.brandId = brandId;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }
