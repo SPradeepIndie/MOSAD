@@ -1,31 +1,79 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
+@Table(name = "bills")
 public class Bill {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long billId;
-
+    private Long id;
     private Double totalAmount;
     private Double advance;
     private Double balance;
-    private LocalDate date;
 
-    // Getters and Setters
-    public Long getBillId() {
-        return billId;
+    @Column(nullable = false, updatable = false)
+    private Date date;
+
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    private List<BillItem> items = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id",nullable = true)
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setBillId(Long billId) {
-        this.billId = billId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public Bill(Double totalAmount, Double advance, Double balance, Date date) {
+        this.totalAmount = totalAmount;
+        this.advance = advance;
+        this.balance = balance;
+        this.date = date;
+    }
+
+    public Bill() {}
+
+
+    // Getters and Setters
+
+    public List<BillItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BillItem> items) {
+        this.items = items;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Double getTotalAmount() {
@@ -44,6 +92,14 @@ public class Bill {
         this.advance = advance;
     }
 
+    public java.util.Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public Double getBalance() {
         return balance;
     }
@@ -52,11 +108,6 @@ public class Bill {
         this.balance = balance;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
+
 }

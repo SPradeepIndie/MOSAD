@@ -1,45 +1,35 @@
 package org.rtss.mosad_backend.controller.bill_management;
 
-import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
-import org.rtss.mosad_backend.dto_mapper.BillDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.service.bill_management.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("/api/v1/bills")
 public class BillController {
-
     @Autowired
     private BillService billService;
 
-    @PostMapping("/create")
-    public BillDTO createBill(@RequestBody BillDTO billDTO) {
-        // Create the Bill entity
-        Bill bill = BillDTOMapper.toEntity(billDTO);
-
-        // Set the current date
-        bill.setDate(LocalDate.now());
-
-        // Calculate balance
-        bill.setBalance(bill.getTotalAmount() - bill.getAdvance());
-
-        // Save the bill
+    @PostMapping
+    public ResponseEntity<Bill> createBill(@RequestBody Bill bill) {
         Bill savedBill = billService.saveBill(bill);
-
-        // Return the saved bill as DTO
-        return BillDTOMapper.toDTO(savedBill);
+        return new ResponseEntity<>(savedBill, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{billId}")
-    public BillDTO getBill(@PathVariable Long billId) {
-        Bill bill = billService.findBillById(billId);
-        if (bill != null) {
-            return BillDTOMapper.toDTO(bill);
-        }
-        return null;
+    @GetMapping
+    public ResponseEntity<List<Bill>> getAllBills() {
+        return ResponseEntity.ok(billService.getAllBills());
     }
+
+    /*@GetMapping("/{id}")
+    public ResponseEntity<Bill> getBillById(@PathVariable Long id) {
+        return billService.getBillById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }*/
 }

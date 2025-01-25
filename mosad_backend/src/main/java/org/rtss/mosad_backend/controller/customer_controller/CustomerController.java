@@ -1,7 +1,7 @@
-/*package org.rtss.mosad_backend.controller.customer_controller;
+package org.rtss.mosad_backend.controller.customer_controller;
 
 import org.rtss.mosad_backend.entity.customer.Customer;
-import org.rtss.mosad_backend.service.CustomerService;
+import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,4 +18,4 @@ public class CustomerController {
     public Customer createCustomer(@RequestParam String name, @RequestParam List<String> contactNumbers) {
         return customerService.saveCustomer(name, contactNumbers);
     }
-}*/
+}

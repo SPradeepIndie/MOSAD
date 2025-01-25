@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.service.account_management;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.*;
-import org.rtss.mosad_backend.dto_mapper.user_dto_mapperUserContactDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
