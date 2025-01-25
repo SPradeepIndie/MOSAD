@@ -1,30 +1,45 @@
 import React, { useState,useEffect } from 'react';
-import { Box, Button, Paper, TextField, Typography,Stack,Grid2 } from '@mui/material';
+import { Box, Button, Paper, Typography,Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { fetchAllBranchNames,fetchBranchDetailsByName } from '../../services/apiBranchService';
+import BranchDetailForm from '../../forms/BranchDetailForm';
+import PopUp from '../../component/PopUp';
 
-
-const initialBranchDetails={
-    branchName:"",
-    contactNumber:"",
-    address:""
+const initialBranch={
+    branchDto:{
+        branchName:"",
+        addressNumber:"",
+        streetName:"",
+        city:""
+    },
+    branchContactDTOList:[
+        {
+            contactNumber:""
+        }
+    ]
 }
 
 const BranchPage=()=>{
     const userRole="admin";
-    const [allBranchName,setAllBranchName]=useState([]);
 
-    //load the all branch names at the rendering
-    useEffect(() => {
-        setAllBranchName(["branch1","branch2"])
-    }, []);
-    /*
-    * Don't use dependency as 'allBranchName' in useEffect
-    * Bevuase it tendss to create a infinite loop and freeze the whole process 
-    */
+    //Set curently selected branch
+    const [selectedBranch,setselectedBranch]=useState("");
 
-    //load a branch detials accrdgin to the branch name
-    
+    const [allBranchNames,setAllBranchNames]=useState([]);
+    const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
 
+    const loadAllBranches=()=>{
+        setIsLoadingBranchNames(true)
+        fetchAllBranchNames().then((response)=>{
+            setAllBranchNames(response.data)
+        }).finally(()=>{
+            setIsLoadingBranchNames(false);
+        }
+        )
+    }
+
+    //------------------------------------------------------------------------
+    //load a branch detials according to the branch name
     const BranchPaper = styled(Paper)(({ theme }) => ({
         width: '10rem',
         height: '5rem',
@@ -37,19 +52,46 @@ const BranchPage=()=>{
         cursor: 'pointer',
     }));
 
-    const[branchDetails,setBranchDetails]=useState(initialBranchDetails);
-    
-    const handleBranchDetails=(event)=>{
-        const {name,value}=event.target;
-        setBranchDetails({...branchDetails,[name]:[value]})
+    const[branchDetails,setBranchDetails]=useState(initialBranch);
+    const [isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
+
+    const handleBranchCardOnClick=(branchName)=>{
+        setIsLoadingBranchDetails(true)
+        fetchBranchDetailsByName(branchName).then((response)=>{
+            setBranchDetails(response.data);
+        }).finally(()=>{
+            setIsLoadingBranchDetails(false);
+            setselectedBranch(branchName);
+        })
     }
     
     const handleSubmit = (event) => {
         event.preventDefault();
         // Handle form submission logic here
-        console.log(branchDetails);
-        
+        console.log(branchDetails);   
     };
+
+    //--------------------------------------------------------------------
+    // load the all branch names at the rendering
+    /*
+    * Don't use dependency as 'allBranchNames' in useEffect
+    * Becuase it tendss to create a infinite loop and freeze the whole process 
+    */
+    useEffect(() => {
+        loadAllBranches();
+    }, []);
+
+    //--------------------------------------------------------------------
+    //pop up handling
+    const[addBranchPopUp,setAddBranchPopUp]=useState(false)
+    const setOkButtonAction=(event)=>{
+        handleSubmit(event)
+    }
+    const setCancelButtonAction=()=>{
+        //resetTheForm()
+        setAddBranchPopUp(false)
+    }
+
 
     return(
         <>
@@ -60,75 +102,46 @@ const BranchPage=()=>{
                 borderBottom:3,
                 borderColor:'rgba(46, 139, 88, 1)'
             }}>
-            {allBranchName.map((item,index)=>(
-                <BranchPaper  key={index} variant="elevation">{item}</BranchPaper>
-            ))}
+                {!isLoadingBranchNames &&
+                    allBranchNames.map((item,index)=>(
+                        <BranchPaper  key={index} variant="elevation" onClick={() => {
+                            handleBranchCardOnClick(item)}
+                        } >{item}</BranchPaper>
+                    ))
+                }
+           
         </Stack>}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',mt:2}}>
-        <Typography variant="h5" component="h2" gutterBottom>
-            Branch Details
-        </Typography>
-        <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={2}>
-            <Grid2 size={{xs:12 ,md:6}}>
-                <Typography  component="label" htmlFor="Branch_name" >
-                    Branch Name:
-                </Typography>
-                <TextField
-                id="Branch_name"
-                name="branchName"
-                label="Branch Name"
-                variant="outlined"
-                fullWidth
-                value={branchDetails.branchName}
-                onChange={handleBranchDetails}
-                />
-            </Grid2>
-            <Grid2 size={{xs:12, md:6}}>
-                <Typography  component="label" htmlFor="Contact_number" >
-                Contact Number:
-                </Typography>
-                <TextField
-                id="Contact_number"
-                name="contactNumber"
-                label="Contact Number"
-                variant="outlined"
-                fullWidth
-                value={branchDetails.contactNumber}
-                onChange={handleBranchDetails}
-                />
-            </Grid2>
-            <Grid2 size={{xs:6}}>
-                <Typography  component="label" htmlFor="address" >
-                Address:
-                </Typography>
-                <TextField
-                id="address"
-                name="address"
-                label="Address"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={4}
-                value={branchDetails.address}
-                onChange={handleBranchDetails}
-                />
-            </Grid2>
-            <Grid2 size={{xs:12}}>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained" color="primary" type="submit">
-                    Update
-                    </Button>
-                    <Button variant="contained" color="error">
-                    Delete
-                    </Button>
-                    {userRole==="admin" && <Button variant="contained">Add new branch</Button>}
-                </Stack>
-                
-            </Grid2>
-            </Grid2>
-        </form>
+            <Typography variant="h5" component="h2" gutterBottom>
+                Branch Details
+            </Typography>
+                <Paper elevation={2} sx={{p:2}}>
+                    {!isLoadingBranchDetails &&
+                        <BranchDetailForm handleSubmit={handleSubmit} branchDetails={branchDetails} setBranchDetails={setBranchDetails}/>
+                    }
+                </Paper>
+               
+                <Paper elevation={1} sx={{p:1,m:2,width:'100%'}}>
+                    <Stack direction="row" spacing={2} >
+                        <Button variant="contained" color="primary">
+                            Update
+                        </Button>
+                        <Button  variant="contained" color="error">
+                            Delete
+                        </Button>
+                        {userRole==="admin" && <Button type="submit" variant="contained" onClick={()=>setAddBranchPopUp(true)}>Add new branch</Button>}
+                    </Stack>  
+                </Paper>
+                 <PopUp 
+                    popUpTitle={"Add New Branch"}
+                    openPopup={addBranchPopUp}
+                    isDefaultButtonsDisplay={true}
+                    setOpenPopup={setAddBranchPopUp}
+                    setOkButtonAction={setOkButtonAction}
+                    setCancelButtonAction={setCancelButtonAction}>
+                <BranchDetailForm handleSubmit={handleSubmit} branchDetails={branchDetails} setBranchDetails={setBranchDetails}/>
+                </PopUp>
         </Box>
     </>
     );

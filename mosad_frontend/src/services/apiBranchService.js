@@ -5,7 +5,7 @@ export const fetchAllBranchNames=()=>{
 }
 
 export const fetchBranchDetailsByName=(data)=>{
-    return apiClient.post('/branch/view/name',JSON.stringify(data));
+    return apiClient.get('/branch/view',{params:{branchName:data}});
 }
 
 export const udpateBranch=(data)=>{

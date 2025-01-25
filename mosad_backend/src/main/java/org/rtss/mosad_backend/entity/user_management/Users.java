@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.entity.user_management;
 
 import jakarta.persistence.*;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -33,6 +34,7 @@ public class Users implements UserDetails {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private Set<UserContacts> userContacts;
+
 
     public Users() {
     }

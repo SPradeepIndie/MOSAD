@@ -145,7 +145,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         />
                     </Grid>
                     <Grid size={{ xs: 2,sm:6}} alignContent={"end"}>
-                        <IconButton disabled={!editMode} aria-label="delete" onClick={addNewContact}>
+                        <IconButton disabled={!editMode} onClick={addNewContact}>
                             <AddIcon />
                         </IconButton>
                     </Grid>

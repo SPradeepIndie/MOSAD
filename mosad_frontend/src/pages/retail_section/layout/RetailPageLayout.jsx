@@ -35,15 +35,12 @@ const RetailPageLayout=()=>{
       
         return(
             <>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} >
-                        {renderTabs()}
-                    </Tabs>
-                </Box>
-                <Suspense fallback={<h1>Loading...</h1>}>
-                    <Outlet/>
-                </Suspense>
-                
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={value} onChange={handleChange} >
+                    {renderTabs()}
+                </Tabs>
+            </Box>
+            <Outlet/>                  
             </>
          
         )
