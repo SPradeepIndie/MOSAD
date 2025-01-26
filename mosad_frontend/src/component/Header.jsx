@@ -17,6 +17,7 @@ function HeaderBar() {
     setAuth({refresh_token:"",Authenticated:false,username:""}) 
     // Remove token from local storage
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
 
     //send logout request to db
     logout();

@@ -18,7 +18,6 @@ const ItemView = () => {
   //Store passed Category and Brand using Link state & useLocation
   const location = useLocation();
   const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  console.log(states);
   let selectedCategory = states.category;
   let selectedBrand = states.brand;
   let selectedBranch = 1; //Adjust based on your branch ID
@@ -97,7 +96,6 @@ const ItemView = () => {
       fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch } })
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
-      console.log(rows);
     }
   }
 
@@ -306,13 +304,13 @@ const ItemView = () => {
           onSubmit={handleSubmit}
           closeDialog={closeDialog}
         />
-
+      {console.log(formData)}
       </PopUp>
       <PopUp
         popUpTitle="Price Details"
         openPopup={isPriceDetailsPopupOpen}
-         setOpenPopup={setIsPriceDetailsPopupOpen}
-         onSubmit={() => setIsPriceDetailsPopupOpen(false)} 
+        setOpenPopup={setIsPriceDetailsPopupOpen}
+        onSubmit={() => setIsPriceDetailsPopupOpen(false)} 
         setCancelButtonAction={() => setIsPriceDetailsPopupOpen(false)} 
         isDefaultButtonsDisplay={false} 
       >

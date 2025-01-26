@@ -72,7 +72,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
@@ -88,7 +88,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }}
                         />
@@ -106,7 +106,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                             fullWidth 
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: "#000000",
+                                  WebkitTextFillColor: "#616161",
                               },
                             }}
                         />
@@ -123,7 +123,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     />
@@ -139,7 +139,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
@@ -185,7 +185,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         label="Role"
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     >

@@ -7,6 +7,7 @@ import org.rtss.mosad_backend.dto.branch_dtos.BranchDTO;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.branch_management.BranchContact;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
+import org.rtss.mosad_backend.entity.user_management.Users;
 
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +36,8 @@ class BranchDTOMapperTest {
                 "street road",
                 "main city",
                 new HashSet<>(List.of(new BranchContact())),
-                new HashSet<>(List.of(new ItemBranch()))
+                new HashSet<>(List.of(new ItemBranch())),
+                new HashSet<>(List.of(new Users()))
         );
 
         //When

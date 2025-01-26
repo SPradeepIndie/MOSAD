@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Box, Button, Paper, Typography,Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { fetchAllBranchNames,fetchBranchDetailsByName } from '../../services/apiBranchService';
+import { fetchAllBranchNames,fetchBranchDetailsByName,deleteBranch,udpateBranch,addBranch } from '../../services/apiBranchService';
 import BranchDetailForm from '../../forms/BranchDetailForm';
 import PopUp from '../../component/PopUp';
 
@@ -18,16 +18,19 @@ const initialBranch={
         }
     ]
 }
-
-const BranchPage=()=>{
+const initialContact={
+    contactNumber:""
+}
+const BranchPage=()=>{    
+    //--------------------------------Main page------------------------------------
     const userRole="admin";
-
-    //Set curently selected branch
-    const [selectedBranch,setselectedBranch]=useState("");
-
-    const [allBranchNames,setAllBranchNames]=useState([]);
-    const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
-
+    const [contactNumber,setContactNumber]=useState(initialContact);//handle contact number
+    const[selectedBranch,setselectedBranch]=useState("");//Set curently selected branch
+    const[allBranchNames,setAllBranchNames]=useState([]);// load the all branch names at the rendering
+    const[isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
+    const[branchDetails,setBranchDetails]=useState(initialBranch);//load a branch detials according to the selcted card
+    const[isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
+    const [editMode,setEditMode]=useState(false); //Set text feilds disability
     const loadAllBranches=()=>{
         setIsLoadingBranchNames(true)
         fetchAllBranchNames().then((response)=>{
@@ -37,9 +40,14 @@ const BranchPage=()=>{
         }
         )
     }
-
-    //------------------------------------------------------------------------
-    //load a branch detials according to the branch name
+    /*
+    * Don't use dependency as 'allBranchNames' in useEffect
+    * Becuase it tendss to create a infinite loop and freeze the whole process 
+    */
+    useEffect(() => {
+        loadAllBranches();
+    }, []);
+    
     const BranchPaper = styled(Paper)(({ theme }) => ({
         width: '10rem',
         height: '5rem',
@@ -51,11 +59,8 @@ const BranchPage=()=>{
         },
         cursor: 'pointer',
     }));
-
-    const[branchDetails,setBranchDetails]=useState(initialBranch);
-    const [isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
-
     const handleBranchCardOnClick=(branchName)=>{
+        setEditMode(false)
         setIsLoadingBranchDetails(true)
         fetchBranchDetailsByName(branchName).then((response)=>{
             setBranchDetails(response.data);
@@ -64,34 +69,68 @@ const BranchPage=()=>{
             setselectedBranch(branchName);
         })
     }
-    
-    const handleSubmit = (event) => {
+    const handleDelete=()=>{
+        if(selectedBranch){
+            if(confirm("confirm branch deletion named: "+selectedBranch))
+            deleteBranch(selectedBranch).then((response)=>{
+                alert(response.data.message);
+            }).finally(()=>{
+                loadAllBranches();
+                setBranchDetails(initialBranch);
+            })
+        }
+        else{
+            alert("Please select a branch first! ")
+        }
+    }
+    //Handle Update
+    const handleUpdatedDetailsSubmit=(event)=>{
+        if(!addBranchPopUp){
+            udpateBranch(branchDetails,selectedBranch).then((response)=>{
+                alert(response.data.message);
+            }).finally(()=>{
+                setEditMode(false)
+            })
+        }
+    }
+    //Rest the BranchPage Form
+    const handleEditMode=()=>{
+        if(editMode){
+            setEditMode(false)
+            handleBranchCardOnClick(selectedBranch)
+        }
+        else{
+            setEditMode(true)
+        }
+        
+    }
+
+    //--------------------------------Add new branch pop up------------------------------------
+    const[addBranchPopUp,setAddBranchPopUp]=useState(false)//Adding branch pop up handling
+    const[newbranchDetails,setNewBranchDetails]=useState(initialBranch);//new branch deails use State
+
+    //Handle new branch submition
+    const handleNewDetailsSubmit = (event) => {
         event.preventDefault();
-        // Handle form submission logic here
-        console.log(branchDetails);   
+        console.log(newbranchDetails);
+        addBranch(newbranchDetails).then((response)=>{
+            alert(response.data.message);
+        }).finally(()=>{
+            resetNewBranchAddingForm()
+        })   
     };
-
-    //--------------------------------------------------------------------
-    // load the all branch names at the rendering
-    /*
-    * Don't use dependency as 'allBranchNames' in useEffect
-    * Becuase it tendss to create a infinite loop and freeze the whole process 
-    */
-    useEffect(() => {
-        loadAllBranches();
-    }, []);
-
-    //--------------------------------------------------------------------
-    //pop up handling
-    const[addBranchPopUp,setAddBranchPopUp]=useState(false)
     const setOkButtonAction=(event)=>{
-        handleSubmit(event)
-    }
+        handleNewDetailsSubmit(event);
+    };
     const setCancelButtonAction=()=>{
-        //resetTheForm()
+        resetNewBranchAddingForm()
         setAddBranchPopUp(false)
+        loadAllBranches()
+    };
+    const resetNewBranchAddingForm=()=>{
+        setNewBranchDetails(initialBranch);
+        setContactNumber(initialContact);
     }
-
 
     return(
         <>
@@ -118,19 +157,32 @@ const BranchPage=()=>{
             </Typography>
                 <Paper elevation={2} sx={{p:2}}>
                     {!isLoadingBranchDetails &&
-                        <BranchDetailForm handleSubmit={handleSubmit} branchDetails={branchDetails} setBranchDetails={setBranchDetails}/>
+                        <BranchDetailForm 
+                            handleSubmit={handleUpdatedDetailsSubmit} 
+                            branchDetails={branchDetails} 
+                            setBranchDetails={setBranchDetails}
+                            editMode={editMode}
+                            contactNum={contactNumber}
+                            setContactNum={setContactNumber}
+                        />
                     }
                 </Paper>
                
                 <Paper elevation={1} sx={{p:1,m:2,width:'100%'}}>
                     <Stack direction="row" spacing={2} >
-                        <Button variant="contained" color="primary">
-                            Update
+                        {editMode && 
+                        <Button variant="contained" color="primary" onClick={handleUpdatedDetailsSubmit}>
+                            Save
+                        </Button> }
+                        <Button variant="contained" color="primary" onClick={()=>handleEditMode()}>
+                            {!editMode ? "Update" : "Reset" }
                         </Button>
-                        <Button  variant="contained" color="error">
+                        <Button  variant="contained" color="error" onClick={handleDelete}>
                             Delete
                         </Button>
-                        {userRole==="admin" && <Button type="submit" variant="contained" onClick={()=>setAddBranchPopUp(true)}>Add new branch</Button>}
+                        {userRole==="admin" && <Button type="submit" variant="contained" onClick={()=>setAddBranchPopUp(true)}>
+                                Add new branch
+                        </Button>}
                     </Stack>  
                 </Paper>
                  <PopUp 
@@ -140,7 +192,14 @@ const BranchPage=()=>{
                     setOpenPopup={setAddBranchPopUp}
                     setOkButtonAction={setOkButtonAction}
                     setCancelButtonAction={setCancelButtonAction}>
-                <BranchDetailForm handleSubmit={handleSubmit} branchDetails={branchDetails} setBranchDetails={setBranchDetails}/>
+                <BranchDetailForm 
+                    handleSubmit={handleNewDetailsSubmit} 
+                    branchDetails={newbranchDetails} 
+                    setBranchDetails={setNewBranchDetails}
+                    editMode={true}
+                    contactNum={contactNumber}
+                    setContactNum={setContactNumber}
+                />
                 </PopUp>
         </Box>
     </>

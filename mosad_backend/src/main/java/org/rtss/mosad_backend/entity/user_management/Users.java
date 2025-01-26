@@ -35,11 +35,14 @@ public class Users implements UserDetails {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private Set<UserContacts> userContacts;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
 
     public Users() {
     }
 
-    public Users(Integer userId, String username, String password, String firstName, String lastName, String email, UserRoles userRoles, Set<UserContacts> userContacts) {
+    public Users(Integer userId, String username, String password, String firstName, String lastName, String email, UserRoles userRoles, Set<UserContacts> userContacts, Branch branch) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -48,6 +51,7 @@ public class Users implements UserDetails {
         this.email = email;
         this.userRoles = userRoles;
         this.userContacts = userContacts;
+        this.branch = branch;
     }
 
     public Integer getUserId() {
@@ -139,6 +143,14 @@ public class Users implements UserDetails {
         this.userContacts = userContacts;
     }
 
+    public Branch getBranch() {
+        return branch;
+    }
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
+
     @Override
     public String toString() {
         return "Users{" +
@@ -150,6 +162,7 @@ public class Users implements UserDetails {
                 ", email='" + email + '\'' +
                 ", userRoles=" + userRoles +
                 ", userContacts=" + userContacts +
+                ", branch=" + branch +
                 '}';
     }
 }

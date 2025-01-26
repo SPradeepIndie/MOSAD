@@ -1,32 +1,47 @@
-import React,{useState} from 'react'
-import { Grid2,Typography,TextField,IconButton,Paper,Button } from '@mui/material'
+import React from 'react'
+import { Grid2,Typography,TextField,Paper,Button, IconButton} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { blue } from '@mui/material/colors';
+import PropTypes from 'prop-types';
 
-export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDetails}) {
+export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDetails,editMode,contactNum,setContactNum}) {
     const handleBranchDtoDetails=(event)=>{
         const {name,value}=event.target;
         setBranchDetails({
             ...branchDetails,
             branchDto:{
                 ...branchDetails.branchDto,
-                [name]:[value]
+                [name]:value
             }
         })
     }
-
-    const [contactNumber,setcontactNumber]=useState({contactNumber:""});
     const handleBranchContactNumberChange=(event)=>{
-        setcontactNumber({...contactNumber,[event.target.name]:event.target.value})
+        setContactNum({...contactNum,[event.target.name]:event.target.value})
     }
     const addNewContact=(event)=>{
-        if(contactNumber.contactNumber!="")
-        setBranchDetails({
-            ...branchDetails,
-            branchContactDTOList: [
-                ...branchDetails.branchContactDTOList,contactNumber
-        ]})
+        // Remove the default empty contact if it exists
+        const updatedContacts = branchDetails.branchContactDTOList.filter(item => item.contactNumber !== "");
+        updatedContacts.push(contactNum); 
+        if(contactNum){
+            setBranchDetails({
+                ...branchDetails,
+                branchContactDTOList: updatedContacts
+            });
+        }
     }
+
+    const removeNumber = (index) => {
+        if (window.confirm(`Do you want to delete ${branchDetails.branchContactDTOList[index].contactNumber}?`)) { 
+            const updatedContactList = [...branchDetails.branchContactDTOList]; 
+            updatedContactList.splice(index, 1); 
+            setBranchDetails({ 
+                ...branchDetails, 
+                branchContactDTOList: updatedContactList 
+            });
+            setContactNum({contactNumber:""})
+        }
+    };
   
     return (
     <form onSubmit={handleSubmit}>
@@ -40,12 +55,17 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 id="Branch_name"
                 name="branchName"
                 variant="outlined"
+                disabled={!editMode}
                 fullWidth
                 value={branchDetails.branchDto.branchName}
                 onChange={handleBranchDtoDetails}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#616161",
+                  },
+                }} 
                 />
             </Grid2>
-          
             <Grid2 size={{xs:6}}>
                 <Typography  component="label" htmlFor="address" >
                 Address:
@@ -53,25 +73,37 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 <TextField
                 size='small'
                 id="address"
-                name="address"
+                name="addressNumber"
                 variant="outlined"
+                disabled={!editMode}
                 fullWidth
                 value={branchDetails.branchDto.addressNumber}
                 onChange={handleBranchDtoDetails}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#616161",
+                  },
+                }} 
                 />
             </Grid2>
             <Grid2 size={{xs:6}}>
-                <Typography  component="label" htmlFor="address-line2" >
-                Address line 2:
+                <Typography  component="label" htmlFor="streetName" >
+                Street name:
                 </Typography>
                 <TextField
                 size='small'
-                id="address-line2"
-                name="address-line2"
+                id="streetName"
+                name="streetName"
                 variant="outlined"
+                disabled={!editMode}
                 fullWidth
                 value={branchDetails.branchDto.streetName}
                 onChange={handleBranchDtoDetails}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#616161",
+                  },
+                }} 
                 />
             </Grid2>
             <Grid2 size={{xs:6}}>
@@ -83,9 +115,15 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 id="city"
                 name="city"
                 variant="outlined"
+                disabled={!editMode}
                 fullWidth
                 value={branchDetails.branchDto.city}
                 onChange={handleBranchDtoDetails}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#616161",
+                  },
+                }} 
                 />
             </Grid2>
 
@@ -98,31 +136,46 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 id="Contact_number"
                 name="contactNumber"
                 variant="outlined"
+                disabled={!editMode}
                 fullWidth
                 type='tel'
-                value={contactNumber.contactNumber}
+                value={contactNum.contactNumber}
                 onChange={handleBranchContactNumberChange}
+                sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#616161",
+                  },
+                }} 
                 />
             </Grid2>
             <Grid2 size={{ xs: 4}} alignContent={"end"}>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={addNewContact}>
-                    Click here to add
+                <Button disabled={!editMode} variant="contained" startIcon={<AddIcon />} onClick={addNewContact}>
+                    Add
                 </Button>
             </Grid2>
             <Grid2 size={{ xs: "auto" }}>
             {branchDetails.branchContactDTOList.map((item, index) => (
-                item.contactNumber === "" ? (
-                    <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
-                        No saved contact numbers
-                    </Paper>
-                    ) : (
-                    <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
+                item.contactNumber !== ""  &&
+                    <Button key={index} 
+                            disabled={!editMode}
+                            sx={{ textAlign: "center", mr: 2 }} 
+                            variant="contained" 
+                            endIcon={<DeleteIcon />} 
+                            size='small'
+                            onClick={()=>removeNumber(index)}>
                         {item.contactNumber}
-                    </Paper>
-                    )
+                    </Button>
+                    
             ))}
             </Grid2>
         </Grid2>
     </form>
   )
+}
+
+BranchDetailForm.prototype={
+    handleSubmit:PropTypes.func.isRequired,
+    branchDetails:PropTypes.object.isRequired,
+    setBranchDetails:PropTypes.func.isRequired,
+    editMode:PropTypes.oneOfType([PropTypes.bool,PropTypes.func])
 }
