@@ -3,7 +3,7 @@ import Tile from '../../component/Tile';
 import { Box, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Alert } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getBrands, addBrand } from '../../services/apiStockService';
+import { fetchBrands, addBrand } from '../../services/apiStockService';
 
 // Icons for dynamic brands
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -31,9 +31,9 @@ function BrandPage({ isFromBranch }) {
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    const fetchBrands = async () => {
+    const getBrands = async () => {
       try {
-        const response = await getBrands(states.category);
+        const response = await fetchBrands(states.category);
         setBrands(response.data);
       } catch (err) {
         setError(err.message);
@@ -42,7 +42,7 @@ function BrandPage({ isFromBranch }) {
       }
     };
 
-    fetchBrands();
+    getBrands();
   }, [states.category]);
 
   const handleAddBrand = async () => {
