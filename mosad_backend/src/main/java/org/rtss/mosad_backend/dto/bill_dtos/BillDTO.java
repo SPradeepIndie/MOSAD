@@ -1,22 +1,26 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
-import java.time.LocalDate;
+import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
+
+import java.util.Date;
+import java.util.List;
 
 public class BillDTO {
-
-    private Long billId;
+    private Long id;
     private Double totalAmount;
     private Double advance;
     private Double balance;
-    private LocalDate date;
+    private Date date;
+    private Long customerId;
+    private List<BillItemDTO> items;
 
     // Getters and Setters
-    public Long getBillId() {
-        return billId;
+    public Long getId() {
+        return id;
     }
 
-    public void setBillId(Long billId) {
-        this.billId = billId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Double getTotalAmount() {
@@ -43,11 +47,27 @@ public class BillDTO {
         this.balance = balance;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<BillItemDTO> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BillItemDTO> items) {
+        this.items = items;
     }
 }
