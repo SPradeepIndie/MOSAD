@@ -8,14 +8,12 @@ export const addCategory =(categoryName) => {
     return apiClient.post('/category', { categoryName });
   };
 
-export const getBrands =(category)=>{
+export const fetchBrands =(category)=>{
     return apiClient.get(`/brand?catName=${category}`);
 };
 
 export const addBrand =(data)=>{
-    
-    
-      return apiClient.post('/brand', data);
+    return apiClient.post('/brand', data);
 };
 
 export const fetchItems=(data)=>{
@@ -33,3 +31,7 @@ export const updateItem=(data)=>{
 export const deleteItem = (itemId) => {
     return apiClient.delete('/item/delete', { params: { itemId } });
 };
+
+export const fetchBrandAndSizeData = (brand, size) => {
+    return apiClient.get(`/item/search?brand=${brand}&size=${size}`);
+  };

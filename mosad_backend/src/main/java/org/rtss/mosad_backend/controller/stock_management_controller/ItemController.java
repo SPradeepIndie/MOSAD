@@ -40,4 +40,9 @@ public class ItemController {
     public ResponseDTO deleteTyreItem(@Param("itemId") Long itemId) {
         return itemService.deleteItemTyre(itemId);
     }
+
+    @GetMapping("/search")
+    public List<AddItemDTO> searchItems(@Param("brand") String brand,@Param("size") String size) {
+        return itemService.searchItems(brand,size);
+    }
 }
