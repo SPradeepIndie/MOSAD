@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.ItemDTO;
 import org.rtss.mosad_backend.service.stock_management_service.ItemService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;

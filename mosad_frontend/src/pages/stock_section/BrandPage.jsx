@@ -52,7 +52,15 @@ function BrandPage({ isFromBranch }) {
     }
 
     try {
-      await addBrand(states.category, newBrandName);
+      const payload = {
+        brandDTO: {
+          brandName: newBrandName,
+        },
+        category: {
+          categoryName: states.category,
+        },
+      };
+      await addBrand(payload);
       setBrands((prev) => [...prev, { brandName: newBrandName }]);
       setNewBrandName('');
       setError(null);
