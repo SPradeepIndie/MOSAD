@@ -24,13 +24,13 @@ const initialContact={
 const BranchPage=()=>{    
     //--------------------------------Main page------------------------------------
     const userRole="admin";
-    const [contactNumber,setContactNumber]=useState(initialContact);//handle contact number
-    const[selectedBranch,setselectedBranch]=useState("");//Set curently selected branch
-    const[allBranchNames,setAllBranchNames]=useState([]);// load the all branch names at the rendering
-    const[isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
-    const[branchDetails,setBranchDetails]=useState(initialBranch);//load a branch detials according to the selcted card
-    const[isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
-    const [editMode,setEditMode]=useState(false); //Set text feilds disability
+    const [contactNumber, setContactNumber] = useState(initialContact);//handle contact number
+    const [selectedBranch, setselectedBranch] = useState("");//Set curently selected branch
+    const [allBranchNames, setAllBranchNames] = useState([]);// load the all branch names at the rendering
+    const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
+    const [branchDetails, setBranchDetails] = useState(initialBranch);//load a branch detials according to the selcted card
+    const [isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
+    const [editMode, setEditMode]=useState(false); //Set text feilds disability
     const loadAllBranches=()=>{
         setIsLoadingBranchNames(true)
         fetchAllBranchNames().then((response)=>{

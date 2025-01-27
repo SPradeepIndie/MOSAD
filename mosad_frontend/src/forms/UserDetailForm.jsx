@@ -255,5 +255,10 @@ UserDetailsForm.propTypes={
     }),
     editMode:PropTypes.bool.isRequired,
     setUserUpdateData:PropTypes.func,
+    handlePwds:PropTypes.func,
+    pwds:PropTypes.shape({
+        pwd_1:PropTypes.string,
+        pwd_2:PropTypes.string
+    })
 
 }

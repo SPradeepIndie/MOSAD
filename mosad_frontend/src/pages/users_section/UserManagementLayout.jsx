@@ -20,7 +20,7 @@ const UserManagementLayout=()=>{
       const renderTabs = () => {
         return tabRoutes.map((route, index) => (
           <Tab 
-            key={index} 
+            key={"tab"+index} 
             component={Link} 
             to={route.path} 
             label={route.label} 

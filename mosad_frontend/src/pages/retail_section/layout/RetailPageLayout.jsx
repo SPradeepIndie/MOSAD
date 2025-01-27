@@ -1,4 +1,4 @@
-import React,{Suspense, useState} from "react"; 
+import React,{useState} from "react"; 
 import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -24,7 +24,7 @@ const RetailPageLayout=()=>{
         const renderTabs = () => {
             return tabRoutes.map((route, index) => (
               <Tab 
-                key={index} 
+                key={"tab"+index} 
                 component={Link} 
                 to={route.path} 
                 label={route.label} 
