@@ -72,7 +72,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
@@ -88,7 +88,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }}
                         />
@@ -106,7 +106,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                             fullWidth 
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: "#000000",
+                                  WebkitTextFillColor: "#616161",
                               },
                             }}
                         />
@@ -123,7 +123,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     />
@@ -139,13 +139,13 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
                     </Grid>
                     <Grid size={{ xs: 2,sm:6}} alignContent={"end"}>
-                        <IconButton disabled={!editMode} aria-label="delete" onClick={addNewContact}>
+                        <IconButton disabled={!editMode} onClick={addNewContact}>
                             <AddIcon />
                         </IconButton>
                     </Grid>
@@ -156,7 +156,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                               No saved contact numbers
                             </Paper>
                           ) : (
-                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
+                            <Paper key={"ContactNumberCard"+index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
                               {item.contactNum}
                             </Paper>
                           )
@@ -185,7 +185,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         label="Role"
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     >
@@ -237,7 +237,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
     );
 }
 
-UserDetailsForm.prototype={
+UserDetailsForm.propTypes={
     onSubmit:PropTypes.func.isRequired,
     userUpdateData:PropTypes.shape({
         userDto:PropTypes.shape({
@@ -255,5 +255,10 @@ UserDetailsForm.prototype={
     }),
     editMode:PropTypes.bool.isRequired,
     setUserUpdateData:PropTypes.func,
+    handlePwds:PropTypes.func,
+    pwds:PropTypes.shape({
+        pwd_1:PropTypes.string,
+        pwd_2:PropTypes.string
+    })
 
 }

@@ -14,14 +14,18 @@ function HeaderBar() {
   const{setAuth}= useAuth();
 
   const handleLogout = () => {
-    setAuth({refresh_token:"",Authenticated:false,username:""}) 
-    // Remove token from local storage
-    localStorage.removeItem('token');
-
     //send logout request to db
-    logout();
+    logout({"refreshToken":localStorage.getItem("refresh_token")}).then((response)=>{
+      alert(response.data);
+    }).finally(()=>{
+      setAuth({refresh_token:"",Authenticated:false,username:""}) 
+      // Remove token from local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('refresh_token');
+      navigate('/', { replace: true }); // Redirect to login page
+  
+    });
    
-    navigate('/', { replace: true }); // Redirect to login page
   };
 
   return (

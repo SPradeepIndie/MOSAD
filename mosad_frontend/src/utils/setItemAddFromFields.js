@@ -10,4 +10,4 @@ const setItemAddFromFields = (selectedCategory,selectedBrand) => {
     return defaultItemFields;
   };
 
-  export default setItemAddFromFields;
+export default setItemAddFromFields;
