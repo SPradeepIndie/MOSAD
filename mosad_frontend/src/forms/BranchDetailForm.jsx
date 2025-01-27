@@ -155,7 +155,7 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
             <Grid2 size={{ xs: "auto" }}>
             {branchDetails.branchContactDTOList.map((item, index) => (
                 item.contactNumber !== ""  &&
-                    <Button key={index} 
+                    <Button key={"BranchContactNumberCard"+index} 
                             disabled={!editMode}
                             sx={{ textAlign: "center", mr: 2 }} 
                             variant="contained" 

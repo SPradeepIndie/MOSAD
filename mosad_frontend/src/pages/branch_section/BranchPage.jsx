@@ -25,7 +25,7 @@ const BranchPage=()=>{
     //--------------------------------Main page------------------------------------
     const userRole="admin";
     const [contactNumber, setContactNumber] = useState(initialContact);//handle contact number
-    const [selectedBranch, setselectedBranch] = useState("");//Set curently selected branch
+    const [selectedBranch, setSelectedBranch] = useState("");//Set curently selected branch
     const [allBranchNames, setAllBranchNames] = useState([]);// load the all branch names at the rendering
     const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
     const [branchDetails, setBranchDetails] = useState(initialBranch);//load a branch detials according to the selcted card
@@ -66,7 +66,7 @@ const BranchPage=()=>{
             setBranchDetails(response.data);
         }).finally(()=>{
             setIsLoadingBranchDetails(false);
-            setselectedBranch(branchName);
+            setSelectedBranch(branchName);
         })
     }
     const handleDelete=()=>{
@@ -107,13 +107,13 @@ const BranchPage=()=>{
 
     //--------------------------------Add new branch pop up------------------------------------
     const[addBranchPopUp,setAddBranchPopUp]=useState(false)//Adding branch pop up handling
-    const[newbranchDetails,setNewBranchDetails]=useState(initialBranch);//new branch deails use State
+    const[newBranchDetails,setNewBranchDetails]=useState(initialBranch);//new branch deails use State
 
     //Handle new branch submition
     const handleNewDetailsSubmit = (event) => {
         event.preventDefault();
-        console.log(newbranchDetails);
-        addBranch(newbranchDetails).then((response)=>{
+        console.log(newBranchDetails);
+        addBranch(newBranchDetails).then((response)=>{
             alert(response.data.message);
         }).finally(()=>{
             resetNewBranchAddingForm()
@@ -143,7 +143,7 @@ const BranchPage=()=>{
             }}>
                 {!isLoadingBranchNames &&
                     allBranchNames.map((item,index)=>(
-                        <BranchPaper  key={index} variant="elevation" onClick={() => {
+                        <BranchPaper  key={"branchInfoCard"+index} variant="elevation" onClick={() => {
                             handleBranchCardOnClick(item)}
                         } >{item}</BranchPaper>
                     ))
@@ -194,7 +194,7 @@ const BranchPage=()=>{
                     setCancelButtonAction={setCancelButtonAction}>
                 <BranchDetailForm 
                     handleSubmit={handleNewDetailsSubmit} 
-                    branchDetails={newbranchDetails} 
+                    branchDetails={newBranchDetails} 
                     setBranchDetails={setNewBranchDetails}
                     editMode={true}
                     contactNum={contactNumber}

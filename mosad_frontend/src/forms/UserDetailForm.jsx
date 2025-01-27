@@ -156,7 +156,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                               No saved contact numbers
                             </Paper>
                           ) : (
-                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
+                            <Paper key={"ContactNumberCard"+index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
                               {item.contactNum}
                             </Paper>
                           )
