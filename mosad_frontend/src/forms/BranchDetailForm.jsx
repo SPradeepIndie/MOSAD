@@ -169,12 +169,28 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
             </Grid2>
         </Grid2>
     </form>
-  )
-}
+  );
+};
 
-BranchDetailForm.prototype={
+BranchDetailForm.propTypes = {
     handleSubmit:PropTypes.func.isRequired,
-    branchDetails:PropTypes.object.isRequired,
+    branchDetails:PropTypes.shape({
+        branchDto:PropTypes.shape({
+            branchName:PropTypes.string,
+            addressNumber:PropTypes.string,
+            streetName:PropTypes.string,
+            city:PropTypes.string
+        }),
+        branchContactDTOList:PropTypes.arrayOf([
+            PropTypes.shape({
+                contactNumber:PropTypes.string
+            })
+        ])
+    }).isRequired,
     setBranchDetails:PropTypes.func.isRequired,
-    editMode:PropTypes.oneOfType([PropTypes.bool,PropTypes.func])
-}
+    editMode:PropTypes.oneOfType([PropTypes.bool,PropTypes.func]),
+    contactNum:PropTypes.shape({
+        contactNumber:PropTypes.string
+    }).isRequired,
+    setContactNum:PropTypes.func.isRequired
+};

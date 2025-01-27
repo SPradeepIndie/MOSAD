@@ -237,7 +237,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
     );
 }
 
-UserDetailsForm.prototype={
+UserDetailsForm.propTypes={
     onSubmit:PropTypes.func.isRequired,
     userUpdateData:PropTypes.shape({
         userDto:PropTypes.shape({
