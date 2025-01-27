@@ -39,6 +39,7 @@ public class Users implements UserDetails {
     @JoinColumn(name = "branch_id")
     private Branch branch;
 
+
     public Users() {
     }
 
@@ -150,6 +151,7 @@ public class Users implements UserDetails {
     public void setBranch(Branch branch) {
         this.branch = branch;
     }
+
 
     @Override
     public String toString() {

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Grid2,Typography,TextField,Paper,Button, IconButton} from '@mui/material'
+import { Grid2,Typography,TextField,Button} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { blue } from '@mui/material/colors';
 import PropTypes from 'prop-types';
 
 export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDetails,editMode,contactNum,setContactNum}) {
