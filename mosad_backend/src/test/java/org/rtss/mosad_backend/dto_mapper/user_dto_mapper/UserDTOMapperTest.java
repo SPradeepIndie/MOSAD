@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.user_dtos.UserDTO;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
@@ -75,7 +76,8 @@ class UserDTOMapperTest {
                 "Pradeep",
                 "mymail@gmail.com",
                 userRoles,
-                new HashSet<UserContacts>(Arrays.asList(userContacts))
+                new HashSet<UserContacts>(Arrays.asList(userContacts)),
+                new Branch()
         );
 
         //when

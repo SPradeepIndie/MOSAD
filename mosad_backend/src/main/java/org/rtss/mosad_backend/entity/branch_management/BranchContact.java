@@ -10,7 +10,7 @@ public class BranchContact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contactId", unique = true, nullable = false)
     private Long contactId;
-    @Column(name = "contactNumber",unique = true, nullable = false)
+    @Column(name = "contactNumber",nullable = false,unique = false)
     private String contactNumber;
 
     @ManyToOne
