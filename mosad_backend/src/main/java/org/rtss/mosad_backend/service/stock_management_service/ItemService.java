@@ -176,7 +176,7 @@ public class ItemService {
 
         itemRepository.delete(existingItem);
 
-        return new ResponseDTO(true, "ItemTyre and associated records deleted successfully.");
+        return new ResponseDTO(true, "Item deleted successfully.");
     }
 
     //Get all items
