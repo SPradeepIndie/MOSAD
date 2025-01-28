@@ -1,30 +1,53 @@
 import React, { useState,useEffect } from 'react';
-import { Box, Button, Paper, TextField, Typography,Stack,Grid2 } from '@mui/material';
+import { Box, Button, Paper, Typography,Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { fetchAllBranchNames,fetchBranchDetailsByName,deleteBranch,udpateBranch,addBranch } from '../../services/apiBranchService';
+import BranchDetailForm from '../../forms/BranchDetailForm';
+import PopUp from '../../component/PopUp';
 
-
-const initialBranchDetails={
-    branchName:"",
-    contactNumber:"",
-    address:""
+const initialBranch={
+    branchDto:{
+        branchName:"",
+        addressNumber:"",
+        streetName:"",
+        city:""
+    },
+    branchContactDTOList:[
+        {
+            contactNumber:""
+        }
+    ]
 }
-
-const BranchPage=()=>{
+const initialContact={
+    contactNumber:""
+}
+const BranchPage=()=>{    
+    //--------------------------------Main page------------------------------------
     const userRole="admin";
-    const [allBranchName,setAllBranchName]=useState([]);
-
-    //load the all branch names at the rendering
-    useEffect(() => {
-        setAllBranchName(["branch1","branch2"])
-    }, []);
+    const [contactNumber, setContactNumber] = useState(initialContact);//handle contact number
+    const [selectedBranch, setSelectedBranch] = useState("");//Set curently selected branch
+    const [allBranchNames, setAllBranchNames] = useState([]);// load the all branch names at the rendering
+    const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
+    const [branchDetails, setBranchDetails] = useState(initialBranch);//load a branch detials according to the selcted card
+    const [isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
+    const [editMode, setEditMode]=useState(false); //Set text feilds disability
+    const loadAllBranches=()=>{
+        setIsLoadingBranchNames(true)
+        fetchAllBranchNames().then((response)=>{
+            setAllBranchNames(response.data)
+        }).finally(()=>{
+            setIsLoadingBranchNames(false);
+        }
+        )
+    }
     /*
-    * Don't use dependency as 'allBranchName' in useEffect
-    * Bevuase it tendss to create a infinite loop and freeze the whole process 
+    * Don't use dependency as 'allBranchNames' in useEffect
+    * Becuase it tendss to create a infinite loop and freeze the whole process 
     */
-
-    //load a branch detials accrdgin to the branch name
+    useEffect(() => {
+        loadAllBranches();
+    }, []);
     
-
     const BranchPaper = styled(Paper)(({ theme }) => ({
         width: '10rem',
         height: '5rem',
@@ -36,20 +59,78 @@ const BranchPage=()=>{
         },
         cursor: 'pointer',
     }));
-
-    const[branchDetails,setBranchDetails]=useState(initialBranchDetails);
-    
-    const handleBranchDetails=(event)=>{
-        const {name,value}=event.target;
-        setBranchDetails({...branchDetails,[name]:[value]})
+    const handleBranchCardOnClick=(branchName)=>{
+        setEditMode(false)
+        setIsLoadingBranchDetails(true)
+        fetchBranchDetailsByName(branchName).then((response)=>{
+            setBranchDetails(response.data);
+        }).finally(()=>{
+            setIsLoadingBranchDetails(false);
+            setSelectedBranch(branchName);
+        })
     }
-    
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        console.log(branchDetails);
+    const handleDelete=()=>{
+        if(selectedBranch){
+            if(confirm("confirm branch deletion named: "+selectedBranch))
+            deleteBranch(selectedBranch).then((response)=>{
+                alert(response.data.message);
+            }).finally(()=>{
+                loadAllBranches();
+                setBranchDetails(initialBranch);
+            })
+        }
+        else{
+            alert("Please select a branch first! ")
+        }
+    }
+    //Handle Update
+    const handleUpdatedDetailsSubmit=(event)=>{
+        if(!addBranchPopUp){
+            udpateBranch(branchDetails,selectedBranch).then((response)=>{
+                alert(response.data.message);
+            }).finally(()=>{
+                setEditMode(false)
+            })
+        }
+    }
+    //Rest the BranchPage Form
+    const handleEditMode=()=>{
+        if(editMode){
+            setEditMode(false)
+            handleBranchCardOnClick(selectedBranch)
+        }
+        else{
+            setEditMode(true)
+        }
         
+    }
+
+    //--------------------------------Add new branch pop up------------------------------------
+    const[addBranchPopUp,setAddBranchPopUp]=useState(false)//Adding branch pop up handling
+    const[newBranchDetails,setNewBranchDetails]=useState(initialBranch);//new branch deails use State
+
+    //Handle new branch submition
+    const handleNewDetailsSubmit = (event) => {
+        event.preventDefault();
+        console.log(newBranchDetails);
+        addBranch(newBranchDetails).then((response)=>{
+            alert(response.data.message);
+        }).finally(()=>{
+            resetNewBranchAddingForm()
+        })   
     };
+    const setOkButtonAction=(event)=>{
+        handleNewDetailsSubmit(event);
+    };
+    const setCancelButtonAction=()=>{
+        resetNewBranchAddingForm()
+        setAddBranchPopUp(false)
+        loadAllBranches()
+    };
+    const resetNewBranchAddingForm=()=>{
+        setNewBranchDetails(initialBranch);
+        setContactNumber(initialContact);
+    }
 
     return(
         <>
@@ -60,75 +141,66 @@ const BranchPage=()=>{
                 borderBottom:3,
                 borderColor:'rgba(46, 139, 88, 1)'
             }}>
-            {allBranchName.map((item,index)=>(
-                <BranchPaper  key={index} variant="elevation">{item}</BranchPaper>
-            ))}
+                {!isLoadingBranchNames &&
+                    allBranchNames.map((item,index)=>(
+                        <BranchPaper  key={"branchInfoCard"+index} variant="elevation" onClick={() => {
+                            handleBranchCardOnClick(item)}
+                        } >{item}</BranchPaper>
+                    ))
+                }
+           
         </Stack>}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',mt:2}}>
-        <Typography variant="h5" component="h2" gutterBottom>
-            Branch Details
-        </Typography>
-        <form onSubmit={handleSubmit}>
-            <Grid2 container spacing={2}>
-            <Grid2 size={{xs:12 ,md:6}}>
-                <Typography  component="label" htmlFor="Branch_name" >
-                    Branch Name:
-                </Typography>
-                <TextField
-                id="Branch_name"
-                name="branchName"
-                label="Branch Name"
-                variant="outlined"
-                fullWidth
-                value={branchDetails.branchName}
-                onChange={handleBranchDetails}
+            <Typography variant="h5" component="h2" gutterBottom>
+                Branch Details
+            </Typography>
+                <Paper elevation={2} sx={{p:2}}>
+                    {!isLoadingBranchDetails &&
+                        <BranchDetailForm 
+                            handleSubmit={handleUpdatedDetailsSubmit} 
+                            branchDetails={branchDetails} 
+                            setBranchDetails={setBranchDetails}
+                            editMode={editMode}
+                            contactNum={contactNumber}
+                            setContactNum={setContactNumber}
+                        />
+                    }
+                </Paper>
+               
+                <Paper elevation={1} sx={{p:1,m:2,width:'100%'}}>
+                    <Stack direction="row" spacing={2} >
+                        {editMode && 
+                        <Button variant="contained" color="primary" onClick={handleUpdatedDetailsSubmit}>
+                            Save
+                        </Button> }
+                        <Button variant="contained" color="primary" onClick={()=>handleEditMode()}>
+                            {!editMode ? "Update" : "Reset" }
+                        </Button>
+                        <Button  variant="contained" color="error" onClick={handleDelete}>
+                            Delete
+                        </Button>
+                        {userRole==="admin" && <Button type="submit" variant="contained" onClick={()=>setAddBranchPopUp(true)}>
+                                Add new branch
+                        </Button>}
+                    </Stack>  
+                </Paper>
+                 <PopUp 
+                    popUpTitle={"Add New Branch"}
+                    openPopup={addBranchPopUp}
+                    isDefaultButtonsDisplay={true}
+                    setOpenPopup={setAddBranchPopUp}
+                    setOkButtonAction={setOkButtonAction}
+                    setCancelButtonAction={setCancelButtonAction}>
+                <BranchDetailForm 
+                    handleSubmit={handleNewDetailsSubmit} 
+                    branchDetails={newBranchDetails} 
+                    setBranchDetails={setNewBranchDetails}
+                    editMode={true}
+                    contactNum={contactNumber}
+                    setContactNum={setContactNumber}
                 />
-            </Grid2>
-            <Grid2 size={{xs:12, md:6}}>
-                <Typography  component="label" htmlFor="Contact_number" >
-                Contact Number:
-                </Typography>
-                <TextField
-                id="Contact_number"
-                name="contactNumber"
-                label="Contact Number"
-                variant="outlined"
-                fullWidth
-                value={branchDetails.contactNumber}
-                onChange={handleBranchDetails}
-                />
-            </Grid2>
-            <Grid2 size={{xs:6}}>
-                <Typography  component="label" htmlFor="address" >
-                Address:
-                </Typography>
-                <TextField
-                id="address"
-                name="address"
-                label="Address"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={4}
-                value={branchDetails.address}
-                onChange={handleBranchDetails}
-                />
-            </Grid2>
-            <Grid2 size={{xs:12}}>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained" color="primary" type="submit">
-                    Update
-                    </Button>
-                    <Button variant="contained" color="error">
-                    Delete
-                    </Button>
-                    {userRole==="admin" && <Button variant="contained">Add new branch</Button>}
-                </Stack>
-                
-            </Grid2>
-            </Grid2>
-        </form>
+                </PopUp>
         </Box>
     </>
     );

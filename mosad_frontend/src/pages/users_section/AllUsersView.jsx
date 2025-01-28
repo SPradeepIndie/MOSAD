@@ -152,19 +152,18 @@ const AllUsersView=()=>{
         <PopUp 
             popUpTitle={"Add new user"}
             openPopup={openPopup}
-            children={
-                <UserDetailsForm  
-                    onSubmit={handleSubmit} 
-                    userUpdateData={userRegData} 
-                    editMode={true} 
-                    setUserUpdateData={setUserRegData}
-                    handlePwds={handlePwds}
-                    pwds={pwds}/>
-            }
             isDefaultButtonsDisplay={true}
             setOpenPopup={setOpenPopup}
             setOkButtonAction={setOkButtonAction}
-            setCancelButtonAction={setCancelButtonAction}/>
+            setCancelButtonAction={setCancelButtonAction}>
+        <UserDetailsForm  
+        onSubmit={handleSubmit} 
+        userUpdateData={userRegData} 
+        editMode={true} 
+        setUserUpdateData={setUserRegData}
+        handlePwds={handlePwds}
+        pwds={pwds}/>
+        </PopUp>
         </Container>
        
     );
