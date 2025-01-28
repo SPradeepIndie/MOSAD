@@ -1,49 +1,51 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
-import java.util.List;
+import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 
 @Entity
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long customerId;
 
-    @Column(nullable = false)
-    private String name;
+    private String customerName;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CustomerContact> contacts;
+    private String customerType;
 
-    public Customer() {}
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private CustomerContact customerContact;
 
-    public Customer(String name) {
-        this.name = name;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public String getName() {
-        return name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getCustomerType() {
+        return customerType;
     }
 
-    public List<CustomerContact> getContacts() {
-        return contacts;
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
-    public void setContacts(List<CustomerContact> contacts) {
-        this.contacts = contacts;
+    public CustomerContact getCustomerContact() {
+        return customerContact;
+    }
+
+    public void setCustomerContact(CustomerContact customerContact) {
+        this.customerContact = customerContact;
     }
 }

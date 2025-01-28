@@ -6,45 +6,42 @@ import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import java.util.List;
 
 public class CustomerDTO {
-    private Long id;
-    private String name;
+    private Long customerId;
+
+    private String customerName;
+
     @NotEmpty(message = "A customer must have at least one contact.")
-    private List<CustomerContactDTO> contacts;
+    private CustomerContactDTO customerContactDTO;
+
     private List<CreditDTO> credits;
 
     private String customerType;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public String getName() {
-        return name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public List<CustomerContactDTO> getContacts() {
-        return contacts;
+    public CustomerContactDTO getCustomerContactDTO() {
+        return customerContactDTO;
     }
 
-    public void setContacts(List<CustomerContactDTO> contacts) {
-        this.contacts = contacts;
-    }
-
-    public String getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
+    public void setCustomerContactDTO(CustomerContactDTO customerContactDTO) {
+        this.customerContactDTO = customerContactDTO;
     }
 
     public List<CreditDTO> getCredits() {
@@ -54,5 +51,12 @@ public class CustomerDTO {
     public void setCredits(List<CreditDTO> credits) {
         this.credits = credits;
     }
-}
 
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
+}

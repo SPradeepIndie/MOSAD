@@ -18,7 +18,7 @@ public class BillDTOMapper {
         dto.setAdvance(bill.getAdvance());
         dto.setBalance(bill.getBalance());
         dto.setDate(bill.getDate());
-        dto.setCustomerId(bill.getCustomer() != null ? bill.getCustomer().getId() : null);
+       // dto.setCustomerId(bill.getCustomer() != null ? bill.getCustomer().getId() : null);
         dto.setItems(bill.getItems().stream().map(this::toItemDTO).collect(Collectors.toList()).reversed());
         return dto;
     }

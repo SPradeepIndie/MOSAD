@@ -26,10 +26,4 @@ public class CustomerContactDTOMapper {
     public CustomerContact customerContactDTOToCustomerContact(CustomerContactDTO customerContactDTO) {
         return modelMapper.map(customerContactDTO, CustomerContact.class);
     }
-
-    public List<CustomerContactDTO> toCustomerDTOList(List<CustomerContact> customers) {
-        return customers.stream()
-                .map(this::customerContactToCustomerContactDTO)
-                .collect(Collectors.toList());
-    }
 }
