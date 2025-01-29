@@ -28,17 +28,17 @@ public class ItemController {
 
     @PostMapping("/add")
     public ResponseDTO addTyreItem(@RequestBody AddItemDTO addItemDTO) {
-        return itemService.addItemTyre(addItemDTO);
+        return itemService.addItem(addItemDTO);
     }
 
     @PutMapping("/update")
     public ResponseDTO updateTyreItem(@RequestBody AddItemDTO updateItemDTO) {
-        return itemService.updateItemTyre(updateItemDTO);
+        return itemService.updateItem(updateItemDTO);
     }
 
     @DeleteMapping("/delete")
     public ResponseDTO deleteTyreItem(@Param("itemId") Long itemId) {
-        return itemService.deleteItemTyre(itemId);
+        return itemService.deleteItem(itemId);
     }
 
     @GetMapping("/search")

@@ -13,8 +13,11 @@ import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiS
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
+import useAuth  from "../../hooks/useAuth";
 
 const ItemView = () => {
+  const {auth}=useAuth();
+  //console.log(auth);
   //Store passed Category and Brand using Link state & useLocation
   const location = useLocation();
   const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
@@ -33,9 +36,10 @@ const ItemView = () => {
   const [inputFieldErrors, setinputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
+
   const openDialog = (item) => {
     if (item) {
-      console.log("Item to edit:", item);
+      //console.log("Item to edit:", item);
       const formattedItem = {
         itemId: item.itemDTO.itemId,
         itemName: item.itemDTO.itemName,
@@ -43,12 +47,15 @@ const ItemView = () => {
         companyPrice: item.itemDTO.companyPrice,
         retailPrice: item.itemDTO.retailPrice,
         discount: item.itemDTO.discount,
-        tyreSize: item.itemTyreDTO.tyreSize,
-        pattern: item.itemTyreDTO.pattern,
-        vehicleType: item.itemTyreDTO.vehicleType,
-        availableQuantity: item.itemBranchDTO.availableQuantity
+        availableQuantity: item.itemBranchDTO.availableQuantity,
+        ...(selectedCategory === "Tyre" && {
+          tyreSize: item.itemTyreDTO.tyreSize,
+          pattern: item.itemTyreDTO.pattern,
+          vehicleType: item.itemTyreDTO.vehicleType
+        })
+        
       };
-      console.log("Formatted Item to update:", formattedItem);
+      //console.log("Formatted Item to update:", formattedItem);
 
       setCurrentItem(formattedItem);
       setFormData(formattedItem);
@@ -161,7 +168,7 @@ const ItemView = () => {
       return;
     }
 
-    console.log("Form Data:", formData);
+    //console.log("Form Data:", formData);
     const formatedData = {
       "itemDTO": {
         "itemId": currentItem ? currentItem.itemId : null,
@@ -184,14 +191,14 @@ const ItemView = () => {
       }
     };
 
-    console.log(formatedData);
+    //console.log(formatedData);
     const request = currentItem
       ? updateItem(formatedData)
       : addItem(formatedData);
 
     request
       .then((response) => {
-        console.log(currentItem ? "Item updated successfully!" : response.data.message);
+        console.log(currentItem ? "Item updated successfully!" :"Backend - "+ response.data.message);
         closeDialog();
         fetchandSetItems();
         setMessage(
@@ -235,10 +242,15 @@ const ItemView = () => {
               <th>Company Price</th>
               <th>Retail Price</th>
               <th>Discount</th>
+              <th>Available Quantity</th>
+              { selectedCategory === "Tyre" &&
+              <>
               <th>Pattern</th>
               <th>Tyre Size</th>
               <th>Vehicle Type</th>
-              <th>Available Quantity</th>
+              </>
+              }
+              
             </tr>
           </thead>
           <tbody>
@@ -258,10 +270,14 @@ const ItemView = () => {
                 <td>{row.itemDTO.companyPrice}</td>
                 <td>{row.itemDTO.retailPrice}</td>
                 <td>{row.itemDTO.discount}</td>
-                <td>{row.itemTyreDTO.pattern}</td>
-                <td>{row.itemTyreDTO.tyreSize}</td>
-                <td>{row.itemTyreDTO.vehicleType}</td>
                 <td>{row.itemBranchDTO.availableQuantity}</td>
+                {selectedCategory === "Tyre" &&
+                  <>
+                    <td>{row.itemTyreDTO.pattern}</td>
+                    <td>{row.itemTyreDTO.tyreSize}</td>
+                    <td>{row.itemTyreDTO.vehicleType}</td>
+                  </>
+                }
               </tr>
             ))}
           </tbody>
@@ -304,7 +320,7 @@ const ItemView = () => {
           onSubmit={handleSubmit}
           closeDialog={closeDialog}
         />
-      {console.log(formData)}
+      
       </PopUp>
       <PopUp
         popUpTitle="Price Details"

@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
+import Loading from '../../component/Loading';
 import PropTypes from 'prop-types';
 
 function Row({ row, onAddRepayment, setMessage, message,columns }) {
@@ -277,12 +278,7 @@ const CreditPage = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ marginTop: 4, textAlign: 'center' }}>
-        <Typography variant="h5" gutterBottom color='primary'>
-          Loading Credits...
-        </Typography>
-      <CircularProgress />
-      </Container>
+      <Loading WhatsLoading={'Credit Details'} />
     );
   }
 

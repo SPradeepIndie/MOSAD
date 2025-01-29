@@ -19,7 +19,6 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -52,20 +51,20 @@ public class ItemService {
     }
 
     //Add item Tyre with branch
-    public ResponseDTO addItemTyre(AddItemDTO addItemDTO) {
+    public ResponseDTO addItem(AddItemDTO addItemDTO) {
 
         // Extract individual DTOs
         ItemDTO itemDTO = addItemDTO.getItemDTO();
 
-        if(!Objects.equals(itemDTO.getCategory(), "Tyre")) {
-            return new ResponseDTO(false, "Under Construction!");
-        }
+
 
         ItemTyreDTO itemTyreDTO = addItemDTO.getItemTyreDTO();
         ItemBranchDTO itemBranchDTO = addItemDTO.getItemBranchDTO();
 
 
         Item item= itemDTOMapper.toEntity(itemDTO);
+
+
 
 
         // Fetch Category and Brand entities
@@ -76,12 +75,6 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Brand ")));
 
         itemRepository.save(item);
-
-        // Map ItemTyreDTO to ItemTyre entity
-        ItemTyre tyre=itemTyreDTOMapper.toEntity(itemTyreDTO);
-        //set item to tyre
-        tyre.setItem(item);
-        itemTyreRepo.save(tyre);
 
         //Map to ItemBranch
 
@@ -97,10 +90,22 @@ public class ItemService {
         itemBranch.setAvailableQuantity(itemBranchDTO.getAvailableQuantity());
         itemBranchRepository.save(itemBranch);
 
+        if(!itemDTO.getCategory().equals("Tyre")) {
+            return new ResponseDTO(true, "Item added successfully");
+        }
+
+        // Map ItemTyreDTO to ItemTyre entity
+        ItemTyre tyre=itemTyreDTOMapper.toEntity(itemTyreDTO);
+        //set item to tyre
+        tyre.setItem(item);
+        itemTyreRepo.save(tyre);
+
+
+
         return new ResponseDTO(true, "Item added successfully");
     }
 
-    public ResponseDTO updateItemTyre(AddItemDTO updateTyreItemDTO) {
+    public ResponseDTO updateItem(AddItemDTO updateTyreItemDTO) {
         // Extract individual DTOs
         ItemDTO itemDTO = updateTyreItemDTO.getItemDTO();
         ItemTyreDTO itemTyreDTO = updateTyreItemDTO.getItemTyreDTO();
@@ -129,17 +134,6 @@ public class ItemService {
         // Save updated Item entity
         Item savedItem = itemRepository.save(existingItem);
 
-        ItemTyre existingTyre = itemTyreRepo.findByItem(existingItem);
-
-        // Update fields in the ItemTyre entity
-        existingTyre.setItem(savedItem);
-        existingTyre.setTyreSize(itemTyreDTO.getTyreSize());
-        existingTyre.setPattern(itemTyreDTO.getPattern());
-        existingTyre.setVehicleType(itemTyreDTO.getVehicleType());
-
-        // Save updated ItemTyre entity
-        itemTyreRepo.save(existingTyre);
-
         // Fetch the existing ItemBranch entity using itemId and branchId
         Long branchId = itemBranchDTO.getBranchId();
         if (branchId == null) {
@@ -160,10 +154,27 @@ public class ItemService {
         // Save updated ItemBranch entity
         itemBranchRepository.save(existingItemBranch);
 
+        if(!itemDTO.getCategory().equals("Tyre")) {
+            return new ResponseDTO(true, "Item updated successfully");
+        }
+
+        ItemTyre existingTyre = itemTyreRepo.findByItem(existingItem);
+
+        // Update fields in the ItemTyre entity
+        existingTyre.setItem(savedItem);
+        existingTyre.setTyreSize(itemTyreDTO.getTyreSize());
+        existingTyre.setPattern(itemTyreDTO.getPattern());
+        existingTyre.setVehicleType(itemTyreDTO.getVehicleType());
+
+        // Save updated ItemTyre entity
+        itemTyreRepo.save(existingTyre);
+
+
+
         return new ResponseDTO(true, "ItemTyre updated successfully");
     }
 
-    public ResponseDTO deleteItemTyre(Long itemId) {
+    public ResponseDTO deleteItem(Long itemId) {
         // Validate itemId
         if (itemId == null) {
             throw new IllegalArgumentException("Item ID is required for deletion.");
@@ -180,34 +191,53 @@ public class ItemService {
     }
 
     //Get all items
-    public List<AddItemDTO> getAllItems(String cat,String brnd,Long branchId) {
-        List<AddItemDTO> addItemDTOS=new ArrayList<>();
+    public List<AddItemDTO> getAllItems(String cat, String brnd, Long branchId) {
+        List<AddItemDTO> addItemDTOS = new ArrayList<>();
 
-        Category category=categoryRepository.findCategoryByCategoryName(cat).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Category not found"));
-        Brand brand=brandRepository.findByBrandName(brnd).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Brand not found"));
+        // Check if category exists
+        Category category = categoryRepository.findCategoryByCategoryName(cat)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Category not found"));
 
-        List<Item> items=itemRepository.findByCategoryAndBrand(category, brand);
-        for(Item item:items) {
+        // Check if brand exists
+        Brand brand = brandRepository.findByBrandName(brnd)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Brand not found"));
+
+        // Fetch items
+        List<Item> items = itemRepository.findByCategoryAndBrand(category, brand);
+        if (items == null || items.isEmpty()) {
+            throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "No items found for this category and brand");
+        }
+
+        for (Item item : items) {
             ItemDTO itemDTO = itemDTOMapper.toDTO(item);
-            ItemTyreDTO itemTyreDTO = null;
-            if (cat.equals("Tyre")) {
-                ItemTyre tyre = itemTyreRepo.findByItem(item);
-                itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
 
+            ItemTyreDTO itemTyreDTO = null;
+            if ("Tyre".equals(cat)) {
+                ItemTyre tyre = itemTyreRepo.findByItem(item);
+                if (tyre != null) {
+                    itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
+                } else {
+                    System.out.println("No tyre details found for item ID: " + item.getItemId());
+                }
             }
 
+            // Fetch branch item details
             ItemBranch itemBranch = itemBranchRepository.findByItemIdAndBranchId(item.getItemId(), branchId);
+            if (itemBranch == null) {
+                System.out.println("No item-branch mapping found for item ID: " + item.getItemId() + " and branch ID: " + branchId);
+                continue; // Skip this item if branch mapping is missing
+            }
+
             ItemBranchDTO itemBranchDTO = itemBranchDTOMapper.toDTO(itemBranch);
 
-            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, itemTyreDTO, itemBranchDTO);
+            // Construct AddItemDTO
+            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, "Tyre".equals(cat) ? itemTyreDTO : null, itemBranchDTO);
             addItemDTOS.add(addItemDTO);
-
         }
 
         return addItemDTOS;
-
-
     }
+
 
     public List<AddItemDTO> searchItems(String brand,String size) {
         // Implement search logic here
