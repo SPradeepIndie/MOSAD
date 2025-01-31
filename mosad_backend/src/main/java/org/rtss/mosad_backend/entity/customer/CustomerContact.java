@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.entity.customer.Customer;
 
 @Entity
 public class CustomerContact {

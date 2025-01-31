@@ -1,19 +1,19 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
 public class BillItemDTO {
-    private Long id;
+    private Long billItemId;
     private Long itemId;
     private String description;
     private Integer quantity;
     private Double unitPrice;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getBillItemId() {
+        return billItemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillItemId(Long billItemId) {
+        this.billItemId = billItemId;
     }
 
     public Long getItemId() {

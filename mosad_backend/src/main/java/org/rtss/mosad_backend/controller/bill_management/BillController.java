@@ -17,8 +17,8 @@ public class BillController {
     private BillService billService;
 
     @PostMapping
-    public ResponseEntity<BillDTO> createBill(@RequestBody BillDTO billDTO , CustomerDTO customerDTO) {
-        BillDTO createdBill = billService.createBill(billDTO , customerDTO);
+    public ResponseEntity<BillDTO> createBill(@RequestBody BillDTO billDTO) {
+        BillDTO createdBill = billService.createBill(billDTO, billDTO.getCustomerDTO(), billDTO.getBillItemDTO());
         return ResponseEntity.ok(createdBill);
     }
 

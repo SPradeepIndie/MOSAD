@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.entity.customer;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 
 @Entity
 public class Customer {
@@ -14,8 +13,10 @@ public class Customer {
 
     private String customerType;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "customer_contact_id")
     private CustomerContact customerContact;
+
 
     public Long getCustomerId() {
         return customerId;

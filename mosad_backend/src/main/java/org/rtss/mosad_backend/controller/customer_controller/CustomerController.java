@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.controller.customer_controller;
 
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
+import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
@@ -17,14 +18,14 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/add")
-    public Customer updateCustomer(
-            @RequestParam Long customerId,
-            @RequestParam String customerName,
-            @RequestParam String customerType,
-            @RequestParam CustomerContactDTO customerContactDTO) {
-
-
-        return customerService.addCustomer(customerId, customerName,customerType ,customerContactDTO);
+    public Customer updateCustomer(@RequestBody CustomerDTO customerDTO) {
+        return customerService.addCustomer(
+                customerDTO.getCustomerId(),
+                customerDTO.getCustomerName(),
+                customerDTO.getCustomerType(),
+                customerDTO.getCustomerContactDTO()
+        );
     }
+
 
 }

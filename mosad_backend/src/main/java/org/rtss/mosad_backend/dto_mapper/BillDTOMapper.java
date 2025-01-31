@@ -13,19 +13,19 @@ public class BillDTOMapper {
 
     public BillDTO toDTO(Bill bill) {
         BillDTO dto = new BillDTO();
-        dto.setId(bill.getId());
+        dto.setBillId(bill.getBillId());
         dto.setTotalAmount(bill.getTotalAmount());
         dto.setAdvance(bill.getAdvance());
         dto.setBalance(bill.getBalance());
         dto.setDate(bill.getDate());
        // dto.setCustomerId(bill.getCustomer() != null ? bill.getCustomer().getId() : null);
-        dto.setItems(bill.getItems().stream().map(this::toItemDTO).collect(Collectors.toList()).reversed());
+        //dto.setItems(bill.getItems().stream().map(this::toItemDTO).collect(Collectors.toList()).reversed());
         return dto;
     }
 
     public Bill toEntity(BillDTO dto) {
         Bill bill = new Bill();
-        bill.setId(dto.getId());
+        bill.setBillId(dto.getBillId());
         bill.setTotalAmount(dto.getTotalAmount());
         bill.setAdvance(dto.getAdvance());
         bill.setBalance(dto.getBalance());
@@ -35,7 +35,7 @@ public class BillDTOMapper {
 
     private BillItemDTO toItemDTO(BillItem item) {
         BillItemDTO dto = new BillItemDTO();
-        dto.setId(item.getId());
+        dto.setBillItemId(item.getBillItemId());
         dto.setItemId(item.getItem().getItemId());
         dto.setDescription(item.getDescription());
         dto.setQuantity(item.getQuantity());

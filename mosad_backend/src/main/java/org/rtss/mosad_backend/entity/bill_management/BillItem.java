@@ -8,7 +8,7 @@ import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 public class BillItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long billItemId;
     @OneToOne
     @JoinColumn(name="item_id",referencedColumnName = "itemId")
     private Item item;
@@ -63,12 +63,12 @@ public class BillItem {
     }
 
 
-    public Long getId() {
-        return id;
+    public Long getBillItemId() {
+        return billItemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillItemId(Long billItemId) {
+        this.billItemId = billItemId;
     }
 
     public Item getItem() {
@@ -82,7 +82,7 @@ public class BillItem {
     @Override
     public String toString() {
         return "BillItem{" +
-                "id=" + id +
+                "id=" + billItemId +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
                 ", bill=" + bill +

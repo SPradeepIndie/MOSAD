@@ -33,7 +33,9 @@ public class CustomerService {
         customer.setCustomerId(customerId);
         customer.setCustomerName(customerName);
         customer.setCustomerType(customerType);
-        customer.setCustomerContact(customerContactDTOMapper.customerContactDTOToCustomerContact(customerContactDTO));
+        CustomerContact customerContact = customerContactDTOMapper.customerContactDTOToCustomerContact(customerContactDTO);
+        customerContact.setCustomer(customer);
+        customer.setCustomerContact(customerContact);
         return customerRepository.save(customer);
     }
 }

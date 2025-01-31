@@ -11,9 +11,11 @@ import java.util.List;
 @Entity
 @Table(name = "bills")
 public class Bill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long billId;
+
     private Double totalAmount;
     private Double advance;
     private Double balance;
@@ -21,8 +23,9 @@ public class Bill {
     @Column(nullable = false, updatable = false)
     private Date date;
 
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
-    private List<BillItem> items = new ArrayList<>();
+    // One-to-Many relationship with BillItem
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BillItem> billItems;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
@@ -60,20 +63,21 @@ public class Bill {
 
     // Getters and Setters
 
-    public List<BillItem> getItems() {
-        return items;
+
+    public List<BillItem> getBillItems() {
+        return billItems;
     }
 
-    public void setItems(List<BillItem> items) {
-        this.items = items;
+    public void setBillItems(List<BillItem> billItems) {
+        this.billItems = billItems;
     }
 
-    public Long getId() {
-        return id;
+    public Long getBillId() {
+        return billId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
     public Double getTotalAmount() {
