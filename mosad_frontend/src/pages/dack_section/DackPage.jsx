@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchRebuildTyres } from '../services/apiDackService';
+import { fetchRebuildTyres } from '../../services/apiDackService';
 
 const RebuildTyrePage = () => {
   const [rebuildTyres, setRebuildTyres] = useState([]);
