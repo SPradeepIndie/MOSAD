@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { fetchRebuildTyres } from '../services/apiDackService';
 
-const DackPage = () => {
+const RebuildTyrePage = () => {
   const [rebuildTyres, setRebuildTyres] = useState([]);
   const [filteredTyres, setFilteredTyres] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTyre, setSelectedTyre] = useState(null);
 
-  // Fetch data from the backend
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/rebuild-tyres'); // Update with your backend endpoint
+        const response = await fetchRebuildTyres();
         setRebuildTyres(response.data);
         setFilteredTyres(response.data);
       } catch (error) {
@@ -21,7 +21,7 @@ const DackPage = () => {
     fetchData();
   }, []);
 
-  // Handle search input
+  //earch by contact number 
   const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -125,4 +125,4 @@ const DackPage = () => {
   );
 };
 
-export default DackPage;
+export default RebuildTyrePage;
