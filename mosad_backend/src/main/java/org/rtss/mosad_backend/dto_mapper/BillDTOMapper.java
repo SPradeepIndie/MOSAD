@@ -36,7 +36,7 @@ public class BillDTOMapper {
     private BillItemDTO toItemDTO(BillItem item) {
         BillItemDTO dto = new BillItemDTO();
         dto.setBillItemId(item.getBillItemId());
-        dto.setItemId(item.getItem().getItemId());
+        //dto.setItemId(item.getItem().getItemId());
         dto.setDescription(item.getDescription());
         dto.setQuantity(item.getQuantity());
         dto.setUnitPrice(item.getUnitPrice());

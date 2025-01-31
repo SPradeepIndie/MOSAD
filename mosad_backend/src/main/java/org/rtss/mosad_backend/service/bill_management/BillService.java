@@ -12,12 +12,14 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.repository.bill_repository.BillItemRepository;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +41,10 @@ public class BillService {
     private CustomerContactDTOMapper customerContactDTOMapper;
     @Autowired
     private BillItemDTOMapper billItemDTOMapper;
+    @Autowired
+    private BillItemService billItemService;
+    @Autowired
+    private BillItemRepository billItemRepository;
 
     public BillService(CustomerService customerService) {
         this.customerService = customerService;
@@ -48,6 +54,7 @@ public class BillService {
     public BillDTO createBill(BillDTO billDTO, CustomerDTO customerDTO, List<BillItemDTO> billItemDTO) {
         Bill bill = billDTOMapper.toEntity(billDTO);
         Customer customer = customerDTOMapper.toEntity(customerDTO);
+
 
         // Convert CustomerContact to CustomerContactDTO before passing
         CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(customer.getCustomerContact());
@@ -61,17 +68,24 @@ public class BillService {
 
         bill.setCustomer(customer);
 
-        // Convert BillItemDTOs to BillItem entities and set the bill reference
-        List<BillItem> billItems = billItemDTO.stream()
-                .map(billItemDTOMapper::toEntity) // Convert DTO to entity
-                .peek(item -> item.setBill(bill)) // Set the bill reference in each item
-                .collect(Collectors.toList());
-
-        // Set the billItems to the bill
-        bill.setBillItems(billItems);
-
         // Save the Bill entity
         Bill savedBill = billRepository.save(bill);
+
+        // Convert BillItems and associate with Bill
+        List<BillItem> billItems = billItemDTO.stream()
+                .map(dto -> {  // ✅ Rename parameter to avoid conflict
+                    BillItem billItem = billItemDTOMapper.toEntity(dto);
+                    billItem.setBill(savedBill);  // Associate BillItem with Bill
+                    return billItem;
+                })
+                .collect(Collectors.toList());
+
+
+        // Save all BillItems
+        billItemRepository.saveAll(billItems);
+
+
+
 
         // Convert the saved Bill entity back to DTO and return it
         return billDTOMapper.toDTO(savedBill);

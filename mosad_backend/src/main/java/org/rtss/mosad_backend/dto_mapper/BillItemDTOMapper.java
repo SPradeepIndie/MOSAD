@@ -11,7 +11,7 @@ public class BillItemDTOMapper {
     public BillItemDTO toDTO(BillItem item) {
         BillItemDTO dto = new BillItemDTO();
         dto.setBillItemId(dto.getBillItemId());  // Fixed incorrect method name (getid -> getId)
-        dto.setItemId(item.getItem().getItemId());
+        //dto.setItemId(item.getItem().getItemId());
         dto.setDescription(item.getDescription());
         dto.setQuantity(item.getQuantity());
         dto.setUnitPrice(item.getUnitPrice());
@@ -24,8 +24,8 @@ public class BillItemDTOMapper {
 
         // Assuming you have an Item entity and need to set it using itemId
         Item item = new Item();
-        item.setItemId(dto.getItemId());
-        billItem.setItem(item);
+        //item.setItemId(dto.getItemId());
+        //billItem.setItem(item);
 
         billItem.setDescription(dto.getDescription());
         billItem.setQuantity(dto.getQuantity());

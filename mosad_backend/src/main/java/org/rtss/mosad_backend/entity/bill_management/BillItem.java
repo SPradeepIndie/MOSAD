@@ -9,9 +9,11 @@ public class BillItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billItemId;
-    @OneToOne
-    @JoinColumn(name="item_id",referencedColumnName = "itemId")
-    private Item item;
+
+    /*@OneToOne
+    @JoinColumn(name="item_id", nullable = true)
+    private Item item;*/
+
     private String description;
     private Integer quantity;
     private Double unitPrice;
@@ -23,8 +25,8 @@ public class BillItem {
 
 
 
-    public BillItem(Item item, String description, Integer quantity, Double unitPrice, Bill bill) {
-        this.item = item;
+    public BillItem(String description, Integer quantity, Double unitPrice, Bill bill) {
+        //this.item = item;
         this.description = description;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -71,13 +73,13 @@ public class BillItem {
         this.billItemId = billItemId;
     }
 
-    public Item getItem() {
+    /*public Item getItem() {
         return item;
     }
 
     public void setItem(Item item) {
         this.item = item;
-    }
+    }*/
 
     @Override
     public String toString() {

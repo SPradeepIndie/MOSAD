@@ -24,7 +24,7 @@ public class Bill {
     private Date date;
 
     // One-to-Many relationship with BillItem
-    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillItem> billItems;
 
     @ManyToOne
@@ -59,10 +59,6 @@ public class Bill {
     }
 
     public Bill() {}
-
-
-    // Getters and Setters
-
 
     public List<BillItem> getBillItems() {
         return billItems;
