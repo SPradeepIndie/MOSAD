@@ -180,21 +180,17 @@ public class ItemService {
     }
 
     //Get all items
-    public List<AddItemDTO> getAllItems(String category,String brand,Long branchId) {
+    public List<AddItemDTO> getAllItems(String cat,String brnd,Long branchId) {
         List<AddItemDTO> addItemDTOS=new ArrayList<>();
 
-        Category _category=categoryRepository.findCategoryByCategoryName(category).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Category not found"));
-        System.out.println("Category found : "+_category.getCategoryName());
-        Brand _brand=brandRepository.findByBrandName(brand).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Brand not found"));
-        System.out.println("Brand found : "+_brand.getBrandName());
+        Category category=categoryRepository.findCategoryByCategoryName(cat).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Category not found"));
+        Brand brand=brandRepository.findByBrandName(brnd).orElseThrow(()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Brand not found"));
 
-        List<Item> items=itemRepository.findByCategoryAndBrand(_category, _brand);
-        System.out.println("Item list found "+items.size());
-        //List<ItemDTO> itemDTOS=new ArrayList<>();
+        List<Item> items=itemRepository.findByCategoryAndBrand(category, brand);
         for(Item item:items) {
             ItemDTO itemDTO = itemDTOMapper.toDTO(item);
             ItemTyreDTO itemTyreDTO = null;
-            if (category.equals("Tyre")) {
+            if (cat.equals("Tyre")) {
                 ItemTyre tyre = itemTyreRepo.findByItem(item);
                 itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
 
@@ -213,4 +209,8 @@ public class ItemService {
 
     }
 
+    public List<AddItemDTO> searchItems(String brand,String size) {
+        // Implement search logic here
+        return new ArrayList<>();
+    }
 }
