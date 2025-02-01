@@ -4,6 +4,7 @@ import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
 import org.rtss.mosad_backend.service.stock_management_service.ItemService;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,30 +20,30 @@ public class ItemController {
     }
 
     @GetMapping("/view")
-    public List<AddItemDTO> getAllItems(@Param("category") String category,@Param("brand") String brand,@Param("branchId") Long branchId){
+    public ResponseEntity<List<AddItemDTO>> getAllItems(@Param("category") String category,@Param("brand") String brand,@Param("branchId") Long branchId){
 
-        return itemService.getAllItems(category,brand,branchId);
+        return ResponseEntity.ok().body(itemService.getAllItems(category,brand,branchId));
 
     }
 
 
     @PostMapping("/add")
-    public ResponseDTO addTyreItem(@RequestBody AddItemDTO addItemDTO) {
-        return itemService.addItem(addItemDTO);
+    public ResponseEntity<ResponseDTO> addItem(@RequestBody AddItemDTO addItemDTO) {
+        return ResponseEntity.ok().body(itemService.addItem(addItemDTO));
     }
 
     @PutMapping("/update")
-    public ResponseDTO updateTyreItem(@RequestBody AddItemDTO updateItemDTO) {
-        return itemService.updateItem(updateItemDTO);
+    public ResponseEntity<ResponseDTO> updateItem(@RequestBody AddItemDTO updateItemDTO) {
+        return ResponseEntity.ok().body(itemService.updateItem(updateItemDTO));
     }
 
     @DeleteMapping("/delete")
-    public ResponseDTO deleteTyreItem(@Param("itemId") Long itemId) {
-        return itemService.deleteItem(itemId);
+    public ResponseEntity<ResponseDTO> deleteItem(@Param("itemId") Long itemId) {
+        return ResponseEntity.ok().body(itemService.deleteItem(itemId));
     }
 
     @GetMapping("/search")
-    public List<AddItemDTO> searchItems(@Param("brand") String brand,@Param("size") String size) {
-        return itemService.searchItems(brand,size);
+    public ResponseEntity<List<AddItemDTO>>searchItems(@Param("brand") String brand,@Param("size") String size) {
+        return ResponseEntity.ok().body(itemService.searchItems(brand,size));
     }
 }
