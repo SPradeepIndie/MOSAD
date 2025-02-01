@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.service.credit_management;
 
+import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
@@ -159,14 +160,16 @@ public class CreditService {
     }
 
     // Delete repayment by id
-    public ResponseEntity<Void> deleteRepaymentById(Long repaymentId) {
+    public ResponseEntity<ResponseDTO> deleteRepaymentById(Long repaymentId) {
         try {
             Repayment repayment = repaymentRepository.findById(repaymentId)
                     .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Repayment not found"))));
 
             repaymentRepository.delete(repayment);
 
-            return ResponseEntity.noContent().build();
+            ResponseDTO responseDTO = new ResponseDTO(true, "Repayment deleted successfully");
+
+            return ResponseEntity.ok().body(responseDTO);
         } catch (Exception ex) {
             throw new ObjectNotValidException(new HashSet<>(List.of("Failed to delete repayment: " + ex.getMessage())));
         }

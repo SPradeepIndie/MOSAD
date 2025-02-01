@@ -11,3 +11,7 @@ export const addRepayment = (creditId, repayment) => {
     ...repayment,
   });
 };
+
+export const deleteRepayment = (repaymentId) => {
+  return apiClient.delete("/credit/delete-repayment", {params: {repaymentId}});
+}

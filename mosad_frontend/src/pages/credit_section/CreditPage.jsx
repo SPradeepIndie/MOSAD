@@ -2,23 +2,24 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Container, Collapse, IconButton, Button, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Typography, Paper, TextField,
-  FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl,
-  CircularProgress
+  FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl
 } from '@mui/material';
-import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
-import { addRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
+import { Delete, KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { addRepayment,deleteRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import Loading from '../../component/Loading';
+import ConfirmationDialog from '../../component/ConfirmationDialog';
 import PropTypes from 'prop-types';
 
-function Row({ row, onAddRepayment, setMessage, message,columns }) {
+function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
+  const [conformationDialog, setConformationDialog] = useState(false);
 
 
   const handleDialogOpen = () => {
@@ -41,10 +42,19 @@ function Row({ row, onAddRepayment, setMessage, message,columns }) {
     }
   };
 
+  const handleDeleteRepayment = (id) => {
+    
+    onDeleteRepayment(row.creditId,id);
+    setConformationDialog(false);
+  };
+
+  
+
   const remainingBalance = row.balance - row.repayments.reduce((acc, repayment) => acc + repayment.amount, 0);
 
   return (
     <>
+      
       <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: remainingBalance == 0 ? '#C8E6C9' : '' }}>
         <TableCell>
           <IconButton
@@ -89,6 +99,10 @@ function Row({ row, onAddRepayment, setMessage, message,columns }) {
                       <TableCell>{repayment.repaymentId}</TableCell>
                       <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
                       <TableCell align="right">{repayment.amount}</TableCell>
+                      <TableCell align="right"><Delete onClick={()=>setConformationDialog(true)} sx={{scale:0.75,cursor:'pointer'}}/></TableCell>
+                      {conformationDialog &&
+      <ConfirmationDialog message='Are you sure you want to delete this repayment?' isOpen={open} onCancel={()=>setConformationDialog(false) } onConfirm={()=>handleDeleteRepayment(repayment.repaymentId)} />
+    }
                     </TableRow>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>
@@ -256,6 +270,34 @@ const CreditPage = () => {
     }
   };
 
+  const handleDeleteRepayment =async (creditId,id) => {
+    
+      try {
+        const response = await deleteRepayment(id);
+        console.log('Repayment deleted successfully:', response.data);
+
+        setMessage({ type: 'success', text: 'Repayment deleted successfully!' });
+        setTimeout(() => setMessage(null), 2000);
+
+        // Update the rows state
+        setRows((prevRows) =>
+          prevRows.map((row) =>
+            row.creditId === creditId
+              ? {
+                ...row,
+                repayments: row.repayments.filter((repayment) => repayment.repaymentId !== id),
+              }
+              : row
+          )
+        );
+      } catch (error) {
+        console.error('Error deleting repayment:', error.response?.data || error.message);
+        setMessage({ type: 'error', text: 'Failed to delete repayment!' });
+        setTimeout(() => setMessage(null), 2000);
+      }
+    
+  };
+
 
 
   let remainingBalance;
@@ -401,7 +443,7 @@ const CreditPage = () => {
             </TableHead>
             <TableBody>
               {filteredRows.map((row) => (
-                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} setMessage={setMessage} message={message} columns={columns} />
+                <Row key={row.creditId} row={row} onAddRepayment={handleAddRepayment} onDeleteRepayment={handleDeleteRepayment} setMessage={setMessage} message={message} columns={columns} />
               ))}
             </TableBody>
           </Table>
@@ -429,6 +471,7 @@ Row.propTypes = {
     ).isRequired,
   }).isRequired,
   onAddRepayment: PropTypes.func.isRequired,
+  onDeleteRepayment: PropTypes.func.isRequired,
   setMessage: PropTypes.func.isRequired,
   message: PropTypes.oneOfType([
     PropTypes.shape({
