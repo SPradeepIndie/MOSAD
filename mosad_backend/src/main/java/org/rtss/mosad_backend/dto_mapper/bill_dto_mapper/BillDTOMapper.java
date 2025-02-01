@@ -4,22 +4,40 @@ import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
+
 import org.springframework.stereotype.Component;
+
+import java.security.PrivateKey;
+import java.util.stream.Collectors;
+
+import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 
 @Component
 public class BillDTOMapper {
 
-    public BillDTO toDTO(Bill bill) {
-        BillDTO dto = new BillDTO();
-        dto.setBillId(bill.getBillId());
-        dto.setTotalAmount(bill.getTotalAmount());
-        dto.setAdvance(bill.getAdvance());
-        dto.setBalance(bill.getBalance());
-        dto.setDate(bill.getDate());
-       // dto.setCustomerId(bill.getCustomer() != null ? bill.getCustomer().getId() : null);
-        //dto.setItems(bill.getItems().stream().map(this::toItemDTO).collect(Collectors.toList()).reversed());
-        return dto;
+    private final BillItemDTOMapper billItemDTOMapper; // Inject dependency
+
+
+    public BillDTOMapper(BillItemDTOMapper billItemDTOMapper) {
+        this.billItemDTOMapper = billItemDTOMapper;
     }
+
+    public BillDTO toDTO(Bill bill) {
+        BillDTO billdto = new BillDTO();
+        billdto.setBillId(bill.getBillId());
+        billdto.setTotalAmount(bill.getTotalAmount());
+        billdto.setAdvance(bill.getAdvance());
+        billdto.setBalance(bill.getBalance());
+        billdto.setDate(bill.getDate());
+        billdto.setCustomerDTO(bill.getCustomer() != null
+                ? new CustomerDTO(bill.getCustomer()) : null);
+        billdto.setBillItemDTO(bill.getBillItems() != null
+                ? bill.getBillItems().stream().map(billItemDTOMapper :: toBillItemDTO).collect(Collectors.toList())
+                : null);
+
+        return billdto;
+    }
+
 
     public Bill toEntity(BillDTO dto) {
         Bill bill = new Bill();
@@ -29,15 +47,5 @@ public class BillDTOMapper {
         bill.setBalance(dto.getBalance());
         bill.setDate(dto.getDate());
         return bill;
-    }
-
-    private BillItemDTO toItemDTO(BillItem item) {
-        BillItemDTO dto = new BillItemDTO();
-        dto.setBillItemId(item.getBillItemId());
-        //dto.setItemId(item.getItem().getItemId());
-        dto.setDescription(item.getDescription());
-        dto.setQuantity(item.getQuantity());
-        dto.setUnitPrice(item.getUnitPrice());
-        return dto;
     }
 }

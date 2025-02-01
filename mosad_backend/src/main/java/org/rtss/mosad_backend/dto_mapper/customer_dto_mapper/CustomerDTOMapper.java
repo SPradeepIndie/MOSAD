@@ -26,6 +26,7 @@ public class CustomerDTOMapper {
         // Map CustomerContact to CustomerContactDTO
         if (customer.getCustomerContact() != null) {
             CustomerContactDTO contactDTO = new CustomerContactDTO();
+            contactDTO.setCustomerContactId(customer.getCustomerContact().getCustomerContactId());
             contactDTO.setContactNumber(customer.getCustomerContact().getContactNumber());
             customerDTO.setCustomerContactDTO(contactDTO);
         }
@@ -48,6 +49,7 @@ public class CustomerDTOMapper {
         // Map CustomerContactDTO to CustomerContact
         if (customerDTO.getCustomerContactDTO() != null) {
             CustomerContact customerContact = new CustomerContact();
+            customerContact.setCustomerContactId(customerDTO.getCustomerContactDTO().getCustomerContactId());
             customerContact.setContactNumber(customerDTO.getCustomerContactDTO().getContactNumber());
             customer.setCustomerContact(customerContact);
         }

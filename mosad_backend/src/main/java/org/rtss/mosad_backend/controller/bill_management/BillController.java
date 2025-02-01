@@ -27,13 +27,4 @@ public class BillController {
         List<BillDTO> bills = billService.getAllBills();
         return ResponseEntity.ok(bills);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BillDTO> getBillById(@PathVariable Long id) {
-        BillDTO bill = billService.getBillById(id);
-        if (bill != null) {
-            return ResponseEntity.ok(bill);
-        }
-        return ResponseEntity.notFound().build();
-    }
 }

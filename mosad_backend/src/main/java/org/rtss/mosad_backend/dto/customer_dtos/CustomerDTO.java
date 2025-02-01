@@ -2,6 +2,7 @@ package org.rtss.mosad_backend.dto.customer_dtos;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
+import org.rtss.mosad_backend.entity.customer.Customer;
 
 import java.util.List;
 
@@ -17,8 +18,17 @@ public class CustomerDTO {
 
     private String customerType;
 
-    // Getters and Setters
+    public CustomerDTO(Customer customer) {
+        this.customerId = customer.getCustomerId();
+        this.customerName = customer.getCustomerName();
+        this.customerType = customer.getCustomerType();
+        this.customerContactDTO = new CustomerContactDTO(customer.getCustomerContact());
+    }
 
+    public CustomerDTO() {
+    }
+
+    // Getters and Setters
 
     public Long getCustomerId() {
         return customerId;

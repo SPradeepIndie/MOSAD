@@ -16,17 +16,26 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
+import { Router, Routes, useNavigate } from 'react-router-dom';
+import AllBillsPage from "./AllBillsPage";
 
 function ccyFormat(num) {
   return num.toFixed(2);
 }
 
 const BillPage = () => {
+  const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
   const [quantity, setQuantity] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [telephone, setTelephone] = useState("");
+
+
+
+  const allBillsPage = () => {
+    navigate('/AllBillsPage')
+  }
 
 
   const handleAddToBill = (item) => {
@@ -121,7 +130,7 @@ const BillPage = () => {
     <Box sx={{ p: 4 }}>
       {/* Search Component */}
       <Box sx={{ mb: 4 }}>
-        <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity} />
+        <SearchComponent onAddToBill={handleAddToBill} quantity={quantity} setQuantity={setQuantity}/>
       </Box>
 
       {/* Bill Content */}
@@ -385,8 +394,16 @@ const BillPage = () => {
       <Button variant="contained" color="primary" onClick={handlePrint}>
         Print Bill
       </Button>
+          
+      <Button 
+        variant="contained" 
+        onClick={allBillsPage}
+        sx={{ backgroundColor: "yellow", color: "black", '&:hover': { backgroundColor: "gold" } }}>
+          All Bills
+      </Button>
 
       </Box>
+      
     </Box>
   );
 };

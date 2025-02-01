@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.user_management.Users;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

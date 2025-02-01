@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CustomerService {
 
@@ -37,5 +40,11 @@ public class CustomerService {
         Customer savedCustomer =  customerRepository.save(customer);
 
         return customerDTOMapper.toDTO(savedCustomer);
+    }
+
+
+    public List<CustomerDTO> getCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream().map(customerDTOMapper::toDTO).collect(Collectors.toList());
     }
 }

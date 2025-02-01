@@ -8,23 +8,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class BillItemDTOMapper {
 
-    public BillItemDTO toDTO(BillItem item) {
+    public BillItemDTO toBillItemDTO(BillItem billItem) {
         BillItemDTO dto = new BillItemDTO();
-        dto.setBillItemId(dto.getBillItemId());  // Fixed incorrect method name (getid -> getId)
+        dto.setBillItemId(billItem.getBillItemId());
         //dto.setItemId(item.getItem().getItemId());
-        dto.setDescription(item.getDescription());
-        dto.setQuantity(item.getQuantity());
-        dto.setUnitPrice(item.getUnitPrice());
+        dto.setDescription(billItem.getDescription());
+        dto.setQuantity(billItem.getQuantity());
+        dto.setUnitPrice(billItem.getUnitPrice());
         return dto;
     }
 
-    public BillItem toEntity(BillItemDTO dto) {
+    public BillItem toBillItemEntity(BillItemDTO dto) {
         BillItem billItem = new BillItem();
         billItem.setBillItemId(dto.getBillItemId()); // Fixed method name
 
         // Assuming you have an Item entity and need to set it using itemId
         Item item = new Item();
-        //item.setItemId(dto.getItemId());
+        item.setItemId(dto.getItemId());
         //billItem.setItem(item);
 
         billItem.setDescription(dto.getDescription());

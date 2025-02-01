@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.dto.bill_dtos;
 
 public class BillItemDTO {
     private Long billItemId;
-    //private Long itemId;
+    private Long itemId;
     private String description;
     private Integer quantity;
     private Double unitPrice;
@@ -16,13 +16,13 @@ public class BillItemDTO {
         this.billItemId = billItemId;
     }
 
-   /* public Long getItemId() {
+   public Long getItemId() {
         return itemId;
     }
 
     public void setItemId(Long itemId) {
         this.itemId = itemId;
-    }*/
+    }
 
     public String getDescription() {
         return description;
@@ -47,4 +47,6 @@ public class BillItemDTO {
     public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
+
+
 }

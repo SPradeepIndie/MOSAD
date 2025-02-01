@@ -51,36 +51,25 @@ public class BillService {
     @Transactional
     public BillDTO createBill(BillDTO billDTO, CustomerDTO customerDTO, List<BillItemDTO> billItemDTO) {
         Bill bill = billDTOMapper.toEntity(billDTO);
-        CustomerDTO customerDTO1 = customerService.addCustomer(customerDTO);
 
-
-        // Convert CustomerContact to CustomerContactDTO before passing
-        //CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(customer.getCustomerContact());
-
-        //customer = customerService.addCustomer(customerDTO);
-        Customer customer2 = customerDTOMapper.toEntity(customerDTO1);
-
-
-        bill.setCustomer(customer2);
+        customerDTO = customerService.addCustomer(customerDTO);
+        Customer customer = customerDTOMapper.toEntity(customerDTO);
+        bill.setCustomer(customer);
 
         // Save the Bill entity
         Bill savedBill = billRepository.save(bill);
 
         // Convert BillItems and associate with Bill
         List<BillItem> billItems = billItemDTO.stream()
-                .map(dto -> {  // ✅ Rename parameter to avoid conflict
-                    BillItem billItem = billItemDTOMapper.toEntity(dto);
+                .map(dto -> {
+                    BillItem billItem = billItemDTOMapper.toBillItemEntity(dto);
                     billItem.setBill(savedBill);  // Associate BillItem with Bill
                     return billItem;
                 })
                 .collect(Collectors.toList());
 
-
         // Save all BillItems
         billItemRepository.saveAll(billItems);
-
-
-
 
         // Convert the saved Bill entity back to DTO and return it
         return billDTOMapper.toDTO(savedBill);
@@ -93,9 +82,4 @@ public class BillService {
                 .collect(Collectors.toList());
     }
 
-    public BillDTO getBillById(Long id) {
-        return billRepository.findById(id)
-                .map(billDTOMapper::toDTO)
-                .orElse(null);
-    }
 }
