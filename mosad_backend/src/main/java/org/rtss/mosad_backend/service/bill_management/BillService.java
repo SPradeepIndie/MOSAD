@@ -3,10 +3,9 @@ package org.rtss.mosad_backend.service.bill_management;
 import jakarta.transaction.Transactional;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.dto_mapper.BillDTOMapper;
-import org.rtss.mosad_backend.dto_mapper.BillItemDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillItemDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
@@ -19,7 +18,6 @@ import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,20 +51,17 @@ public class BillService {
     @Transactional
     public BillDTO createBill(BillDTO billDTO, CustomerDTO customerDTO, List<BillItemDTO> billItemDTO) {
         Bill bill = billDTOMapper.toEntity(billDTO);
-        Customer customer = customerDTOMapper.toEntity(customerDTO);
+        CustomerDTO customerDTO1 = customerService.addCustomer(customerDTO);
 
 
         // Convert CustomerContact to CustomerContactDTO before passing
-        CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(customer.getCustomerContact());
+        //CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(customer.getCustomerContact());
 
-        customer = customerService.addCustomer(
-                customer.getCustomerId(),
-                customer.getCustomerName(),
-                customer.getCustomerType(),
-                customerContactDTO
-        );
+        //customer = customerService.addCustomer(customerDTO);
+        Customer customer2 = customerDTOMapper.toEntity(customerDTO1);
 
-        bill.setCustomer(customer);
+
+        bill.setCustomer(customer2);
 
         // Save the Bill entity
         Bill savedBill = billRepository.save(bill);

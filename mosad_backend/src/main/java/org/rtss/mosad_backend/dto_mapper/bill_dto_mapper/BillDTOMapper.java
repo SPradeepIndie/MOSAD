@@ -1,12 +1,10 @@
-package org.rtss.mosad_backend.dto_mapper;
+package org.rtss.mosad_backend.dto_mapper.bill_dto_mapper;
 
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 @Component
 public class BillDTOMapper {

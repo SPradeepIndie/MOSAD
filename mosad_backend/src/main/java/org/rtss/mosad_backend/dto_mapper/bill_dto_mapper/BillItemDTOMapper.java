@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.dto_mapper;
+package org.rtss.mosad_backend.dto_mapper.bill_dto_mapper;
 
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;

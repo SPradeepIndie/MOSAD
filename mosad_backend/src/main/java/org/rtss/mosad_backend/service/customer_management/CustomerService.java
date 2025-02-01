@@ -3,6 +3,7 @@ package org.rtss.mosad_backend.service.customer_management;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
+import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
@@ -24,18 +25,17 @@ public class CustomerService {
     @Autowired
     private CustomerContactDTOMapper customerContactDTOMapper;
 
-
-
+    @Autowired
+    private CustomerDTOMapper customerDTOMapper;
 
     @Transactional
-    public Customer addCustomer(Long customerId, String customerName, String customerType, CustomerContactDTO customerContactDTO) {
-        Customer customer = new Customer();
-        customer.setCustomerId(customerId);
-        customer.setCustomerName(customerName);
-        customer.setCustomerType(customerType);
-        CustomerContact customerContact = customerContactDTOMapper.customerContactDTOToCustomerContact(customerContactDTO);
+    public CustomerDTO addCustomer(CustomerDTO customerDTO) {
+        Customer customer = customerDTOMapper.toEntity(customerDTO);
+        CustomerContact customerContact = customerContactDTOMapper.customerContactDTOToCustomerContact(customerDTO.getCustomerContactDTO());
         customerContact.setCustomer(customer);
         customer.setCustomerContact(customerContact);
-        return customerRepository.save(customer);
+        Customer savedCustomer =  customerRepository.save(customer);
+
+        return customerDTOMapper.toDTO(savedCustomer);
     }
 }
