@@ -1,4 +1,6 @@
 import { Container, Typography, CircularProgress } from '@mui/material';
+import PropTypes from 'prop-types';
+
 
 export default function Loading({WhatsLoading}) {
     return (
@@ -10,3 +12,8 @@ export default function Loading({WhatsLoading}) {
       </Container>
     );
 }
+
+
+Loading.propTypes = {
+  WhatsLoading: PropTypes.string.isRequired
+};
