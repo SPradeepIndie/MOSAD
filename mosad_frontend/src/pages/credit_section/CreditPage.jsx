@@ -99,10 +99,10 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
                       <TableCell>{repayment.repaymentId}</TableCell>
                       <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
                       <TableCell align="right">{repayment.amount}</TableCell>
-                      <TableCell align="right"><Delete onClick={()=>setConformationDialog(true)} sx={{scale:0.75,cursor:'pointer'}}/></TableCell>
+                      {/* <TableCell align="right"><Delete onClick={() => setConformationDialog(true)} sx={{ scale: 0.75, cursor: 'pointer' }} /></TableCell>
                       {conformationDialog &&
-      <ConfirmationDialog message='Are you sure you want to delete this repayment?' isOpen={open} onCancel={()=>setConformationDialog(false) } onConfirm={()=>handleDeleteRepayment(repayment.repaymentId)} />
-    }
+                        <ConfirmationDialog message='Are you sure you want to delete this repayment?' isOpen={open} onCancel={() => setConformationDialog(false)} onConfirm={() => handleDeleteRepayment(repayment.repaymentId)} />
+                      } */}
                     </TableRow>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>

@@ -63,6 +63,11 @@ public class CreditController {
         return ResponseEntity.ok(creditService.deleteRepaymentById(repaymentId).getBody());
     }
 
+    @PutMapping("update-repayment")
+    public ResponseEntity<RepaymentResponseDTO> updateRepayment(@RequestBody RepaymentResponseDTO repaymentUpdate) {
+        return ResponseEntity.ok(creditService.updateRepayment(repaymentUpdate).getBody());
+    }
+
     @GetMapping("/get-credits-by-due-date")
     public List<Credit> getCreditsBtDueDate(@RequestParam String date) {
             return creditService.getCreditsBtDueDate(date);

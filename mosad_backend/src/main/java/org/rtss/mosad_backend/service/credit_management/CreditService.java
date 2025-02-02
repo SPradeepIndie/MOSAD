@@ -175,6 +175,30 @@ public class CreditService {
         }
     }
 
+    //Update repayment
+    public ResponseEntity<RepaymentResponseDTO> updateRepayment(RepaymentResponseDTO repaymentUpdate) {
+        try {
+            Repayment repayment = repaymentRepository.findById(repaymentUpdate.getRepaymentId())
+                    .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Repayment not found"))));
+
+            repayment.setDate(repaymentUpdate.getDate());
+            repayment.setAmount(repaymentUpdate.getAmount());
+
+            repayment = repaymentRepository.save(repayment);
+
+            RepaymentResponseDTO responseDTO = new RepaymentResponseDTO(
+                    repayment.getRepaymentId(),
+                    repayment.getDate(),
+                    repayment.getAmount(),
+                    repayment.getCredit().getCreditId()
+            );
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception ex) {
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to update repayment: " + ex.getMessage())));
+        }
+    }
+
     public List<Credit> getCreditsBtDueDate(String date)  {
         Date dueDate = null;
         try {
