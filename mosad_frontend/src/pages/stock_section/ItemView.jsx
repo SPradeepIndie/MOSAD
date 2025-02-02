@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -35,8 +35,10 @@ const ItemView = () => {
   const [inputFieldErrors, setinputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
+
+
   const [confirmationDialog, setConfirmationDialog] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const dialogOpenRef = useRef(false); // ✅ Track whether dialog is open
 
   const openDialog = (item) => {
     if (item) {
@@ -105,29 +107,46 @@ const ItemView = () => {
     }
   }
 
+  
+  const handleRowClick = (id) => {
+    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
+    
+  };
+
+  const openConfirmationDialog = () => {
+    if(selectedRowId !== null){
+    dialogOpenRef.current = true; // ✅ Mark dialog as open
+    setConfirmationDialog(true);
+    }else{
+      setMessage({ type: "error", text: "Please select an item to delete." });
+      setTimeout(() => setMessage(null), 2000);
+    }
+  };
+  
+  const closeConfirmationDialog = () => {
+    dialogOpenRef.current = false; // ✅ Mark dialog as closed
+    setConfirmationDialog(false);
+  };
+  
   const handleDelete = () => {
-
-    if (deleteConfirmation) {
-      console.log("Delete Confirmation "+deleteConfirmation+" Selected Row ID:", selectedRowId);
-
-      if (selectedRowId !== null) {
-        const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
-        deleteItem(selectedItem.itemDTO.itemId)
-          .then(() => {
-            setMessage({ type: "success", text: "Item deleted successfully!" });
-            setRows(rows.filter((row) => row.itemDTO.itemId !== selectedRowId));
-            setSelectedRowId(null);
-            setTimeout(() => setMessage(null), 3000);
-          })
-          .catch((error) => {
-            console.error("Error deleting item:", error);
-            setMessage({ type: "error", text: "Failed to delete item!" });
-            setTimeout(() => setMessage(null), 3000);
-          });
-      } else {
-        setMessage({ type: "error", text: "Please select an item to delete." });
-        setTimeout(() => setMessage(null), 3000);
-      }
+    if (selectedRowId !== null) {
+      
+      const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
+      deleteItem(selectedItem.itemDTO.itemId)
+        .then(() => {
+          setMessage({ type: "success", text: "Item deleted successfully!" });
+          setRows(rows.filter((row) => row.itemDTO.itemId !== selectedRowId));
+          setSelectedRowId(null);
+          setTimeout(() => setMessage(null), 3000);
+        })
+        .catch((error) => {
+          console.error("Error deleting item:", error);
+          setMessage({ type: "error", text: "Failed to delete item!" });
+          setTimeout(() => setMessage(null), 3000);
+        });
+    } else {
+      setMessage({ type: "error", text: "Please select an item to delete." });
+      setTimeout(() => setMessage(null), 3000);
     }
   };
 
@@ -149,24 +168,27 @@ const ItemView = () => {
 
   }, [selectedCategory, selectedBrand]);
 
-  // useEffect(() => {
-  //   const handleOutsideClick = (event) => {
-  //     if (
-  //       !event.target.closest(".item-table") &&
-  //       !event.target.closest(".confirmation-dialog") && 
-  //       !event.target.closest(".confirmation-dialog-overlay") // ✅ Ignore clicks on the overlay too
-  //     ) {
-  //       console.log("Clicked outside, deselecting row");
-  //       setSelectedRowId(null);
-  //     }
-  //   };
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        dialogOpenRef.current || // ✅ Prevent deselection when dialog is open
+        event.target.closest(".item-table") || 
+        event.target.closest(".confirmation-dialog") || 
+        event.target.closest(".confirmation-dialog-overlay")
+      ) {
+        return;
+      }
   
-  //   document.addEventListener("click", handleOutsideClick);
+      console.log("Clicked outside, deselecting row");
+      setSelectedRowId(null);
+    };
   
-  //   return () => {
-  //     document.removeEventListener("click", handleOutsideClick);
-  //   };
-  // }, [selectedRowId]);
+    document.addEventListener("click", handleOutsideClick);
+  
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [selectedRowId]);
   
 
   const handleSubmit = (e) => {
@@ -229,21 +251,20 @@ const ItemView = () => {
 
 
 
-  const handleRowClick = (id) => {
-    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
-    console.log("Selected Row ID:", selectedRowId);
-  };
 
   return (
     <>
       {message && <GeneralMessage message={message} />}
       {confirmationDialog && (
         <ConfirmationDialog
-          message="Are you sure you want to delete this item?"
-          onCancel={() => {setConfirmationDialog(false)}}
-          onConfirm={() => {setConfirmationDialog(false);setDeleteConfirmation(true);handleDelete();}}
-          isOpen={confirmationDialog}
-        />
+        message={"Are you sure you want to delete this item ID="+selectedRowId+" ? "}
+        onCancel={closeConfirmationDialog}
+        onConfirm={() => {
+          closeConfirmationDialog();
+          handleDelete();
+        }}
+        isOpen={confirmationDialog}
+      />
       )}
       <div className="item-view-container">
         <section className="banner">
@@ -298,7 +319,7 @@ const ItemView = () => {
           </tbody>
         </table>
         <div className="button-group">
-          <button className="btn delete" onClick={()=>setConfirmationDialog(true)}>Delete</button>
+          <button className="btn delete" onClick={()=>openConfirmationDialog()}>Delete</button>
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
               console.log("On Update Selected Row ID:", selectedRowId);
