@@ -13,6 +13,7 @@ import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiS
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
+import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 const ItemView = () => {
  
@@ -34,6 +35,8 @@ const ItemView = () => {
   const [inputFieldErrors, setinputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
+  const [confirmationDialog, setConfirmationDialog] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
 
   const openDialog = (item) => {
     if (item) {
@@ -103,23 +106,28 @@ const ItemView = () => {
   }
 
   const handleDelete = () => {
-    if (selectedRowId !== null) {
-      const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
-      deleteItem(selectedItem.itemDTO.itemId)
-        .then(() => {
-          setMessage({ type: "success", text: "Item deleted successfully!" });
-          setRows(rows.filter((row) => row.itemDTO.itemId !== selectedRowId));
-          setSelectedRowId(null);
-          setTimeout(() => setMessage(null), 3000);
-        })
-        .catch((error) => {
-          console.error("Error deleting item:", error);
-          setMessage({ type: "error", text: "Failed to delete item!" });
-          setTimeout(() => setMessage(null), 3000);
-        });
-    } else {
-      setMessage({ type: "error", text: "Please select an item to delete." });
-      setTimeout(() => setMessage(null), 3000);
+
+    if (deleteConfirmation) {
+      console.log("Delete Confirmation "+deleteConfirmation+" Selected Row ID:", selectedRowId);
+
+      if (selectedRowId !== null) {
+        const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
+        deleteItem(selectedItem.itemDTO.itemId)
+          .then(() => {
+            setMessage({ type: "success", text: "Item deleted successfully!" });
+            setRows(rows.filter((row) => row.itemDTO.itemId !== selectedRowId));
+            setSelectedRowId(null);
+            setTimeout(() => setMessage(null), 3000);
+          })
+          .catch((error) => {
+            console.error("Error deleting item:", error);
+            setMessage({ type: "error", text: "Failed to delete item!" });
+            setTimeout(() => setMessage(null), 3000);
+          });
+      } else {
+        setMessage({ type: "error", text: "Please select an item to delete." });
+        setTimeout(() => setMessage(null), 3000);
+      }
     }
   };
 
@@ -135,26 +143,31 @@ const ItemView = () => {
 
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
-
-
-
-
     fetchandSetItems();
 
-    const handleOutsideClick = (event) => {
-      if (!event.target.closest(".item-table")) {
-        setSelectedRowId(null); // Deselect row when clicking outside the table
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
 
 
   }, [selectedCategory, selectedBrand]);
+
+  // useEffect(() => {
+  //   const handleOutsideClick = (event) => {
+  //     if (
+  //       !event.target.closest(".item-table") &&
+  //       !event.target.closest(".confirmation-dialog") && 
+  //       !event.target.closest(".confirmation-dialog-overlay") // ✅ Ignore clicks on the overlay too
+  //     ) {
+  //       console.log("Clicked outside, deselecting row");
+  //       setSelectedRowId(null);
+  //     }
+  //   };
+  
+  //   document.addEventListener("click", handleOutsideClick);
+  
+  //   return () => {
+  //     document.removeEventListener("click", handleOutsideClick);
+  //   };
+  // }, [selectedRowId]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -224,6 +237,14 @@ const ItemView = () => {
   return (
     <>
       {message && <GeneralMessage message={message} />}
+      {confirmationDialog && (
+        <ConfirmationDialog
+          message="Are you sure you want to delete this item?"
+          onCancel={() => {setConfirmationDialog(false)}}
+          onConfirm={() => {setConfirmationDialog(false);setDeleteConfirmation(true);handleDelete();}}
+          isOpen={confirmationDialog}
+        />
+      )}
       <div className="item-view-container">
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
@@ -277,7 +298,7 @@ const ItemView = () => {
           </tbody>
         </table>
         <div className="button-group">
-          <button className="btn delete" onClick={handleDelete}>Delete</button>
+          <button className="btn delete" onClick={()=>setConfirmationDialog(true)}>Delete</button>
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
               console.log("On Update Selected Row ID:", selectedRowId);
