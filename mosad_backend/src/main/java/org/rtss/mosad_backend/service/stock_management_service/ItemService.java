@@ -239,9 +239,22 @@ public class ItemService {
     }
 
 
-    public List<AddItemDTO> searchItems(String brand,String size) {
+    public List<AddItemDTO> searchItems(String brand,String size,Long branchId) {
         // Implement search logic here
-        
-        return new ArrayList<>();
+        List<ItemTyre> itemTyres = itemTyreRepo.findByItem_Brand_BrandNameAndTyreSize(brand, size);
+        System.out.println("\n\n"+itemTyres+"\n\n");
+        List<AddItemDTO> addItemDTOS = new ArrayList<>();
+        for (ItemTyre itemTyre : itemTyres) {
+            System.out.println("\n\n ItemID = "+itemTyre.getItem().getItemId()+"\n\n");
+            ItemDTO itemDTO = itemDTOMapper.toDTO(itemTyre.getItem());
+
+            ItemTyreDTO itemTyreDTO = itemTyreDTOMapper.toDTO(itemTyre);
+            ItemBranch itemBranch = itemBranchRepository.findByItemIdAndBranchId(itemTyre.getItem().getItemId(), branchId);
+            ItemBranchDTO itemBranchDTO = itemBranchDTOMapper.toDTO(itemBranch);
+            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, itemTyreDTO, itemBranchDTO);
+            addItemDTOS.add(addItemDTO);
+        }
+        System.out.println(addItemDTOS);
+        return addItemDTOS;
     }
 }
