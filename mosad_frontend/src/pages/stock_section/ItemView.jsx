@@ -13,11 +13,9 @@ import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiS
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
-import useAuth  from "../../hooks/useAuth";
 
 const ItemView = () => {
-  const {auth}=useAuth();
-  //console.log(auth);
+ 
   //Store passed Category and Brand using Link state & useLocation
   const location = useLocation();
   const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
@@ -39,7 +37,6 @@ const ItemView = () => {
 
   const openDialog = (item) => {
     if (item) {
-      //console.log("Item to edit:", item);
       const formattedItem = {
         itemId: item.itemDTO.itemId,
         itemName: item.itemDTO.itemName,
@@ -55,7 +52,6 @@ const ItemView = () => {
         })
         
       };
-      //console.log("Formatted Item to update:", formattedItem);
 
       setCurrentItem(formattedItem);
       setFormData(formattedItem);
@@ -168,7 +164,6 @@ const ItemView = () => {
       return;
     }
 
-    //console.log("Form Data:", formData);
     const formatedData = {
       "itemDTO": {
         "itemId": currentItem ? currentItem.itemId : null,
@@ -191,7 +186,6 @@ const ItemView = () => {
       }
     };
 
-    //console.log(formatedData);
     const request = currentItem
       ? updateItem(formatedData)
       : addItem(formatedData);
