@@ -16,8 +16,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
-import { Router, Routes, useNavigate } from 'react-router-dom';
-import AllBillsPage from "./AllBillsPage";
+import { useNavigate } from 'react-router-dom';
 
 function ccyFormat(num) {
   return num.toFixed(2);
@@ -30,13 +29,6 @@ const BillPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [telephone, setTelephone] = useState("");
-
-
-
-  const allBillsPage = () => {
-    navigate('/AllBillsPage')
-  }
-
 
   const handleAddToBill = (item) => {
     setRows((prevRows) => [
@@ -51,8 +43,6 @@ const BillPage = () => {
       },
     ]);
   };
-  
-  
 
   const handleInputChange = (index, field, value) => {
     setRows((prevRows) => {
@@ -84,7 +74,6 @@ const BillPage = () => {
     }
   };
   
-
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
 
@@ -106,25 +95,18 @@ const BillPage = () => {
 
   const alertMessage = `
     Rashmi Tyre Center - Bill Details
-
     Date : ${new Date().toLocaleDateString()}
     Customer Name: ${customerName || "N/A"}
     Telephone: ${telephone || "N/A"}
     Total: ${ccyFormat(total)}
     Advance: ${ccyFormat(advance)}
     Balance: ${ccyFormat(balance)}
-
     Items:
     ${details}
-
     Thank you for your business!
   `;
-
   alert(alertMessage);
 };
-
-  
-  
 
   return (
     <Box sx={{ p: 4 }}>
@@ -395,12 +377,9 @@ const BillPage = () => {
         Print Bill
       </Button>
           
-      <Button 
-        variant="contained" 
-        onClick={allBillsPage}
-        sx={{ backgroundColor: "yellow", color: "black", '&:hover': { backgroundColor: "gold" } }}>
+      <Button variant="contained" onClick={() => navigate("/AllBillsPage")} sx={{ backgroundColor: "yellow", color: "black", ml: 2 }}>
           All Bills
-      </Button>
+        </Button>
 
       </Box>
       
