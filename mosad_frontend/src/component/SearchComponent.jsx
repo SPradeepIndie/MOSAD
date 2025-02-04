@@ -27,9 +27,11 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
   const [error, setError] = useState(""); // Error message for search failures
   const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
+  const branchId = 1; // Hardcoded branch ID for now
+
 
   async function getBrands(){
-    return fetchBrands().then((result) => {
+    return fetchBrands("Tyre").then((result) => {
         return result;
       }).catch((error) => {
         return null; 
@@ -37,7 +39,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
   }
 
   async function getBrandAndSizeData(){
-    return fetchBrandAndSizeData(brand,size).then((result) => {
+    return fetchBrandAndSizeData(brand,size,branchId).then((result) => {
         return result;
       }).catch((error) => {
         return null;
@@ -51,7 +53,12 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
       const response = await getBrands();
       if (response.status === 200 && Array.isArray(response.data)) {
           // Set brands if the API response is an array
-          setBrands(response.data);
+          let fetchedBrands=[];
+          for (let i = 0; i < response.data.length; i++) {
+            fetchedBrands.push(response.data[i].brandName);
+          }
+          setBrands(fetchedBrands);
+          
         
       } else {
         setBrands([]); // Default to an empty array if response is unexpected
@@ -74,8 +81,10 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
       setError(""); // Clear any previous error
       const response = await getBrandAndSizeData();
       
+      
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
+        console.log("Search results:", results);
         
       } else {
         setResults([]); // Clear results if no content
@@ -91,7 +100,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
     if (quantity > 0) {
         const unitPrice = parseFloat(row.officialSellingPrice) || 0;
         onAddToBill({
-            description: `${row.tyreSize} ${brand}`,
+            description: `${row.itemTyreDTO.tyreSize} ${brand}`,
             unitPrice: unitPrice,
             quantity: quantity,
             subtotal: unitPrice * quantity,
@@ -160,10 +169,10 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
               {results.map((result, index) => (
                 <TableRow key={index}>
                   <TableCell>{brand}</TableCell>
-                  <TableCell>{result.tyreSize}</TableCell>
-                  <TableCell>{result.pattern}</TableCell>
-                  <TableCell>{result.officialSellingPrice}</TableCell>
-                  <TableCell>{result.tyreCount}</TableCell>
+                  <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
+                  <TableCell>{result.itemTyreDTO.pattern}</TableCell>
+                  <TableCell>{result.itemDTO.companyPrice}</TableCell>
+                  <TableCell>{result.itemBranchDTO.availableQuantity}</TableCell>
                   <TableCell>
               <TextField
                 type="number"
