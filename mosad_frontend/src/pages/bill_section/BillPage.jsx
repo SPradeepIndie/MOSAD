@@ -51,12 +51,10 @@ const BillPage = () => {
         ...updatedRows[index],
         [field]: value,
       };
-
       if (field === "unitPrice" || field === "quantity") {
         const unitPrice = parseFloat(updatedRows[index].unitPrice) || 0;
         const quantity = parseInt(updatedRows[index].quantity, 10) || 1;
         updatedRows[index].subtotal = unitPrice * quantity;
-      
         if (field === "quantity") {
           setQuantity(quantity);
         }
@@ -76,7 +74,6 @@ const BillPage = () => {
   
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
-
   const handleDeleteRow = (index) => {
     setRows((prevRows) => prevRows.filter((_, i) => i !== index));
   };
