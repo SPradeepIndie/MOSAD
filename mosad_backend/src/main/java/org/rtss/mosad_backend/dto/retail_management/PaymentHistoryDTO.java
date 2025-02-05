@@ -1,5 +1,4 @@
 package org.rtss.mosad_backend.dto.retail_management;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 

@@ -1,8 +1,7 @@
 package org.rtss.mosad_backend.dto.credit_dtos;
 
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 
 import java.util.Date;
 

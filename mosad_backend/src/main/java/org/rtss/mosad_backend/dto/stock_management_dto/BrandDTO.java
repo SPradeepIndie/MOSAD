@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.dto.stock_management_dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.stereotype.Component;
 
 public class BrandDTO {
 
