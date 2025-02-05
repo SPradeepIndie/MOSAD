@@ -15,7 +15,10 @@ public class AddItemDTO {
         this.itemBranchDTO = itemBranchDTO;
     }
 
-
+    public AddItemDTO(ItemDTO itemDTO, ItemBranchDTO itemBranchDTO) {
+        this.itemDTO = itemDTO;
+        this.itemBranchDTO = itemBranchDTO;
+    }
 
     // Getters and Setters
     public ItemDTO getItemDTO() {

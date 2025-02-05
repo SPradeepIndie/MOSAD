@@ -18,7 +18,7 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
             "LEFT JOIN c.repayments r")
     List<Object[]> findAllNormalCustomerCreditDetails();
 
-    @Query("SELECT c.creditId, c.balance, c.dueDate, CONCAT(u.firstName, u.lastName) AS name , uc.contactNum AS contactNumber, r.repaymentId, r.date, r.amount,b.id " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate, CONCAT(u.firstName, ' ', u.lastName) AS name , uc.contactNum AS contactNumber, r.repaymentId, r.date, r.amount,b.id " +
             "FROM Credit c " +
             "JOIN c.user u " +
             "JOIN u.userContacts uc " +
