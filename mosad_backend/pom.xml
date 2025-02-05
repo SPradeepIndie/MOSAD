@@ -11,7 +11,7 @@
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
 <!--	MOSAD project version up here-->
-	<version>3.2.0</version>
+	<version>3.2.6</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
@@ -47,6 +47,10 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

@@ -18,7 +18,7 @@ public class Brand {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "brands", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<Category> categories;
 
-    @OneToMany(mappedBy = "brand")
+    @OneToMany(mappedBy = "brand",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<Item> items;
 
     public Brand() {

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public class ItemTyreDTO {
 
-    private Long itemId;
+
     @NotBlank(message = "Tyre size cannot be blank")
     @Size(max = 50, message = "Tyre size cannot exceed 50 characters")
     public String tyreSize;
@@ -20,13 +20,6 @@ public class ItemTyreDTO {
 
 
     // Getters and Setters
-    public Long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
-    }
 
     public String getTyreSize() {
         return tyreSize;
