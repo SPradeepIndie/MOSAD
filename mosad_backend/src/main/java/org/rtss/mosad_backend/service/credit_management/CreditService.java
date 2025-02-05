@@ -84,7 +84,7 @@ public class CreditService {
 
     // Get all credits with repayments
     public List<CreditDetailsDTO> getAllCreditDetails(String customerType) {
-        System.out.println(customerType);
+
         try {
 
             List<Object[]> results;
@@ -204,7 +204,7 @@ public class CreditService {
         try {
             dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new ObjectNotValidException(new HashSet<>(List.of("Invalid date format")));
         }
         return creditRepository.findCreditByDueDate(dueDate);
     }
