@@ -161,7 +161,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
             </TableHead>
             <TableBody>
               {results.map((result, index) => (
-                <TableRow key={"row"+index}>
+                <TableRow key={index}>
                   <TableCell>{brand}</TableCell>
                   <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
                   <TableCell>{result.itemTyreDTO.pattern}</TableCell>
