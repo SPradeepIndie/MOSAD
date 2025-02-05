@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class AccountManagementService {
     private final UsersOTPRepo usersOTPRepo;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private Random random=new Random();
+    private final SecureRandom random=new SecureRandom();
 
     public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
