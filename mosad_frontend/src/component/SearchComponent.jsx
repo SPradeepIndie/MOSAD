@@ -52,14 +52,8 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
     try {
       const response = await getBrands();
       if (response.status === 200 && Array.isArray(response.data)) {
-          // Set brands if the API response is an array
-          let fetchedBrands=[];
-          for (let i = 0; i < response.data.length; i++) {
-            fetchedBrands.push(response.data[i].brandName);
-          }
-          setBrands(fetchedBrands);
-          
-        
+        // Set brands using for-of loop
+        setBrands(response.data.map((brand) => brand.brandName));
       } else {
         setBrands([]); // Default to an empty array if response is unexpected
         console.log(response.data)
@@ -167,7 +161,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
             </TableHead>
             <TableBody>
               {results.map((result, index) => (
-                <TableRow key={index}>
+                <TableRow key={"row"+index}>
                   <TableCell>{brand}</TableCell>
                   <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
                   <TableCell>{result.itemTyreDTO.pattern}</TableCell>

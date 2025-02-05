@@ -77,7 +77,7 @@ const UserDetailsView=()=>{
         if (editMode) {
             updateUserDetails(userData,{params:{username: auth.username}})
                 .then((response)=>{
-                    const {success,message}=response.data
+                    const {message}=response.data
                     alert(message);
             })
            

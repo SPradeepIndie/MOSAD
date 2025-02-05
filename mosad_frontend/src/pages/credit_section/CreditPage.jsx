@@ -4,7 +4,7 @@ import {
   TableContainer, TableHead, TableRow, Typography, Paper, TextField,
   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl
 } from '@mui/material';
-import { Delete, KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { addRepayment,deleteRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,7 +12,6 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import Loading from '../../component/Loading';
-import ConfirmationDialog from '../../component/ConfirmationDialog';
 import PropTypes from 'prop-types';
 
 function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
@@ -43,7 +42,6 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
   };
 
   const handleDeleteRepayment = (id) => {
-    
     onDeleteRepayment(row.creditId,id);
     setConformationDialog(false);
   };
@@ -99,10 +97,6 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
                       <TableCell>{repayment.repaymentId}</TableCell>
                       <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
                       <TableCell align="right">{repayment.amount}</TableCell>
-                      {/* <TableCell align="right"><Delete onClick={() => setConformationDialog(true)} sx={{ scale: 0.75, cursor: 'pointer' }} /></TableCell>
-                      {conformationDialog &&
-                        <ConfirmationDialog message='Are you sure you want to delete this repayment?' isOpen={open} onCancel={() => setConformationDialog(false)} onConfirm={() => handleDeleteRepayment(repayment.repaymentId)} />
-                      } */}
                     </TableRow>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>

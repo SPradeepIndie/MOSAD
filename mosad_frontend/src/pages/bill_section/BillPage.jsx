@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useState } from "react";
 import {
   Box,
   TextField,
@@ -66,10 +66,6 @@ const BillPage = () => {
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
 
-  const printRef = useRef();
-  /*const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-  });*/
 
   return (
     <Box sx={{ p: 4 }}>
@@ -155,7 +151,7 @@ const BillPage = () => {
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow key={index}>
+                <TableRow key={"row"+ index}>
                   <TableCell align="center">
                     <TextField
                       variant="outlined"
@@ -163,8 +159,7 @@ const BillPage = () => {
                       type="number"
                       value={row.quantity}
                       onChange={(e) => handleInputChange(index, "quantity", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
-                      sx={{ width: "80%" }}
+                      sx={{ width: "80%" ,fontSize:"1.2em"}}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -173,8 +168,7 @@ const BillPage = () => {
                       size="small"
                       value={row.description}
                       onChange={(e) => handleInputChange(index, "description", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
-                      sx={{ width: "90%" }}
+                      sx={{ width: "90%" ,fontSize:"1.2em"}}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -184,8 +178,7 @@ const BillPage = () => {
                       type="number"
                       value={row.unitPrice}
                       onChange={(e) => handleInputChange(index, "unitPrice", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
-                      sx={{ width: "90%" }}
+                      sx={{ width: "90%" ,fontSize:"1.2em"}}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -193,8 +186,8 @@ const BillPage = () => {
                       variant="outlined"
                       size="small"
                       value={ccyFormat(row.subtotal || 0)}
-                      InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
-                      sx={{ width: "90%" }}
+                      readOnly={true}
+                      sx={{ width: "90%" ,fontSize:"1.2em"}}
                     />
                   </TableCell>
                 </TableRow>
@@ -212,8 +205,8 @@ const BillPage = () => {
                     size="small"
                     type="number"
                     value={ccyFormat(total)}
-                    InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
-                    sx={{ width: "90%" }}
+                    readOnly={true}
+                    sx={{ width: "90%" ,fontSize:"1.2em"}}
                   />
                 </TableCell>
               </TableRow>
@@ -229,8 +222,7 @@ const BillPage = () => {
                     type="number"
                     value={advance}
                     onChange={handleAdvanceChange}
-                    InputProps={{ style: { fontSize: "1.2rem" } }}
-                    sx={{ width: "90%" }}
+                    sx={{ width: "90%" ,fontSize:"1.2em"}}
                   />
                 </TableCell>
               </TableRow>
@@ -245,11 +237,8 @@ const BillPage = () => {
                     size="medium"
                     type="number"
                     value={ccyFormat(balance)}
-                    InputProps={{
-                      readOnly: true,
-                      style: { fontSize: "1.2rem" },
-                    }}
-                    sx={{ width: "90%" }}
+                    readOnly={true}
+                    sx={{ width: "90%" ,fontSize:"1.2em"}}
                   />
                 </TableCell>
               </TableRow>

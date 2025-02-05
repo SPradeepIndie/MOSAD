@@ -152,7 +152,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                     <Grid size={{ xs: "auto" }}>
                     {userUpdateData.userContactDto.map((item, index) => (
                         item.contactNum === "" ? (
-                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
+                            <Paper key={"NoContactNumberCard"} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
                               No saved contact numbers
                             </Paper>
                           ) : (
