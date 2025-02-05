@@ -48,7 +48,7 @@ public class BrandService {
                 return new ResponseDTO(true, "Successfully updated brand: " + existingBrand.getBrandName());
             } else {
                 // Create a new brand
-                Brand newBrand=brandDTOMapper.BrandDtoToBrand(addBrandDto.getBrandDTO());
+                Brand newBrand=brandDTOMapper.brandDtoToBrand(addBrandDto.getBrandDTO());
                 createNewBrand(newBrand,category);
                 return new ResponseDTO(true, "Successfully added new brand: " + newBrand.getBrandName());
             }
@@ -88,7 +88,7 @@ public class BrandService {
                 .filter(brand -> brand.getCategories().contains(category))
                 .toList();
         return brands.stream()
-                .map(brandDTOMapper::BrandToBrandDto)
+                .map(brandDTOMapper::brandToBrandDto)
                 .toList();
 
     }

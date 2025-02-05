@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/rebuild-tyres")
+@RequestMapping("/api/v1/rebuild-tyres")
 public class RebuildTyreController {
 
-    @Autowired
-    private RebuildTyreService rebuildTyreService;
+
+    private final RebuildTyreService rebuildTyreService;
+
+    public RebuildTyreController(RebuildTyreService rebuildTyreService) {
+        this.rebuildTyreService = rebuildTyreService;
+    }
 
     @PostMapping
     public ResponseEntity<RebuildTyre> createRebuildTyre(@RequestBody RebuildTyre rebuildTyre) {

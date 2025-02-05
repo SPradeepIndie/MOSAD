@@ -12,8 +12,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bills")
 public class BillController {
-    @Autowired
-    private BillService billService;
+
+    private final BillService billService;
+
+    public BillController( BillService billService) {
+        this.billService = billService;
+    }
 
     @PostMapping
     public ResponseEntity<Bill> createBill(@RequestBody Bill bill) {
@@ -26,11 +30,5 @@ public class BillController {
         return ResponseEntity.ok(billService.getAllBills());
     }
 
-    /*@GetMapping("/{id}")
-    public ResponseEntity<Bill> getBillById(@PathVariable Long id) {
-        return billService.getBillById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }*/
 }
 
