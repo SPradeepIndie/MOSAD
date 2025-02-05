@@ -39,6 +39,9 @@ public class Users implements UserDetails {
     @JoinColumn(name = "branch_id")
     private Branch branch;
 
+    @OneToOne
+    @JoinColumn(name = "otp_id")
+    private UsersOTP usersOTP;
 
     public Users() {
     }
@@ -152,6 +155,13 @@ public class Users implements UserDetails {
         this.branch = branch;
     }
 
+    public UsersOTP getUsersOTP() {
+        return usersOTP;
+    }
+
+    public void setUsersOTP(UsersOTP usersOTP) {
+        this.usersOTP = usersOTP;
+    }
 
     @Override
     public String toString() {

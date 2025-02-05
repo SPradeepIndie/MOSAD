@@ -73,7 +73,7 @@ const RebuildTyrePage = () => {
           </thead>
           <tbody>
             {filteredTyres.map((tyre, index) => (
-              <tr key={index} className="odd:bg-white even:bg-gray-100">
+              <tr key={"row"+index} className="odd:bg-white even:bg-gray-100">
                 <td className="border border-gray-300 p-2">{tyre.customerId}</td>
                 <td className="border border-gray-300 p-2">{tyre.contactNumber}</td>
                 <td className="border border-gray-300 p-2">{tyre.dateReceived}</td>

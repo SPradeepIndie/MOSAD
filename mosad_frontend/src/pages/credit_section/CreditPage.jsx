@@ -4,7 +4,7 @@ import {
   TableContainer, TableHead, TableRow, Typography, Paper, TextField,
   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl
 } from '@mui/material';
-import { Delete, KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
 import { addRepayment,deleteRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,16 +12,13 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import Loading from '../../component/Loading';
-import ConfirmationDialog from '../../component/ConfirmationDialog';
 import PropTypes from 'prop-types';
 
 function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
-  const [deleteConformationDialog, setDeleteConformationDialog] = useState(false);
-  const [repaymentIdForDeletion, setRepaymentIdForDeletion] = useState(null);
-
+  const [conformationDialog, setConformationDialog] = useState(false);
 
 
   const handleDialogOpen = () => {
@@ -45,10 +42,8 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
   };
 
   const handleDeleteRepayment = (id) => {
-    console.log("Repayment Id = "+id);
     onDeleteRepayment(row.creditId,id);
-    setDeleteConformationDialog(false);
-    setRepaymentIdForDeletion(null);
+    setConformationDialog(false);
   };
 
   
@@ -98,38 +93,11 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
                 </TableHead>
                 <TableBody>
                   {row.repayments.map((repayment) => (
-                    <>
-                      <TableRow key={repayment.repaymentId}>
-                        <TableCell>{repayment.repaymentId}</TableCell>
-                        <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
-                        <TableCell align="right">{repayment.amount}</TableCell>
-                        <TableCell align="right">
-                          <Delete
-                            onClick={() => {
-                              setRepaymentIdForDeletion(repayment.repaymentId);
-                              setDeleteConformationDialog(true);
-                            }}
-                            sx={{
-                              scale: 0.75,
-                              cursor: 'pointer',
-                              color: 'red',
-                              borderColor: 'black',
-                              '&:hover': {
-                                scale: '1'
-                              }
-                            }}
-                          /></TableCell>
-
-                      </TableRow>
-                      {deleteConformationDialog &&
-                        <ConfirmationDialog
-                          message='Are you sure you want to delete this repayment?'
-                          isOpen={open}
-                          onCancel={() => setDeleteConformationDialog(false)}
-                          onConfirm={() => handleDeleteRepayment(repaymentIdForDeletion)}
-                        />
-                      }
-                    </>
+                    <TableRow key={repayment.repaymentId}>
+                      <TableCell>{repayment.repaymentId}</TableCell>
+                      <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
+                      <TableCell align="right">{repayment.amount}</TableCell>
+                    </TableRow>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>
                     <TableCell colSpan={2}>
