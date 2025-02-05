@@ -26,9 +26,8 @@ public class BillService {
 
     @Autowired
     private BillRepository billRepository;
+
     private final CustomerService customerService;
-
-
     @Autowired
     private BillDTOMapper billDTOMapper;
     @Autowired
@@ -50,23 +49,22 @@ public class BillService {
 
     @Transactional
     public BillDTO createBill(BillDTO billDTO, CustomerDTO customerDTO, List<BillItemDTO> billItemDTO) {
-        Bill bill = billDTOMapper.toEntity(billDTO);
 
+        Bill bill = billDTOMapper.toEntity(billDTO);
         customerDTO = customerService.addCustomer(customerDTO);
         Customer customer = customerDTOMapper.toEntity(customerDTO);
         bill.setCustomer(customer);
 
-        // Save the Bill entity
-        Bill savedBill = billRepository.save(bill);
-
-        // Convert BillItems and associate with Bill
         List<BillItem> billItems = billItemDTO.stream()
                 .map(dto -> {
                     BillItem billItem = billItemDTOMapper.toBillItemEntity(dto);
-                    billItem.setBill(savedBill);  // Associate BillItem with Bill
+                    billItem.setBill(bill);
                     return billItem;
                 })
                 .collect(Collectors.toList());
+        bill.setBillItems(billItems);
+
+        Bill savedBill = billRepository.save(bill);
 
         // Save all BillItems
         billItemRepository.saveAll(billItems);
