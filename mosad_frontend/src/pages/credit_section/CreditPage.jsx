@@ -19,7 +19,9 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
-  const [conformationDialog, setConformationDialog] = useState(false);
+  const [deleteConformationDialog, setDeleteConformationDialog] = useState(false);
+  const [repaymentIdForDeletion, setRepaymentIdForDeletion] = useState(null);
+
 
 
   const handleDialogOpen = () => {
@@ -43,9 +45,10 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
   };
 
   const handleDeleteRepayment = (id) => {
-    
+    console.log("Repayment Id = "+id);
     onDeleteRepayment(row.creditId,id);
-    setConformationDialog(false);
+    setDeleteConformationDialog(false);
+    setRepaymentIdForDeletion(null);
   };
 
   
@@ -95,15 +98,38 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
                 </TableHead>
                 <TableBody>
                   {row.repayments.map((repayment) => (
-                    <TableRow key={repayment.repaymentId}>
-                      <TableCell>{repayment.repaymentId}</TableCell>
-                      <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
-                      <TableCell align="right">{repayment.amount}</TableCell>
-                      {/* <TableCell align="right"><Delete onClick={() => setConformationDialog(true)} sx={{ scale: 0.75, cursor: 'pointer' }} /></TableCell>
-                      {conformationDialog &&
-                        <ConfirmationDialog message='Are you sure you want to delete this repayment?' isOpen={open} onCancel={() => setConformationDialog(false)} onConfirm={() => handleDeleteRepayment(repayment.repaymentId)} />
-                      } */}
-                    </TableRow>
+                    <>
+                      <TableRow key={repayment.repaymentId}>
+                        <TableCell>{repayment.repaymentId}</TableCell>
+                        <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
+                        <TableCell align="right">{repayment.amount}</TableCell>
+                        <TableCell align="right">
+                          <Delete
+                            onClick={() => {
+                              setRepaymentIdForDeletion(repayment.repaymentId);
+                              setDeleteConformationDialog(true);
+                            }}
+                            sx={{
+                              scale: 0.75,
+                              cursor: 'pointer',
+                              color: 'red',
+                              borderColor: 'black',
+                              '&:hover': {
+                                scale: '1'
+                              }
+                            }}
+                          /></TableCell>
+
+                      </TableRow>
+                      {deleteConformationDialog &&
+                        <ConfirmationDialog
+                          message='Are you sure you want to delete this repayment?'
+                          isOpen={open}
+                          onCancel={() => setDeleteConformationDialog(false)}
+                          onConfirm={() => handleDeleteRepayment(repaymentIdForDeletion)}
+                        />
+                      }
+                    </>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>
                     <TableCell colSpan={2}>

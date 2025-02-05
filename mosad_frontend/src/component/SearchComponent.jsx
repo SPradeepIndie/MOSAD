@@ -54,8 +54,8 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
       if (response.status === 200 && Array.isArray(response.data)) {
           // Set brands if the API response is an array
           let fetchedBrands=[];
-          for (let i = 0; i < response.data.length; i++) {
-            fetchedBrands.push(response.data[i].brandName);
+          for (const item of response.data) {
+            fetchedBrands.push(item.brandName);
           }
           setBrands(fetchedBrands);
           
