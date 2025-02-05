@@ -83,12 +83,12 @@ public class CreditService {
 
 
     // Get all credits with repayments
-    public List<CreditDetailsDTO> getAllCreditDetails(String CustomerType) {
-        System.out.println(CustomerType);
+    public List<CreditDetailsDTO> getAllCreditDetails(String customerType) {
+        System.out.println(customerType);
         try {
 
             List<Object[]> results;
-            if (CustomerType.equalsIgnoreCase("Retail")) {
+            if (customerType.equalsIgnoreCase("Retail")) {
                 results = creditRepository.findAllRetailCustomerCreditDetails();
             } else {
                 results = creditRepository.findAllNormalCustomerCreditDetails();
