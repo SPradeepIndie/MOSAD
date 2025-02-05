@@ -32,6 +32,6 @@ export const deleteItem = (itemId) => {
     return apiClient.delete('/item/delete', { params: { itemId } });
 };
 
-export const fetchBrandAndSizeData = (brand, size) => {
-    return apiClient.get(`/item/search?brand=${brand}&size=${size}`);
+export const fetchBrandAndSizeData = (brand, size,branchId) => {
+    return apiClient.get(`/item/search?brand=${brand}&size=${size}&branchId=${branchId}`);
   };
