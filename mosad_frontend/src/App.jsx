@@ -38,7 +38,7 @@ const BranchStockLayout =lazy(()=>import( './pages/branch_section/BranchStockLay
 const PaymentHistory =lazy(()=>import( './pages/retail_section/PaymentHistory'));
 const PurchaseHistory =lazy(()=>import( './pages/retail_section/PurchaseHistory'));
 const IncompleteTransactions =lazy(()=>import( './pages/retail_section/IncompleteTransactions'));
-const ProductAvailabilityChecker =lazy(()=>import( './pages/retail_section/ProductAvailabilityChecker'));
+const FindProductAvailability =lazy(()=>import( './pages/retail_section/FindProductAvailability'));
 
 function App() {
   const {auth}=useAuth();
@@ -92,7 +92,7 @@ function App() {
               <Route index element={ <PaymentHistory />} />
               <Route path="purchase-history" element={ <PurchaseHistory />} />
               <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
-              <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+              <Route path="product-availability" element={ <FindProductAvailability />} />
           </Route>
           <Route path="/future" element={ <ReportPredictionPage />} />
           <Route path="/employee" element={ <EmployeePage />} />
