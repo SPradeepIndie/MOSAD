@@ -1,8 +1,7 @@
 package org.rtss.mosad_backend.service.mail_service;
 
-import org.rtss.mosad_backend.config.JavaMailSender.MailSender;
+import org.rtss.mosad_backend.config.java_mail_sender.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service

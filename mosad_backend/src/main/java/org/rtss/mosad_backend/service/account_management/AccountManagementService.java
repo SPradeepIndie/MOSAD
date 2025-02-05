@@ -18,9 +18,9 @@ import org.rtss.mosad_backend.service.mail_service.EmailService;
 import org.rtss.mosad_backend.service.mail_service.MailBody;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.*;
@@ -39,6 +39,7 @@ public class AccountManagementService {
     private final UsersOTPRepo usersOTPRepo;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private Random random=new Random();
 
     public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
@@ -108,10 +109,10 @@ public class AccountManagementService {
     //Return all users usernames
     public List<UserDetailsDTO> getAllUsers() {
         List<Users> users = usersRepo.findAll();
-        if(users.isEmpty()){
-            throw new RuntimeException("No users found");
-        }
         List<UserDetailsDTO> userDetails = new ArrayList<>();
+        if(users.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No users found");
+        }
         for (Users user : users) {
             userDetails.add(convertToUserDetailsDTO(user));
         }
@@ -180,17 +181,16 @@ public class AccountManagementService {
 
     // Generate a 6-digit OTP
     private String generateRandomOTPCode(){
-        Random random=new Random();
         int otp=100000 + random.nextInt(900000);
         return String.valueOf(otp);
     }
 
     //Save OTP in database
     private void saveOTP(String otpCode,Users user) {
-        int OTP_EXP_TIME = 1000 * 60;
+        int otpExpTime = 1000 * 60;
         UsersOTP usersOtp=new UsersOTP();
         usersOtp.setOtpToken(otpCode);
-        usersOtp.setOtpExpiryDate(new Date(System.currentTimeMillis()+ OTP_EXP_TIME));
+        usersOtp.setOtpExpiryDate(new Date(System.currentTimeMillis()+ otpExpTime));
         user.setUsersOTP(usersOtp);
         usersOtp.setUser(user);
         usersOTPRepo.saveAndFlush(usersOtp);

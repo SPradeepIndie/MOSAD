@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.config.JavaMailSender;
+package org.rtss.mosad_backend.config.java_mail_sender;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

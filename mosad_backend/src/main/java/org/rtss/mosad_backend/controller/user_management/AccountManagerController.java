@@ -64,7 +64,7 @@ public class AccountManagerController {
     @PostMapping("/forgot-pwd/change")
     public ResponseEntity<String> newPasswordSet(@RequestParam String email) {
         String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
-        return ResponseEntity.ok().body("Implementing");
+        return ResponseEntity.ok().body(escapedEmail);
     }
 
 }
