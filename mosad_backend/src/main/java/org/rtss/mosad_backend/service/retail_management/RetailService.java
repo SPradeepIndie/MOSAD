@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class RetailService {
+    public static final String RETAIL_USER_NOT_FOUND = "User is not a retail user";
+    public static final String ADMIN = "admin";
     private final BillRepository billRepository;
     private final UsersRepo userRepository;
     public RetailService(BillRepository billRepository, UsersRepo userRepository) {
@@ -26,9 +28,9 @@ public class RetailService {
     public List<PaymentHistoryDTO> getPaymentHistory(String username) {
         // Fetch the logged-in user
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User is not a retail user"));
+                .orElseThrow(() -> new IllegalArgumentException(RETAIL_USER_NOT_FOUND));
         // Check if the logged-in user is an admin
-        if ("admin".equalsIgnoreCase(user.getUsername())) {
+        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
             // Admin: Fetch all users' payment history
             List<Bill> allBills = billRepository.findAll();
             return allBills.stream()
@@ -40,7 +42,7 @@ public class RetailService {
                             returnPaymentStatus(bill),
                             bill.getTotalAmount()
                     ))
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             // Regular user: Fetch only their payment history
             List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
@@ -53,7 +55,7 @@ public class RetailService {
                             returnPaymentStatus(bill),
                             bill.getTotalAmount()
                     ))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
     private String returnPaymentStatus(Bill bill) {
@@ -66,9 +68,9 @@ public class RetailService {
     public List<PurchaseHistoryDTO> getPurchaseHistory(String username) {
         // Fetch the logged-in user
         Users user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User is not a retail user"));
+                .orElseThrow(() -> new IllegalArgumentException(RETAIL_USER_NOT_FOUND));
         // Check if the logged-in user is an admin
-        if ("admin".equalsIgnoreCase(user.getUsername())) {
+        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
             // Admin: Fetch all users' purchase history
             List<Bill> allBills = billRepository.findAll();
             return allBills.stream()
@@ -79,7 +81,7 @@ public class RetailService {
                                     item.getQuantity(),
                                     item.getQuantity() * item.getUnitPrice()
                             )))
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             // Regular user: Fetch only their purchase history
             List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
@@ -91,7 +93,7 @@ public class RetailService {
                                     item.getQuantity(),
                                     item.getQuantity() * item.getUnitPrice()
                             )))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
     // IncompleteTransaction
@@ -99,11 +101,11 @@ public class RetailService {
         // Fetch the logged-in user to check their role
         Optional<Users> retailUser = userRepository.findByUsername(username);
         if (retailUser.isEmpty()) {
-            throw new IllegalArgumentException("User is not a retail user");
+            throw new IllegalArgumentException(RETAIL_USER_NOT_FOUND);
         }
         Users user = retailUser.get();
         // Check if the logged-in user is an admin
-        if ("admin".equalsIgnoreCase(user.getUsername())) {
+        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
             // Admin: Fetch all users' transactions
             List<Bill> allBills = billRepository.findAll();
             return allBills.stream()
@@ -116,7 +118,7 @@ public class RetailService {
                             bill.getBalance(),
                             calculateDueDate(bill.getDate()) // Directly use the date
                     ))
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             // Regular user: Fetch only their transactions
             List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
@@ -130,7 +132,7 @@ public class RetailService {
                             bill.getBalance(),
                             calculateDueDate(bill.getDate()) // Directly use the date
                     ))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
     private Date calculateDueDate(Date date) {
