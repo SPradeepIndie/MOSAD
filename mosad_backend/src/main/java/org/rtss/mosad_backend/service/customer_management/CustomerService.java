@@ -7,32 +7,34 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.rtss.mosad_backend.entity.customer.CustomerType;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class CustomerService {
+    private final CustomerRepository customerRepository;
+    private final CustomerContactRepository customerContactRepository;
+    private final CustomerDTOMapper customerDTOMapper;
+    private final CustomerContactDTOMapper customerContactDTOMapper;
 
-    @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private CustomerContactRepository customerContactRepository;
-
-    @Autowired
-    private CustomerDTOMapper customerDTOMapper;
-
-    @Autowired
-    private CustomerContactDTOMapper customerContactDTOMapper;
+    public CustomerService(CustomerRepository customerRepository, CustomerContactRepository customerContactRepository, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper) {
+        this.customerRepository = customerRepository;
+        this.customerContactRepository = customerContactRepository;
+        this.customerDTOMapper = customerDTOMapper;
+        this.customerContactDTOMapper = customerContactDTOMapper;
+    }
 
     // Save a new customer
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
         if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
-            throw new RuntimeException("A customer must have at least one contact.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A customer must have at least one contact.");
         }
         Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
         Customer savedCustomer = customerRepository.save(customer);
@@ -48,14 +50,14 @@ public class CustomerService {
     // Get a specific customer by ID
     public CustomerDTO getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID: " + id));
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID: " + id))));
         return customerDTOMapper.toCustomerDTO(customer);
     }
 
     // Update an existing customer
     public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
         Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with ID : " + id));
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID : " + id))));
 
         existingCustomer.setName(customerDTO.getName());
         existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
@@ -69,7 +71,7 @@ public class CustomerService {
     // Delete a customer by ID
     public void deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
-            throw new RuntimeException(" Customer not found with ID: " + id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST," Customer not found with ID: " + id);
         }
         customerRepository.deleteById(id);
     }
