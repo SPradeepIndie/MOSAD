@@ -7,11 +7,13 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.rtss.mosad_backend.entity.customer.CustomerType;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class CustomerService {
     // Save a new customer
     public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
         if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
-            throw new RuntimeException("A customer must have at least one contact.");
+            throw new ObjectNotValidException(new HashSet<>(List.of("A customer must have at least one contact.")));
         }
         Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
         Customer savedCustomer = customerRepository.save(customer);
