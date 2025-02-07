@@ -2,16 +2,19 @@ package org.rtss.mosad_backend.service.rebuild_tyre_management;
 
 import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
 import org.rtss.mosad_backend.repository.rebuild_tyre.RebuildTyreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class RebuildTyreService {
+    private final RebuildTyreRepository rebuildTyreRepository;
 
-    @Autowired
-    private RebuildTyreRepository rebuildTyreRepository;
+    public RebuildTyreService(RebuildTyreRepository rebuildTyreRepository) {
+        this.rebuildTyreRepository = rebuildTyreRepository;
+    }
 
     public RebuildTyre saveRebuildTire(RebuildTyre rebuildTyre) {
         return rebuildTyreRepository.save(rebuildTyre);
@@ -38,6 +41,6 @@ public class RebuildTyreService {
     }
 
     public List<RebuildTyre> getRebuildTyresByStatus(RebuildTyre.TyreStatus tyreStatus) {
-        return null;
+        return new ArrayList<>(rebuildTyreRepository.findByStatus(tyreStatus));
     }
 }

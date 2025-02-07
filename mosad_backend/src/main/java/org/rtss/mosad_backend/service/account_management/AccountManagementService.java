@@ -19,6 +19,7 @@ import org.rtss.mosad_backend.service.mail_service.MailBody;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -55,6 +56,7 @@ public class AccountManagementService {
     }
 
     //delete a given user
+    @Transactional
     public ResponseDTO deleteUser(String username) {
         Users user = usersRepo.findByUsername(username)
                 .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG));
@@ -63,6 +65,7 @@ public class AccountManagementService {
     }
 
     //update a given user
+    @Transactional
     public ResponseDTO updateUser(String username, UserDetailsDTO userUpdateDto){
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
@@ -121,6 +124,7 @@ public class AccountManagementService {
     }
 
     //send the otp
+    @Transactional
     public ResponseDTO sendOtp(String email){
         Users user=verifyEmail(email);
         String otp=generateRandomOTPCode();
@@ -131,6 +135,7 @@ public class AccountManagementService {
     }
 
     //verify otp
+    @Transactional
     public ResponseDTO verifyOtp(String otp,String email) {
         Users user=verifyEmail(email);
         UsersOTP userOtp=usersOTPRepo.findByOtpTokenAndUser(otp,user).orElseThrow(
@@ -145,6 +150,7 @@ public class AccountManagementService {
     }
 
     //Change to new password
+    @Transactional
     public ResponseDTO changeToNewPassword(String newPassword,String email) {
         Users user=verifyEmail(email);
         String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);

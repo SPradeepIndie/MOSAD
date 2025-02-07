@@ -16,7 +16,7 @@ public class UsersOTP {
     @Column(nullable = false)
     private Date otpExpiryDate;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private Users user;
 
