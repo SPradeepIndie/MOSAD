@@ -1,0 +1,16 @@
+name: "PR-Commenting"
+on:
+ #Handle pull requests
+  pull_request:
+    types: [opened,synchronize,reoponed]
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            **Thank you for your contribution**
+            This pull request will merge ASAP after finished the testings!
