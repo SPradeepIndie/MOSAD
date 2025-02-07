@@ -1,16 +1,16 @@
 package org.rtss.mosad_backend.service.mail_service;
 
-import org.rtss.mosad_backend.config.java_mail_sender.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-    private final MailSender mailSender;
+    private final JavaMailSender javaMailSender;
 
-    public EmailService(MailSender mailSender) {
-        this.mailSender = mailSender;
+    public EmailService(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
     }
 
     public void sendMail(MailBody mailBody) {
@@ -20,7 +20,7 @@ public class EmailService {
         message.setSubject(mailBody.subject());
         message.setText(mailBody.body());
 
-        mailSender.javaMailSender().send(message);
+        javaMailSender.send(message);
 
     }
 }
