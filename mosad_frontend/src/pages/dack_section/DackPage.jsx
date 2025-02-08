@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import RebuildTyreTable from '../components/RebuildTyreTable';
-import RebuildTyreForm from '../form/RebuildTyreForm';
+import RebuildTyreForm from '../forms/RebuildTyreForm';
 import {
   getAllTyres,
   getTyresByContactNumber,
