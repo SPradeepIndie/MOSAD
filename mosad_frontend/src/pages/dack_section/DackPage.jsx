@@ -4,11 +4,11 @@ import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
 import RebuildTyreForm from '../../forms/RebuildTyreForm.jsx';
 import {
-  getAllTyres,
-  getTyresByContactNumber,
-  createTyre,
-  updateTyre,
-  deleteTyre,
+  fetchRebuildTyres as getAllTyres,
+  fetchRebuildTyresByContact as getTyresByContactNumber,
+  createRebuildTyre as createTyre,
+  updateRebuildTyre as updateTyre,
+  deleteRebuildTyre as deleteTyre,
 } from '../../services/apiDackService';
 
 const RebuildTyrePage = () => {
