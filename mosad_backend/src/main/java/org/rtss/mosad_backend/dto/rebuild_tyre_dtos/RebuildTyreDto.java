@@ -1,24 +1,34 @@
-package org.rtss.mosad_backend.entity.rebuild_tyre;
+package org.rtss.mosad_backend.dto.rebuild_tyre_dtos;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre.TyreStatus;
 
-@Entity
-public class RebuildTyre {
+public class RebuildTyreDto {
 
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
-
+    @NotNull(message = "Customer ID cannot be null")
     private Long customerId;
+
+    @NotNull(message = "Tyre number cannot be null")
     private Integer tyreNumber;
+
+    @NotBlank(message = "Tyre size cannot be blank")
     private String tyreSize;
+
+    @NotBlank(message = "Tyre brand cannot be blank")
     private String tyreBrand;
+
+    @NotBlank(message = "Customer name cannot be blank")
     private String customerName;
+
+    @NotBlank(message = "Contact number cannot be blank")
     private String contactNumber;
+
+    @NotNull(message = "Date received cannot be null")
     private LocalDate dateReceived;
+
+    // Optional fields
     private LocalDate dateSentToCompany;
     private String salesRepNumber;
     private String jobNumber;
@@ -27,21 +37,11 @@ public class RebuildTyre {
     private String billNumber;
     private Double price;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Tyre status cannot be null")
     private TyreStatus status;
-
-    public enum TyreStatus {
-        IN_HOLD, SENT_TO_REBUILD, DONE
-    }
 
     // Getters and Setters
 
-    public Long getItemId() {
-        return itemId;
-    }
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
-    }
     public Long getCustomerId() {
         return customerId;
     }
