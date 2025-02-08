@@ -32,30 +32,7 @@ public class RebuildTyre {
         IN_HOLD, SENT_TO_REBUILD, DONE
     }
 
-    // Constructors
-    public RebuildTyre() {}
-
-    public RebuildTyre(Long customerId, Integer tyreNumber, String tyreSize, String tyreBrand, 
-                       String customerName, String contactNumber, LocalDate dateReceived, 
-                       LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, 
-                       LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, 
-                       String billNumber, Double price, TyreStatus status) {
-        this.customerId = customerId;
-        this.tyreNumber = tyreNumber;
-        this.tyreSize = tyreSize;
-        this.tyreBrand = tyreBrand;
-        this.customerName = customerName;
-        this.contactNumber = contactNumber;
-        this.dateReceived = dateReceived;
-        this.dateSentToCompany = dateSentToCompany;
-        this.salesRepNumber = salesRepNumber;
-        this.jobNumber = jobNumber;
-        this.dateReceivedFromCompany = dateReceivedFromCompany;
-        this.dateDeliveredToCustomer = dateDeliveredToCustomer;
-        this.billNumber = billNumber;
-        this.price = price;
-        this.status = status;
-    }
+    
 
     // Getters and Setters
     public Long getItemId() {
