@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.dto.rebuild_tyre;
+package org.rtss.mosad_backend.dto.rebuild_tyre_dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

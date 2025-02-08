@@ -1,7 +1,7 @@
 // src/pages/RebuildTyrePage.js
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
-import RebuildTyreTable from '../components/RebuildTyreTable';
+import RebuildTyreTable from '../component/RebuildTyreTable';
 import RebuildTyreForm from '../forms/RebuildTyreForm';
 import {
   getAllTyres,
