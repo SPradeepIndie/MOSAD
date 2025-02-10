@@ -83,6 +83,11 @@ function HomePage() {
             icon={<AssessmentIcon fontSize="large" />}
             link="/future"
           />
+           <Tile
+            title="Dack Tires"
+            icon={<AssessmentIcon fontSize="large" />}
+            link="/dack"
+          />
         </Stack>
       </Box>
     </>

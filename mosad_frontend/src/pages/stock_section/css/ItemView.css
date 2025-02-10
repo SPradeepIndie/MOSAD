@@ -80,7 +80,7 @@ body {
   background-color: lightgray; /* Highlight row on hover */
 }
 
-.selected-row {
+.item-table tbody tr.selected-row {
   background-color: yellow; /* Color for the selected row */
   font-weight: bold; /* Make it visually distinct */
 }
@@ -96,11 +96,6 @@ body {
   background-color: lightgray;
 }
 
-
-.selected-row {
-  background-color: #ffc107;
-  font-weight: bold;
-}
 
 /* Buttons */
 .button-group {

@@ -7,12 +7,10 @@ import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.service.credit_management.CreditService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -59,7 +57,6 @@ public class CreditController {
 
     @DeleteMapping("/delete-repayment")
     public ResponseEntity<ResponseDTO> deleteRepayment(@Param("repaymentId") Long repaymentId) {
-        System.out.println("\n\n"+repaymentId+"\n\n");
         return ResponseEntity.ok(creditService.deleteRepaymentById(repaymentId).getBody());
     }
 

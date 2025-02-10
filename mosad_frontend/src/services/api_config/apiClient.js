@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 const BASE_URL= 'http://localhost:8080/api/v1'
 

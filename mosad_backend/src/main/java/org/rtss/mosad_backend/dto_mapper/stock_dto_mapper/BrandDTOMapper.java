@@ -13,14 +13,14 @@ public class BrandDTOMapper {
         this.modelMapper = modelMapper;
     }
 
-    public BrandDTO BrandToBrandDto(Brand brand) {
+    public BrandDTO brandToBrandDto(Brand brand) {
         if(brand == null) {
             throw new IllegalArgumentException("Brand cannot be null");
         }
         return modelMapper.map(brand, BrandDTO.class);
     }
 
-    public Brand BrandDtoToBrand(BrandDTO brandDto) {
+    public Brand brandDtoToBrand(BrandDTO brandDto) {
         if(brandDto == null) {
             throw new IllegalArgumentException("BrandDTO cannot be null");
         }

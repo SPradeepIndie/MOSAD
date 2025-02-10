@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.rtss.mosad_backend.entity.user_management.BlackListTokens;
 import org.rtss.mosad_backend.repository.user_management.BlackListTokensRepo;
 import org.rtss.mosad_backend.service.login_user.CustomUserDetailsService;
 import org.rtss.mosad_backend.service.login_user.JwtService;

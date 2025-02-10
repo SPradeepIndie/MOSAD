@@ -1,9 +1,8 @@
 package org.rtss.mosad_backend.dto.retail_management;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
+
 public class PaymentHistoryDTO {
 
     private Date date;

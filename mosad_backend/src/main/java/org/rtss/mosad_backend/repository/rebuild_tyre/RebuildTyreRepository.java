@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface RebuildTyreRepository extends JpaRepository<RebuildTyre, Long> {
-    List<RebuildTyre> findByStatus(RebuildTyre.TyreStatus status);
+    List<RebuildTyre> findAllByContactNumber(String contactNumber);
 }

@@ -7,9 +7,11 @@ import org.rtss.mosad_backend.entity.user_management.BlackListTokens;
 import org.rtss.mosad_backend.entity.user_management.TokenType;
 import org.rtss.mosad_backend.repository.user_management.BlackListTokensRepo;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class LogoutService implements LogoutHandler {
             Map<String, String> body = new ObjectMapper().readValue(request.getInputStream(), Map.class);
             refreshToken = body.get("refreshToken"); // Extract refresh token from JSON
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse request body", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Failed to parse request body", e);
         }
 
         // Blacklist the refresh token
@@ -54,7 +56,7 @@ public class LogoutService implements LogoutHandler {
         try {
             new ObjectMapper().writeValue(response.getOutputStream(),"Successfully logged out");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"ObjectMapper writing value error", e);
         }
     }
 }
