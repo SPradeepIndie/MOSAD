@@ -1,16 +1,19 @@
 package org.rtss.mosad_backend.controller.rebuild_tyre;
 
+import org.rtss.mosad_backend.dto.rebuild_tyre_dtos.RebuildTyreDto;
+import org.rtss.mosad_backend.dto_mapper.rebuild_tyre_dto_mapper.RebuildTyreMapper;
 import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
 import org.rtss.mosad_backend.service.rebuild_tyre_management.RebuildTyreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/rebuild-tyres")
 public class RebuildTyreController {
-
 
     private final RebuildTyreService rebuildTyreService;
 
@@ -18,33 +21,41 @@ public class RebuildTyreController {
         this.rebuildTyreService = rebuildTyreService;
     }
 
+    // Create a new tyre entry.
     @PostMapping
-    public ResponseEntity<RebuildTyre> createRebuildTyre(@RequestBody RebuildTyre rebuildTyre) {
-        RebuildTyre savedTyre = rebuildTyreService.saveRebuildTyre(rebuildTyre);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTyre);
+    public ResponseEntity<RebuildTyreDto> createRebuildTyre(@Valid @RequestBody RebuildTyreDto rebuildTyreDto) {
+        RebuildTyre tyre = RebuildTyreMapper.toEntity(rebuildTyreDto);
+        RebuildTyre savedTyre = rebuildTyreService.createRebuildTyre(tyre);
+        RebuildTyreDto responseDto = RebuildTyreMapper.toDto(savedTyre);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping
-    public ResponseEntity<List<RebuildTyre>> getAllRebuildTyres() {
-        return ResponseEntity.ok(rebuildTyreService.getAllRebuildTyres());
+    // Find tyres by the customer's contact number.
+    @GetMapping("/contact/{contactNumber}")
+    public ResponseEntity<List<RebuildTyreDto>> getTyresByContactNumber(@PathVariable String contactNumber) {
+        List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
+        List<RebuildTyreDto> dtoList = tyres.stream()
+                .map(RebuildTyreMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RebuildTyre> getRebuildTyreById(@PathVariable Long id) {
-        return rebuildTyreService.getRebuildTyreById(id)
-                .map(ResponseEntity::ok)
+    // Update a tyre entry by its id.
+    @PutMapping("/{id}")
+    public ResponseEntity<RebuildTyreDto> updateRebuildTyre(@PathVariable Long id, @Valid @RequestBody RebuildTyreDto rebuildTyreDto) {
+        RebuildTyre tyreToUpdate = RebuildTyreMapper.toEntity(rebuildTyreDto);
+        return rebuildTyreService.updateRebuildTyre(id, tyreToUpdate)
+                .map(updatedTyre -> {
+                    RebuildTyreDto updatedDto = RebuildTyreMapper.toDto(updatedTyre);
+                    return ResponseEntity.ok(updatedDto);
+                })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<RebuildTyre>> getRebuildTiresByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(
-                rebuildTyreService.getRebuildTyresByStatus(RebuildTyre.TyreStatus.valueOf(status.toUpperCase())));
-    }
-
+    // Delete a tyre entry by its id.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRebuildTyre(@PathVariable Long id) {
         rebuildTyreService.deleteRebuildTyre(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }
