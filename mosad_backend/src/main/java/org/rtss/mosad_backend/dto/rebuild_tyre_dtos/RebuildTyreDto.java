@@ -1,22 +1,33 @@
-package org.rtss.mosad_backend.entity.rebuild_tyre;
+package org.rtss.mosad_backend.dto.rebuild_tyre_dtos;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre.TyreStatus;
 
-@Entity
-public class RebuildTyre {
+public class RebuildTyreDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long itemId;
-
+    @NotNull(message = "Customer ID cannot be null")
     private Long customerId;
+
+    @NotNull(message = "Tyre number cannot be null")
     private Integer tyreNumber;
+
+    @NotBlank(message = "Tyre size cannot be blank")
     private String tyreSize;
+
+    @NotBlank(message = "Tyre brand cannot be blank")
     private String tyreBrand;
+
+    @NotBlank(message = "Customer name cannot be blank")
     private String customerName;
+
+    @NotBlank(message = "Contact number cannot be blank")
     private String contactNumber;
+
+    @NotNull(message = "Date received cannot be null")
     private LocalDate dateReceived;
+
     private LocalDate dateSentToCompany;
     private String salesRepNumber;
     private String jobNumber;
@@ -25,21 +36,17 @@ public class RebuildTyre {
     private String billNumber;
     private Double price;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Tyre status cannot be null")
     private TyreStatus status;
 
-    public enum TyreStatus {
-        IN_HOLD, SENT_TO_REBUILD, DONE
-    }
-
     // Constructors
-    public RebuildTyre() {}
+    public RebuildTyreDto() {}
 
-    public RebuildTyre(Long customerId, Integer tyreNumber, String tyreSize, String tyreBrand, 
-                       String customerName, String contactNumber, LocalDate dateReceived, 
-                       LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, 
-                       LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, 
-                       String billNumber, Double price, TyreStatus status) {
+    public RebuildTyreDto(Long customerId, Integer tyreNumber, String tyreSize, String tyreBrand, 
+                          String customerName, String contactNumber, LocalDate dateReceived, 
+                          LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, 
+                          LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, 
+                          String billNumber, Double price, TyreStatus status) {
         this.customerId = customerId;
         this.tyreNumber = tyreNumber;
         this.tyreSize = tyreSize;
@@ -58,10 +65,6 @@ public class RebuildTyre {
     }
 
     // Getters and Setters
-    public Long getItemId() {
-        return itemId;
-    }
-
     public Long getCustomerId() {
         return customerId;
     }
