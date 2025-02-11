@@ -6,28 +6,62 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOM
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
+import org.rtss.mosad_backend.entity.customer.CustomerType;
+import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
+    private final CustomerRepository customerRepository;
+    private final CustomerContactRepository customerContactRepository;
+    private final CustomerDTOMapper customerDTOMapper;
+    private final CustomerContactDTOMapper customerContactDTOMapper;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    public CustomerService(CustomerRepository customerRepository, CustomerContactRepository customerContactRepository, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper) {
+        this.customerRepository = customerRepository;
+        this.customerContactRepository = customerContactRepository;
+        this.customerDTOMapper = customerDTOMapper;
+        this.customerContactDTOMapper = customerContactDTOMapper;
+    }
 
-    @Autowired
-    private CustomerContactRepository customerContactRepository;
+    // Save a new customer
+    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+        if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A customer must have at least one contact.");
+        }
+        Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
+        Customer savedCustomer = customerRepository.save(customer);
+        return customerDTOMapper.toCustomerDTO(savedCustomer);
+    }
 
-    @Autowired
-    private CustomerContactDTOMapper customerContactDTOMapper;
 
+    // Get all customers
+    public List<CustomerDTO> getAllCustomers() {
+        return customerDTOMapper.toCustomerDTOList(customerRepository.findAll());
+    }
+
+    // Get a specific customer by ID
+    public CustomerDTO getCustomerById(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID: " + id))));
+        return customerDTOMapper.toCustomerDTO(customer);
+    }
+
+    // Update an existing customer
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+        Customer existingCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID : " + id))));
+
+        existingCustomer.setName(customerDTO.getName());
+        existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
+        existingCustomer.setContacts(customerDTOMapper.toCustomerEntity(customerDTO).getContacts());
     @Autowired
     private CustomerDTOMapper customerDTOMapper;
 
@@ -43,6 +77,25 @@ public class CustomerService {
     }
 
 
+    // Delete a customer by ID
+    public void deleteCustomer(Long id) {
+        if (!customerRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST," Customer not found with ID: " + id);
+        }
+        customerRepository.deleteById(id);
+    }
+
+    public List<CustomerContactDTO> getCustomerByContact(String contactNumber) {
+        System.out.println("\n Service ekata Awa  "+contactNumber);
+        List<CustomerContact> customers= customerContactRepository.findCustomerContactsByContactNumber(contactNumber);
+        System.out.println("\n Customers are \n"+customers+"\n\n");
+        return customerContactDTOMapper.toCustomerDTOList(customers);
+    }
+    public List<CustomerDTO> getCustomersByContact(String contactNumber){
+
+        List<Customer> customers=customerContactRepository.findCustomersByContactNumber(contactNumber);
+
+        return customerDTOMapper.toCustomerDTOList(customers);
     public List<CustomerDTO> getCustomers() {
         List<Customer> customers = customerRepository.findAll();
         return customers.stream().map(customerDTOMapper::toDTO).collect(Collectors.toList());

@@ -48,9 +48,23 @@ public class AccountManagerController {
         return ResponseEntity.ok().body(users);
     }
 
-    @PostMapping("/forgot")
-    public ResponseEntity<String> forgotPassword(){
-        return ResponseEntity.ok().body("Implementing");
+    @PostMapping("/forgot-pwd/email")
+    public ResponseEntity<ResponseDTO> sendOtp(@RequestParam String email) {
+        String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
+        return ResponseEntity.ok().body(accountManagementService.sendOtp(escapedEmail));
+    }
+
+    @PostMapping("/forgot-pwd/otp")
+    public ResponseEntity<ResponseDTO> verifyOtp(@RequestParam String otp,@RequestParam String email) {
+        String escapedOtp=validateHtmlPathVariable.escapeHTMLSpecialCharacters(otp);
+        String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
+        return ResponseEntity.ok().body(accountManagementService.verifyOtp(escapedOtp,escapedEmail));
+    }
+
+    @PostMapping("/forgot-pwd/change")
+    public ResponseEntity<String> newPasswordSet(@RequestParam String email) {
+        String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
+        return ResponseEntity.ok().body(escapedEmail);
     }
 
 }

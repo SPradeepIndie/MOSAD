@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -13,6 +13,7 @@ import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiS
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
+import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 const ItemView = () => {
  
@@ -34,6 +35,10 @@ const ItemView = () => {
   const [inputFieldErrors, setinputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
+
+
+  const [confirmationDialog, setConfirmationDialog] = useState(false);
+  const dialogOpenRef = useRef(false); // ✅ Track whether dialog is open
 
   const openDialog = (item) => {
     if (item) {
@@ -102,8 +107,30 @@ const ItemView = () => {
     }
   }
 
+  
+  const handleRowClick = (id) => {
+    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
+    
+  };
+
+  const openConfirmationDialog = () => {
+    if(selectedRowId !== null){
+    dialogOpenRef.current = true; // ✅ Mark dialog as open
+    setConfirmationDialog(true);
+    }else{
+      setMessage({ type: "error", text: "Please select an item to delete." });
+      setTimeout(() => setMessage(null), 2000);
+    }
+  };
+  
+  const closeConfirmationDialog = () => {
+    dialogOpenRef.current = false; // ✅ Mark dialog as closed
+    setConfirmationDialog(false);
+  };
+  
   const handleDelete = () => {
     if (selectedRowId !== null) {
+      
       const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
       deleteItem(selectedItem.itemDTO.itemId)
         .then(() => {
@@ -135,26 +162,34 @@ const ItemView = () => {
 
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
-
-
-
-
     fetchandSetItems();
 
-    const handleOutsideClick = (event) => {
-      if (!event.target.closest(".item-table")) {
-        setSelectedRowId(null); // Deselect row when clicking outside the table
-      }
-    };
-
-    document.addEventListener("click", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
 
 
   }, [selectedCategory, selectedBrand]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        dialogOpenRef.current || // ✅ Prevent deselection when dialog is open
+        event.target.closest(".item-table") || 
+        event.target.closest(".confirmation-dialog") || 
+        event.target.closest(".confirmation-dialog-overlay")
+      ) {
+        return;
+      }
+  
+      console.log("Clicked outside, deselecting row");
+      setSelectedRowId(null);
+    };
+  
+    document.addEventListener("click", handleOutsideClick);
+  
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  }, [selectedRowId]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -216,14 +251,21 @@ const ItemView = () => {
 
 
 
-  const handleRowClick = (id) => {
-    setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
-    console.log("Selected Row ID:", selectedRowId);
-  };
 
   return (
     <>
       {message && <GeneralMessage message={message} />}
+      {confirmationDialog && (
+        <ConfirmationDialog
+        message={"Are you sure you want to delete this item ID="+selectedRowId+" ? "}
+        onCancel={closeConfirmationDialog}
+        onConfirm={() => {
+          closeConfirmationDialog();
+          handleDelete();
+        }}
+        isOpen={confirmationDialog}
+      />
+      )}
       <div className="item-view-container">
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
@@ -277,7 +319,7 @@ const ItemView = () => {
           </tbody>
         </table>
         <div className="button-group">
-          <button className="btn delete" onClick={handleDelete}>Delete</button>
+          <button className="btn delete" onClick={()=>openConfirmationDialog()}>Delete</button>
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
               console.log("On Update Selected Row ID:", selectedRowId);

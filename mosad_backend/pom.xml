@@ -11,7 +11,7 @@
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
 <!--	MOSAD project version up here-->
-	<version>3.2.6</version>
+	<version>3.2.8</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
@@ -71,6 +71,8 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--	JSON web token-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>

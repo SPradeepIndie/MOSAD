@@ -217,14 +217,13 @@ public class ItemService {
                 if (tyre != null) {
                     itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
                 } else {
-                    System.out.println("No tyre details found for item ID: " + item.getItemId());
+                    throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Tyre not found for this item");
                 }
             }
 
             // Fetch branch item details
             ItemBranch itemBranch = itemBranchRepository.findByItemIdAndBranchId(item.getItemId(), branchId);
             if (itemBranch == null) {
-                System.out.println("No item-branch mapping found for item ID: " + item.getItemId() + " and branch ID: " + branchId);
                 continue; // Skip this item if branch mapping is missing
             }
 

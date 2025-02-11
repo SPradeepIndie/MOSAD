@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.dto.credit_dtos;
 
-import org.rtss.mosad_backend.entity.credit.Credit;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
