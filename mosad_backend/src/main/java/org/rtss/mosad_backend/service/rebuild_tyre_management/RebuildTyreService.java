@@ -45,6 +45,10 @@ public class RebuildTyreService {
         });
     }
 
+    public List<RebuildTyre> getAllRebuildTyres() {
+        return rebuildTyreRepository.findAll();
+    }
+
     public void deleteRebuildTyre(Long id) {
         rebuildTyreRepository.deleteById(id);
     }
