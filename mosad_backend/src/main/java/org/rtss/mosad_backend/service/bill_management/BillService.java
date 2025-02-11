@@ -11,12 +11,14 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 import org.rtss.mosad_backend.repository.bill_repository.BillItemRepository;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +44,9 @@ public class BillService {
     private BillItemService billItemService;
     @Autowired
     private BillItemRepository billItemRepository;
+    @Autowired
+    private ItemRepo itemRepository;
+
 
     public BillService(CustomerService customerService) {
         this.customerService = customerService;
@@ -67,7 +72,23 @@ public class BillService {
         Bill savedBill = billRepository.save(bill);
 
         // Save all BillItems
-        billItemRepository.saveAll(billItems);
+//        billItemRepository.saveAll(billItems);
+//
+//        for (BillItem billItem : billItems) {
+//            // Fetch the corresponding item from the database
+//            Item item = itemRepository.findById(billItem.getItem().getId())
+//                    .orElseThrow(() -> new RuntimeException("Item not found"));
+//
+//            // Reduce the item quantity
+//            int updatedQuantity = item.getQuantity() - billItem.getQuantity();
+//            if (updatedQuantity < 0) {
+//                throw new RuntimeException("Insufficient stock for item: " + item.getName());
+//            }
+//            item.setQuantity(updatedQuantity);
+//
+//            // Save the updated item
+//            itemRepository.save(item);
+//        }
 
         // Convert the saved Bill entity back to DTO and return it
         return billDTOMapper.toDTO(savedBill);
