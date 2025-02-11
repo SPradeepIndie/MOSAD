@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.user_management.Users;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,8 +19,8 @@ public class Bill {
     private Double advance;
     private Double balance;
 
-    @Column(nullable = false, updatable = false)
-    private Date date;
+    @Column(columnDefinition = "DATE") // Ensure only date is stored
+    private LocalDate date;
 
     // One-to-Many relationship with BillItem
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -50,7 +50,7 @@ public class Bill {
         this.user = user;
     }
 
-    public Bill(Double totalAmount, Double advance, Double balance, Date date) {
+    public Bill(Double totalAmount, Double advance, Double balance, LocalDate date) {
         this.totalAmount = totalAmount;
         this.advance = advance;
         this.balance = balance;
@@ -91,11 +91,11 @@ public class Bill {
         this.advance = advance;
     }
 
-    public java.util.Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

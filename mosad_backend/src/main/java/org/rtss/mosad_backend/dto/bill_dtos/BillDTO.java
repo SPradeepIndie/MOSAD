@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.dto.bill_dtos;
 
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class BillDTO {
@@ -10,7 +10,7 @@ public class BillDTO {
     private Double totalAmount;
     private Double advance;
     private Double balance;
-    private Date date;
+    private LocalDate date;
     private CustomerDTO customerDTO;
     private List<BillItemDTO> billItemDTO;
 
@@ -47,11 +47,11 @@ public class BillDTO {
         this.balance = balance;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
