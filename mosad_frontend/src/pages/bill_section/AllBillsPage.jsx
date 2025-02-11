@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Container,
   Paper,
@@ -18,17 +18,26 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { fetchAllBills } from "../../services/apiBillService";
 
 const BillList = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [filterPhone, setFilterPhone] = useState("");
   const [filterDate, setFilterDate] = useState(null);
+  const [bills,setBills]=useState([]);
 
-  const bills = [
-    { id: 1, billNumber: "B001", customer: "John Doe", date: "2025-02-01", amount: 100, phone: "123-456-7890" },
-    { id: 2, billNumber: "B002", customer: "Jane Smith", date: "2025-02-02", amount: 150, phone: "987-654-3210" },
-  ];
+  // const bills = [
+  //   { id: 1, billNumber: "B001", customer: "John Doe", date: "2025-02-01", amount: 100, phone: "123-456-7890" },
+  //   { id: 2, billNumber: "B002", customer: "Jane Smith", date: "2025-02-02", amount: 150, phone: "987-654-3210" },
+  // ];
+
+
+  useEffect(()=>{
+    fetchAllBills().then((response)=>{
+      setBills(response.data);
+    })
+  },[]);
 
   const handleOpenDrawer = (bill) => {
     setSelectedBill(bill);
