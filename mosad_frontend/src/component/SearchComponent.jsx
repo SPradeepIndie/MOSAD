@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
 
-const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
+const SearchComponent = ({ onAddToBill, quantity, setQuantity}) => {
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands
@@ -160,8 +160,8 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {results.map((result, index) => (
-                <TableRow key={index}>
+              {results.map((result) => (
+                <TableRow key={result.id}>
                   <TableCell>{brand}</TableCell>
                   <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
                   <TableCell>{result.itemTyreDTO.pattern}</TableCell>

@@ -36,7 +36,7 @@ public class RetailService {
             return allBills.stream()
                     .map(bill -> new PaymentHistoryDTO(
                             bill.getDate(),
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             returnPaymentStatus(bill),
@@ -45,11 +45,11 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their payment history
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
                     .map(bill -> new PaymentHistoryDTO(
                             bill.getDate(),
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             returnPaymentStatus(bill),
@@ -74,7 +74,7 @@ public class RetailService {
             // Admin: Fetch all users' purchase history
             List<Bill> allBills = billRepository.findAll();
             return allBills.stream()
-                    .flatMap(bill -> bill.getItems().stream()
+                    .flatMap(bill -> bill.getBillItems().stream()
                             .map(item -> new PurchaseHistoryDTO(
                                     bill.getDate(),
                                     item.getDescription(),
@@ -84,9 +84,9 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their purchase history
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
-                    .flatMap(bill -> bill.getItems().stream()
+                    .flatMap(bill -> bill.getBillItems().stream()
                             .map(item -> new PurchaseHistoryDTO(
                                     bill.getDate(),
                                     item.getDescription(),
@@ -112,7 +112,7 @@ public class RetailService {
                     .filter(bill -> bill.getBalance() > 0)
                     .map(bill -> new IncompleteTransactionsDTO(
                             bill.getDate(), // Directly use the date
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             bill.getBalance(),
@@ -121,12 +121,12 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their transactions
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
                     .filter(bill -> bill.getBalance() > 0)
                     .map(bill -> new IncompleteTransactionsDTO(
                             bill.getDate(), // Directly use the date
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             bill.getBalance(),
@@ -135,13 +135,9 @@ public class RetailService {
                     .toList();
         }
     }
-    private Date calculateDueDate(Date date) {
-        // Convert java.util.Date to LocalDate
-        LocalDate localDate = date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    private Date calculateDueDate(LocalDate date) {
         // Add 30 days
-        LocalDate dueDate = localDate.plusDays(30);
+        LocalDate dueDate = date.plusDays(30);
         // Convert back to java.util.Date
         return Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }

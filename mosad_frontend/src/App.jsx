@@ -14,6 +14,7 @@ import Footer from './component/Footer';
 import HeaderBar from './component/Header';
 
 const BillPage=lazy(()=>import('./pages/bill_section/BillPage'));
+const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
@@ -103,6 +104,9 @@ function App() {
             <Route path="view-all" element={<AllUsersView />}/>
           </Route>
         </Route>
+
+        
+        <Route path="/AllBillsPage" element={<AllBillsPage />} />
         </Routes>
       </Box>
 
