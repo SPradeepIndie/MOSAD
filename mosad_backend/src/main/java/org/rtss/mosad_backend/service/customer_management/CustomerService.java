@@ -33,7 +33,11 @@ public class CustomerService {
 
     // Get all customers
     public List<CustomerDTO> getAllCustomers() {
-        return customerDTOMapper.toCustomerDTOList(customerRepository.findAll());
+        List<Customer> customerList= customerRepository.findAll();
+        if(customerList.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No customers found");
+        }
+        return customerList.stream().map(customerDTOMapper::toCustomerDTO).toList();
     }
 
     // Get a specific customer by ID
@@ -59,7 +63,6 @@ public class CustomerService {
         return customer;
     }
 
-
     // Delete a customer by ID
     public void deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
@@ -70,6 +73,6 @@ public class CustomerService {
 
     public List<CustomerDTO> getCustomersByContact(String contactNumber) {
         List<Customer> customers = customerContactRepository.findCustomersByContactNumber(contactNumber);
-        return customerDTOMapper.toCustomerDTOList(customers);
+        return customers.stream().map(customerDTOMapper::toCustomerDTO).toList();
     }
 }

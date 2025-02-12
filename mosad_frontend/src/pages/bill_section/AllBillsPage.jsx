@@ -51,15 +51,18 @@ const BillList = () => {
   };
 
   // Filtering logic
-const filteredBills = bills.filter((bill) => {
-  const matchesPhone = filterPhone
-    ? bill.customerDTO.customerContactDTO.contactNumber && bill.customerDTO.customerContactDTO.contactNumber.includes(filterPhone) // Ensure bill.phone exists before using .includes()
-    : true;
-  const matchesDate = filterDate
-    ? bill.date === dayjs(filterDate).format("YYYY-MM-DD")
-    : true;
-  return matchesPhone && matchesDate;
-});
+  const filteredBills = bills.filter((bill) => {
+    const matchesPhone = filterPhone
+      ? bill.addCustomerDTO?.customerContactDTO?.contactNumber?.includes(filterPhone)
+      : true;
+  
+    const matchesDate = filterDate
+      ? bill.billDTO?.date === dayjs(filterDate).format("YYYY-MM-DD")
+      : true;
+  
+    return matchesPhone && matchesDate;
+  });
+  
 
 
   return (
@@ -105,21 +108,22 @@ const filteredBills = bills.filter((bill) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredBills.map((bill) => (
-                <TableRow key={bill.billId}>
-                  <TableCell>{bill.billId}</TableCell>
-                  <TableCell>{bill.customerDTO.customerName}</TableCell>
-                  <TableCell>{bill.date}</TableCell>
-                  <TableCell>{bill.totalAmount}</TableCell>
-                  <TableCell>{bill.customerDTO.customerContactDTO.contactNumber}</TableCell>
-                  <TableCell>
-                    <Button variant="outlined" color="primary" onClick={() => handleOpenDrawer(bill)}>
-                      View
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+  {filteredBills.map((bill, index) => (
+    <TableRow key={index}>
+      <TableCell>{bill.billDTO?.billId || "N/A"}</TableCell>
+      <TableCell>{bill.addCustomerDTO?.customerDTO?.customerName || "N/A"}</TableCell>
+      <TableCell>{bill.billDTO?.date || "N/A"}</TableCell>
+      <TableCell>{bill.billDTO?.totalAmount || "N/A"}</TableCell>
+      <TableCell>{bill.addCustomerDTO?.customerContactDTO?.contactNumber || "N/A"}</TableCell>
+      <TableCell>
+        <Button variant="outlined" color="primary" onClick={() => handleOpenDrawer(bill)}>
+          View
+        </Button>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
           </Table>
         </TableContainer>
 
@@ -147,13 +151,13 @@ const filteredBills = bills.filter((bill) => {
 </Typography>
       <Box sx={{ mt: 1, p: 1, border: "1px solid #ddd", borderRadius: "8px" }}>
         <Typography>
-          <strong>Bill Number:</strong> {selectedBill.billId}
+          <strong>Bill Number:</strong> {selectedBill.billDTO.billId}
         </Typography>
         <Typography>
-          <strong>Advanced:</strong> {selectedBill.advance}
+          <strong>Advanced:</strong> {selectedBill.billDTO.advance}
         </Typography>
         <Typography>
-          <strong>Balance:</strong> {selectedBill.balance}
+          <strong>Balance:</strong> {selectedBill.billDTO.balance}
         </Typography>
       </Box>
       <br></br>

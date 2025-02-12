@@ -13,7 +13,6 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customerId;
 
-
     @Column(nullable = false)
     private String customerName;
 
@@ -48,14 +47,6 @@ public class Customer {
         this.customerId = customerId;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
     public CustomerType getCustomerType() {
         return customerType;
     }
@@ -73,13 +64,19 @@ public class Customer {
         this.customerName = customerName;
     }
 
-
     public CustomerContact getCustomerContact() {
         return customerContact;
     }
 
-
     public void setCustomerContact(CustomerContact customerContact) {
         this.customerContact = customerContact;
+    }
+
+    public List<Credit> getCredits() {
+        return credits;
+    }
+
+    public void setCredits(List<Credit> credits) {
+        this.credits = credits;
     }
 }
