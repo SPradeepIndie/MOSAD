@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, {useState } from "react";
 import {
   Box,
   TextField,
@@ -12,7 +12,7 @@ import {
   Typography,
   Button,
   IconButton,
-  Grid,
+  Grid2,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
@@ -162,8 +162,8 @@ const BillPage = () => {
         </Box>
 
         {/* Customer Info */}
-        <Grid container spacing={2} sx={{ mb: 2 }}>
-  <Grid item xs={12} sm={4}>
+        <Grid2 container spacing={2} sx={{ mb: 2 }}>
+  <Grid2 item xs={12} sm={4}>
     <Typography
       sx={{
         fontSize: "1.2rem",
@@ -182,8 +182,8 @@ const BillPage = () => {
       value={customerName} // Bind to state
       onChange={(e) => setCustomerName(e.target.value)} // Update state on input
     />
-  </Grid>
-  <Grid item xs={12} sm={4}>
+  </Grid2>
+  <Grid2 item xs={12} sm={4}>
     <Typography
       sx={{
         fontSize: "1.2rem",
@@ -202,8 +202,8 @@ const BillPage = () => {
       value={telephone} // Bind to state
       onChange={(e) => setTelephone(e.target.value)} // Update state on input
     />
-  </Grid>
-  <Grid item xs={12} sm={4}>
+  </Grid2>
+  <Grid2 item xs={12} sm={4}>
     <Typography
       sx={{
         fontSize: "1.2rem",
@@ -214,8 +214,8 @@ const BillPage = () => {
     >
       Date: {new Date().toLocaleDateString()}
     </Typography>
-  </Grid>
-</Grid>
+  </Grid2>
+</Grid2>
 
 
         {/* Table and Bill */}
@@ -248,7 +248,11 @@ const BillPage = () => {
                       type="number"
                       value={row.quantity}
                       onChange={(e) => handleInputChange(index, "quantity", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
+                      slotProps={{
+                        input: {
+                          style: { fontSize: "1.2rem" },
+                        },
+                      }}
                       sx={{ width: "80%" }}
                     />
                   </TableCell>
@@ -258,7 +262,11 @@ const BillPage = () => {
                       size="small"
                       value={row.description}
                       onChange={(e) => handleInputChange(index, "description", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
+                      slotProps={{
+                        input: {
+                          style: { fontSize: "1.2rem" },
+                        },
+                      }}
                       sx={{ width: "90%" }}
                     />
                   </TableCell>
@@ -269,8 +277,12 @@ const BillPage = () => {
                       type="number"
                       value={row.unitPrice}
                       onChange={(e) => handleInputChange(index, "unitPrice", e.target.value)}
-                      InputProps={{ style: { fontSize: "1.2rem" } }}
-                      sx={{ width: "90%" }}
+                      slotProps={{
+                        input: {
+                          style: { fontSize: "1.2rem" },
+                        },
+                      }}
+                      sx={{ width: "80%" }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -278,7 +290,12 @@ const BillPage = () => {
                       variant="outlined"
                       size="small"
                       value={ccyFormat(row.subtotal || 0)}
-                      InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
+                      slotProps={{
+                        input: {
+                          readOnly: true,
+                          style: { fontSize: "1.2rem" },
+                        },
+                      }}
                       sx={{ width: "90%" }}
                     />
                   </TableCell>
@@ -302,7 +319,12 @@ const BillPage = () => {
                     size="small"
                     type="number"
                     value={ccyFormat(total)}
-                    InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        style: { fontSize: "1.2rem" },
+                      },
+                    }}
                     sx={{ width: "90%" }}
                   />
                 </TableCell>
@@ -319,7 +341,11 @@ const BillPage = () => {
                     type="number"
                     value={advance}
                     onChange={handleAdvanceChange}
-                    InputProps={{ style: { fontSize: "1.2rem" } }}
+                    slotProps={{
+                      input: {
+                        style: { fontSize: "1.2rem" },
+                      },
+                    }}
                     sx={{ width: "90%" }}
                   />
 
@@ -336,9 +362,11 @@ const BillPage = () => {
                     size="medium"
                     type="number"
                     value={ccyFormat(balance)}
-                    InputProps={{
-                      readOnly: true,
-                      style: { fontSize: "1.2rem" },
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        style: { fontSize: "1.2rem" },
+                      },
                     }}
                     sx={{ width: "90%" }}
                   />

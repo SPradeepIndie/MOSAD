@@ -28,12 +28,6 @@ const BillList = () => {
   const [filterDate, setFilterDate] = useState(null);
   const [bills,setBills]=useState([]);
 
-  // const bills = [
-  //   { id: 1, billNumber: "B001", customer: "John Doe", date: "2025-02-01", amount: 100, phone: "123-456-7890" },
-  //   { id: 2, billNumber: "B002", customer: "Jane Smith", date: "2025-02-02", amount: 150, phone: "987-654-3210" },
-  // ];
-
-
   useEffect(()=>{
     fetchAllBills().then((response)=>{
       setBills(response.data);
@@ -108,8 +102,8 @@ const BillList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-  {filteredBills.map((bill, index) => (
-    <TableRow key={index}>
+  {filteredBills.map((bill) => (
+    <TableRow key={bill.id}>
       <TableCell>{bill.billDTO?.billId || "N/A"}</TableCell>
       <TableCell>{bill.addCustomerDTO?.customerDTO?.customerName || "N/A"}</TableCell>
       <TableCell>{bill.billDTO?.date || "N/A"}</TableCell>
