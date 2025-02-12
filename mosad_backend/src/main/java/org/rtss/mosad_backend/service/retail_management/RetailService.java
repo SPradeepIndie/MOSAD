@@ -45,7 +45,7 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their payment history
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
                     .map(bill -> new PaymentHistoryDTO(
                             bill.getDate(),
@@ -84,7 +84,7 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their purchase history
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
                     .flatMap(bill -> bill.getBillItems().stream()
                             .map(item -> new PurchaseHistoryDTO(
@@ -121,7 +121,7 @@ public class RetailService {
                     .toList();
         } else {
             // Regular user: Fetch only their transactions
-            List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
+            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
             return userBills.stream()
                     .filter(bill -> bill.getBalance() > 0)
                     .map(bill -> new IncompleteTransactionsDTO(
@@ -135,13 +135,9 @@ public class RetailService {
                     .toList();
         }
     }
-    private Date calculateDueDate(Date date) {
-        // Convert java.util.Date to LocalDate
-        LocalDate localDate = date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+    private Date calculateDueDate(LocalDate date) {
         // Add 30 days
-        LocalDate dueDate = localDate.plusDays(30);
+        LocalDate dueDate = date.plusDays(30);
         // Convert back to java.util.Date
         return Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
