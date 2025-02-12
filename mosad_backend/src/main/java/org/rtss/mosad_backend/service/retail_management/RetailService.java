@@ -1,8 +1,9 @@
-/*package org.rtss.mosad_backend.service.retail_management;
+package org.rtss.mosad_backend.service.retail_management;
 import org.rtss.mosad_backend.dto.retail_management.IncompleteTransactionsDTO;
 import org.rtss.mosad_backend.dto.retail_management.PaymentHistoryDTO;
 import org.rtss.mosad_backend.dto.retail_management.PurchaseHistoryDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
+import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
@@ -35,7 +36,7 @@ public class RetailService {
             return allBills.stream()
                     .map(bill -> new PaymentHistoryDTO(
                             bill.getDate(),
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             returnPaymentStatus(bill),
@@ -48,7 +49,7 @@ public class RetailService {
             return userBills.stream()
                     .map(bill -> new PaymentHistoryDTO(
                             bill.getDate(),
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             returnPaymentStatus(bill),
@@ -73,7 +74,7 @@ public class RetailService {
             // Admin: Fetch all users' purchase history
             List<Bill> allBills = billRepository.findAll();
             return allBills.stream()
-                    .flatMap(bill -> bill.getItems().stream()
+                    .flatMap(bill -> bill.getBillItems().stream()
                             .map(item -> new PurchaseHistoryDTO(
                                     bill.getDate(),
                                     item.getDescription(),
@@ -85,7 +86,7 @@ public class RetailService {
             // Regular user: Fetch only their purchase history
             List<Bill> userBills = billRepository.findByUser(user); // Assuming this method exists
             return userBills.stream()
-                    .flatMap(bill -> bill.getItems().stream()
+                    .flatMap(bill -> bill.getBillItems().stream()
                             .map(item -> new PurchaseHistoryDTO(
                                     bill.getDate(),
                                     item.getDescription(),
@@ -111,7 +112,7 @@ public class RetailService {
                     .filter(bill -> bill.getBalance() > 0)
                     .map(bill -> new IncompleteTransactionsDTO(
                             bill.getDate(), // Directly use the date
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             bill.getBalance(),
@@ -125,7 +126,7 @@ public class RetailService {
                     .filter(bill -> bill.getBalance() > 0)
                     .map(bill -> new IncompleteTransactionsDTO(
                             bill.getDate(), // Directly use the date
-                            bill.getItems().stream()
+                            bill.getBillItems().stream()
                                     .map(BillItem::getDescription)
                                     .collect(Collectors.joining(", ")),
                             bill.getBalance(),
@@ -145,4 +146,3 @@ public class RetailService {
         return Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 }
-*/

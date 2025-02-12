@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 
 @Entity
 @Table(name = "bill_items")
@@ -10,23 +9,15 @@ public class BillItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billItemId;
 
-    /*@OneToOne
-    @JoinColumn(name="item_id", nullable = true)
-    private Item item;*/
-
     private String description;
     private Integer quantity;
     private Double unitPrice;
-
 
     @ManyToOne
     @JoinColumn(name = "bill_id", nullable = false)
     private Bill bill;
 
-
-
     public BillItem(String description, Integer quantity, Double unitPrice, Bill bill) {
-        //this.item = item;
         this.description = description;
         this.quantity = quantity;
         this.unitPrice = unitPrice;

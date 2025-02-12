@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.service.bill_management;
 
 import jakarta.transaction.Transactional;
-import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
 import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillItemDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;

@@ -40,7 +40,4 @@ public class ResponseDTO {
                 '}';
     }
 
-    public void setData(Bill savedBill) {
-
-    }
 }

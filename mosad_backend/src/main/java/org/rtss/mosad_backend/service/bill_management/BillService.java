@@ -27,9 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.springframework.web.server.ResponseStatusException;
-
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,9 +46,6 @@ public class BillService {
 
     //Repository Injection
     private final BillRepository billRepository;
-    private final CustomerRepository customerRepository;
-    private final BillItemRepository billItemRepository;
-    private final ItemRepo itemRepository;
 
 
     public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerRepository customerRepository, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, BillItemService billItemService, BillItemRepository billItemRepository, ItemRepo itemRepository) {
@@ -59,12 +53,9 @@ public class BillService {
         this.customerService = customerService;
         this.billDTOMapper = billDTOMapper;
         this.customerDTOMapper = customerDTOMapper;
-        this.customerRepository = customerRepository;
         this.customerContactDTOMapper = customerContactDTOMapper;
         this.billItemDTOMapper = billItemDTOMapper;
         this.billItemService = billItemService;
-        this.billItemRepository = billItemRepository;
-        this.itemRepository = itemRepository;
     }
 
 

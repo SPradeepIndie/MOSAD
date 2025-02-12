@@ -2,13 +2,8 @@ package org.rtss.mosad_backend.dto_mapper.customer_dto_mapper;
 
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CustomerContactDTOMapper {

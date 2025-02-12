@@ -1,17 +1,18 @@
 package org.rtss.mosad_backend.dto.retail_management;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class PurchaseHistoryDTO {
 
 
-    private Date date;
+    private LocalDate date;
     private String productName;
     private Integer quantity;
     private Double price;
 
-    public PurchaseHistoryDTO(Date date, String productName, Integer quantity, Double price) {
+    public PurchaseHistoryDTO(LocalDate date, String productName, Integer quantity, Double price) {
         this.date = date;
         this.productName = productName;
         this.quantity = quantity;
@@ -22,11 +23,11 @@ public class PurchaseHistoryDTO {
     }
 
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

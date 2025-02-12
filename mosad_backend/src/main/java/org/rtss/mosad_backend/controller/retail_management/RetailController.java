@@ -1,4 +1,4 @@
-/*package org.rtss.mosad_backend.controller.retail_management;
+package org.rtss.mosad_backend.controller.retail_management;
 
 import org.rtss.mosad_backend.dto.retail_management.IncompleteTransactionsDTO;
 import org.rtss.mosad_backend.dto.retail_management.PurchaseHistoryDTO;
@@ -35,4 +35,3 @@ public class RetailController {
     }
 
 }
-*/
