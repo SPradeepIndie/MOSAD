@@ -1,6 +1,8 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
+
 import java.time.LocalDate;
+
 
 public class BillDTO {
     private Long billId;
@@ -8,6 +10,7 @@ public class BillDTO {
     private Double advance;
     private Double balance;
     private LocalDate date;
+
 
     public BillDTO() {
     }
@@ -19,6 +22,7 @@ public class BillDTO {
         this.balance = balance;
         this.date = date;
     }
+
 
     // Getters and Setters
     public Long getBillId() {
@@ -59,7 +63,9 @@ public class BillDTO {
 
     public void setDate(LocalDate date) {
         this.date = date;
+
     }
+
 
 
 }

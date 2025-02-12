@@ -1,8 +1,14 @@
 package org.rtss.mosad_backend.controller.customer_controller;
 
+
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
+
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
+import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
+
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +18,9 @@ import java.util.List;
 @RequestMapping("/api/customers")
 public class CustomerController {
 
-    private final CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
+
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -21,13 +29,16 @@ public class CustomerController {
     @PostMapping("/add")
     public ResponseEntity<CustomerDTO>  updateCustomer(@RequestBody CustomerDetailsDTO customerDetailsDTO) {
         CustomerDTO customerDto = customerService.addCustomer(customerDetailsDTO);
+
         return ResponseEntity.ok(customerDto);
 
     }
 
     @GetMapping("/get")
     public ResponseEntity<List<CustomerDTO>> getCustomers() {
+
         List<CustomerDTO> customerDTOs = customerService.getAllCustomers();
+
         return ResponseEntity.ok(customerDTOs);
     }
 

@@ -1,9 +1,12 @@
 package org.rtss.mosad_backend.dto.customer_dtos;
 
+
+
 public class CustomerDTO {
     private Long customerId;
 
     private String customerName;
+
 
     private String customerType;
 
@@ -11,10 +14,12 @@ public class CustomerDTO {
         this.customerType = customerType;
         this.customerName = customerName;
         this.customerId = customerId;
+
     }
 
     public CustomerDTO() {
     }
+
 
     public Long getCustomerId() {
         return customerId;
@@ -32,11 +37,12 @@ public class CustomerDTO {
         this.customerName = customerName;
     }
 
-    public String getCustomerType() {
-        return customerType;
+    public CustomerContactDTO getCustomerContactDTO() {
+        return customerContactDTO;
     }
 
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
+    public void setCustomerContactDTO(CustomerContactDTO customerContactDTO) {
+        this.customerContactDTO = customerContactDTO;
     }
+
 }

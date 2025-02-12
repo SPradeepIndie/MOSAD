@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.dto_mapper.bill_dto_mapper;
 
+
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
@@ -17,10 +18,13 @@ public class BillDTOMapper {
 
     public BillDTO toDTO(Bill bill) {
         return modelMapper.map(bill, BillDTO.class);
+
     }
 
 
     public Bill toEntity(BillDTO dto) {
+
         return modelMapper.map(dto, Bill.class);
+
     }
 }
