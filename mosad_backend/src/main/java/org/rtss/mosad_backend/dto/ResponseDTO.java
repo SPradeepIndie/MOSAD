@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.dto;
 
-import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.springframework.stereotype.Component;
 
 @Component

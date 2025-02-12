@@ -2,7 +2,6 @@ package org.rtss.mosad_backend.dto.retail_management;
 
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class PurchaseHistoryDTO {
 

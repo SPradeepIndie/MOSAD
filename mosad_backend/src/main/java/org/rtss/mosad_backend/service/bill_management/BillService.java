@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.service.bill_management;
 
-
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
@@ -8,7 +7,6 @@ import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
-
 import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillItemDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
@@ -16,16 +14,10 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
-
-
-import org.rtss.mosad_backend.repository.bill_repository.BillItemRepository;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
-import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,20 +34,18 @@ public class BillService {
 
     //Services Injection
     private final CustomerService customerService;
-    private final BillItemService billItemService;
 
     //Repository Injection
     private final BillRepository billRepository;
 
 
-    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerRepository customerRepository, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, BillItemService billItemService, BillItemRepository billItemRepository, ItemRepo itemRepository) {
+    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper) {
         this.billRepository = billRepository;
         this.customerService = customerService;
         this.billDTOMapper = billDTOMapper;
         this.customerDTOMapper = customerDTOMapper;
         this.customerContactDTOMapper = customerContactDTOMapper;
         this.billItemDTOMapper = billItemDTOMapper;
-        this.billItemService = billItemService;
     }
 
 
