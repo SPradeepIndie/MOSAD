@@ -1,5 +1,8 @@
 package org.rtss.mosad_backend.dto_mapper.customer_dto_mapper;
 
+
+import org.modelmapper.ModelMapper;
+
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
@@ -41,17 +44,10 @@ public class CustomerDTOMapper {
             return null;
         }
 
-        Customer customer = new Customer();
-        customer.setCustomerId(customerDTO.getCustomerId());
-        customer.setCustomerName(customerDTO.getCustomerName());
-        customer.setCustomerType(customerDTO.getCustomerType());
 
-        // Map CustomerContactDTO to CustomerContact
-        if (customerDTO.getCustomerContactDTO() != null) {
-            CustomerContact customerContact = new CustomerContact();
-            customerContact.setCustomerContactId(customerDTO.getCustomerContactDTO().getCustomerContactId());
-            customerContact.setContactNumber(customerDTO.getCustomerContactDTO().getContactNumber());
-            customer.setCustomerContact(customerContact);
+        if (customer.getCustomerContact() != null) {
+            customer.getCustomerContact().setCustomer(customer);
+
         }
 
 

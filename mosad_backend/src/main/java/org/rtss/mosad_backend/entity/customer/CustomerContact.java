@@ -4,11 +4,6 @@ import jakarta.persistence.*;
 
 @Entity
 public class CustomerContact {
-    public CustomerContact(Long customerContactId, Customer customer, String contactNumber) {
-        this.customerContactId = customerContactId;
-        this.customer = customer;
-        this.contactNumber = contactNumber;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +11,22 @@ public class CustomerContact {
 
     private String contactNumber;
 
-    public CustomerContact(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
 
     @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    public CustomerContact(Long customerContactId, Customer customer, String contactNumber) {
+        this.customerContactId = customerContactId;
+        this.customer = customer;
+        this.contactNumber = contactNumber;
+    }
+    public CustomerContact(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+
+
 
     public CustomerContact() {
 

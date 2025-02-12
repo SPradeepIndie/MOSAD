@@ -30,6 +30,15 @@ public class RebuildTyreController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @GetMapping
+    public ResponseEntity<List<RebuildTyreDto>> getAllRebuildTyres() {
+        List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
+        List<RebuildTyreDto> dtoList = tyres.stream()
+                .map(RebuildTyreMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtoList);
+    }
+
     // Find tyres by the customer's contact number.
     @GetMapping("/contact/{contactNumber}")
     public ResponseEntity<List<RebuildTyreDto>> getTyresByContactNumber(@PathVariable String contactNumber) {

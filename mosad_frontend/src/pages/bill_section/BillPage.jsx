@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   TextField,
@@ -74,7 +74,36 @@ const BillPage = () => {
   
   const total = rows.reduce((sum, row) => sum + parseFloat(row.subtotal || 0), 0);
   const balance = total - advance;
+  const handleDeleteRow = (index) => {
+    setRows((prevRows) => prevRows.filter((_, i) => i !== index));
+  };
 
+  const handlePrint = () => {
+  const details = rows
+    .map((row, index) => {
+      return `Item ${index + 1}:
+        - Brand: ${row.brand || "N/A"}
+        - Size: ${row.tyreSize || "N/A"}
+        - Quantity: ${row.quantity || "N/A"}
+        - Unit Price: ${ccyFormat(row.unitPrice || 0)}
+        - Subtotal: ${ccyFormat(row.subtotal || 0)};`;
+    })
+    .join("\n\n");
+
+  const alertMessage = `
+    Rashmi Tyre Center - Bill Details
+    Date : ${new Date().toLocaleDateString()}
+    Customer Name: ${customerName || "N/A"}
+    Telephone: ${telephone || "N/A"}
+    Total: ${ccyFormat(total)}
+    Advance: ${ccyFormat(advance)}
+    Balance: ${ccyFormat(balance)}
+    Items:
+    ${details}
+    Thank you for your business!
+  `;
+  alert(alertMessage);
+};
 
   return (
     <Box sx={{ p: 4 }}>
@@ -211,7 +240,7 @@ const BillPage = () => {
             </TableHead>
             <TableBody>
               {rows.map((row, index) => (
-                <TableRow key={"row"+ index}>
+                <TableRow key={index}>
                   <TableCell align="center">
                     <TextField
                       variant="outlined"
@@ -219,7 +248,8 @@ const BillPage = () => {
                       type="number"
                       value={row.quantity}
                       onChange={(e) => handleInputChange(index, "quantity", e.target.value)}
-                      sx={{ width: "80%" ,fontSize:"1.2em"}}
+                      InputProps={{ style: { fontSize: "1.2rem" } }}
+                      sx={{ width: "80%" }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -228,7 +258,8 @@ const BillPage = () => {
                       size="small"
                       value={row.description}
                       onChange={(e) => handleInputChange(index, "description", e.target.value)}
-                      sx={{ width: "90%" ,fontSize:"1.2em"}}
+                      InputProps={{ style: { fontSize: "1.2rem" } }}
+                      sx={{ width: "90%" }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -238,7 +269,8 @@ const BillPage = () => {
                       type="number"
                       value={row.unitPrice}
                       onChange={(e) => handleInputChange(index, "unitPrice", e.target.value)}
-                      sx={{ width: "90%" ,fontSize:"1.2em"}}
+                      InputProps={{ style: { fontSize: "1.2rem" } }}
+                      sx={{ width: "90%" }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -246,8 +278,8 @@ const BillPage = () => {
                       variant="outlined"
                       size="small"
                       value={ccyFormat(row.subtotal || 0)}
-                      readOnly={true}
-                      sx={{ width: "90%" ,fontSize:"1.2em"}}
+                      InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
+                      sx={{ width: "90%" }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -270,8 +302,8 @@ const BillPage = () => {
                     size="small"
                     type="number"
                     value={ccyFormat(total)}
-                    readOnly={true}
-                    sx={{ width: "90%" ,fontSize:"1.2em"}}
+                    InputProps={{ readOnly: true, style: { fontSize: "1.2rem" } }}
+                    sx={{ width: "90%" }}
                   />
                 </TableCell>
               </TableRow>
@@ -287,7 +319,8 @@ const BillPage = () => {
                     type="number"
                     value={advance}
                     onChange={handleAdvanceChange}
-                    sx={{ width: "90%" ,fontSize:"1.2em"}}
+                    InputProps={{ style: { fontSize: "1.2rem" } }}
+                    sx={{ width: "90%" }}
                   />
 
                 </TableCell>
@@ -303,8 +336,11 @@ const BillPage = () => {
                     size="medium"
                     type="number"
                     value={ccyFormat(balance)}
-                    readOnly={true}
-                    sx={{ width: "90%" ,fontSize:"1.2em"}}
+                    InputProps={{
+                      readOnly: true,
+                      style: { fontSize: "1.2rem" },
+                    }}
+                    sx={{ width: "90%" }}
                   />
                 </TableCell>
               </TableRow>
