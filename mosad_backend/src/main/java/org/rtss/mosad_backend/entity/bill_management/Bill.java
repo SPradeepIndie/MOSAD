@@ -30,9 +30,10 @@ public class Bill {
     @JoinColumn(name = "user_id", nullable = true)
     private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id",nullable = true)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
+
 
     public Customer getCustomer() {
         return customer;

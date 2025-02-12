@@ -1,10 +1,8 @@
 package org.rtss.mosad_backend.dto_mapper.customer_dto_mapper;
 
+import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.entity.customer.Customer;
-import org.rtss.mosad_backend.entity.customer.CustomerContact;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,49 +11,32 @@ import java.util.stream.Collectors;
 @Component
 public class CustomerDTOMapper {
 
-    public CustomerDTO toDTO(Customer customer) {
-        if (customer == null) {
-            return null;
-        }
+    private final ModelMapper modelMapper;
 
-        CustomerDTO customerDTO = new CustomerDTO();
-        customerDTO.setCustomerId(customer.getCustomerId());
-        customerDTO.setCustomerName(customer.getCustomerName());
-        customerDTO.setCustomerType(customer.getCustomerType());
-
-        // Map CustomerContact to CustomerContactDTO
-        if (customer.getCustomerContact() != null) {
-            CustomerContactDTO contactDTO = new CustomerContactDTO();
-            contactDTO.setCustomerContactId(customer.getCustomerContact().getCustomerContactId());
-            contactDTO.setContactNumber(customer.getCustomerContact().getContactNumber());
-            customerDTO.setCustomerContactDTO(contactDTO);
-        }
-
-
-
-        return customerDTO;
+    public CustomerDTOMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
-    public Customer toEntity(CustomerDTO customerDTO) {
-        if (customerDTO == null) {
-            return null;
+    // Map Customer Entity to DTO
+    public CustomerDTO toCustomerDTO(Customer customer) {
+        return modelMapper.map(customer, CustomerDTO.class);
+    }
+
+    // Map Customer DTO to Entity
+    public Customer toCustomerEntity(CustomerDTO customerDTO) {
+        Customer customer = modelMapper.map(customerDTO, Customer.class);
+
+        if (customer.getCustomerContact() != null) {
+            customer.getCustomerContact().setCustomer(customer);
         }
-
-        Customer customer = new Customer();
-        customer.setCustomerId(customerDTO.getCustomerId());
-        customer.setCustomerName(customerDTO.getCustomerName());
-        customer.setCustomerType(customerDTO.getCustomerType());
-
-        // Map CustomerContactDTO to CustomerContact
-        if (customerDTO.getCustomerContactDTO() != null) {
-            CustomerContact customerContact = new CustomerContact();
-            customerContact.setCustomerContactId(customerDTO.getCustomerContactDTO().getCustomerContactId());
-            customerContact.setContactNumber(customerDTO.getCustomerContactDTO().getContactNumber());
-            customer.setCustomerContact(customerContact);
-        }
-
-
 
         return customer;
+    }
+
+    // Map List of Customer Entities to DTOs
+    public List<CustomerDTO> toCustomerDTOList(List<Customer> customers) {
+        return customers.stream()
+                .map(this::toCustomerDTO)
+                .collect(Collectors.toList());
     }
 }

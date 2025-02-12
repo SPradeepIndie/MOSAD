@@ -1,17 +1,17 @@
 package org.rtss.mosad_backend.service.customer_management;
 
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
+import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
-import org.rtss.mosad_backend.entity.customer.CustomerType;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
@@ -31,17 +31,6 @@ public class CustomerService {
         this.customerContactDTOMapper = customerContactDTOMapper;
     }
 
-    // Save a new customer
-    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
-        if (customerDTO.getContacts() == null || customerDTO.getContacts().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"A customer must have at least one contact.");
-        }
-        Customer customer = customerDTOMapper.toCustomerEntity(customerDTO);
-        Customer savedCustomer = customerRepository.save(customer);
-        return customerDTOMapper.toCustomerDTO(savedCustomer);
-    }
-
-
     // Get all customers
     public List<CustomerDTO> getAllCustomers() {
         return customerDTOMapper.toCustomerDTOList(customerRepository.findAll());
@@ -54,26 +43,20 @@ public class CustomerService {
         return customerDTOMapper.toCustomerDTO(customer);
     }
 
-    // Update an existing customer
-    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
-        Customer existingCustomer = customerRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID : " + id))));
-
-        existingCustomer.setName(customerDTO.getName());
-        existingCustomer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
-        existingCustomer.setContacts(customerDTOMapper.toCustomerEntity(customerDTO).getContacts());
-    @Autowired
-    private CustomerDTOMapper customerDTOMapper;
-
     @Transactional
-    public CustomerDTO addCustomer(CustomerDTO customerDTO) {
-        Customer customer = customerDTOMapper.toEntity(customerDTO);
-        CustomerContact customerContact = customerContactDTOMapper.customerContactDTOToCustomerContact(customerDTO.getCustomerContactDTO());
+    public CustomerDTO addCustomer(CustomerDetailsDTO customerDetailsDTO) {
+        Customer customer = extractCustomer(customerDetailsDTO);
+        Customer savedCustomer =  customerRepository.saveAndFlush(customer);
+
+        return customerDTOMapper.toCustomerDTO(savedCustomer);
+    }
+
+    public Customer extractCustomer(CustomerDetailsDTO customerDetailsDTO) {
+        Customer customer = customerDTOMapper.toCustomerEntity(customerDetailsDTO.getCustomerDTO());
+        CustomerContact customerContact = customerContactDTOMapper.customerContactDTOToCustomerContact(customerDetailsDTO.getCustomerContactDTO());
         customerContact.setCustomer(customer);
         customer.setCustomerContact(customerContact);
-        Customer savedCustomer =  customerRepository.save(customer);
-
-        return customerDTOMapper.toDTO(savedCustomer);
+        return customer;
     }
 
 
@@ -85,19 +68,8 @@ public class CustomerService {
         customerRepository.deleteById(id);
     }
 
-    public List<CustomerContactDTO> getCustomerByContact(String contactNumber) {
-        System.out.println("\n Service ekata Awa  "+contactNumber);
-        List<CustomerContact> customers= customerContactRepository.findCustomerContactsByContactNumber(contactNumber);
-        System.out.println("\n Customers are \n"+customers+"\n\n");
-        return customerContactDTOMapper.toCustomerDTOList(customers);
-    }
-    public List<CustomerDTO> getCustomersByContact(String contactNumber){
-
-        List<Customer> customers=customerContactRepository.findCustomersByContactNumber(contactNumber);
-
+    public List<CustomerDTO> getCustomersByContact(String contactNumber) {
+        List<Customer> customers = customerContactRepository.findCustomersByContactNumber(contactNumber);
         return customerDTOMapper.toCustomerDTOList(customers);
-    public List<CustomerDTO> getCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(customerDTOMapper::toDTO).collect(Collectors.toList());
     }
 }
