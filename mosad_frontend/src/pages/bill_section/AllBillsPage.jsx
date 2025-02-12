@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Container,
   Paper,
@@ -18,17 +18,27 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { fetchAllBills } from "../../services/apiBillService";
+
 
 const BillList = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [filterPhone, setFilterPhone] = useState("");
   const [filterDate, setFilterDate] = useState(null);
+  const [bills,setBills]=useState([]);
 
-  const bills = [
-    { id: 1, billNumber: "B001", customer: "John Doe", date: "2025-02-01", amount: 100, phone: "123-456-7890" },
-    { id: 2, billNumber: "B002", customer: "Jane Smith", date: "2025-02-02", amount: 150, phone: "987-654-3210" },
-  ];
+  // const bills = [
+  //   { id: 1, billNumber: "B001", customer: "John Doe", date: "2025-02-01", amount: 100, phone: "123-456-7890" },
+  //   { id: 2, billNumber: "B002", customer: "Jane Smith", date: "2025-02-02", amount: 150, phone: "987-654-3210" },
+  // ];
+
+
+  useEffect(()=>{
+    fetchAllBills().then((response)=>{
+      setBills(response.data);
+    })
+  },[]);
 
   const handleOpenDrawer = (bill) => {
     setSelectedBill(bill);
@@ -41,11 +51,16 @@ const BillList = () => {
   };
 
   // Filtering logic
-  const filteredBills = bills.filter((bill) => {
-    const matchesPhone = filterPhone ? bill.phone.includes(filterPhone) : true;
-    const matchesDate = filterDate ? bill.date === dayjs(filterDate).format("YYYY-MM-DD") : true;
-    return matchesPhone && matchesDate;
-  });
+const filteredBills = bills.filter((bill) => {
+  const matchesPhone = filterPhone
+    ? bill.customerDTO.customerContactDTO.contactNumber && bill.customerDTO.customerContactDTO.contactNumber.includes(filterPhone) // Ensure bill.phone exists before using .includes()
+    : true;
+  const matchesDate = filterDate
+    ? bill.date === dayjs(filterDate).format("YYYY-MM-DD")
+    : true;
+  return matchesPhone && matchesDate;
+});
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -81,22 +96,22 @@ const BillList = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell><strong>Bill Number</strong></TableCell>
-                <TableCell><strong>Customer</strong></TableCell>
+              <TableCell><strong>Bill Number</strong></TableCell>
+                <TableCell><strong>Customer Name</strong></TableCell>
                 <TableCell><strong>Date</strong></TableCell>
-                <TableCell><strong>Amount (USD)</strong></TableCell>
+                <TableCell><strong>Total Amount </strong></TableCell>
                 <TableCell><strong>Telephone</strong></TableCell>
                 <TableCell><strong>Action</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredBills.map((bill) => (
-                <TableRow key={bill.id}>
-                  <TableCell>{bill.billNumber}</TableCell>
-                  <TableCell>{bill.customer}</TableCell>
+                <TableRow key={bill.billId}>
+                  <TableCell>{bill.billId}</TableCell>
+                  <TableCell>{bill.customerDTO.customerName}</TableCell>
                   <TableCell>{bill.date}</TableCell>
-                  <TableCell>{bill.amount}</TableCell>
-                  <TableCell>{bill.phone}</TableCell>
+                  <TableCell>{bill.totalAmount}</TableCell>
+                  <TableCell>{bill.customerDTO.customerContactDTO.contactNumber}</TableCell>
                   <TableCell>
                     <Button variant="outlined" color="primary" onClick={() => handleOpenDrawer(bill)}>
                       View
@@ -110,33 +125,71 @@ const BillList = () => {
 
         {/* Side Drawer to Show Bill Details */}
         <Drawer
-          anchor="right"
-          open={openDrawer}
-          onClose={handleCloseDrawer}
-          sx={{
-            "& .MuiDrawer-paper": {
-              width: 300,
-              padding: 2,
-            },
-          }}
-        >
-          <Box>
-            {selectedBill ? (
-              <>
-                <Typography variant="h6" gutterBottom>
-                  Bill Details
-                </Typography>
-                <Typography><strong>Bill Number:</strong> {selectedBill.billNumber}</Typography>
-                <Typography><strong>Customer:</strong> {selectedBill.customer}</Typography>
-                <Typography><strong>Date:</strong> {selectedBill.date}</Typography>
-                <Typography><strong>Amount:</strong> ${selectedBill.amount}</Typography>
-                <Typography><strong>Telephone:</strong> {selectedBill.phone}</Typography>
-              </>
-            ) : (
-              <Typography>No bill selected</Typography>
-            )}
+  anchor="right"
+  open={openDrawer}
+  onClose={handleCloseDrawer}
+  sx={{
+    "& .MuiDrawer-paper": {
+      width: 300,
+      padding: 2,
+    },
+  }}
+>
+  {selectedBill ? (
+    <>
+    
+    <Typography 
+  variant="h6" 
+  gutterBottom 
+  sx={{ backgroundColor: "#81c784", padding: "8px", borderRadius: "4px" }}
+>
+  Bill Details
+</Typography>
+      <Box sx={{ mt: 1, p: 1, border: "1px solid #ddd", borderRadius: "8px" }}>
+        <Typography>
+          <strong>Bill Number:</strong> {selectedBill.billId}
+        </Typography>
+        <Typography>
+          <strong>Advanced:</strong> {selectedBill.advance}
+        </Typography>
+        <Typography>
+          <strong>Balance:</strong> {selectedBill.balance}
+        </Typography>
+      </Box>
+      <br></br>
+
+      <Box>
+      <Typography variant="h6" gutterBottom sx={{ backgroundColor: "#81c784", padding: "8px", borderRadius: "4px" }}>
+        Item Details
+      </Typography>
+
+      {Array.isArray(selectedBill.billItemDTO) ? (
+        selectedBill.billItemDTO.map((item) => (
+          <Box
+            key={item.billItemId}
+            sx={{ mt: 1, p: 1, border: "1px solid #ddd", borderRadius: "8px" }}
+          >
+            <Typography>
+              <strong>Description:</strong> {item.description}
+            </Typography>
+            <Typography>
+              <strong>Quantity:</strong> {item.quantity}
+            </Typography>
+            <Typography>
+              <strong>Unit Price:</strong> {item.unitPrice}
+            </Typography>
           </Box>
-        </Drawer>
+        ))
+      ) : (
+        <Typography>No item details available</Typography>
+      )}
+      </Box>
+    </>
+  ) : (
+    <Typography>No bill selected</Typography>
+  )}
+</Drawer>
+
       </Container>
     </LocalizationProvider>
   );

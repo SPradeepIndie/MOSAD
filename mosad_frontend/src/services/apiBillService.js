@@ -7,3 +7,7 @@ export const addItem=(data)=>{
 export const addBillDetails=()=>{
     return apiClient.post('/')
 }
+
+export const fetchAllBills=()=>{
+    return apiClient.get('/bills');
+}
