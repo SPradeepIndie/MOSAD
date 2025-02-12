@@ -42,6 +42,7 @@ public class AccountManagementService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final SecureRandom random=new SecureRandom();
+    private boolean isOtpVerified = false;
 
     public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
@@ -56,7 +57,6 @@ public class AccountManagementService {
     }
 
     //delete a given user
-    @Transactional
     public ResponseDTO deleteUser(String username) {
         Users user = usersRepo.findByUsername(username)
                 .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG));
@@ -65,7 +65,6 @@ public class AccountManagementService {
     }
 
     //update a given user
-    @Transactional
     public ResponseDTO updateUser(String username, UserDetailsDTO userUpdateDto){
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
@@ -128,35 +127,40 @@ public class AccountManagementService {
     public ResponseDTO sendOtp(String email){
         Users user=verifyEmail(email);
         String otp=generateRandomOTPCode();
-        sendEmailWithOtp(email,otp);
+        sendEmailWithOtp(email,otp,user.getUsername());
         saveOTP(otp,user);
 
         return new ResponseDTO(true,"Successfully sent otp! check you email ");
     }
 
     //verify otp
-    @Transactional
     public ResponseDTO verifyOtp(String otp,String email) {
         Users user=verifyEmail(email);
         UsersOTP userOtp=usersOTPRepo.findByOtpTokenAndUser(otp,user).orElseThrow(
                 () -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Otp not found for given mail")
         );
         if(userOtp.getOtpExpiryDate().before(Date.from(Instant.now()))){
+            user.setUsersOTP(null);
+            usersRepo.saveAndFlush(user);
             usersOTPRepo.deleteById(userOtp.getOtpId());
             throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,"Otp expired");
         }
-
+        isOtpVerified=true;
         return new ResponseDTO(true,"Successfully verified OTP");
     }
 
     //Change to new password
-    @Transactional
     public ResponseDTO changeToNewPassword(String newPassword,String email) {
-        Users user=verifyEmail(email);
-        String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
-        user.setPassword(encryptedNewPassword);
-        usersRepo.saveAndFlush(user);
-        return new ResponseDTO(true,"Successfully changed password");
+        if(isOtpVerified){
+            Users user=verifyEmail(email);
+            String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
+            user.setPassword(encryptedNewPassword);
+            usersRepo.saveAndFlush(user);
+            return new ResponseDTO(true,"Successfully changed password");
+        }
+        else{
+            return new ResponseDTO(false,"Otp not verified");
+        }
     }
 
     //Return a specific user details
@@ -204,11 +208,16 @@ public class AccountManagementService {
     }
 
     //Send the Email with OTP
-    private void sendEmailWithOtp(String emailAddress,String otpCode){
+    private void sendEmailWithOtp(String emailAddress,String otpCode,String username){
         MailBody mailBody=new MailBody(
                 emailAddress,
-                "",
-                "OTP:"+otpCode
+                "Password Reset OTP",
+                "Dear "+username+" ,\n\n" +
+                        "Your OTP for password reset is: " + otpCode + "\n\n" +
+                        "Please enter this OTP on the password reset page within 10 minutes.\n\n" +
+                        "If you did not request a password reset, please ignore this email.\n\n" +
+                        "Sincerely,\n" +
+                        "Your Team"
         );
         emailService.sendMail(mailBody);
     }

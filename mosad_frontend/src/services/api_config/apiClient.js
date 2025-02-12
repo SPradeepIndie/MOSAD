@@ -1,17 +1,5 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
 const BASE_URL= 'http://localhost:8080/api/v1'
-
-export const getUseAuth=()=>{
-  const {auth}= useAuth();
-  return auth;
-};
-
-export const navigateToLogin=()=>{
-  const navigate = useNavigate();
-  return navigate
-}
 
 const apiClient = axios.create({
     baseURL:BASE_URL,
@@ -27,7 +15,6 @@ const privateApiClient = axios.create({
   },
 });
 
-  
 apiClient.interceptors.response.use(
   response => response,
   async error => {

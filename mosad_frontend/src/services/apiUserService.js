@@ -21,12 +21,26 @@ export const getUserDetailsByUsername=(data)=>{
 }
 
 export const getAllUsername=()=>{
-    return apiClient.get('user/view/all');
+    return apiClient.get('/user/view/all');
 }
 
 export const logout=(data)=>{
     return apiClient.post('/logout',data);
 }
 
-//Should have to create endpoint for  forgotpassword email , otp
+export const fgtPwdMailCheckAndOtpSend=(emailData)=>{
+    return apiClient.get('/user/forgot-pwd/email',{params:{email: emailData}});
+}
+
+export const verifyOtp=(otpData,emailData)=>{
+    return apiClient.get('/user/forgot-pwd/otp',{params:{otp:otpData ,email: emailData}});
+}
+
+export const resendOtp=(emailData)=>{
+    return apiClient.get('/user/forgot-pwd/otp/resend',{params:{email: emailData}});
+}
+
+export const changePwd=(emailData,data)=>{
+    return apiClient.post('/user/forgot-pwd/change',data,{params:{email: emailData}});
+}
 

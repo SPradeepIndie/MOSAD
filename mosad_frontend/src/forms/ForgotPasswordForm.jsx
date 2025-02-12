@@ -1,5 +1,7 @@
 import { Typography, Button, TextField, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import {fgtPwdMailCheckAndOtpSend,verifyOtp,resendOtp} from '../services/apiUserService';
+
 const ForgotPasswordForm = () =>{
     const [step, setStep] = useState(1); // Step management: 1 - Email, 2 - OTP, 3 - New Password, 4 - Success
     const [email, setEmail] = useState("");
@@ -10,138 +12,159 @@ const ForgotPasswordForm = () =>{
     const [timer, setTimer] = useState(30); // Countdown timer for OTP
     const [isResendDisabled, setIsResendDisabled] = useState(true);
     const [passwordStrength, setPasswordStrength] = useState("");
-    const handleEmailSubmit = () => {
-        // Simulating a backend response
-        const emailExists = true; // Replace with backend call result
+    const [isLoading,setIsLoading] =useState(false);
+
+    //Email submititon to backend
+    const handleEmailSubmit = async () => {
+        //validate email
         if (email.includes(' ')) {
           setErrorMessage('Email cannot contain spaces.');
           return false;
         }
-        if (!email) {
+        else if (!email) {
           setErrorMessage("Email cannot be empty.");
+          return false;
         }
         else if (!email.includes("@")) {
-          setErrorMessage("Enter a valid email.");          
+          setErrorMessage("Enter a valid email.");   
+          return false;       
         }               
-        else if (!emailExists){
-          setErrorMessage("Email does not exist.");
+        try {
+          setIsLoading(true); // Set loading state to true
+          const response = await fgtPwdMailCheckAndOtpSend(email); 
+      
+          if (response.data.success) {
+            setStep(2);
+            setErrorMessage("");
+            startTimer(); 
+          } else {
+            setErrorMessage(response.data.message);
+          }
+        } catch (error) {
+          console.error("Error sending email:", error);
+          setErrorMessage("Failed to send email. Please try again later.");
+        } finally {
+          setIsLoading(false); // Set loading state to false after the request completes
         }
-        else if (emailExists) {
-          setStep(2);
-          setErrorMessage("");
-          startTimer();
-        }     
-      };
+    };
 
-      const handleOtpSubmit = () => {
-        const otpIsValid = true; // Replace with backend call result       
-        if (!otp) {
-          setErrorMessage("OTP cannot be empty.");
-          return;
-        }
-        if (!/^\d+$/.test(otp)) {
-          setErrorMessage("OTP must contain only numbers.");
-          return;
-        }
-        if (!/^\d{6}$/.test(otp)) {
-          setErrorMessage("OTP must have only 6 digit.");
-          return;
-        }
-        if (otpIsValid) {
+    //Otp submisson to backend
+    const handleOtpSubmit = () => {     
+      if (!otp) {
+        setErrorMessage("OTP cannot be empty.");
+        return false;
+      }
+      if (!/^\d+$/.test(otp)) {
+        setErrorMessage("OTP must contain only numbers.");
+        return false;
+      }
+      if (!/^\d{6}$/.test(otp)) {
+        setErrorMessage("OTP must have only 6 digit.");
+        return false;
+      }
+
+      verifyOtp(otp,email).then((response)=>{
+        if (response.data.success) {
           setStep(3);
           setErrorMessage("");
         } else {
-          setErrorMessage("Invalid OTP. Please try again.");
+          setErrorMessage("Invalid OTP. Please try again."+response.data.message);
         }
-      };
+      })
+    };
 
-      const startTimer = () => {
-        let countdown = 30;
+    const startTimer = () => {
+      let countdown = 60;
+      setTimer(countdown);
+      const interval = setInterval(() => {
+        countdown -= 1;
         setTimer(countdown);
-        const interval = setInterval(() => {
-          countdown -= 1;
-          setTimer(countdown);
-          if (countdown <= 0) clearInterval(interval);
-        }, 1000);
-      };
+        if (countdown <= 0) clearInterval(interval);
+      }, 1000);
+    };
 
-      const handleResendOtp = () => {
-        if (!isResendDisabled) {
-          setOtp(""); 
-          setTimer(30);
-          setIsResendDisabled(true);
-          startResendTimer();
-        console.log("Resend OTP triggered.");//Implement here as new OTP sending process
-        }
-      };
-    
-      const startResendTimer = () => {
-        const interval = setInterval(() => {
-          setTimer((prev) => {
-            if (prev === 1) {
-              clearInterval(interval);
-              setIsResendDisabled(false);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
-      };
+    //Otp resending....
+    const handleResendOtp = () => {
+      if (!isResendDisabled) {
+        setOtp(""); 
+        setTimer(30);
+        setIsResendDisabled(true);
+        startResendTimer();
+        resendOtp(email).then((response)=>{
+          setConfirmPassword(response.data.message);
+        })
+      }
+    };
+    const startResendTimer = () => {
+      const interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(interval);
+            setIsResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    };
 
-      const handlePasswordSubmit = () => {
-        if (newPassword.length < 8) {
-          setErrorMessage("Password must be at least 8 characters long.");
-          return;
-        }
-        if (newPassword.includes(' ')) {
-          setErrorMessage('Password cannot contain spaces.');
-          return false;
-        }       
-        if (!/\d/.test(newPassword)) {
-          setErrorMessage("Password must contain at least one number.");
-          return;
-        }
-        if (newPassword === confirmPassword) {
-          setStep(4);
-          setErrorMessage("");
-        } else {
-          setErrorMessage("Passwords do not match.");
-        }
-      };
-      const handlePasswordChange = (password) => {
-        setNewPassword(password);
-        if (password === "") {
-          setPasswordStrength(""); 
-          return;
-        }    
-        
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        if (hasUpperCase && hasSpecialChar) {
-          setPasswordStrength("strong");
-        } else {
-          setPasswordStrength("weak");
-        }
-      };
-      const handleContinueToLogin = () => {
-        window.location.reload();
-      };
+    //New password changing
+    const handlePasswordSubmit = () => {
+      if (newPassword.length < 6) {
+        setErrorMessage("Password must be at least 8 characters long.");
+        return;
+      }
+      if (newPassword.includes(' ')) {
+        setErrorMessage('Password cannot contain spaces.');
+        return;
+      }       
+      if (!/\d/.test(newPassword)) {
+        setErrorMessage("Password must contain at least one number.");
+        return;
+      }
+      if (newPassword === confirmPassword) {
+        setStep(4);
+        setErrorMessage("");
+      } else {
+        setErrorMessage("Passwords do not match.");
+      }
+    };
+    const handlePasswordChange = (password) => {
+      setNewPassword(password);
+      if (password === "") {
+        setPasswordStrength(""); 
+        return;
+      }    
       
-      useEffect(() => {
-        let interval;
-        if (timer > 0) {
-          interval = setInterval(() => {
-            setTimer((prev) => prev - 1);
-          }, 1000);
-        } else {
-          setIsResendDisabled(false); // Enable resend button after timer ends
-        }
-    
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-      }, [timer]);
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      if (hasUpperCase && hasSpecialChar) {
+        setPasswordStrength("strong");
+      } else {
+        setPasswordStrength("weak");
+      }
+    };
+
+
+    const handleContinueToLogin = () => {
+      window.location.reload();
+    };
+      
+    useEffect(() => {
+      let interval;
+      if (timer > 0) {
+        interval = setInterval(() => {
+          setTimer((prev) => prev - 1);
+        }, 1000);
+      } else {
+        setIsResendDisabled(false); // Enable resend button after timer ends
+      }
+  
+      return () => clearInterval(interval); // Cleanup interval on component unmount
+    }, [timer]);
 
     return(      
-        <Box>
+      <Box>
             {/* Email Entering section */}{step === 1 && (     
                 <Box>
                     <Typography variant="h5" gutterBottom>
@@ -280,5 +303,9 @@ const ForgotPasswordForm = () =>{
                         Continue to Login
                     </Button>
                 </Box>)}
-   </Box>    );}
+      </Box>    
+   );
+   
+}
+
 export default ForgotPasswordForm;

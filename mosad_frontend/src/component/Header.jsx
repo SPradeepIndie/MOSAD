@@ -22,7 +22,7 @@ function HeaderBar() {
       // Remove token from local storage
       localStorage.removeItem('token');
       localStorage.removeItem('refresh_token');
-      navigate('/', { replace: true }); // Redirect to login page
+      navigate('/login', { replace: true }); // Redirect to login page
   
     });
    

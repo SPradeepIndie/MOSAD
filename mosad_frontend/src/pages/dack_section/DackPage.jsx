@@ -19,13 +19,14 @@ const RebuildTyrePage = () => {
 
   const fetchTyres = async () => {
     try {
-      let data;
+      let response;
       if (filter) {
-        data = await getTyresByContactNumber(filter);
+        response = await getTyresByContactNumber(filter);
       } else {
-        data = await getAllTyres();
+        response = await getAllTyres();
+        console.log(response.data)
       }
-      setTyres(data);
+      setTyres([]);
     } catch (error) {
       console.error(error);
       alert('Error fetching tyre data');
