@@ -30,7 +30,9 @@ const ForgotPasswordForm = () =>{
           setStep(2);
           setErrorMessage("");
           startTimer();
-        }     
+        }  
+        
+        
       };
 
       const handleOtpSubmit = () => {
@@ -89,7 +91,7 @@ const ForgotPasswordForm = () =>{
       };
 
       const handlePasswordSubmit = () => {
-        if (newPassword.length < 8) {
+        if (newPassword.length < 6) {
           setErrorMessage("Password must be at least 8 characters long.");
           return;
         }

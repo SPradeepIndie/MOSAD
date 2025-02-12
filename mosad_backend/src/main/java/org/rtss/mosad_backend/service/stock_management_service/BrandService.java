@@ -103,7 +103,7 @@ public class BrandService {
 
     //Check the category is registered
     private Category checkRegisteredCategory(String cat){
-            return CategoryRepo.findCategoryByCategoryName(cat).orElseThrow(
+            return categoryRepo.findCategoryByCategoryName(cat).orElseThrow(
                     ()->new ObjectNotValidException(new HashSet<>(List.of("Can not find category called: "+cat,"Before add a brand add the category first")))
             );
     }

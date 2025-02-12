@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
-import { fetchCategories, getBrands, fetchItems } from '../../services/apiStockService';
+import { fetchCategories, fetchBrands, fetchItems } from '../../services/apiStockService';
 import ProductCardComponent from './components/ProductCardComponent';
 
 const FindProductAvailability = () => {
@@ -173,7 +173,7 @@ const FindProductAvailability = () => {
 
         {/* Find Now Button */}
         <Grid item xs={12} sm={6} md={3} display="flex" alignItems="center">
-          <Button variant="contained" onClick={handleFindNow} fullWidth>
+          <Button variant="contained" onClick={handleFindNow} fullWidth disabled={!selectedCategory} >
             Find Now
           </Button>
         </Grid>
