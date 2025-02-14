@@ -38,4 +38,5 @@ public class ResponseDTO {
                 ", message='" + message + '\'' +
                 '}';
     }
+
 }

@@ -34,7 +34,7 @@ public class Credit {
     private List<Repayment> repayments;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bill_id",referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "bill_id",referencedColumnName = "billId", nullable = false)
     private Bill bill;
 
     public Credit() {

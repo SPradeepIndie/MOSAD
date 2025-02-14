@@ -1,30 +1,23 @@
 package org.rtss.mosad_backend.entity.bill_management;
 
 import jakarta.persistence.*;
-import org.rtss.mosad_backend.entity.stock_management_entity.Item;
 
 @Entity
 @Table(name = "bill_items")
 public class BillItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne
-    @JoinColumn(name="item_id",referencedColumnName = "itemId")
-    private Item item;
+    private Long billItemId;
+
     private String description;
     private Integer quantity;
     private Double unitPrice;
-
 
     @ManyToOne
     @JoinColumn(name = "bill_id", nullable = false)
     private Bill bill;
 
-
-
-    public BillItem(Item item, String description, Integer quantity, Double unitPrice, Bill bill) {
-        this.item = item;
+    public BillItem(String description, Integer quantity, Double unitPrice, Bill bill) {
         this.description = description;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
@@ -63,26 +56,18 @@ public class BillItem {
     }
 
 
-    public Long getId() {
-        return id;
+    public Long getBillItemId() {
+        return billItemId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
+    public void setBillItemId(Long billItemId) {
+        this.billItemId = billItemId;
     }
 
     @Override
     public String toString() {
         return "BillItem{" +
-                "id=" + id +
+                "id=" + billItemId +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
                 ", bill=" + bill +
@@ -97,4 +82,3 @@ public class BillItem {
         this.description = description;
     }
 }
-
