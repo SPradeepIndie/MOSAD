@@ -77,9 +77,9 @@ public class CustomerService {
     }
 
     public List<CustomerContactDTO> getCustomerByContact(String contactNumber) {
-        System.out.println("\n Service ekata Awa  "+contactNumber);
+
         List<CustomerContact> customers= customerContactRepository.findCustomerContactsByContactNumber(contactNumber);
-        System.out.println("\n Customers are \n"+customers+"\n\n");
+
         return customerContactDTOMapper.toCustomerDTOList(customers);
     }
     public List<CustomerDTO> getCustomersByContact(String contactNumber){

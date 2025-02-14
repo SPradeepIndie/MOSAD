@@ -54,7 +54,7 @@ function HomePage() {
           <Tile
             title="Stock"
             icon={<InventoryIcon fontSize="large" />}
-            link="/stock"
+            link="/stock/item-view"
           />
           <Tile
             title="Retail"

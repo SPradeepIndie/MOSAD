@@ -19,6 +19,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -56,16 +57,10 @@ public class ItemService {
         // Extract individual DTOs
         ItemDTO itemDTO = addItemDTO.getItemDTO();
 
-
-
         ItemTyreDTO itemTyreDTO = addItemDTO.getItemTyreDTO();
         ItemBranchDTO itemBranchDTO = addItemDTO.getItemBranchDTO();
 
-
         Item item= itemDTOMapper.toEntity(itemDTO);
-
-
-
 
         // Fetch Category and Brand entities
 
@@ -204,6 +199,7 @@ public class ItemService {
 
         // Fetch items
         List<Item> items = itemRepository.findByCategoryAndBrand(category, brand);
+
         if (items == null || items.isEmpty()) {
             throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "No items found for this category and brand");
         }
@@ -241,6 +237,7 @@ public class ItemService {
     public List<AddItemDTO> searchItems(String brand,String size,Long branchId) {
         // Implement search logic here
         List<ItemTyre> itemTyres = itemTyreRepo.findByItem_Brand_BrandNameAndTyreSize(brand, size);
+
         List<AddItemDTO> addItemDTOS = new ArrayList<>();
         for (ItemTyre itemTyre : itemTyres) {
             ItemDTO itemDTO = itemDTOMapper.toDTO(itemTyre.getItem());
@@ -252,4 +249,41 @@ public class ItemService {
         }
         return addItemDTOS;
     }
+
+    public List<AddItemDTO> searchItemsByName(String name,Long branchId) {
+
+        List<AddItemDTO> addItemDTOS = new ArrayList<>();
+
+
+
+        List<Item> items = itemRepository.findByItemNameContainingIgnoreCase(name);
+
+        for(Item item : items){
+            ItemDTO itemDTO=itemDTOMapper.toDTO(item);
+            ItemTyreDTO itemTyreDTO = null;
+            if ("Tyre".equals(item.getCategory().getCategoryName())) {
+                ItemTyre tyre = itemTyreRepo.findByItem(item);
+                if (tyre != null) {
+                    itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
+                } else {
+                    throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Tyre not found for this item");
+                }
+            }
+
+            // Fetch branch item details
+            ItemBranch itemBranch = itemBranchRepository.findByItemIdAndBranchId(item.getItemId(), branchId);
+            if (itemBranch == null) {
+                continue; // Skip this item if branch mapping is missing
+            }
+
+            ItemBranchDTO itemBranchDTO = itemBranchDTOMapper.toDTO(itemBranch);
+
+            // Construct AddItemDTO
+            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, "Tyre".equals(item.getCategory().getCategoryName()) ? itemTyreDTO : null, itemBranchDTO);
+            addItemDTOS.add(addItemDTO);
+        }
+
+        return addItemDTOS;
+        }
+
 }
