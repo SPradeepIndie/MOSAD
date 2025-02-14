@@ -5,6 +5,7 @@ import UserDetailsForm from "../../forms/UserDetailForm";
 import { getAllUsername,registerUser } from "../../services/apiUserService";
 import { DataGrid } from '@mui/x-data-grid';
 
+
 const initialUserRegData={
     userDto:{
         username:"",

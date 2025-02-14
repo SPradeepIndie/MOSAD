@@ -1,4 +1,4 @@
-import apiClient from './api_config/apiClient';
+import {apiClient} from './api_config/apiClient';
 
 export const fetchCategories =()=>{
     return apiClient.get('/category');

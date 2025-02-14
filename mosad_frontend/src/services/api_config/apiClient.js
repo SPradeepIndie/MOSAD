@@ -1,14 +1,14 @@
 import axios from 'axios';
-const BASE_URL= 'http://localhost:8080/api/v1'
+const BASE_URL= 'http://localhost:8080/api/v1';
 
-const apiClient = axios.create({
+export const apiClient = axios.create({
     baseURL:BASE_URL,
     headers: {
       'Content-Type': 'application/json',
     },
 });
 
-const privateApiClient = axios.create({
+export const privateApiClient = axios.create({
   baseURL:BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -83,4 +83,4 @@ privateApiClient.interceptors.request.use(
 );
 
 
-export default apiClient;
+

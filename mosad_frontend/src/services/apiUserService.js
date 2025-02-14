@@ -1,4 +1,4 @@
-import apiClient from './api_config/apiClient';
+import {apiClient} from './api_config/apiClient';
 
 export const loginRequest=(data)=>{
     return apiClient.post('/login',JSON.stringify(data));
@@ -43,4 +43,5 @@ export const resendOtp=(emailData)=>{
 export const changePwd=(emailData,data)=>{
     return apiClient.post('/user/forgot-pwd/change',data,{params:{email: emailData}});
 }
+
 

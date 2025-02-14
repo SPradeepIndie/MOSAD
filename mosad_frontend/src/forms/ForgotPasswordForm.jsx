@@ -32,7 +32,6 @@ const ForgotPasswordForm = () =>{
         try {
           setIsLoading(true); // Set loading state to true
           const response = await fgtPwdMailCheckAndOtpSend(email); 
-      
           if (response.data.success) {
             setStep(2);
             setErrorMessage("");
@@ -191,6 +190,7 @@ const ForgotPasswordForm = () =>{
                       color="primary"
                       onClick={handleEmailSubmit}
                       fullWidth
+                      loading={isLoading}
                     >
                       Continue
                     </Button>

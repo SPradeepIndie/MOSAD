@@ -12,6 +12,6 @@ export default function CheckPrivileges({allowedRoles}) {
     );
 }
 
-CheckPrivileges.prototype={
+CheckPrivileges.propTypes={
     allowedRoles:PropTypes.arrayOf(PropTypes.string)
 }

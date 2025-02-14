@@ -1,4 +1,4 @@
-import apiClient from './api_config/apiClient';
+import {apiClient} from './api_config/apiClient';
 
 export const fetchPaymentHistory = (data) => {
     return apiClient.get('/retail/paymentHistory',{params:{username:data}});

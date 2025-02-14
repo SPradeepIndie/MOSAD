@@ -7,7 +7,6 @@ import useAuth from "../hooks/useAuth"
 import PopUp from "../component/PopUp";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
 
-
 const LoginPage = () => {
     const{setAuth}= useAuth();
 
@@ -44,7 +43,7 @@ const LoginPage = () => {
         const { Authenticated, access_token,refresh_token,role,branchId } = response.data;
         localStorage.setItem("token",access_token)
         localStorage.setItem("refresh_token",refresh_token)
-        setAuth({refresh_token,Authenticated,username:loginData.username,roles:[role],branch:branchId})
+        setAuth({refreshToken:refresh_token,accessToken:access_token,Authenticated,username:loginData.username,roles:[role],branch:branchId})
         navigate('/home', { replace: true }); // Used replace to prevent back navigation
        
     }

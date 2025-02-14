@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.exception_handler;
 
+import org.rtss.mosad_backend.exceptions.DbTableInitException;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -22,4 +23,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(DbTableInitException.class)
+    public ResponseEntity<?> handleRequestFormatException(DbTableInitException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
