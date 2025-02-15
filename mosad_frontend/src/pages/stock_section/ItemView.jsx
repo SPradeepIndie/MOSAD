@@ -19,8 +19,6 @@ import SearchComponent from "../../component/SearchComponent";
 const ItemView = () => {
  
   //Store passed Category and Brand using Link state & useLocation
-  const location = useLocation();
-  const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
   const [selectedCategory, setSelectedCategory] = useState("Tyre");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
@@ -59,8 +57,6 @@ const ItemView = () => {
   const [inputFieldErrors, setinputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
-
-  const [fetchKey, setFetchKey] = useState(0);
 
 
   const [confirmationDialog, setConfirmationDialog] = useState(false);

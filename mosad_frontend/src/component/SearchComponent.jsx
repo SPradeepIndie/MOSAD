@@ -289,10 +289,16 @@ useEffect(() => {
             <TableHead>
               <TableRow>
                 <TableCell>Brand</TableCell>
-                <TableCell>Size</TableCell>
-                <TableCell>Pattern</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Store Count</TableCell>
+
+                {category==="Tyre" &&
+                  <>
+                <TableCell>Size</TableCell>
+                <TableCell>Pattern</TableCell>
+                </>
+                }
+                
                 <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
@@ -300,10 +306,14 @@ useEffect(() => {
               {results.map((result) => (
                 <TableRow key={result.id}>
                   <TableCell>{brand}</TableCell>
-                  <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
-                  <TableCell>{result.itemTyreDTO.pattern}</TableCell>
                   <TableCell>{result.itemDTO.companyPrice}</TableCell>
                   <TableCell>{result.itemBranchDTO.availableQuantity}</TableCell>
+                  { category==="Tyre" &&
+                   <>
+                    <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
+                    <TableCell>{result.itemTyreDTO.pattern}</TableCell>
+                   </>
+                  }
                   <TableCell>
               <TextField
                 type="number"
@@ -335,6 +345,11 @@ useEffect(() => {
 };
 
 SearchComponent.propTypes = {
+  setSelectedBranch: PropTypes.func.isRequired, // A required function for setting the selected branch
+  setSelectedCategory: PropTypes.func.isRequired, // A required function for setting the selected category
+  setSelectedBrand: PropTypes.func.isRequired, // A required function for setting the selected brand
+  fetchandSetItems: PropTypes.func.isRequired, // A required function for fetching and setting items
+  handleFilterChange: PropTypes.func.isRequired, // A required function for handling filter changes
   //onSearchResult: PropTypes.func.isRequired,  // A required function for handling search results
   onAddToBill: PropTypes.func.isRequired,    // A required function for adding to the bill
   
