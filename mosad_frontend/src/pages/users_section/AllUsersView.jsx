@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import PopUp from '../../component/PopUp'
 import { Container,Grid2,Button,Paper} from "@mui/material";
 import UserDetailsForm from "../../forms/UserDetailForm";
-import { getAllUsername,registerUser } from "../../services/apiUserService";
 import { DataGrid } from '@mui/x-data-grid';
+import {useGetAllUsername} from '../../hooks/useApiUserService'
+import { useRegister } from "../../hooks/servicesHook/useApiUserService";
 
 
 const initialUserRegData={
@@ -37,6 +38,8 @@ const columns = [
 
 const AllUsersView=()=>{
     const [users,setUsers]=useState([]);
+    const getAllUsername=useGetAllUsername();
+    const registerUser = useRegister();
     
     //control data loading asynchronus nature 
     const [isLoading, setIsLoading] = useState(false);

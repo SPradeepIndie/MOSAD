@@ -2,13 +2,14 @@ import { CheckBox, LockOutlined } from "@mui/icons-material";
 import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
 import { useState, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { loginRequest } from "../services/apiUserService";
 import useAuth from "../hooks/useAuth"
 import PopUp from "../component/PopUp";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
+import { useLogin } from "../hooks/servicesHook/useApiUserService";
 
 const LoginPage = () => {
     const{setAuth}= useAuth();
+    const loginRequest=useLogin();
 
     const [openForgotPasswordPopup,setOpenForgotPasswordPopup]=useState(false);
     const navigate = useNavigate();
@@ -41,8 +42,6 @@ const LoginPage = () => {
         e.preventDefault();
         const response = await loginRequest(loginData);
         const { Authenticated, access_token,refresh_token,role,branchId } = response.data;
-        localStorage.setItem("token",access_token)
-        localStorage.setItem("refresh_token",refresh_token)
         setAuth({refreshToken:refresh_token,accessToken:access_token,Authenticated,username:loginData.username,roles:[role],branch:branchId})
         navigate('/home', { replace: true }); // Used replace to prevent back navigation
        

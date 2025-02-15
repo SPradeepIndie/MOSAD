@@ -1,11 +1,10 @@
-import {apiClient} from '../services/api_config/apiClient';
-import useAuth from './useAuth';
+import {apiClient} from '../../services/api_config/apiClient';
+import useAuth from '../useAuth';
 import useRefreshToken from './useRefreshToken';
 
 const useApiClient = () => {
     const {auth}=useAuth()
     const refresh =useRefreshToken();
-
     //Handle Error using apiCLient with access token
     apiClient.interceptors.response.use(
         response => response,
@@ -17,8 +16,8 @@ const useApiClient = () => {
             if (error.response.status === 401 && !originalRequest._retry) {
                 originalRequest._retry = true;
                 try {
-                    const access_token=refresh();  
-
+                    const access_token = refresh(); 
+                    console.log(access_token)
                     // Retry the original request with the new token
                     originalRequest.headers.Authorization = `Bearer ${access_token}`;
                     return axios(originalRequest);
@@ -57,7 +56,8 @@ const useApiClient = () => {
         },
         (error) => Promise.reject(error)
     );
-            
+
+        
     return apiClient;
 }
 

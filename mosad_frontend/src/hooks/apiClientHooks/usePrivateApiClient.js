@@ -1,5 +1,5 @@
-import useAuth from './useAuth';
-import { privateApiClient } from '../services/api_config/apiClient';
+import useAuth from '../useAuth';
+import { privateApiClient } from '../../services/api_config/apiClient';
 
 export const usePrivateApiClient = () => {
     const {auth}=useAuth()
@@ -7,6 +7,7 @@ export const usePrivateApiClient = () => {
     privateApiClient.interceptors.request.use(
         (config)=>{
             const token = auth.refreshToken;
+            console.log(token)
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -14,8 +15,6 @@ export const usePrivateApiClient = () => {
         },
         (error) => Promise.reject(error)
     );
-
-   
-        
+    
     return privateApiClient;
 }

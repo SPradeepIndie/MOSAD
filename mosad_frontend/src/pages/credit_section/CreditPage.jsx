@@ -5,7 +5,7 @@ import {
   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl
 } from '@mui/material';
 import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
-import { addRepayment,deleteRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
+import {useAddRepayment,useDeleteRepayment,useFetchAllCreditDetails}from '../../hooks/servicesHook/useCreditService'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
@@ -14,12 +14,12 @@ import GeneralMessage from '../../component/GeneralMessage';
 import Loading from '../../component/Loading';
 import PropTypes from 'prop-types';
 
+//Table row handling
 function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
   const [conformationDialog, setConformationDialog] = useState(false);
-
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -188,6 +188,9 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
 
 
 const CreditPage = () => {
+  const addRepayment=useAddRepayment();
+  const deleteRepayment=useDeleteRepayment(); 
+  const fetchAllCreditDetails=useFetchAllCreditDetails();
   const [rows, setRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);

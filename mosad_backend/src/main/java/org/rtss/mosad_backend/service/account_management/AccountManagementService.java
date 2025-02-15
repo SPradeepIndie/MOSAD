@@ -125,24 +125,27 @@ public class AccountManagementService {
     //send the otp
     @Transactional
     public ResponseDTO sendOtp(String email){
+        isOtpVerified=false;
         Users user=verifyEmail(email);
-        String otp=generateRandomOTPCode();
-        sendEmailWithOtp(email,otp,user.getUsername());
-        saveOTP(otp,user);
-
-        return new ResponseDTO(true,"Successfully sent otp! check you email ");
+        if(user.getUsersOTP()==null){
+            String otp=generateRandomOTPCode();
+            sendEmailWithOtp(email,otp,user.getUsername());
+            saveOTP(otp,user);
+            return new ResponseDTO(true,"Successfully sent otp! check you email ");
+        }
+        otpDelete(user, user.getUsersOTP());
+        return new ResponseDTO(false,"Given user has already requested otp! Please wait another 2 minutes to retry ");
     }
 
     //verify otp
     public ResponseDTO verifyOtp(String otp,String email) {
+        isOtpVerified=false;
         Users user=verifyEmail(email);
         UsersOTP userOtp=usersOTPRepo.findByOtpTokenAndUser(otp,user).orElseThrow(
                 () -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Otp not found for given mail")
         );
         if(userOtp.getOtpExpiryDate().before(Date.from(Instant.now()))){
-            user.setUsersOTP(null);
-            usersRepo.saveAndFlush(user);
-            usersOTPRepo.deleteById(userOtp.getOtpId());
+            otpDelete(user, userOtp);
             throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,"Otp expired");
         }
         isOtpVerified=true;
@@ -156,6 +159,8 @@ public class AccountManagementService {
             String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
             user.setPassword(encryptedNewPassword);
             usersRepo.saveAndFlush(user);
+            isOtpVerified=false;
+            otpDelete(user, user.getUsersOTP());
             return new ResponseDTO(true,"Successfully changed password");
         }
         else{
@@ -221,4 +226,12 @@ public class AccountManagementService {
         );
         emailService.sendMail(mailBody);
     }
+
+    //Delete otp
+    private void otpDelete(Users user, UsersOTP userOtp) {
+        user.setUsersOTP(null);
+        usersRepo.saveAndFlush(user);
+        usersOTPRepo.deleteById(userOtp.getOtpId());
+    }
 }
+

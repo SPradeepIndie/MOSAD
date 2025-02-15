@@ -1,6 +1,6 @@
 import { Typography, Button, TextField, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import {fgtPwdMailCheckAndOtpSend,verifyOtp,resendOtp} from '../services/apiUserService';
+import { useFgtPwdMailCheckAndOtpSend,useVerifyOtp,useResendOtp } from "../hooks/servicesHook/useApiUserService";
 
 const ForgotPasswordForm = () =>{
     const [step, setStep] = useState(1); // Step management: 1 - Email, 2 - OTP, 3 - New Password, 4 - Success
@@ -16,6 +16,10 @@ const ForgotPasswordForm = () =>{
 
     //Email submititon to backend
     const handleEmailSubmit = async () => {
+      const fgtPwdMailCheckAndOtpSend=useFgtPwdMailCheckAndOtpSend();
+      const verifyOtp = useVerifyOtp();
+      const resendOtp = useResendOtp();
+
         //validate email
         if (email.includes(' ')) {
           setErrorMessage('Email cannot contain spaces.');

@@ -1,7 +1,12 @@
 import React, { useState,useEffect } from 'react';
 import { Box, Button, Paper, Typography,Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { fetchAllBranchNames,fetchBranchDetailsByName,deleteBranch,udpateBranch,addBranch } from '../../services/apiBranchService';
+import {
+    useFetchAllBranchNames, 
+    useAddBranch,
+    useUdpateBranch,
+    useFetchBranchDetailsByName, 
+    useDeleteBranch} from '../../hooks/servicesHook/useBranchService'
 import BranchDetailForm from '../../forms/BranchDetailForm';
 import PopUp from '../../component/PopUp';
 
@@ -21,7 +26,13 @@ const initialBranch={
 const initialContact={
     contactNumber:""
 }
-const BranchPage=()=>{    
+const BranchPage=()=>{  
+    const fetchAllBranchNames=useFetchAllBranchNames();
+    const fetchBranchDetailsByName=useFetchBranchDetailsByName();
+    const deleteBranch=useDeleteBranch();
+    const udpateBranch=useUdpateBranch();
+    const addBranch=useAddBranch();
+    
     //--------------------------------Main page------------------------------------
     const userRole="admin";
     const [contactNumber, setContactNumber] = useState(initialContact);//handle contact number
