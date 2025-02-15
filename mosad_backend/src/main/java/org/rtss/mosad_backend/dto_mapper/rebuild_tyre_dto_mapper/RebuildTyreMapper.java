@@ -27,6 +27,7 @@ public class RebuildTyreMapper {
 
     public static RebuildTyreDto toDto(RebuildTyre tyre) {
         RebuildTyreDto dto = new RebuildTyreDto();
+        dto.setItemId(tyre.getItemId());
         dto.setCustomerId(tyre.getCustomerId());
         dto.setTyreNumber(tyre.getTyreNumber());
         dto.setTyreSize(tyre.getTyreSize());
