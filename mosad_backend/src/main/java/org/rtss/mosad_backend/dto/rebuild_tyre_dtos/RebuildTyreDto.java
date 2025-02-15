@@ -7,6 +7,8 @@ import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre.TyreStatus;
 
 public class RebuildTyreDto {
 
+    private Long itemId;
+
     @NotNull(message = "Customer ID cannot be null")
     private Long customerId;
 
@@ -65,6 +67,14 @@ public class RebuildTyreDto {
     }
 
     // Getters and Setters
+    
+    public Long getItemId() {
+        return itemId;
+    }
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
     public Long getCustomerId() {
         return customerId;
     }
