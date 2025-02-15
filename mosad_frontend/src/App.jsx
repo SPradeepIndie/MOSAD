@@ -64,65 +64,60 @@ function App() {
         <Route path='/unathorized' element={<UnauthorizedPage/>}/>
         <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
-        <Route element={<HomeLayout/>}>
-            <Route path="/home" element={ <HomePage />} />
+          <Route element={<HomeLayout/>}>
+              <Route path="/home" element={ <HomePage />} />
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
-              <Route path="/stock" element={ <StockPageLayout />} >
-                <Route index element={<StockPage isFromBranch={false}/>}/>
-                <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
-                <Route path="item-view" element={<ItemView />} />
-              </Route>
-            </Route>
-
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","BRANCH_MANAGER"]}/>}>
-              <Route path="/branch" element={ <BranchPageLayout />} >
-                <Route index element={<BranchPage/>}/>
-                <Route path="bill-history" element={<BillPage />}/>
-                <Route path="stock" element={<BranchStockLayout />}>
-                  <Route index element={<StockPage isFromBranch={true}/>}/>
-                  <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
-                  <Route path="item-view" element={<ItemView />}/>
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
+                <Route path="/stock" element={ <StockPageLayout />} >
+                  <Route index element={<StockPage isFromBranch={false}/>}/>
+                  <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
+                  <Route path="item-view" element={<ItemView />} />
                 </Route>
-                <Route path="employee-view" element={<EmployeePage />}/>
               </Route>
-            </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
-              <Route path="/credit" element={ <CreditPage />} />
-              <Route path="/bill" element={ <BillPage />} />
-              <Route path="/dack" element={ <DackPage />} />
-              <Route path="/future" element={ <ReportPredictionPage />} />
-              <Route path="/services" element={ <ServicesPage />} />
-            </Route>
-
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
-              <Route path="/retail" element={ <RetailPageLayout />} >
-                  <Route index element={ <PaymentHistory />} />
-                  <Route path="purchase-history" element={ <PurchaseHistory />} />
-                  <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
-                  <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","BRANCH_MANAGER"]}/>}>
+                <Route path="/branch" element={ <BranchPageLayout />} >
+                  <Route index element={<BranchPage/>}/>
+                  <Route path="bill-history" element={<BillPage />}/>
+                  <Route path="stock" element={<BranchStockLayout />}>
+                    <Route index element={<StockPage isFromBranch={true}/>}/>
+                    <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
+                    <Route path="item-view" element={<ItemView />}/>
+                  </Route>
+                  <Route path="employee-view" element={<EmployeePage />}/>
+                </Route>
               </Route>
-            </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
-              <Route path="/employee" element={ <EmployeePage />} />
-            </Route>
-
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
-              <Route path="/user" element={ <UserManagementLayout />} >
-                <Route index element={<UserDetailsView/>}/>
-                <Route path="view-all" element={<AllUsersView />}/>
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
+                <Route path="/credit" element={ <CreditPage />} />
+                <Route path="/bill" element={ <BillPage />} />
+                <Route path="/dack" element={ <DackPage />} />
+                <Route path="/future" element={ <ReportPredictionPage />} />
+                <Route path="/services" element={ <ServicesPage />} />
               </Route>
-            </Route>
 
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
+                <Route path="/retail" element={ <RetailPageLayout />} >
+                    <Route index element={ <PaymentHistory />} />
+                    <Route path="purchase-history" element={ <PurchaseHistory />} />
+                    <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+                    <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+                </Route>
+              </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+                <Route path="/employee" element={ <EmployeePage />} />
+              </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+                <Route path="/user" element={ <UserManagementLayout />} >
+                  <Route index element={<UserDetailsView/>}/>
+                  <Route path="view-all" element={<AllUsersView />}/>
+                </Route>
+              </Route>
+          </Route>
         </Route>
         </Routes>
-      </Box>
-
-      <Box maxWidth="xl">
-        {auth.Authenticated && <Footer />}
-      </Box>
     </Container>
   )
 
