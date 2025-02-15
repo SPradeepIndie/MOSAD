@@ -20,8 +20,8 @@ import {
 import { fetchBrands,fetchBrandAndSizeData,fetchCategories } from "../services/apiStockService";
 import { Grid } from "@mui/system";
 
-const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleFilterChange}) => {
-  const [category,setCategory] = useState("Tyre"); // Holds the selected category
+const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
+  const [category,setCategory] = useState(""); // Holds the selected category
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
   
@@ -120,7 +120,7 @@ useEffect(() => {
       setSelectedBranch(branch.branchId);
       setSelectedCategory(category);
       setSelectedBrand(brand);
-      handleFilterChange(size, name, type);
+     
       fetchandSetItems();
       console.log("handleFilter finished");
    } catch (err) {
@@ -202,7 +202,7 @@ useEffect(() => {
             <Select
               labelId="category-select-label"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => {setCategory(e.target.value);setSelectedCategory(e.target.value);fetchandSetItems();}}
               variant="outlined"
             >
               {categories.map((c) => (
@@ -222,7 +222,7 @@ useEffect(() => {
             <Select
               labelId="brand-select-label"
               value={brand}
-              onChange={(e) => setBrand(e.target.value)}
+              onChange={(e) => {setBrand(e.target.value);setSelectedBrand(e.target.value);fetchandSetItems();}}
               variant="outlined"
             >
               {brands.map((b) => (
@@ -235,39 +235,47 @@ useEffect(() => {
 
           </FormControl>
         </Grid>
-        <Grid >
-        </Grid>
+      </Grid>
 
         <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid >
-            <TextField
-              label="Tyre Size"
-              variant="outlined"
-              value={size}
-              onChange={(e) => {setSize(e.target.value);handleFilterChange(e.target.value,null,null);}}
-              fullWidth
-            />
-          </Grid>
-          <Grid >
+          
+        <Grid >
             <TextField
               label="Name"
               variant="outlined"
+              name="itemName"
               value={name}
-              onChange={(e) => {setName(e.target.value);handleFilterChange(null,e.target.value,null);}}
+              onChange={(e) => {setName(e.target.value);handleSearchChange(e);}}
               fullWidth
             />
           </Grid>
-          <Grid >
-            <TextField
-              label="Vehicle Type"
-              variant="outlined"
-              value={type}
-              onChange={(e) => {setType(e.target.value);handleFilterChange(null,null,e.target.value);}}
-              fullWidth
-            />
-          </Grid>
+
+          {category=="Tyre" &&
+          <>
+            <Grid >
+              <TextField
+                label="Tyre Size"
+                variant="outlined"
+                name="tyreSize"
+                value={size}
+                onChange={(e) => {setSize(e.target.value);handleSearchChange(e);}}
+                fullWidth
+              />
+            </Grid>
+            
+            <Grid >
+              <TextField
+                label="Vehicle Type"
+                variant="outlined"
+                name="vehicleType"
+                value={type}
+                onChange={(e) => {setType(e.target.value);handleSearchChange(e);}}
+                fullWidth
+              />
+            </Grid>
+            </>}
         </Grid>
-      </Grid>
+      
 
 
 

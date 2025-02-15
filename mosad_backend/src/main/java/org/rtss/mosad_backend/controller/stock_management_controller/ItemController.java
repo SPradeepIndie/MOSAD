@@ -46,5 +46,9 @@ public class ItemController {
     public ResponseEntity<List<AddItemDTO>>searchItems(@Param("brand") String brand,@Param("size") String size,@Param("branchId") Long branchId){
         return ResponseEntity.ok().body(itemService.searchItems(brand,size,branchId));
     }
+    @GetMapping("/name")
+    public ResponseEntity<List<AddItemDTO>>searchItemsByName(@Param("name") String name,@Param("branchId") Long branchId){
+        return ResponseEntity.ok().body(itemService.searchItemsByName(name,branchId));
+    }
 
 }

@@ -250,23 +250,22 @@ public class ItemService {
         return addItemDTOS;
     }
 
-    public List<AddItemDTO> searchItemsByName(String name,Long branchId) {
+    public List<AddItemDTO> searchItemsByName(String name, Long branchId) {
 
         List<AddItemDTO> addItemDTOS = new ArrayList<>();
 
+        List<Item> items = itemRepository.findItemsByItemNameContainsIgnoreCase(name);
+        System.out.println("\n\nLength of items: " + items.size() + "\n\n");
 
-
-        List<Item> items = itemRepository.findByItemNameContainingIgnoreCase(name);
-
-        for(Item item : items){
-            ItemDTO itemDTO=itemDTOMapper.toDTO(item);
+        for (Item item : items) {
+            ItemDTO itemDTO = itemDTOMapper.toDTO(item);
             ItemTyreDTO itemTyreDTO = null;
+
+            // Only fetch tyre details if it's a tyre
             if ("Tyre".equals(item.getCategory().getCategoryName())) {
                 ItemTyre tyre = itemTyreRepo.findByItem(item);
                 if (tyre != null) {
                     itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
-                } else {
-                    throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "Tyre not found for this item");
                 }
             }
 
@@ -278,12 +277,14 @@ public class ItemService {
 
             ItemBranchDTO itemBranchDTO = itemBranchDTOMapper.toDTO(itemBranch);
 
-            // Construct AddItemDTO
-            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, "Tyre".equals(item.getCategory().getCategoryName()) ? itemTyreDTO : null, itemBranchDTO);
+            // Construct AddItemDTO for both tyre and non-tyre items
+            AddItemDTO addItemDTO = new AddItemDTO(itemDTO, itemTyreDTO, itemBranchDTO);
             addItemDTOS.add(addItemDTO);
         }
 
+        System.out.println("\n\nLength of addItemDTOS: " + addItemDTOS.size() + "\n\n");
         return addItemDTOS;
-        }
+    }
+
 
 }

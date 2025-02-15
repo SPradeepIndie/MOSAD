@@ -19,33 +19,18 @@ import SearchComponent from "../../component/SearchComponent";
 const ItemView = () => {
  
   //Store passed Category and Brand using Link state & useLocation
-  const [selectedCategory, setSelectedCategory] = useState("Tyre");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
+  const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
+
 
 
 
 
   const [rows, setRows] = useState([]);
 
-  const [filter,setFilters] =useState({tyreSize:"",itemName:"",vehicleType:""});
 
-
-  const handleFilterChange = (tireSize,itemName,vehicleType) => {
-    
-    setFilters({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
-    setTimeout(() => {
-      console.log(filter);
-      console.log(selectedCategory,selectedBrand,selectedBranch);
-    }, 1000);
-  };
-
-  const filteredRows = rows.filter((row) => {
-    const itemNameMatch = filter.itemName?.trim() ? row.itemDTO?.itemName?.toLowerCase().includes(filter.itemName.trim().toLowerCase()) : true;
-    const vehicleTypeMatch = filter.vehicleType?.trim() ? row.itemTyreDTO?.vehicleType?.toLowerCase().includes(filter.vehicleType.trim().toLowerCase()) : true;
-    const tyreSizeMatch = filter.tyreSize?.trim() ? row.itemTyreDTO?.tyreSize?.toLowerCase().includes(filter.tyreSize.trim().toLowerCase()) : true;
-    return itemNameMatch && vehicleTypeMatch && tyreSizeMatch;
-  });
   
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
@@ -54,7 +39,7 @@ const ItemView = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(selectedCategory,selectedBrand));
   const [message, setMessage] = useState(null);
-  const [inputFieldErrors, setinputFieldErrors] = useState({});
+  const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
   const [selectedItemPriceDetails, setSelectedItemPriceDetails] = useState(null);
 
@@ -90,7 +75,7 @@ const ItemView = () => {
   };
 
   const closeDialog = () => {
-    setinputFieldErrors({});
+    setInputFieldErrors({});
     setIsDialogOpen(false);
   };
 
@@ -108,7 +93,7 @@ const ItemView = () => {
       fieldError = "Discount must be between 0 and 100.";
     }
 
-    setinputFieldErrors((prevErrors) => {
+    setInputFieldErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
       if (fieldError) {
         updatedErrors[key] = fieldError;
@@ -119,8 +104,11 @@ const ItemView = () => {
     });
   };
 
+
+
   const fetchandSetItems = async () => {
     console.log("Fetching items for Category:", selectedCategory, "Brand:", selectedBrand, "Branch:", selectedBranch);
+
     if (selectedCategory && selectedBrand && selectedBranch) {
       
       fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch , } })
@@ -189,11 +177,12 @@ const ItemView = () => {
 
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
+    //const tyreBrands = ["newB", "newC"];
     fetchandSetItems();
     console.log("Fetch item called by useEffect!")
 
 
-  }, [selectedCategory, selectedBrand,selectedBranch]);
+  }, [selectedBranch, selectedCategory, selectedBrand]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -206,7 +195,7 @@ const ItemView = () => {
         return;
       }
   
-      console.log("Clicked outside, deselecting row");
+      
       setSelectedRowId(null);
     };
   
@@ -274,6 +263,24 @@ const ItemView = () => {
       });
   };
 
+  const handleSearchChange = (e) => {
+    const { name, value } = e.target;
+    setSearchFilters({ ...searchFilters, [name]: value });
+    console.log("Search Filters:", searchFilters);
+  };
+
+  const filteredRows = rows.filter((row) =>
+    row.itemDTO.itemName.toLowerCase().includes(searchFilters.itemName.toLowerCase()) &&
+    (row.itemTyreDTO?.tyreSize || "").toLowerCase().includes(searchFilters.tyreSize.toLowerCase()) &&
+    (row.itemTyreDTO?.vehicleType || "").toLowerCase().includes(searchFilters.vehicleType.toLowerCase())
+  );
+
+  // useEffect(
+  //   ()=>{
+  //     setSelectedBrand("Select Brand");
+  //     setRows([]);
+  //   },[selectedCategory]
+  // )
 
   return (
     <>
@@ -289,26 +296,109 @@ const ItemView = () => {
         isOpen={confirmationDialog}
       />
       )}
-      
-      <SearchComponent 
-        setSelectedBranch={setSelectedBranch} 
-        setSelectedCategory={setSelectedCategory} 
-        setSelectedBrand={setSelectedBrand}
+
+      <SearchComponent
         selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
         selectedBrand={selectedBrand}
-        handleFilterChange={handleFilterChange}
+        setSelectedBrand={setSelectedBrand}
+        selectedBranch={selectedBranch}
+        setSelectedBranch={setSelectedBranch}
         fetchandSetItems={fetchandSetItems}
-
-
-        
-        
+        handleSearchChange={handleSearchChange}
       />
+
+      
+   
       <div className="item-view-container">
       
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
           
         </section>
+
+        {/* <div className="search-filters">
+        <input
+          type="text"
+          placeholder="Search by Item Name"
+          name="itemName"
+          value={searchFilters.itemName}
+          onChange={handleSearchChange}
+        />
+        <input
+          type="text"
+          placeholder="Search by Tyre Size"
+          name="tyreSize"
+          value={searchFilters.tyreSize}
+          onChange={handleSearchChange}
+        />
+        <input
+          type="text"
+          placeholder="Search by Vehicle Type"
+          name="vehicleType"
+          value={searchFilters.vehicleType}
+          onChange={handleSearchChange}
+        />
+      </div> */}
+
+     
+        {/* <div className="search-filters">
+          <select
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(e.target.value)}
+          >
+            <option value={1}>Branch 1</option>
+            <option value={2}>Branch 2</option>
+            <option value={3}>Branch 3</option>
+          </select>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Select Category</option>
+            <option value="Tyre">Tyre</option>
+            <option value="Tube">Tube</option>
+            <option value="Oil">Oil</option>
+          </select>
+          <select
+            value={selectedBrand}
+            onChange={(e) => setSelectedBrand(e.target.value)}
+          >
+            <option value="">Select Brand</option>
+            <option value="newB">newB</option>
+            <option value="newC">newC</option>
+            <option value="WS">WS</option>
+            <option value="WE">WE</option>
+            <option value="Rapid">Rapid</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Search by Item Name"
+            name="itemName"
+            value={searchFilters.itemName}
+            onChange={handleSearchChange}
+          />
+          {selectedCategory === "Tyre" && (
+            <>
+              <input
+                type="text"
+                placeholder="Search by Tyre Size"
+                name="tyreSize"
+                value={searchFilters.tyreSize}
+                onChange={handleSearchChange}
+              />
+              <input
+                type="text"
+                placeholder="Search by Vehicle Type"
+                name="vehicleType"
+                value={searchFilters.vehicleType}
+                onChange={handleSearchChange}
+              />
+            </>
+          )}
+        </div> */}
+
+   
         <table className="item-table">
           <thead>
           <h3>{selectedCategory} {selectedBrand}</h3>
@@ -319,7 +409,7 @@ const ItemView = () => {
               <th>Retail Price</th>
               <th>Discount</th>
               <th>Available Quantity</th>
-              { selectedCategory === "Tyre" &&
+              { selectedCategory === "Tyre" && filteredRows[0].itemTyreDTO!=null &&
               <>
               <th>Pattern</th>
               <th>Tyre Size</th>
@@ -330,7 +420,10 @@ const ItemView = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRows.map((row) => (
+            {
+              console.log("Rows:", rows.length)
+            }
+            {filteredRows && filteredRows.map((row) => (
               <tr
                 key={row.itemDTO.itemId}
                 className={selectedRowId === row.itemDTO.itemId ? "selected-row" : ""}
@@ -347,7 +440,7 @@ const ItemView = () => {
                 <td>{row.itemDTO.retailPrice}</td>
                 <td>{row.itemDTO.discount}</td>
                 <td>{row.itemBranchDTO.availableQuantity}</td>
-                {selectedCategory === "Tyre" &&
+                {selectedCategory === "Tyre" && row.itemTyreDTO &&
                   <>
                     <td>{row.itemTyreDTO.pattern}</td>
                     <td>{row.itemTyreDTO.tyreSize}</td>
