@@ -1,4 +1,3 @@
-// src/component/RebuildTyreTable.jsx
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -9,46 +8,41 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   IconButton,
-  TableSortLabel
+  TableSortLabel,
+  Tooltip,
 } from '@mui/material';
-import RIcon from '../assets/R.png'; // adjust path if necessary
-import redIcon from '../assets/red.png';
-import yellowIcon from '../assets/yellow.png';
-import greenIcon from '../assets/green.png';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 
 const headerStyle = {
   fontWeight: 'bold',
-  backgroundColor: '#f5f5f5', // Customize header background color here
+  backgroundColor: '#f5f5f5',
 };
 
-const getStatusImage = (status) => {
-  if (status === "IN_HOLD") return redIcon;
-  if (status === "SENT_TO_REBUILD") return yellowIcon;
-  if (status === "DONE") return greenIcon;
-  return null;
+const getStatusColor = (status) => {
+  if (status === 'IN_HOLD') return '#f44336'; // red
+  if (status === 'SENT_TO_REBUILD') return '#ff9800'; // orange
+  if (status === 'DONE') return '#4caf50'; // green
+  return '#000';
 };
 
 const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
-  const [sortOrder, setSortOrder] = useState("asc"); // Track sorting order
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  // Function to handle sorting
   const handleSort = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  // Sorting logic
   const sortedTyres = [...tyres].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.status.localeCompare(b.status);
-    } else {
-      return b.status.localeCompare(a.status);
-    }
+    return sortOrder === 'asc'
+      ? a.status.localeCompare(b.status)
+      : b.status.localeCompare(a.status);
   });
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 2 }}>
+    <TableContainer component={Paper} sx={{ mt: 2, maxHeight: '70vh' }} stickyHeader>
       <Table>
         <TableHead>
           <TableRow>
@@ -70,7 +64,14 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
         </TableHead>
         <TableBody>
           {sortedTyres.map((tyre, index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              sx={{
+                backgroundColor: index % 2 === 0 ? '#ffffff' : '#f7f7f7',
+                '&:hover': { backgroundColor: '#e0f7fa' },
+                transition: 'background-color 0.3s',
+              }}
+            >
               <TableCell>{tyre.customerId}</TableCell>
               <TableCell>{tyre.itemId}</TableCell>
               <TableCell>{tyre.tyreNumber}</TableCell>
@@ -80,26 +81,26 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
               <TableCell>{tyre.billNumber}</TableCell>
               <TableCell>{tyre.price}</TableCell>
               <TableCell>
-                {getStatusImage(tyre.status) ? (
-                  <img
-                    src={getStatusImage(tyre.status)}
-                    alt={tyre.status}
-                    style={{ width: 24, height: 24 }}
-                  />
-                ) : (
-                  tyre.status
-                )}
+                <span style={{ color: getStatusColor(tyre.status), fontWeight: 'bold' }}>
+                  {tyre.status}
+                </span>
               </TableCell>
               <TableCell>
-                <Button variant="contained" onClick={() => onUpdate(tyre)} sx={{ mr: 1 }}>
-                  Update
-                </Button>
-                <IconButton onClick={() => onInfo(tyre)}>
-                  <img src={RIcon} alt="More Info" style={{ width: 24, height: 24 }} />
-                </IconButton>
-                <Button variant="outlined" color="error" onClick={() => onDelete(tyre.itemId)} sx={{ ml: 1 }}>
-                  Delete
-                </Button>
+                <Tooltip title="Update">
+                  <IconButton onClick={() => onUpdate(tyre)} color="primary">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="More Info">
+                  <IconButton onClick={() => onInfo(tyre)} color="info">
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton onClick={() => onDelete(tyre.itemId)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
