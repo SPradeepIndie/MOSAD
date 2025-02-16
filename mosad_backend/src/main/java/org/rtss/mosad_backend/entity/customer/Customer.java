@@ -20,7 +20,7 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_contact_id")
     private CustomerContact customerContact;
 

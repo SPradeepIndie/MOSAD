@@ -19,6 +19,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -200,9 +201,9 @@ public class ItemService {
         // Fetch items
         List<Item> items = itemRepository.findByCategoryAndBrand(category, brand);
 
-        if (items == null || items.isEmpty()) {
-            throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "No items found for this category and brand");
-        }
+//        if (items == null || items.isEmpty()) {
+//            throw new HttpServerErrorException(HttpStatus.NOT_FOUND, "No items found for this category and brand");
+//        }
 
         for (Item item : items) {
             ItemDTO itemDTO = itemDTOMapper.toDTO(item);
@@ -250,11 +251,36 @@ public class ItemService {
         return addItemDTOS;
     }
 
-    public List<AddItemDTO> searchItemsByName(String name, Long branchId) {
+    public List<AddItemDTO> searchItemsByName(String Category,String Brand,String name,String tyreSize, Long branchId) {
+
+
 
         List<AddItemDTO> addItemDTOS = new ArrayList<>();
 
-        List<Item> items = itemRepository.findItemsByItemNameContainsIgnoreCase(name);
+        if(Objects.equals(Category, "Tyre") && tyreSize != null && !tyreSize.isEmpty()) {
+            addItemDTOS=searchItems(Brand,tyreSize,branchId);
+            System.out.println("\n\nTyres : " + addItemDTOS.size() + "\n\n");
+            return addItemDTOS;
+        }
+
+
+        // Check if category exists
+        Category category = categoryRepository.findCategoryByCategoryName(Category)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Category not found"));
+
+        // Check if brand exists
+        Brand brand = brandRepository.findByBrandName(Brand)
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, "Brand not found"));
+
+        System.out.println("\n\nCategory: " + category.getCategoryName() +"Brand: " + brand.getBrandName() + " Name: " + name + " BranchId: " + branchId + " ItemName: "+name+ "\n\n");
+        // Fetch items
+        List<Item> items=null;
+        if(name != null && !name.isEmpty()) {
+             items = itemRepository.findItemsByItemNameAndCategoryAndBrand(name, category.getCategoryId(), brand.getBrandId());
+        }
+        else{
+            items = itemRepository.findByCategoryAndBrand(category, brand);
+        }
         System.out.println("\n\nLength of items: " + items.size() + "\n\n");
 
         for (Item item : items) {
@@ -262,11 +288,19 @@ public class ItemService {
             ItemTyreDTO itemTyreDTO = null;
 
             // Only fetch tyre details if it's a tyre
-            if ("Tyre".equals(item.getCategory().getCategoryName())) {
+            if ("Tyre".equals(category.getCategoryName())) {
+
+
                 ItemTyre tyre = itemTyreRepo.findByItem(item);
+
+
                 if (tyre != null) {
                     itemTyreDTO = itemTyreDTOMapper.toDTO(tyre);
+                    itemDTO=itemDTOMapper.toDTO(tyre.getItem());
                 }
+            }
+            else{
+                System.out.println("\n\nNot a tyre\n\n");
             }
 
             // Fetch branch item details

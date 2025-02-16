@@ -21,4 +21,7 @@ public interface ItemRepo extends JpaRepository<Item, Long> {
     @Query(value = "SELECT * FROM Item WHERE item_name ILIKE CONCAT('%', :name, '%')", nativeQuery = true)
     List<Item> findItemsByItemNameContainsIgnoreCase(String name);
 
+    @Query(value = "SELECT * FROM Item WHERE LOWER(item_name) = LOWER(:itemName) AND category_id = :category AND brand_id = :brand", nativeQuery = true)
+    List<Item> findItemsByItemNameAndCategoryAndBrand(String itemName, Long category, Long brand);
+
 }

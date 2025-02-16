@@ -85,6 +85,12 @@ body {
   font-weight: bold; /* Make it visually distinct */
 }
 
+.inline{
+  display: inline;
+  width: 100%;
+  color: #000000;
+  
+}
 
 
 /* .item-table tbody tr.selected-row {

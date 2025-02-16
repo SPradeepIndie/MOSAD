@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./css/ItemView.css";
 import GeneralMessage from "../../component/GeneralMessage";
 import ItemDetailsForm from "../../forms/ItemDetailsForm";
@@ -10,16 +10,15 @@ import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
 import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
-import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
 
 const ItemView = () => {
- 
+
   //Store passed Category and Brand using Link state & useLocation
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Tyre");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
   const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
@@ -31,13 +30,13 @@ const ItemView = () => {
   const [rows, setRows] = useState([]);
 
 
-  
+
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
-  
+
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState(setItemAddFromFields(selectedCategory,selectedBrand));
+  const [formData, setFormData] = useState(setItemAddFromFields(selectedCategory, selectedBrand));
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [isPriceDetailsPopupOpen, setIsPriceDetailsPopupOpen] = useState(false);
@@ -62,14 +61,14 @@ const ItemView = () => {
           pattern: item.itemTyreDTO.pattern,
           vehicleType: item.itemTyreDTO.vehicleType
         })
-        
+
       };
 
       setCurrentItem(formattedItem);
       setFormData(formattedItem);
     } else {
       setCurrentItem(null);
-      setFormData(setItemAddFromFields(selectedCategory,selectedBrand));
+      setFormData(setItemAddFromFields(selectedCategory, selectedBrand));
     }
     setIsDialogOpen(true);
   };
@@ -84,12 +83,12 @@ const ItemView = () => {
     let fieldError = "";
     if (!value) {
       fieldError = `${key.replace(/([A-Z])/g, " $1").trim()} is required.`;
-    } else if ((key === "availableQuantity" ) && !Number.isInteger(Number(value))) {
+    } else if ((key === "availableQuantity") && !Number.isInteger(Number(value))) {
       fieldError = "Quantity must be a valid integer.";
-    } else if ((key === "companyPrice" || key==="retailPrice" || key==="discount") && !/^(-?\d+(\.\d+)?)$/.test(value)) {
+    } else if ((key === "companyPrice" || key === "retailPrice" || key === "discount") && !/^(-?\d+(\.\d+)?)$/.test(value)) {
       fieldError = "Price must be a valid number.";
     }
-    else if( key === "discount" && (parseFloat(value) < 0 || parseFloat(value) > 100)){
+    else if (key === "discount" && (parseFloat(value) < 0 || parseFloat(value) > 100)) {
       fieldError = "Discount must be between 0 and 100.";
     }
 
@@ -107,45 +106,48 @@ const ItemView = () => {
 
 
   const fetchandSetItems = async () => {
-    console.log("Fetching items for Category:", selectedCategory, "Brand:", selectedBrand, "Branch:", selectedBranch);
+    console.log("Inside fetchItems !");
 
-    if (selectedCategory && selectedBrand && selectedBranch) {
-      
-      fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch , } })
+    if (selectedCategory && selectedBrand && selectedBranch ) {
+      console.log("Before setRows !" + rows.length);
+      fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch, } })
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
-      
+
+      console.log("Rows set " + rows.length);
+
     }
-    else{
+    else {
       console.error("Error fetching data: Category, Brand and Branch are required");
     }
-    console.log(rows);  
+
   }
 
-  
+
   const handleRowClick = (id) => {
     setSelectedRowId((prevId) => (prevId === id ? null : id)); // Toggle selection
-    
+    console.log("Row Clicked ID:", id);
+
   };
 
   const openConfirmationDialog = () => {
-    if(selectedRowId !== null){
-    dialogOpenRef.current = true; // ✅ Mark dialog as open
-    setConfirmationDialog(true);
-    }else{
+    if (selectedRowId !== null) {
+      dialogOpenRef.current = true; // ✅ Mark dialog as open
+      setConfirmationDialog(true);
+    } else {
       setMessage({ type: "error", text: "Please select an item to delete." });
       setTimeout(() => setMessage(null), 2000);
     }
   };
-  
+
   const closeConfirmationDialog = () => {
     dialogOpenRef.current = false; // ✅ Mark dialog as closed
     setConfirmationDialog(false);
   };
-  
+
   const handleDelete = () => {
     if (selectedRowId !== null) {
-      
+
       const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
       deleteItem(selectedItem.itemDTO.itemId)
         .then(() => {
@@ -166,6 +168,7 @@ const ItemView = () => {
   };
 
   useEffect(() => {
+    console.log("Fetch item called by useEffect!")
 
     const brandImages = {
       atlander: atlander_baner,
@@ -177,30 +180,31 @@ const ItemView = () => {
 
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
-    //const tyreBrands = ["newB", "newC"];
     fetchandSetItems();
-    console.log("Fetch item called by useEffect!")
+    fetchandSetItems();
+
+    console.log("Fetched items for Category:", selectedCategory, "Brand:", selectedBrand, "Branch:", selectedBranch);
 
 
-  }, [selectedBranch, selectedCategory, selectedBrand]);
+  }, [selectedBranch, selectedBrand]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
         dialogOpenRef.current || // ✅ Prevent deselection when dialog is open
-        event.target.closest(".item-table") || 
-        event.target.closest(".confirmation-dialog") || 
+        event.target.closest(".item-table") ||
+        event.target.closest(".confirmation-dialog") ||
         event.target.closest(".confirmation-dialog-overlay")
       ) {
         return;
       }
-  
-      
+
+
       setSelectedRowId(null);
     };
-  
+
     document.addEventListener("click", handleOutsideClick);
-  
+
     return () => {
       document.removeEventListener("click", handleOutsideClick);
     };
@@ -242,13 +246,13 @@ const ItemView = () => {
 
     request
       .then((response) => {
-        console.log(currentItem ? "Item updated successfully!" :"Backend - "+ response.data.message);
+        console.log(currentItem ? "Item updated successfully!" : "Backend - " + response.data.message);
         closeDialog();
         fetchandSetItems();
         setMessage(
           currentItem
             ? { type: "success", text: "Item updated successfully!" }
-            : { type: response.data.success ? "success": "error", text:  response.data.message }
+            : { type: response.data.success ? "success" : "error", text: response.data.message }
         );
         setTimeout(() => setMessage(null), 3000);
       })
@@ -275,26 +279,26 @@ const ItemView = () => {
     (row.itemTyreDTO?.vehicleType || "").toLowerCase().includes(searchFilters.vehicleType.toLowerCase())
   );
 
-  // useEffect(
-  //   ()=>{
-  //     setSelectedBrand("Select Brand");
-  //     setRows([]);
-  //   },[selectedCategory]
-  // )
+  useEffect(
+    () => {
+     
+      setRows([]);
+    }, [selectedCategory]
+  )
 
   return (
     <>
       {message && <GeneralMessage message={message} />}
       {confirmationDialog && (
         <ConfirmationDialog
-        message={"Are you sure you want to delete this item ID="+selectedRowId+" ? "}
-        onCancel={closeConfirmationDialog}
-        onConfirm={() => {
-          closeConfirmationDialog();
-          handleDelete();
-        }}
-        isOpen={confirmationDialog}
-      />
+          message={"Are you sure you want to delete this item ID=" + selectedRowId + " ? "}
+          onCancel={closeConfirmationDialog}
+          onConfirm={() => {
+            closeConfirmationDialog();
+            handleDelete();
+          }}
+          isOpen={confirmationDialog}
+        />
       )}
 
       <SearchComponent
@@ -308,100 +312,20 @@ const ItemView = () => {
         handleSearchChange={handleSearchChange}
       />
 
-      
-   
+
+
       <div className="item-view-container">
-      
+
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
-          
+
         </section>
 
-        {/* <div className="search-filters">
-        <input
-          type="text"
-          placeholder="Search by Item Name"
-          name="itemName"
-          value={searchFilters.itemName}
-          onChange={handleSearchChange}
-        />
-        <input
-          type="text"
-          placeholder="Search by Tyre Size"
-          name="tyreSize"
-          value={searchFilters.tyreSize}
-          onChange={handleSearchChange}
-        />
-        <input
-          type="text"
-          placeholder="Search by Vehicle Type"
-          name="vehicleType"
-          value={searchFilters.vehicleType}
-          onChange={handleSearchChange}
-        />
-      </div> */}
-
-     
-        {/* <div className="search-filters">
-          <select
-            value={selectedBranch}
-            onChange={(e) => setSelectedBranch(e.target.value)}
-          >
-            <option value={1}>Branch 1</option>
-            <option value={2}>Branch 2</option>
-            <option value={3}>Branch 3</option>
-          </select>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="">Select Category</option>
-            <option value="Tyre">Tyre</option>
-            <option value="Tube">Tube</option>
-            <option value="Oil">Oil</option>
-          </select>
-          <select
-            value={selectedBrand}
-            onChange={(e) => setSelectedBrand(e.target.value)}
-          >
-            <option value="">Select Brand</option>
-            <option value="newB">newB</option>
-            <option value="newC">newC</option>
-            <option value="WS">WS</option>
-            <option value="WE">WE</option>
-            <option value="Rapid">Rapid</option>
-          </select>
-          <input
-            type="text"
-            placeholder="Search by Item Name"
-            name="itemName"
-            value={searchFilters.itemName}
-            onChange={handleSearchChange}
-          />
-          {selectedCategory === "Tyre" && (
-            <>
-              <input
-                type="text"
-                placeholder="Search by Tyre Size"
-                name="tyreSize"
-                value={searchFilters.tyreSize}
-                onChange={handleSearchChange}
-              />
-              <input
-                type="text"
-                placeholder="Search by Vehicle Type"
-                name="vehicleType"
-                value={searchFilters.vehicleType}
-                onChange={handleSearchChange}
-              />
-            </>
-          )}
-        </div> */}
-
-   
         <table className="item-table">
+          <caption>{selectedCategory} {selectedBrand}</caption>
           <thead>
-          <h3>{selectedCategory} {selectedBrand}</h3>
+           
+
             <tr>
               <th>Name</th>
               <th>Description</th>
@@ -409,14 +333,14 @@ const ItemView = () => {
               <th>Retail Price</th>
               <th>Discount</th>
               <th>Available Quantity</th>
-              { selectedCategory === "Tyre" && filteredRows[0].itemTyreDTO!=null &&
-              <>
-              <th>Pattern</th>
-              <th>Tyre Size</th>
-              <th>Vehicle Type</th>
-              </>
+              {selectedCategory === "Tyre" && filteredRows[0]?.itemTyreDTO !== null &&
+                <>
+                  <th>Pattern</th>
+                  <th>Tyre Size</th>
+                  <th>Vehicle Type</th>
+                </>
               }
-              
+
             </tr>
           </thead>
           <tbody>
@@ -429,7 +353,7 @@ const ItemView = () => {
                 className={selectedRowId === row.itemDTO.itemId ? "selected-row" : ""}
                 onClick={() => {
                   console.log("Row clicked:", row.itemDTO.itemId);
-                  
+
                   handleRowClick(row.itemDTO.itemId);
 
                 }}
@@ -452,11 +376,11 @@ const ItemView = () => {
           </tbody>
         </table>
         <div className="button-group">
-          <button className="btn delete" onClick={()=>openConfirmationDialog()}>Delete</button>
+          <button className="btn delete" onClick={() => openConfirmationDialog()}>Delete</button>
           <button className="btn update" onClick={() => {
             if (selectedRowId) {
               console.log("On Update Selected Row ID:", selectedRowId);
-              const selectedItem = rows.find(row =>row.itemDTO.itemId === selectedRowId);
+              const selectedItem = rows.find(row => row.itemDTO.itemId === selectedRowId);
               openDialog(selectedItem);
 
             } else {
@@ -465,7 +389,7 @@ const ItemView = () => {
             }
           }}>Update</button>
           <button className="btn add" onClick={() => openDialog(null)}>Add Item</button>
-          <button className="btn info"onClick={() => {
+          <button className="btn info" onClick={() => {
             if (selectedRowId) {
               const selectedItem = rows.find((row) => row.itemDTO.itemId === selectedRowId);
               setSelectedItemPriceDetails({
@@ -473,7 +397,7 @@ const ItemView = () => {
                 discount: selectedItem.itemDTO.discount || 0,
               });
               setIsPriceDetailsPopupOpen(true);
-            }else {
+            } else {
               setMessage({ type: "error", text: "Please select an item to view price details!" });
               setTimeout(() => setMessage(null), 2000);
             }
@@ -489,20 +413,20 @@ const ItemView = () => {
           onSubmit={handleSubmit}
           closeDialog={closeDialog}
         />
-      
+
       </PopUp>
       <PopUp
         popUpTitle="Price Details"
         openPopup={isPriceDetailsPopupOpen}
         setOpenPopup={setIsPriceDetailsPopupOpen}
-        onSubmit={() => setIsPriceDetailsPopupOpen(false)} 
-        setCancelButtonAction={() => setIsPriceDetailsPopupOpen(false)} 
-        isDefaultButtonsDisplay={false} 
+        onSubmit={() => setIsPriceDetailsPopupOpen(false)}
+        setCancelButtonAction={() => setIsPriceDetailsPopupOpen(false)}
+        isDefaultButtonsDisplay={false}
       >
         <PriceDetailsSection
-        officialSellingPrice={selectedItemPriceDetails?.officialSellingPrice || ""}
-        discount={selectedItemPriceDetails?.discount || ""}
-      />
+          officialSellingPrice={selectedItemPriceDetails?.officialSellingPrice || ""}
+          discount={selectedItemPriceDetails?.discount || ""}
+        />
       </PopUp>
     </>
   );

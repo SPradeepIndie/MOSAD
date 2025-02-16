@@ -42,13 +42,14 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.deleteItem(itemId));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/nn")
     public ResponseEntity<List<AddItemDTO>>searchItems(@Param("brand") String brand,@Param("size") String size,@Param("branchId") Long branchId){
         return ResponseEntity.ok().body(itemService.searchItems(brand,size,branchId));
     }
-    @GetMapping("/name")
-    public ResponseEntity<List<AddItemDTO>>searchItemsByName(@Param("name") String name,@Param("branchId") Long branchId){
-        return ResponseEntity.ok().body(itemService.searchItemsByName(name,branchId));
+    @GetMapping("/search")
+    public ResponseEntity<List<AddItemDTO>>searchItemsByName(@Param("Category") String Category,@Param("Brand") String Brand,@Param("name") String name,@Param("tyreSize") String tyreSize,@Param("branchId") Long branchId){
+        return ResponseEntity.ok().body(itemService.searchItemsByName(Category,Brand,name,tyreSize,branchId));
     }
+
 
 }

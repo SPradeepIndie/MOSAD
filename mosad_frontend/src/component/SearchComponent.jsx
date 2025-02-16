@@ -21,7 +21,7 @@ import { fetchBrands,fetchBrandAndSizeData,fetchCategories } from "../services/a
 import { Grid } from "@mui/system";
 
 const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
-  const [category,setCategory] = useState(""); // Holds the selected category
+  const [category,setCategory] = useState("Tyre"); // Holds the selected category
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
   
@@ -50,7 +50,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
   }
 
   async function getBrandAndSizeData(){
-    return fetchBrandAndSizeData(brand,size,branch.branchId).then((result) => {
+    return fetchBrandAndSizeData(category,brand,name,size,branch.branchId).then((result) => {
         return result;
       }).catch((error) => {
         return null;
@@ -202,7 +202,7 @@ useEffect(() => {
             <Select
               labelId="category-select-label"
               value={category}
-              onChange={(e) => {setCategory(e.target.value);setSelectedCategory(e.target.value);fetchandSetItems();}}
+              onChange={(e) => { setCategory(e.target.value); setSelectedCategory(e.target.value); }}
               variant="outlined"
             >
               {categories.map((c) => (
@@ -222,7 +222,7 @@ useEffect(() => {
             <Select
               labelId="brand-select-label"
               value={brand}
-              onChange={(e) => {setBrand(e.target.value);setSelectedBrand(e.target.value);fetchandSetItems();}}
+              onChange={(e) => { setBrand(e.target.value); setSelectedBrand(e.target.value); fetchandSetItems(); }}
               variant="outlined"
             >
               {brands.map((b) => (
@@ -237,20 +237,20 @@ useEffect(() => {
         </Grid>
       </Grid>
 
-        <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          
-        <Grid >
-            <TextField
-              label="Name"
-              variant="outlined"
-              name="itemName"
-              value={name}
-              onChange={(e) => {setName(e.target.value);handleSearchChange(e);}}
-              fullWidth
-            />
-          </Grid>
+      <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-          {category=="Tyre" &&
+        <Grid >
+          <TextField
+            label="Name"
+            variant="outlined"
+            name="itemName"
+            value={name}
+            onChange={(e) => { setName(e.target.value); handleSearchChange(e); }}
+            fullWidth
+          />
+        </Grid>
+
+        {category == "Tyre" &&
           <>
             <Grid >
               <TextField
@@ -258,35 +258,36 @@ useEffect(() => {
                 variant="outlined"
                 name="tyreSize"
                 value={size}
-                onChange={(e) => {setSize(e.target.value);handleSearchChange(e);}}
+                onChange={(e) => { setSize(e.target.value); handleSearchChange(e); }}
                 fullWidth
               />
             </Grid>
-            
+
             <Grid >
               <TextField
                 label="Vehicle Type"
                 variant="outlined"
                 name="vehicleType"
                 value={type}
-                onChange={(e) => {setType(e.target.value);handleSearchChange(e);}}
+                onChange={(e) => { setType(e.target.value); handleSearchChange(e); }}
                 fullWidth
               />
             </Grid>
-            </>}
-        </Grid>
+          </>}
+      </Grid>
       
 
 
 
-      <Button
+      {onAddToBill && <Button
         variant="contained"
         color="primary"
         onClick={onAddToBill ? handleSearch : handleFilter}
-        //disabled={loadingBrands || !brand || !size}
+        disabled={loadingBrands || !brand}
+        
       >
         Search
-      </Button>
+      </Button>}
 
       {error && <Typography color="error">{error}</Typography>}
 
@@ -316,7 +317,7 @@ useEffect(() => {
                   <TableCell>{brand}</TableCell>
                   <TableCell>{result.itemDTO.companyPrice}</TableCell>
                   <TableCell>{result.itemBranchDTO.availableQuantity}</TableCell>
-                  { category==="Tyre" &&
+                  { category==="Tyre" && result.itemTyreDTO &&
                    <>
                     <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
                     <TableCell>{result.itemTyreDTO.pattern}</TableCell>
