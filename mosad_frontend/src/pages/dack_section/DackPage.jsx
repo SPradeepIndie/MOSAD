@@ -5,14 +5,12 @@ import {
   TextField,
   Button,
   Box,
+  Paper,
   Dialog,
   DialogTitle,
   DialogContent,
-  Card,
-  CardContent,
-  Grid,
   Slide,
-  Paper,
+  Grid2 as Grid,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
@@ -28,15 +26,9 @@ import {
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-    background: {
-      default: '#fafafa',
-    },
+    primary: { main: '#1976d2' },
+    secondary: { main: '#dc004e' },
+    background: { default: '#f5f5f5' },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -47,50 +39,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-import PropTypes from 'prop-types';
-
-const DashboardSummary = ({ tyres }) => {
-  const totalOrders = tyres.length;
-  const statusCounts = tyres.reduce((acc, tyre) => {
-    acc[tyre.status] = (acc[tyre.status] || 0) + 1;
-    return acc;
-  }, {});
-  return (
-    <Card sx={{ mb: 2, backgroundColor: '#e8f5e9' }}>
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Typography variant="h6">Total Orders</Typography>
-            <Typography variant="h4">{totalOrders}</Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h6">In Hold</Typography>
-            <Typography variant="h4">{statusCounts['IN_HOLD'] || 0}</Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h6">Sent to Rebuild</Typography>
-            <Typography variant="h4">{statusCounts['SENT_TO_REBUILD'] || 0}</Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="h6">Done</Typography>
-            <Typography variant="h4">{statusCounts['DONE'] || 0}</Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
-};
-
-DashboardSummary.propTypes = {
-  tyres: PropTypes.array.isRequired,
-};
-
 const RebuildTyrePage = () => {
   const [tyres, setTyres] = useState([]);
   const [filter, setFilter] = useState('');
   const [editingTyre, setEditingTyre] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const [openUpdatePopup, setOpenUpdatePopup] = useState(false);
+  const [openFormPopup, setOpenFormPopup] = useState(false);
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [infoTyre, setInfoTyre] = useState(null);
 
@@ -102,7 +56,6 @@ const RebuildTyrePage = () => {
       } else {
         response = await getAllTyres();
       }
-      console.log('Fetched tyres:', response.data);
       setTyres(response.data);
     } catch (error) {
       console.error(error);
@@ -114,9 +67,7 @@ const RebuildTyrePage = () => {
     fetchTyres();
   }, [filter, refresh]);
 
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
+  const handleFilterChange = (e) => setFilter(e.target.value);
 
   const handleFormSubmit = async (formData) => {
     try {
@@ -127,7 +78,7 @@ const RebuildTyrePage = () => {
         await createTyre(formData);
       }
       setRefresh(!refresh);
-      setOpenUpdatePopup(false);
+      setOpenFormPopup(false);
     } catch (error) {
       console.error(error);
       alert(editingTyre ? 'Error updating tyre' : 'Error creating tyre');
@@ -148,7 +99,7 @@ const RebuildTyrePage = () => {
 
   const handleUpdate = (tyre) => {
     setEditingTyre(tyre);
-    setOpenUpdatePopup(true);
+    setOpenFormPopup(true);
   };
 
   const handleInfo = (tyre) => {
@@ -158,7 +109,7 @@ const RebuildTyrePage = () => {
 
   const handleCancelUpdate = () => {
     setEditingTyre(null);
-    setOpenUpdatePopup(false);
+    setOpenFormPopup(false);
   };
 
   const handleCloseInfo = () => {
@@ -168,7 +119,7 @@ const RebuildTyrePage = () => {
 
   const handleAddOrder = () => {
     setEditingTyre(null);
-    setOpenUpdatePopup(true);
+    setOpenFormPopup(true);
   };
 
   return (
@@ -178,44 +129,50 @@ const RebuildTyrePage = () => {
           Rebuild Tyre Management
         </Typography>
 
-        <DashboardSummary tyres={tyres} />
-
-        <Paper sx={{ p: 2, mb: 2 }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Box display="flex" alignItems="center">
+        <Paper sx={{ p: 2, mb: 3, boxShadow: 3, borderRadius: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={8}>
               <TextField
                 label="Filter by Contact Number"
                 value={filter}
                 onChange={handleFilterChange}
                 variant="outlined"
-                sx={{ mr: 2 }}
+                fullWidth
               />
-              <Button variant="contained" onClick={fetchTyres} sx={{ mr: 1 }}>
-                Search
-              </Button>
-              <Button variant="outlined" onClick={() => setFilter('')}>
-                Clear Filter
-              </Button>
-            </Box>
-            <Button variant="contained" color="primary" onClick={handleAddOrder}>
-              Add Order
-            </Button>
-          </Box>
+            </Grid>
+            <Grid item xs={12} sm={4} container spacing={1}>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" onClick={fetchTyres} fullWidth>
+                  Search
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="outlined" onClick={() => setFilter('')} fullWidth>
+                  Clear Filter
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
         </Paper>
 
-        <RebuildTyreTable tyres={tyres} onUpdate={handleUpdate} onInfo={handleInfo} onDelete={handleDeleteTyre} />
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Button variant="contained" color="primary" onClick={handleAddOrder}>
+            Add Order
+          </Button>
+        </Box>
+
+        <RebuildTyreTable
+          tyres={tyres}
+          onUpdate={handleUpdate}
+          onInfo={handleInfo}
+          onDelete={handleDeleteTyre}
+        />
 
         <PopUp
           popUpTitle={editingTyre ? 'Update Order' : 'Add New Order'}
-          openPopup={openUpdatePopup}
-          setOpenPopup={setOpenUpdatePopup}
+          openPopup={openFormPopup}
+          setOpenPopup={setOpenFormPopup}
           setCancelButtonAction={handleCancelUpdate}
-          paperSx={{
-            position: 'absolute',
-            right: 20,
-            top: 50,
-            m: 0,
-          }}
           isDefaultButtonsDisplay={false}
         >
           <RebuildTyreForm
@@ -236,25 +193,25 @@ const RebuildTyrePage = () => {
           <DialogContent dividers>
             {infoTyre && (
               <Box>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Tyre Size:</strong> {infoTyre.tyreSize}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Tyre Brand:</strong> {infoTyre.tyreBrand}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Date Sent To Company:</strong> {infoTyre.dateSentToCompany}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Sales Rep Number:</strong> {infoTyre.salesRepNumber}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Job Number:</strong> {infoTyre.jobNumber}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Date Received From Company:</strong> {infoTyre.dateReceivedFromCompany}
                 </Typography>
-                <Typography>
+                <Typography variant="body1">
                   <strong>Date Delivered To Customer:</strong> {infoTyre.dateDeliveredToCustomer}
                 </Typography>
               </Box>

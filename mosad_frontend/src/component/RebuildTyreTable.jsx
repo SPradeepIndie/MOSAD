@@ -18,14 +18,8 @@ import InfoIcon from '@mui/icons-material/Info';
 
 const headerStyle = {
   fontWeight: 'bold',
-  backgroundColor: '#f5f5f5',
-};
-
-const getStatusColor = (status) => {
-  if (status === 'IN_HOLD') return '#f44336'; // red
-  if (status === 'SENT_TO_REBUILD') return '#ff9800'; // orange
-  if (status === 'DONE') return '#4caf50'; // green
-  return '#000';
+  backgroundColor: '#1976d2', // professional blue header
+  color: '#fff',
 };
 
 const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
@@ -35,15 +29,18 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  const sortedTyres = [...tyres].sort((a, b) => {
-    return sortOrder === 'asc'
+  const sortedTyres = [...tyres].sort((a, b) =>
+    sortOrder === 'asc'
       ? a.status.localeCompare(b.status)
-      : b.status.localeCompare(a.status);
-  });
+      : b.status.localeCompare(a.status)
+  );
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 2, maxHeight: '70vh' }} stickyHeader>
-      <Table>
+    <TableContainer
+      component={Paper}
+      sx={{ mt: 3, boxShadow: 3, borderRadius: 2 }}
+    >
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell sx={headerStyle}>Customer ID</TableCell>
@@ -55,11 +52,18 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
             <TableCell sx={headerStyle}>Bill Number</TableCell>
             <TableCell sx={headerStyle}>Price</TableCell>
             <TableCell sx={headerStyle}>
-              <TableSortLabel active direction={sortOrder} onClick={handleSort}>
+              <TableSortLabel
+                active
+                direction={sortOrder}
+                onClick={handleSort}
+                sx={{ color: '#fff' }}
+              >
                 Status
               </TableSortLabel>
             </TableCell>
-            <TableCell sx={headerStyle}>Actions</TableCell>
+            <TableCell sx={headerStyle} align="center">
+              Actions
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -67,9 +71,9 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
             <TableRow
               key={index}
               sx={{
-                backgroundColor: index % 2 === 0 ? '#ffffff' : '#f7f7f7',
-                '&:hover': { backgroundColor: '#e0f7fa' },
-                transition: 'background-color 0.3s',
+                backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#fff',
+                '&:hover': { backgroundColor: '#e3f2fd' },
+                transition: 'background-color 0.3s ease',
               }}
             >
               <TableCell>{tyre.customerId}</TableCell>
@@ -80,13 +84,9 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
               <TableCell>{tyre.dateReceived}</TableCell>
               <TableCell>{tyre.billNumber}</TableCell>
               <TableCell>{tyre.price}</TableCell>
-              <TableCell>
-                <span style={{ color: getStatusColor(tyre.status), fontWeight: 'bold' }}>
-                  {tyre.status}
-                </span>
-              </TableCell>
-              <TableCell>
-                <Tooltip title="Update">
+              <TableCell>{tyre.status}</TableCell>
+              <TableCell align="center">
+                <Tooltip title="Edit">
                   <IconButton onClick={() => onUpdate(tyre)} color="primary">
                     <EditIcon />
                   </IconButton>
@@ -120,7 +120,7 @@ RebuildTyreTable.propTypes = {
       contactNumber: PropTypes.string.isRequired,
       dateReceived: PropTypes.string.isRequired,
       billNumber: PropTypes.string.isRequired,
-      price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       status: PropTypes.string.isRequired,
       tyreSize: PropTypes.string,
       tyreBrand: PropTypes.string,
