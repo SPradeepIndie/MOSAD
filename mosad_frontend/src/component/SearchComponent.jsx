@@ -16,9 +16,10 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Grid2
 } from "@mui/material";
 import { fetchBrands,fetchBrandAndSizeData,fetchCategories } from "../services/apiStockService";
-import { Grid } from "@mui/system";
+
 
 const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
   const [category,setCategory] = useState("Tyre"); // Holds the selected category
@@ -172,8 +173,8 @@ useEffect(() => {
         Search 
       </Typography>
 
-      <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid size={3} gap={2} spacing={3} direction="column">
+      <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid2 size={3} gap={2} spacing={3} direction="column">
 
           <FormControl fullWidth>
             <InputLabel id="branch-select-label">Branch</InputLabel>
@@ -183,7 +184,10 @@ useEffect(() => {
               onChange={(e) => {
                 const selectedBranch = branches.find(b => b.branchId === e.target.value);
                 setBranch(selectedBranch); // Set the whole object
-                console.log(selectedBranch);
+                if(setSelectedBranch){
+                  setSelectedBranch(selectedBranch.branchId);
+                }
+                
               }}
               variant="outlined"
             >
@@ -195,14 +199,20 @@ useEffect(() => {
             </Select>
           </FormControl>
 
-        </Grid>
-        <Grid size={3} gap={2} spacing={3} direction="column">
+        </Grid2>
+        <Grid2 size={3} gap={2} spacing={3} direction="column">
           <FormControl fullWidth>
             <InputLabel id="category-select-label">Category</InputLabel>
             <Select
               labelId="category-select-label"
               value={category}
-              onChange={(e) => { setCategory(e.target.value); setSelectedCategory(e.target.value); }}
+              onChange={(e) => { 
+                  setCategory(e.target.value); 
+                  if(setSelectedCategory){
+                    setSelectedCategory(e.target.value); 
+                  }
+                }
+              }
               variant="outlined"
             >
               {categories.map((c) => (
@@ -214,15 +224,22 @@ useEffect(() => {
 
 
           </FormControl>
-        </Grid>
-        <Grid size={3} gap={2} spacing={3} direction="column">
+        </Grid2>
+        <Grid2 size={3} gap={2} spacing={3} direction="column">
 
           <FormControl fullWidth>
             <InputLabel id="brand-select-label">Brand</InputLabel>
             <Select
               labelId="brand-select-label"
               value={brand}
-              onChange={(e) => { setBrand(e.target.value); setSelectedBrand(e.target.value); fetchandSetItems(); }}
+              onChange={(e) => { 
+                setBrand(e.target.value); 
+                setSelectedBrand(e.target.value); 
+                if (fetchandSetItems) {
+                  fetchandSetItems();
+                }
+              
+              }}
               variant="outlined"
             >
               {brands.map((b) => (
@@ -234,12 +251,12 @@ useEffect(() => {
 
 
           </FormControl>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
 
-      <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+      <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-        <Grid >
+        <Grid2 >
           <TextField
             label="Name"
             variant="outlined"
@@ -248,11 +265,11 @@ useEffect(() => {
             onChange={(e) => { setName(e.target.value); handleSearchChange(e); }}
             fullWidth
           />
-        </Grid>
+        </Grid2>
 
         {category == "Tyre" &&
           <>
-            <Grid >
+            <Grid2 >
               <TextField
                 label="Tyre Size"
                 variant="outlined"
@@ -261,9 +278,9 @@ useEffect(() => {
                 onChange={(e) => { setSize(e.target.value); handleSearchChange(e); }}
                 fullWidth
               />
-            </Grid>
+            </Grid2>
 
-            <Grid >
+            <Grid2 >
               <TextField
                 label="Vehicle Type"
                 variant="outlined"
@@ -272,9 +289,9 @@ useEffect(() => {
                 onChange={(e) => { setType(e.target.value); handleSearchChange(e); }}
                 fullWidth
               />
-            </Grid>
+            </Grid2>
           </>}
-      </Grid>
+      </Grid2>
       
 
 
