@@ -1,42 +1,38 @@
 package org.rtss.mosad_backend.dto.customer_dtos;
 
-import jakarta.validation.constraints.NotEmpty;
-import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
-
-import java.util.List;
 
 public class CustomerDTO {
-    private Long id;
-    private String name;
-    @NotEmpty(message = "A customer must have at least one contact.")
-    private List<CustomerContactDTO> contacts;
-    private List<CreditDTO> credits;
+    private Long customerId;
+
+    private String customerName;
 
     private String customerType;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public CustomerDTO(String customerType, String customerName, Long customerId) {
+        this.customerType = customerType;
+        this.customerName = customerName;
+        this.customerId = customerId;
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public CustomerDTO() {
     }
 
-    public String getName() {
-        return name;
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public List<CustomerContactDTO> getContacts() {
-        return contacts;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setContacts(List<CustomerContactDTO> contacts) {
-        this.contacts = contacts;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getCustomerType() {
@@ -46,13 +42,4 @@ public class CustomerDTO {
     public void setCustomerType(String customerType) {
         this.customerType = customerType;
     }
-
-    public List<CreditDTO> getCredits() {
-        return credits;
-    }
-
-    public void setCredits(List<CreditDTO> credits) {
-        this.credits = credits;
-    }
 }
-

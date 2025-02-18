@@ -11,10 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/retail")
-@CrossOrigin(origins = "http://localhost:3000") // Adjust for frontend connection
 public class RetailController {
 
-    private final RetailService retailService;
+   private final RetailService retailService;
 
     public RetailController(RetailService retailService) {
         this.retailService = retailService;
@@ -26,12 +25,12 @@ public class RetailController {
     }
 
     @GetMapping("/purchaseHistory")
-    public List<PurchaseHistoryDTO> getPurchaseHistory(@RequestParam String username) {
+    public List<PurchaseHistoryDTO> getPurchaseHistory(@RequestParam String username){
         return retailService.getPurchaseHistory(username);
     }
 
     @GetMapping("/incompleteTransaction")
-    public List<IncompleteTransactionsDTO> getIncompleteTransactions(@RequestParam String username) {
+    public List<IncompleteTransactionsDTO> getIncompleteTransactions(@RequestParam String username){
         return retailService.getIncompleteTransactions(username);
     }
 

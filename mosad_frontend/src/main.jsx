@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
       <GlobalAccessProvider>
         <App/>
-        </GlobalAccessProvider>
+      </GlobalAccessProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

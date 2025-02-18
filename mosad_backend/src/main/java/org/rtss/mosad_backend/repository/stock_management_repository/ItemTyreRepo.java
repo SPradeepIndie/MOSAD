@@ -20,4 +20,8 @@ public interface ItemTyreRepo extends JpaRepository<ItemTyre,Long> {
 
     @Query
     List<ItemTyre> findByItem_Brand_BrandNameAndTyreSize (String brand, String size);
+
+    List<ItemTyre> findItemTyreByVehicleType(String vehicleType);
+
+
 }

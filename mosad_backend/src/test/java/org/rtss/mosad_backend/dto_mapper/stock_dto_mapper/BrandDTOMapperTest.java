@@ -35,7 +35,7 @@ class BrandDTOMapperTest {
         );
 
         //When
-        BrandDTO brandDto=brandDTOMapper.BrandToBrandDto(brand);
+        BrandDTO brandDto=brandDTOMapper.brandToBrandDto(brand);
 
         //Then
         assertNotNull(brandDto);
@@ -47,7 +47,7 @@ class BrandDTOMapperTest {
     void shouldThrowIllegalArgumentExceptionIfBrandIsNull() {
         //Given nothing -> When & Then
         assertThrows(IllegalArgumentException.class,
-                () -> brandDTOMapper.BrandToBrandDto(null),
+                () -> brandDTOMapper.brandToBrandDto(null),
                 "Brand cannot be null");
     }
 
@@ -59,7 +59,7 @@ class BrandDTOMapperTest {
             );
 
             //When
-            Brand brand=brandDTOMapper.BrandDtoToBrand(brandDTO);
+            Brand brand=brandDTOMapper.brandDtoToBrand(brandDTO);
 
             //Then
             assertNotNull(brand);
@@ -71,7 +71,7 @@ class BrandDTOMapperTest {
     void shouldThrowIllegalArgumentExceptionIfBrandDTOIsNull() {
         //Given nothing -> When & Then
         assertThrows(IllegalArgumentException.class,
-                () -> brandDTOMapper.BrandDtoToBrand(null),
+                () -> brandDTOMapper.brandDtoToBrand(null),
                 "BrandDTO cannot be null");
     }
 
