@@ -18,7 +18,7 @@ import PropTypes from 'prop-types';
 function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
+  const [newRepayment, setNewRepayment] = useState({ date: dayjs().format('YYYY-MM-DD'), amount: '' });
   const [deleteConformationDialog, setDeleteConformationDialog] = useState(false);
   const [repaymentIdForDeletion, setRepaymentIdForDeletion] = useState(null);
 
@@ -160,7 +160,7 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Basic date picker"
-                value={dayjs()}
+                value={ dayjs(newRepayment.date)}
                 onChange={(newValue) =>
                   setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : value.format('YYYY-MM-DD') })
                 }

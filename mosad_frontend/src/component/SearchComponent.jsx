@@ -16,9 +16,16 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Grid2
+  Grid2,Dialog, DialogTitle, DialogContent, DialogActions
 } from "@mui/material";
-import { fetchBrands,fetchBrandAndSizeData,fetchCategories } from "../services/apiStockService";
+import { fetchBrands,fetchBrandAndSizeData,fetchCategories,addCategory,addBrand } from "../services/apiStockService";
+import { fetchAllBranchNames } from "../services/apiBranchService";
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
+import PopUp from "./PopUp";
+import GeneralMessage from "./GeneralMessage";
+
+
 
 
 const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
@@ -35,12 +42,30 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
   const [error, setError] = useState(""); // Error message for search failures
   const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
-  const branches = [
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [newBrandName, setNewBrandName] = useState('');
+    const [newCategoryName,setNewCategoryName] = useState('');
+    const [message, setMessage] = useState(null);
+
+  let branches = [
     { branchId: 1, branchName: "Main" },
     { branchId: 2, branchName: "Branch A" },
     { branchId: 3, branchName: "Branch B" },
     { branchId: 4, branchName: "Branch C" },
   ]; // Sample branches
+
+  const loadBranches = async () => {
+    const response = await fetchAllBranchNames();
+    if (response.status === 200 && Array.isArray(response.data)) {
+      branches = response.data.map((branchName, index) => ({
+        branchId: index + 1,
+        branchName: branchName
+      }));
+      console.log("Branches:", branches);
+    } else {
+      console.error("Unexpected response from the server:", response);
+    }
+  };
 
   async function getBrands(){
     return fetchBrands(category).then((result) => {
@@ -102,9 +127,58 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
     }
   }
 
+  const handleAddCategory = async (categoryName) => {
+    try {
+
+      await addCategory(categoryName);
+      
+      setCategories([...categories, categoryName]);
+      setNewCategoryName("");
+      setMessage({type: 'success', text:"Category added successfully!"});
+      setTimeout(() => setMessage(null), 2000);
+
+
+      
+    } catch (err) {
+      console.error("Failed to add category:", err);
+      
+      setMessage({type: 'error', text:"Failed to add category !"});
+      setTimeout(() => setMessage(null), 2000);
+    }
+  };
+
+  const handleAddBrand = async () => {
+    try {
+      const payload = {
+              brandDTO: {
+                brandName: newBrandName,
+              },
+              category: {
+                categoryName:category,
+              },
+            };
+      await addBrand(payload);
+      
+      console.log("Brand added successfully:");
+      setBrands([...brands, newBrandName]);
+      setDialogOpen(false);
+      setNewBrandName("");
+      setMessage({type: 'success', text:"Brand  added successfully!"});
+      setTimeout(() => setMessage(null), 2000);
+      
+    } catch (err) {
+      console.error("Failed to add brand:", err);
+      setMessage({type: 'error', text:"Failed to add brand !"});
+      setTimeout(() => setMessage(null), 2000);
+    }
+  };
+
+
   // Fetch available brands when the component mounts
   useEffect(() => {
-    
+
+  loadBranches();
+
   loadcategories();
 
   loadbrands();
@@ -114,23 +188,31 @@ useEffect(() => {
   loadbrands();
 }, [category]);
 
+useEffect(() => {
+  setResults([]);
+  setSize("");
+  setName("");
+  setType("");
+
+}, [category,brand]);
+
 
   const handleFilter=()=>{
-  console.log("handleFilter clicked");
+  
    try {
       setSelectedBranch(branch.branchId);
       setSelectedCategory(category);
       setSelectedBrand(brand);
      
       fetchandSetItems();
-      console.log("handleFilter finished");
+      
    } catch (err) {
       console.error("Error during filter operation:", err);
    }
   }
 
   const handleSearch = async () => {
-    console.log("Search clicked");
+    
 
     try {
       setError(""); // Clear any previous error
@@ -154,9 +236,9 @@ useEffect(() => {
 
   const handleAddToBill = (row) => {
     if (quantity > 0) {
-        const unitPrice = parseFloat(row.officialSellingPrice) || 0;
+        const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
         onAddToBill({
-            description: `${row.itemTyreDTO.tyreSize} ${brand}`,
+            description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
             unitPrice: unitPrice,
             quantity: quantity,
             subtotal: unitPrice * quantity,
@@ -168,28 +250,32 @@ useEffect(() => {
   
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
+   <> 
+   {message && <GeneralMessage message={message} />}
+    <Grid2 xs={12}>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3, borderBottom: 1, borderColor: 'grey.500', borderRadius: 1, p: 2, boxShadow: 3 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
-        Search 
+        Search
       </Typography>
-
-      <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid2 size={3} gap={2} spacing={3} direction="column">
-
-          <FormControl fullWidth>
+  
+      <Grid2 container gap={1} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
+        
+        {/* Branch Select with "+" Icon */}
+        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+          <FormControl fullWidth sx={{ minWidth: 120 }}>
             <InputLabel id="branch-select-label">Branch</InputLabel>
             <Select
               labelId="branch-select-label"
-              value={branch.branchId} // Use branchId here
+              value={branch.branchId}
               onChange={(e) => {
                 const selectedBranch = branches.find(b => b.branchId === e.target.value);
-                setBranch(selectedBranch); // Set the whole object
-                if(setSelectedBranch){
+                setBranch(selectedBranch);
+                if (setSelectedBranch) {
                   setSelectedBranch(selectedBranch.branchId);
                 }
-                
               }}
               variant="outlined"
+              fullWidth
             >
               {branches.map((b) => (
                 <MenuItem key={b.branchId} value={b.branchId}>
@@ -198,22 +284,31 @@ useEffect(() => {
               ))}
             </Select>
           </FormControl>
-
+          {/* Plus Icon for Branch */}
+          <IconButton
+            color="primary"
+            onClick={() =>{ console.log("Add New Branch");}}
+            sx={{ ml: 1 }}
+          >
+            <AddIcon />
+          </IconButton>
         </Grid2>
-        <Grid2 size={3} gap={2} spacing={3} direction="column">
-          <FormControl fullWidth>
+  
+        {/* Category Select with "+" Icon */}
+        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+          <FormControl fullWidth sx={{ minWidth: 120 }}>
             <InputLabel id="category-select-label">Category</InputLabel>
             <Select
               labelId="category-select-label"
               value={category}
-              onChange={(e) => { 
-                  setCategory(e.target.value); 
-                  if(setSelectedCategory){
-                    setSelectedCategory(e.target.value); 
-                  }
+              onChange={(e) => {
+                setCategory(e.target.value);
+                if (setSelectedCategory) {
+                  setSelectedCategory(e.target.value);
                 }
-              }
+              }}
               variant="outlined"
+              fullWidth
             >
               {categories.map((c) => (
                 <MenuItem key={c} value={c}>
@@ -221,26 +316,33 @@ useEffect(() => {
                 </MenuItem>
               ))}
             </Select>
-
-
           </FormControl>
+          {/* Plus Icon for Category */}
+          <IconButton
+            color="primary"
+            onClick={() => {console.log("Add New Category");setDialogOpen(true);}}
+            sx={{ ml: 1 }}
+          >
+            <AddIcon />
+          </IconButton>
         </Grid2>
-        <Grid2 size={3} gap={2} spacing={3} direction="column">
-
-          <FormControl fullWidth>
+  
+        {/* Brand Select with "+" Icon */}
+        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+          <FormControl fullWidth sx={{ minWidth: 120 }}>
             <InputLabel id="brand-select-label">Brand</InputLabel>
             <Select
               labelId="brand-select-label"
               value={brand}
-              onChange={(e) => { 
-                setBrand(e.target.value); 
-                setSelectedBrand(e.target.value); 
-                if (fetchandSetItems) {
+              onChange={(e) => {
+                setBrand(e.target.value);
+                if (fetchandSetItems && setSelectedBrand) {
+                  setSelectedBrand(e.target.value);
                   fetchandSetItems();
                 }
-              
               }}
               variant="outlined"
+              fullWidth
             >
               {brands.map((b) => (
                 <MenuItem key={b} value={b}>
@@ -248,15 +350,21 @@ useEffect(() => {
                 </MenuItem>
               ))}
             </Select>
-
-
           </FormControl>
+          {/* Plus Icon for Brand */}
+          <IconButton
+            color="primary"
+            onClick={() => {console.log("Add New Brand");setDialogOpen(true);}}
+            sx={{ ml: 1 }}
+          >
+            <AddIcon />
+          </IconButton>
         </Grid2>
+  
       </Grid2>
-
-      <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-
-        <Grid2 >
+  
+      <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
+        <Grid2 xs={12} sm={6} md={4}>
           <TextField
             label="Name"
             variant="outlined"
@@ -266,10 +374,10 @@ useEffect(() => {
             fullWidth
           />
         </Grid2>
-
-        {category == "Tyre" &&
+  
+        {category === "Tyre" && (
           <>
-            <Grid2 >
+            <Grid2 xs={12} sm={6} md={4}>
               <TextField
                 label="Tyre Size"
                 variant="outlined"
@@ -279,8 +387,8 @@ useEffect(() => {
                 fullWidth
               />
             </Grid2>
-
-            <Grid2 >
+  
+            <Grid2 xs={12} sm={6} md={4}>
               <TextField
                 label="Vehicle Type"
                 variant="outlined"
@@ -290,41 +398,39 @@ useEffect(() => {
                 fullWidth
               />
             </Grid2>
-          </>}
+          </>
+        )}
       </Grid2>
-      
-
-
-
-      {onAddToBill && <Button
-        variant="contained"
-        color="primary"
-        onClick={onAddToBill ? handleSearch : handleFilter}
-        disabled={loadingBrands || !brand}
-        
-      >
-        Search
-      </Button>}
-
+  
+      {onAddToBill && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onAddToBill ? handleSearch : handleFilter}
+          disabled={loadingBrands || !brand}
+          fullWidth
+        >
+          Search
+        </Button>
+      )}
+  
       {error && <Typography color="error">{error}</Typography>}
-
-      {/* Results Table */}
+  
       {onAddToBill && results.length > 0 && (
         <TableContainer component={Paper} sx={{ mt: 2 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Brand</TableCell>
+                <TableCell>Name</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Store Count</TableCell>
-
-                {category==="Tyre" &&
+                {category === "Tyre" && (
                   <>
-                <TableCell>Size</TableCell>
-                <TableCell>Pattern</TableCell>
-                </>
-                }
-                
+                    <TableCell>Size</TableCell>
+                    <TableCell>Pattern</TableCell>
+                  </>
+                )}
                 <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
@@ -332,24 +438,25 @@ useEffect(() => {
               {results.map((result) => (
                 <TableRow key={result.id}>
                   <TableCell>{brand}</TableCell>
+                  <TableCell>{result.itemDTO.itemName}</TableCell>
                   <TableCell>{result.itemDTO.companyPrice}</TableCell>
                   <TableCell>{result.itemBranchDTO.availableQuantity}</TableCell>
-                  { category==="Tyre" && result.itemTyreDTO &&
-                   <>
-                    <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
-                    <TableCell>{result.itemTyreDTO.pattern}</TableCell>
-                   </>
-                  }
+                  {category === "Tyre" && result.itemTyreDTO && (
+                    <>
+                      <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
+                      <TableCell>{result.itemTyreDTO.pattern}</TableCell>
+                    </>
+                  )}
                   <TableCell>
-              <TextField
-                type="number"
-                size="small"
-                variant="outlined"
-                placeholder="Qty"
-                value={quantity} 
-                onChange={(event) => setQuantity(event.target.value)}  // Update state on change
-              />
-            </TableCell>
+                    <TextField
+                      type="number"
+                      size="small"
+                      variant="outlined"
+                      placeholder="Qty"
+                      value={quantity}
+                      onChange={(event) => setQuantity(event.target.value)}
+                    />
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="contained"
@@ -366,6 +473,33 @@ useEffect(() => {
         </TableContainer>
       )}
     </Box>
+  </Grid2>
+
+      <PopUp
+        popUpTitle="Add New Brand"
+        openPopup={dialogOpen}
+        setOpenPopup={setDialogOpen}
+        setOkButtonAction={handleAddBrand}
+        setCancelButtonAction={() => setDialogOpen(false)}
+        isDefaultButtonsDisplay={true}
+      >
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Brand Name"
+          fullWidth
+          variant="outlined"
+          value={newBrandName}
+          onChange={(e) => setNewBrandName(e.target.value)}
+        />
+
+      </PopUp>
+
+  
+  
+  
+   </>   
+  
   );
 
 };
@@ -375,8 +509,6 @@ SearchComponent.propTypes = {
   setSelectedCategory: PropTypes.func.isRequired, // A required function for setting the selected category
   setSelectedBrand: PropTypes.func.isRequired, // A required function for setting the selected brand
   fetchandSetItems: PropTypes.func.isRequired, // A required function for fetching and setting items
-  handleFilterChange: PropTypes.func.isRequired, // A required function for handling filter changes
-  //onSearchResult: PropTypes.func.isRequired,  // A required function for handling search results
   onAddToBill: PropTypes.func.isRequired,    // A required function for adding to the bill
   
  

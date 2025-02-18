@@ -14,6 +14,8 @@ import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
+import Box from '@mui/material/Box';
+import { Add } from "@mui/icons-material";
 
 const ItemView = () => {
 
@@ -301,16 +303,20 @@ const ItemView = () => {
         />
       )}
 
-      <SearchComponent
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        selectedBrand={selectedBrand}
-        setSelectedBrand={setSelectedBrand}
-        selectedBranch={selectedBranch}
-        setSelectedBranch={setSelectedBranch}
-        fetchandSetItems={fetchandSetItems}
-        handleSearchChange={handleSearchChange}
-      />
+<Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+  <SearchComponent
+    selectedCategory={selectedCategory}
+    setSelectedCategory={setSelectedCategory}
+    selectedBrand={selectedBrand}
+    setSelectedBrand={setSelectedBrand}
+    selectedBranch={selectedBranch}
+    setSelectedBranch={setSelectedBranch}
+    fetchandSetItems={fetchandSetItems}
+    handleSearchChange={handleSearchChange}
+  />
+  
+</Box>
+
 
 
 
