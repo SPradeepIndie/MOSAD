@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./css/ConfirmationDialog.css"; 
 const ConfirmationDialog = ({
+  title,
   message,
   onCancel,
   onConfirm,
@@ -15,7 +16,7 @@ const ConfirmationDialog = ({
         <button className="close-button" onClick={onCancel}>
           &times;
         </button>
-        <h3>Confirmation</h3>
+        <h3>{title? title: "Confirmation"}</h3>
         <p>{message}</p>
         <div className="confirmation-dialog-actions">
           <button className="cancel-button" onClick={onCancel}>
@@ -31,6 +32,7 @@ const ConfirmationDialog = ({
 };
 
 ConfirmationDialog.propTypes = {
+  title:PropTypes.string,
   message: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,

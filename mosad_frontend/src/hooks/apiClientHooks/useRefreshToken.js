@@ -3,8 +3,8 @@ import { usePrivateApiClient } from './usePrivateApiClient';
 
 const useRefreshToken = () => {
     const {setAuth}= useAuth();
-    const privateApiClient= usePrivateApiClient();
-
+    const privateApiClient=usePrivateApiClient();
+    
     const refresh = async ()=>{
         const response = await privateApiClient.post('/refresh_token');
         const { access_token } = response.data;
@@ -13,7 +13,7 @@ const useRefreshToken = () => {
                 ...prev,accessToken:access_token
             }
         })
-        return access_token;
+        return access_token;        
     }
 
     return refresh;

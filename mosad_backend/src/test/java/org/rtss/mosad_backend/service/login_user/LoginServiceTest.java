@@ -1,9 +1,16 @@
 package org.rtss.mosad_backend.service.login_user;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.rtss.mosad_backend.dto.user_dtos.AuthDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
@@ -16,8 +23,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ServerErrorException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,6 +43,8 @@ class LoginServiceTest {
     private DtoValidator dtoValidator;
     private UserLoginDTO userLoginDto;
     private Authentication authentication;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     private UsersRepo usersRepo;
     private AuthDTO authDTO;
@@ -44,6 +56,8 @@ class LoginServiceTest {
         dtoValidator=mock(DtoValidator.class);
         usersRepo=mock(UsersRepo.class);
         authentication=mock(Authentication.class);
+        request = mock(HttpServletRequest.class);
+        response = mock(HttpServletResponse.class);
 
         authDTO=new AuthDTO();
         userLoginDto = new UserLoginDTO("testUser", "testPassword");
@@ -57,32 +71,49 @@ class LoginServiceTest {
     @Test
     void shouldVerifyUserAndGenerateTokensWhenAuthenticated() {
         //Given
-        UserRoles userRoles=new UserRoles();
-        userRoles.setRoleName("Admin");
+        String accessToken="accessToken";
         Users user =new Users();
         user.setUsername("testUser");
         user.setPassword("testPassword");
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
         user.setEmail("testEmail@gmail.com");
+
+        UserRoles userRoles=new UserRoles();
+        userRoles.setRoleName("Admin");
         user.setUserRoles(userRoles);
+
+        Branch branch=new Branch();
+        user.setBranch(branch);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(Boolean.TRUE);
 
         when(authentication.getPrincipal()).thenReturn(user);
 
-        when(jwtService.generateToken(userLoginDto.getUsername(),"Admin")).thenReturn("accessToken");
+        when(jwtService.generateToken(userLoginDto.getUsername(),"Admin")).thenReturn(accessToken);
         when(jwtService.generateRefreshToken(userLoginDto.getUsername())).thenReturn("refreshToken");
 
+        authDTO.setAuthenticated(true);
+        authDTO.setAccessToken(accessToken);
+        authDTO.setRole(userRoles.getRoleName());
+        authDTO.setBranchId(user.getBranch().getBranchId());
+        // Capture the output stream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         //When
-        AuthDTO result = loginService.verifyUser(userLoginDto);
+        try {
+            when(response.getOutputStream()).thenReturn(new TestServletOutputStream(outputStream));
+            loginService.verifyUser(request,response,userLoginDto);
+            // Assert that the correct object was written to the response.
+            ObjectMapper objectMapper = new ObjectMapper();
+            String expectedJson = objectMapper.writeValueAsString(authDTO);
+            String actualJson = outputStream.toString();
+            assertEquals(expectedJson, actualJson);
+        } catch (IOException e) {
+            fail("IOException should not have been thrown: " + e.getMessage());
+        }
 
         //Then
-        assertTrue(result.isAuthenticated());
-        assertEquals("accessToken",result.getAccessToken());
-        assertEquals("refreshToken",result.getRefreshToken());
-
         verify(dtoValidator).validate(userLoginDto);
         verify(authenticationManager).authenticate(any());
         verify(jwtService).generateToken(userLoginDto.getUsername(),"Admin");
@@ -91,17 +122,27 @@ class LoginServiceTest {
 
     @Test
     void shouldNotVerifyUserAndShouldNotGenerateTokensWhenAuthenticationFailed() {
+        //Given
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(false);
 
-        //When
-        AuthDTO result = loginService.verifyUser(userLoginDto);
+        authDTO.setAuthenticated(false);
+
+        // Capture the output stream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            when(response.getOutputStream()).thenReturn(new TestServletOutputStream(outputStream));
+            loginService.verifyUser(request,response,userLoginDto);
+            // Assert that the correct object was written to the response.
+            ObjectMapper objectMapper = new ObjectMapper();
+            String expectedJson = objectMapper.writeValueAsString(authDTO);
+            String actualJson = outputStream.toString();
+            assertEquals(expectedJson, actualJson);
+        } catch (IOException e) {
+            fail("IOException should not have been thrown: " + e.getMessage());
+        }
 
         //Then
-        assertFalse(result.isAuthenticated());
-        assertNull(result.getAccessToken());
-        assertNull(result.getRefreshToken());
-
         verify(dtoValidator).validate(userLoginDto);
         verify(authenticationManager).authenticate(any());
         verify(jwtService, never()).generateToken(any(),any());
@@ -114,12 +155,8 @@ class LoginServiceTest {
     @Test
     void shouldGenerateAccessTokenWhenHeaderIsValidAndRefreshTokenIsValid(){
         //Given
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        String refreshToken = "testRefreshToken";
+        String refreshToken = "validRefreshToken";
         String username = "testUser";
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken);
-
         UserRoles userRoles=new UserRoles();
         userRoles.setRoleName("Admin");
         Users user =new Users();
@@ -130,20 +167,29 @@ class LoginServiceTest {
         user.setEmail("testEmail@gmail.com");
         user.setUserRoles(userRoles);
 
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        Cookie[] cookies = {refreshTokenCookie};
+
+        when(request.getCookies()).thenReturn(cookies);
+
         when(jwtService.extractUsernameFromToken(refreshToken)).thenReturn(username);
         when(usersRepo.findByUsername(username)).thenReturn(Optional.of(user));
         when(jwtService.validateToken(refreshToken, user)).thenReturn(true);
         when(jwtService.generateToken(username,"Admin")).thenReturn("newAccessToken");
 
         authDTO.setAccessToken("newAccessToken");
-        authDTO.setRefreshToken(refreshToken);
         authDTO.setAuthenticated(true);
 
-        //test that output stream has written
-
-        //When
+        // Capture the output stream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            loginService.refreshToken(request, response);
+            when(response.getOutputStream()).thenReturn(new TestServletOutputStream(outputStream));
+            loginService.refreshToken(request,response);
+            // Assert that the correct object was written to the response.
+            ObjectMapper objectMapper = new ObjectMapper();
+            String expectedJson = objectMapper.writeValueAsString(authDTO);
+            String actualJson = outputStream.toString();
+            assertEquals(expectedJson, actualJson);
         } catch (IOException e) {
             fail("IOException should not have been thrown: " + e.getMessage());
         }
@@ -154,51 +200,62 @@ class LoginServiceTest {
         verify(jwtService).validateToken(refreshToken,user);
         verify(jwtService).generateToken(username,"Admin");
 
-        assertTrue(authDTO.isAuthenticated());
-        assertEquals("newAccessToken",authDTO.getAccessToken());
-        assertEquals(refreshToken,authDTO.getRefreshToken());
 
     }
 
     @Test
-    void shouldFailToRefreshTokenWithNullAuthHeader() {
+    void refreshToken_noRefreshTokenCookie_throwsUnauthorizedException() {
         //Given
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
+        when(request.getCookies()).thenReturn(null);
 
         //when login service is called and then throw exception
         HttpServerErrorException exception = assertThrows(HttpServerErrorException.class,
                 ()-> loginService.refreshToken(request,response));
 
         //then
-        assertEquals(HttpStatus.BAD_REQUEST,exception.getStatusCode());
-        assertEquals("Invalid request header",exception.getStatusText());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals("No valid refresh token found.", exception.getStatusText());
     }
 
     @Test
-    void shouldFailToRefreshTokenWithEmptyAuthHeader() {
-        //Given
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        request.addHeader(HttpHeaders.AUTHORIZATION, "");
+    void refreshToken_emptyRefreshToken_throwsUnauthorizedException() {
+        // Given
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "");
+        Cookie[] cookies = {refreshTokenCookie};
+        when(request.getCookies()).thenReturn(cookies);
 
-        //when login service is called and then throw exception
+        // When
         HttpServerErrorException exception = assertThrows(HttpServerErrorException.class,
-                ()-> loginService.refreshToken(request,response));
+                () -> loginService.refreshToken(request, response));
 
         //Then
-        assertEquals(HttpStatus.BAD_REQUEST,exception.getStatusCode());
-        assertEquals("Invalid request header",exception.getStatusText());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals("Refresh token is empty", exception.getStatusText());
+    }
+
+    @Test
+    void refreshToken_nullUsername_throwsUnauthorizedException() {
+        // Given
+        Cookie refreshTokenCookie = new Cookie("refreshToken", "invalidRefreshToken");
+        Cookie[] cookies = {refreshTokenCookie};
+
+        when(request.getCookies()).thenReturn(cookies);
+        when(jwtService.extractUsernameFromToken("invalidRefreshToken")).thenReturn(null);
+
+        // When
+        HttpServerErrorException exception = assertThrows(HttpServerErrorException.class,
+                () -> loginService.refreshToken(request, response));
+
+        //Then
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusCode());
+        assertEquals("Invalid refresh token", exception.getStatusText());
     }
 
     @Test
     void shouldFailToRefreshTokenWhenTokenInvalid(){
         //Given
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
         String refreshToken = "testRefreshToken";
         String username = "testUser";
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken);
 
         UserRoles userRoles=new UserRoles();
         userRoles.setRoleName("Admin");
@@ -209,6 +266,11 @@ class LoginServiceTest {
         user.setLastName("testLastName");
         user.setEmail("testEmail@gmail.com");
         user.setUserRoles(userRoles);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        Cookie[] cookies = {refreshTokenCookie};
+
+        when(request.getCookies()).thenReturn(cookies);
 
         when(jwtService.extractUsernameFromToken(refreshToken)).thenReturn(username);
         when(usersRepo.findByUsername(username)).thenReturn(Optional.of(user));
@@ -227,25 +289,30 @@ class LoginServiceTest {
         verify(jwtService).validateToken(refreshToken,user);
     }
 
-    @Test
-    void shouldFailToRefreshTokenWhenUsernameIsNull(){
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        String refreshToken = "testRefreshToken";
-        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + refreshToken);
+    // Helper class to mock HttpServletResponse.getOutputStream()
 
-        when(jwtService.extractUsernameFromToken(refreshToken)).thenReturn(null);
+    static class TestServletOutputStream extends jakarta.servlet.ServletOutputStream {
+        private final OutputStream outputStream;
 
-        //when login service is called and then throw exception
-        HttpServerErrorException exception = assertThrows(HttpServerErrorException.class,
-                ()-> loginService.refreshToken(request,response));
+        public TestServletOutputStream(OutputStream outputStream) {
+            this.outputStream = outputStream;
+        }
 
-        //Then
-        assertEquals(HttpStatus.UNAUTHORIZED,exception.getStatusCode());
-        assertEquals("Invalid refresh token",exception.getStatusText());
+        @Override
+        public void write(int b) throws IOException {
+            outputStream.write(b);
+        }
 
-        verify(jwtService).extractUsernameFromToken(refreshToken);
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setWriteListener(WriteListener writeListener) {
+
+        }
     }
 
-
 }
+

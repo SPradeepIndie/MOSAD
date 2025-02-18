@@ -10,6 +10,7 @@ export const apiClient = axios.create({
 
 export const privateApiClient = axios.create({
   baseURL:BASE_URL,
+  withCredentials:true,
   headers: {
     'Content-Type': 'application/json',
   },
