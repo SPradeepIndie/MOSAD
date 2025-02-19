@@ -15,7 +15,6 @@ import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
 import Box from '@mui/material/Box';
-import { Add } from "@mui/icons-material";
 
 const ItemView = () => {
 

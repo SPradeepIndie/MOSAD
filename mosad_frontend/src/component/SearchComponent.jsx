@@ -16,7 +16,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Grid2,Dialog, DialogTitle, DialogContent, DialogActions
+  Grid2
 } from "@mui/material";
 import { fetchBrands,fetchBrandAndSizeData,fetchCategories,addCategory,addBrand } from "../services/apiStockService";
 import { fetchAllBranchNames } from "../services/apiBranchService";
@@ -510,6 +510,7 @@ SearchComponent.propTypes = {
   setSelectedBrand: PropTypes.func.isRequired, // A required function for setting the selected brand
   fetchandSetItems: PropTypes.func.isRequired, // A required function for fetching and setting items
   onAddToBill: PropTypes.func.isRequired,    // A required function for adding to the bill
+  handleSearchChange: PropTypes.func.isRequired,    // A required function for handling search changes
   
  
   quantity: (props, propName, componentName) => {
