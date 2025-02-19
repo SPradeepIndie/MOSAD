@@ -262,6 +262,8 @@ UserDetailsForm.propTypes={
     pwds:PropTypes.shape({
         pwd_1:PropTypes.string,
         pwd_2:PropTypes.string
-    })
+    }),
+    errors:PropTypes.object,
+    setErrors:PropTypes.func
 
 }

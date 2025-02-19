@@ -3,8 +3,7 @@ import PopUp from '../../component/PopUp'
 import { Container,Grid2,Button,Paper} from "@mui/material";
 import UserDetailsForm from "../../forms/UserDetailForm";
 import { DataGrid } from '@mui/x-data-grid';
-import {useGetAllUsername} from '../../hooks/servicesHook/useApiUserService'
-import { useRegister } from "../../hooks/servicesHook/useApiUserService";
+import {useGetAllUsername,useRegister} from '../../hooks/servicesHook/useApiUserService'
 
 const initialErrors = {
     firstNameError: '',
@@ -54,7 +53,7 @@ const validateEmail = (email) => {
   
 const validateContactNum = (contactNum) => {
     // Basic phone number validation regex (numbers and optional hyphens/spaces)
-    const regex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+    const regex = /^[+]?[(]?\d{3}[)]?[-\s.]?\d{3}[-\s.]?\d{4,6}$/im;
     return regex.test(contactNum);
 }
 

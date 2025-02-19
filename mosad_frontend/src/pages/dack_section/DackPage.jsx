@@ -30,8 +30,9 @@ const RebuildTyrePage = () => {
         response = await getTyresByContactNumber(filter);
       } else {
         response = await getAllTyres();
-        console.log(response.data)
       }
+      console.log(response.data)
+      
       setTyres([]);
     } catch (error) {
       console.error(error);

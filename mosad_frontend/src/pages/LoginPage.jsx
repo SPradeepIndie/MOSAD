@@ -124,7 +124,7 @@ const LoginPage = () => {
                                     <TextField
                                         name="username"
                                         placeholder="Username"
-                                        error={errors.usernameError && errors.usernameError.length?true:false}
+                                        error={errors.usernameError}
                                         helperText={errors.usernameError}
                                         fullWidth
                                         required
@@ -143,7 +143,7 @@ const LoginPage = () => {
                                     <TextField
                                         type="password"
                                         name="password"
-                                        error={errors.passwordError && errors.passwordError.length?true:false}
+                                        error={errors.passwordError}
                                         helperText={errors.passwordError}
                                         placeholder="Password"
                                         fullWidth
