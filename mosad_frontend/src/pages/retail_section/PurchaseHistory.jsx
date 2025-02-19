@@ -1,9 +1,10 @@
 import React, { useState ,useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-import { fetchPurchaseHistory } from "../../services/apiRetailService";
+import useFetchPurchaseHistory from "../../hooks/servicesHook/useRetailService"
 import useAuth from "../../hooks/useAuth";
 const PurchaseHistory = () => {
+    const fetchPurchaseHistory=useFetchPurchaseHistory();
     const [rows, setRows] = useState([]);
     const {auth}=useAuth();
 
