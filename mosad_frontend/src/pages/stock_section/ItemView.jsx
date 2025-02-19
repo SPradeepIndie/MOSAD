@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
+import SearchComponent from "../../component/SearchComponent";
 
 const ItemView = () => {
   const addItem = useAddItem(); 
@@ -21,13 +22,34 @@ const ItemView = () => {
   const deleteItem =useDeleteItem(); 
   const updateItem= useUpdateItem();
   //Store passed Category and Brand using Link state & useLocation
-  const location = useLocation();
-  const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props
-  let selectedCategory = states.category;
-  let selectedBrand = states.brand;
-  let selectedBranch = 1; //Adjust based on your branch ID
+  const [selectedCategory, setSelectedCategory] = useState("Tyre");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
+
+
+
 
   const [rows, setRows] = useState([]);
+
+  const [filter,setFilters] =useState({tyreSize:"",itemName:"",vehicleType:""});
+
+
+  const handleFilterChange = (tireSize,itemName,vehicleType) => {
+    
+    setFilters({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
+    setTimeout(() => {
+      console.log(filter);
+      console.log(selectedCategory,selectedBrand,selectedBranch);
+    }, 1000);
+  };
+
+  const filteredRows = rows.filter((row) => {
+    const itemNameMatch = filter.itemName?.trim() ? row.itemDTO?.itemName?.toLowerCase().includes(filter.itemName.trim().toLowerCase()) : true;
+    const vehicleTypeMatch = filter.vehicleType?.trim() ? row.itemTyreDTO?.vehicleType?.toLowerCase().includes(filter.vehicleType.trim().toLowerCase()) : true;
+    const tyreSizeMatch = filter.tyreSize?.trim() ? row.itemTyreDTO?.tyreSize?.toLowerCase().includes(filter.tyreSize.trim().toLowerCase()) : true;
+    return itemNameMatch && vehicleTypeMatch && tyreSizeMatch;
+  });
+  
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
   
@@ -100,14 +122,19 @@ const ItemView = () => {
     });
   };
 
- 
-
   const fetchandSetItems = async () => {
-    if (selectedCategory && selectedBrand) {
-      fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch } })
+    console.log("Fetching items for Category:", selectedCategory, "Brand:", selectedBrand, "Branch:", selectedBranch);
+    if (selectedCategory && selectedBrand && selectedBranch) {
+      
+      fetchItems({ params: { category: selectedCategory, brand: selectedBrand, branchId: selectedBranch , } })
         .then((response) => setRows(response.data))
         .catch((error) => console.error("Error fetching data:", error));
+      
     }
+    else{
+      console.error("Error fetching data: Category, Brand and Branch are required");
+    }
+    console.log(rows);  
   }
 
   
@@ -166,10 +193,10 @@ const ItemView = () => {
     setBannerImage(brandImages[selectedBrand.toLowerCase()] || default_baner);
 
     fetchandSetItems();
+    console.log("Fetch item called by useEffect!")
 
 
-
-  }, [selectedCategory, selectedBrand]);
+  }, [selectedCategory, selectedBrand,selectedBranch]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -192,7 +219,6 @@ const ItemView = () => {
       document.removeEventListener("click", handleOutsideClick);
     };
   }, [selectedRowId]);
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -252,9 +278,6 @@ const ItemView = () => {
   };
 
 
-
-
-
   return (
     <>
       {message && <GeneralMessage message={message} />}
@@ -269,12 +292,29 @@ const ItemView = () => {
         isOpen={confirmationDialog}
       />
       )}
+      
+      <SearchComponent 
+        setSelectedBranch={setSelectedBranch} 
+        setSelectedCategory={setSelectedCategory} 
+        setSelectedBrand={setSelectedBrand}
+        selectedCategory={selectedCategory}
+        selectedBrand={selectedBrand}
+        handleFilterChange={handleFilterChange}
+        fetchandSetItems={fetchandSetItems}
+
+
+        
+        
+      />
       <div className="item-view-container">
+      
         <section className="banner">
           <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
+          
         </section>
         <table className="item-table">
           <thead>
+          <h3>{selectedCategory} {selectedBrand}</h3>
             <tr>
               <th>Name</th>
               <th>Description</th>
@@ -293,7 +333,7 @@ const ItemView = () => {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {filteredRows.map((row) => (
               <tr
                 key={row.itemDTO.itemId}
                 className={selectedRowId === row.itemDTO.itemId ? "selected-row" : ""}

@@ -15,6 +15,7 @@ import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const BillPage=lazy(()=>import('./pages/bill_section/BillPage'));
+const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
@@ -55,25 +56,25 @@ function App() {
     <Container maxWidth="xl" disableGutters sx={{
         width:'100vw',height:'100vh',
         backgroundImage: `url(${!auth.Authenticated && backgroundImage})`,
-        backgroundSize: 'cover', 
+        backgroundSize: 'cover',
         backgroundPosition: 'center'
     }}>
       <Routes>
-        <Route path="*" element={<NotFoundPage />} /> 
+        <Route path="*" element={<NotFoundPage />} />
         <Route path='/unathorized' element={<UnauthorizedPage/>}/>
-        <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} /> 
+        <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
         <Route element={<HomeLayout/>}>
             <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
-              <Route path="/stock" element={ <StockPageLayout />} > 
+              <Route path="/stock" element={ <StockPageLayout />} >
                 <Route index element={<StockPage isFromBranch={false}/>}/>
                 <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
-                <Route path="item-view" element={<ItemView />} /> 
+                <Route path="item-view" element={<ItemView />} />
               </Route>
             </Route>
-            
+
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","BRANCH_MANAGER"]}/>}>
               <Route path="/branch" element={ <BranchPageLayout />} >
                 <Route index element={<BranchPage/>}/>
@@ -93,7 +94,7 @@ function App() {
               <Route path="/dack" element={ <DackPage />} />
               <Route path="/future" element={ <ReportPredictionPage />} />
               <Route path="/services" element={ <ServicesPage />} />
-            </Route>  
+            </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
               <Route path="/retail" element={ <RetailPageLayout />} >

@@ -48,8 +48,8 @@ class CreditServiceTest {
         // Arrange
         CreditDTO creditDTO = new CreditDTO(null, 5000.0, new Date(), 1L);
         Customer customer = new Customer();
-        customer.setId(1L);
-        customer.setName("John Doe");
+        customer.setCustomerId(1L);
+        customer.setCustomerName("John Doe");
 
         Credit credit = new Credit();
         credit.setCreditId(1L);
