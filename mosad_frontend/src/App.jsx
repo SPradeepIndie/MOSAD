@@ -4,11 +4,8 @@ import { Route,Routes,Navigate,useLocation} from 'react-router-dom';
 import { Box, Container } from '@mui/material'
 import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
-
 import LoginPage from './pages/LoginPage'
-
 import backgroundImage from './assets/bg-image.jpg'
-
 import HomePage from './pages/home/HomePage'
 import Footer from './component/Footer';
 import HeaderBar from './component/Header';
@@ -18,8 +15,9 @@ const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
-const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
+// const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
 const RetailPageLayout =lazy(()=>import( './pages/retail_section/layout/RetailPageLayout'));
+const BillSectionLayout =lazy(()=>import('./pages/bill_section/BillSectionLayout'));
 const ServicesPage =lazy(()=>import( './pages/services_section/ServicesPage'));
 
 const UserManagementLayout =lazy(()=>import( './pages/users_section/UserManagementLayout'));
@@ -86,7 +84,7 @@ function App() {
           </Route>
 
           <Route path="/credit" element={ <CreditPage />} />
-          <Route path="/bill" element={ <BillPage />} />
+          
           <Route path="/dack" element={ <DackPage />} />
 
           <Route path="/retail" element={ <RetailPageLayout />} >
@@ -95,7 +93,8 @@ function App() {
               <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
               <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
           </Route>
-          <Route path="/future" element={ <ReportPredictionPage />} />
+
+          {/* <Route path="/future" element={ <ReportPredictionPage />} /> */}
           <Route path="/employee" element={ <EmployeePage />} />
           <Route path="/services" element={ <ServicesPage />} />
           
@@ -103,11 +102,15 @@ function App() {
             <Route index element={<UserDetailsView/>}/>
             <Route path="view-all" element={<AllUsersView />}/>
           </Route>
-        </Route>
 
-        
-        <Route path="/AllBillsPage" element={<AllBillsPage />} />
-        </Routes>
+          <Route path="/bill" element={ <BillSectionLayout />} >
+              <Route index element={ <BillPage />} />
+              <Route path="AllBillsPage" element={ <AllBillsPage />} />
+              
+          </Route>
+
+        </Route>
+      </Routes>
       </Box>
 
       <Box maxWidth="xl">
