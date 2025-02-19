@@ -83,8 +83,8 @@ public class LoginService {
     //responsible for create access token with the refresh token when access token expires
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, HttpServerErrorException {
         String refreshToken = getRefreshTokenFromCookies(request.getCookies())
-                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "No valid refresh token found."));
-
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Refresh token is empty"));
+        
         String username = jwtService.extractUsernameFromToken(refreshToken);
         if (username == null) {
             throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
