@@ -1,10 +1,8 @@
 package org.rtss.mosad_backend.service.stock_management_service;
 
+import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.ItemBranchDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.ItemDTO;
-import org.rtss.mosad_backend.dto.stock_management_dto.ItemTyreDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.*;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemBranchDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.stock_dto_mapper.ItemTyreDTOMapper;
@@ -33,8 +31,9 @@ public class ItemService {
     private final ItemDTOMapper itemDTOMapper;
     private final ItemTyreDTOMapper itemTyreDTOMapper;
     private final ItemBranchDTOMapper itemBranchDTOMapper;
+    private final BranchRepo branchRepo;
 
-    public ItemService(ItemRepo itemRepository, ItemBranchRepository itemBranchRepository, CategoryRepo categoryRepository, BrandRepo brandRepository, BranchRepo branchRepository, ItemTyreRepo itemTyreRepo, ItemDTOMapper itemDTOMapper, ItemTyreDTOMapper itemTyreDTOMapper, ItemBranchDTOMapper itemBranchDTOMapper) {
+    public ItemService(ItemRepo itemRepository, ItemBranchRepository itemBranchRepository, CategoryRepo categoryRepository, BrandRepo brandRepository, BranchRepo branchRepository, ItemTyreRepo itemTyreRepo, ItemDTOMapper itemDTOMapper, ItemTyreDTOMapper itemTyreDTOMapper, ItemBranchDTOMapper itemBranchDTOMapper, BranchRepo branchRepo) {
         this.itemRepository = itemRepository;
         this.itemBranchRepository = itemBranchRepository;
         this.categoryRepository = categoryRepository;
@@ -44,8 +43,19 @@ public class ItemService {
         this.itemDTOMapper = itemDTOMapper;
         this.itemTyreDTOMapper = itemTyreDTOMapper;
         this.itemBranchDTOMapper = itemBranchDTOMapper;
+        this.branchRepo = branchRepo;
     }
 
+    public List<BranchDTO>  getBranches(){
+        List<Branch> branches=branchRepo.findAll();
+        System.out.println("Branches: " + branches);
+        ModelMapper modelMapper=new ModelMapper();
+        List<BranchDTO> branchDTOS=new ArrayList<>();
+        for(Branch branch:branches){
+            branchDTOS.add(modelMapper.map(branch,BranchDTO.class));
+        }
+        return branchDTOS;
+    }
     //get item qty in a branch
     public Integer getItemQty(Long itemId, Long branchId) {
         return itemBranchRepository.findByItemIdAndBranchId(itemId, branchId).getAvailableQuantity();

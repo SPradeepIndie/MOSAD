@@ -70,12 +70,6 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.item-table tbody tr {
-  background-color: white; /* Default row color */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
 .item-table tbody tr:hover {
   background-color: lightgray; /* Highlight row on hover */
 }
@@ -113,14 +107,14 @@ body {
 }
 
 .btn {
-  /* padding: 10px 20px; */
+
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   padding: 8px 12px;
-  cursor: pointer;
+ 
   font-size: 0.9rem;
 }
 

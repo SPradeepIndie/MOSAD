@@ -236,7 +236,7 @@ const ItemView = () => {
         "vehicleType": formData.vehicleType
       },
       "itemBranchDTO": {
-        "branchId": 1, // Adjust based on your branch ID
+        "branchId": selectedBranch, // Adjust based on your branch ID
         "availableQuantity": parseInt(formData.availableQuantity)
       }
     };

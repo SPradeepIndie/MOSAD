@@ -18,8 +18,7 @@ import {
   Paper,
   Grid2
 } from "@mui/material";
-import { fetchBrands,fetchBrandAndSizeData,fetchCategories,addCategory,addBrand } from "../services/apiStockService";
-import { fetchAllBranchNames } from "../services/apiBranchService";
+import { fetchBrands,fetchBrandAndSizeData,fetchCategories,addCategory,addBrand,fetchBranches } from "../services/apiStockService";
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import PopUp from "./PopUp";
@@ -28,10 +27,14 @@ import GeneralMessage from "./GeneralMessage";
 
 
 
+
+
+
 const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
   const [category,setCategory] = useState("Tyre"); // Holds the selected category
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
+  const [branches, setBranches] = useState([]); // Holds the list of available branches
   
   const [size, setSize] = useState(""); // Holds the entered size
   const [name, setName] = useState(""); // Holds the entered name
@@ -42,29 +45,33 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
   const [error, setError] = useState(""); // Error message for search failures
   const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [newBrandName, setNewBrandName] = useState('');
-    const [newCategoryName,setNewCategoryName] = useState('');
-    const [message, setMessage] = useState(null);
+  const [newBrandName, setNewBrandName] = useState('');
+  const [newCategoryName,setNewCategoryName] = useState('');
+  const [message, setMessage] = useState(null);
+    
+  const [isAddingBrand, setIsAddingBrand] = useState(false);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
 
-  let branches = [
-    { branchId: 1, branchName: "Main" },
-    { branchId: 2, branchName: "Branch A" },
-    { branchId: 3, branchName: "Branch B" },
-    { branchId: 4, branchName: "Branch C" },
-  ]; // Sample branches
+
+
 
   const loadBranches = async () => {
-    const response = await fetchAllBranchNames();
-    if (response.status === 200 && Array.isArray(response.data)) {
-      branches = response.data.map((branchName, index) => ({
-        branchId: index + 1,
-        branchName: branchName
-      }));
-      console.log("Branches:", branches);
-    } else {
-      console.error("Unexpected response from the server:", response);
+    try {
+      const response = await fetchBranches();
+      if (response.status === 200 && Array.isArray(response.data)) {
+        // Set branches using for-of loop
+        setBranches(response.data);
+      } else {
+        setBranches([]); // Default to an empty array if response is unexpected
+        console.error("Unexpected response from the server:", response);
+      }
+    } catch (err) {
+      console.error("Failed to fetch branches:", err);
+      setError("Failed to load branches. Please try again.");
+    } finally {
+      setLoadingBrands(false);
     }
+    
   };
 
   async function getBrands(){
@@ -127,13 +134,20 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
     }
   }
 
-  const handleAddCategory = async (categoryName) => {
+  const handleAddCategory = async () => {
+    
+    setIsAddingCategory(true);
+    setIsAddingBrand(false);
+    
+
+    if(newCategoryName !== ""){
     try {
 
-      await addCategory(categoryName);
+      await addCategory(newCategoryName);
       
-      setCategories([...categories, categoryName]);
+      setCategories([...categories, newCategoryName]);
       setNewCategoryName("");
+      setIsAddingCategory(false);
       setMessage({type: 'success', text:"Category added successfully!"});
       setTimeout(() => setMessage(null), 2000);
 
@@ -145,9 +159,15 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
       setMessage({type: 'error', text:"Failed to add category !"});
       setTimeout(() => setMessage(null), 2000);
     }
+  }
   };
 
   const handleAddBrand = async () => {
+    
+    setIsAddingBrand(true);
+    setIsAddingCategory(false);
+    
+    if(newBrandName !== "") {
     try {
       const payload = {
               brandDTO: {
@@ -161,7 +181,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
       
       console.log("Brand added successfully:");
       setBrands([...brands, newBrandName]);
-      setDialogOpen(false);
+      setIsAddingBrand(false);
       setNewBrandName("");
       setMessage({type: 'success', text:"Brand  added successfully!"});
       setTimeout(() => setMessage(null), 2000);
@@ -171,6 +191,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
       setMessage({type: 'error', text:"Failed to add brand !"});
       setTimeout(() => setMessage(null), 2000);
     }
+  }
   };
 
 
@@ -182,6 +203,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
   loadcategories();
 
   loadbrands();
+
     
   }, []);
 useEffect(() => {
@@ -284,14 +306,7 @@ useEffect(() => {
               ))}
             </Select>
           </FormControl>
-          {/* Plus Icon for Branch */}
-          <IconButton
-            color="primary"
-            onClick={() =>{ console.log("Add New Branch");}}
-            sx={{ ml: 1 }}
-          >
-            <AddIcon />
-          </IconButton>
+         
         </Grid2>
   
         {/* Category Select with "+" Icon */}
@@ -320,7 +335,7 @@ useEffect(() => {
           {/* Plus Icon for Category */}
           <IconButton
             color="primary"
-            onClick={() => {console.log("Add New Category");setDialogOpen(true);}}
+            onClick={() => {handleAddCategory();}}
             sx={{ ml: 1 }}
           >
             <AddIcon />
@@ -354,7 +369,7 @@ useEffect(() => {
           {/* Plus Icon for Brand */}
           <IconButton
             color="primary"
-            onClick={() => {console.log("Add New Brand");setDialogOpen(true);}}
+            onClick={() => {handleAddBrand();}}
             sx={{ ml: 1 }}
           >
             <AddIcon />
@@ -475,12 +490,12 @@ useEffect(() => {
     </Box>
   </Grid2>
 
-      <PopUp
-        popUpTitle="Add New Brand"
-        openPopup={dialogOpen}
-        setOpenPopup={setDialogOpen}
+      {isAddingBrand && <PopUp
+        popUpTitle= { "Add New Brand"}
+        openPopup={isAddingBrand}
+        setOpenPopup={setIsAddingBrand}
         setOkButtonAction={handleAddBrand}
-        setCancelButtonAction={() => setDialogOpen(false)}
+        setCancelButtonAction={() => setIsAddingBrand(false)}
         isDefaultButtonsDisplay={true}
       >
         <TextField
@@ -490,10 +505,34 @@ useEffect(() => {
           fullWidth
           variant="outlined"
           value={newBrandName}
-          onChange={(e) => setNewBrandName(e.target.value)}
+          onChange={(e) => {
+            setNewBrandName(e.target.value);
+          }}
         />
 
-      </PopUp>
+      </PopUp>}
+
+      {isAddingCategory && <PopUp
+        popUpTitle= { "Add New Category"}
+        openPopup={isAddingCategory}
+        setOpenPopup={setIsAddingCategory}
+        setOkButtonAction={handleAddCategory}
+        setCancelButtonAction={() => setIsAddingCategory(false)}
+        isDefaultButtonsDisplay={true}
+      >
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Category Name"
+          fullWidth
+          variant="outlined"
+          value={newCategoryName}
+          onChange={(e) => {
+            setNewCategoryName(e.target.value);
+          }}
+        />
+
+      </PopUp>}
 
   
   

@@ -81,6 +81,7 @@ const BillPage = () => {
   const handlePrint = () => {
   const details = rows
     .map((row, index) => {
+      console.log(row);
       return `Item ${index + 1}:
         - Brand: ${row.brand || "N/A"}
         - Size: ${row.tyreSize || "N/A"}

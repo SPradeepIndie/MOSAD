@@ -1,5 +1,9 @@
 import apiClient from './api_config/apiClient';
 
+export const fetchBranches =()=>{
+    return apiClient.get('/item/allbranches');
+};
+
 export const fetchCategories =()=>{
     return apiClient.get('/category');
 };
