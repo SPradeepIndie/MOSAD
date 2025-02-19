@@ -9,7 +9,6 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
   const tiles = [
