@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.controller.bill_management;
+package org.rtss.mosad_backend.controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
