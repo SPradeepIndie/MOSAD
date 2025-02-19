@@ -29,7 +29,7 @@ public class LoginController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody UserLoginDTO userLoginDto) throws IOException {
-        loginService.verifyUser(request,response,userLoginDto);
+        loginService.verifyUser(response,userLoginDto);
     }
 
     //request access token with the valid refresh token

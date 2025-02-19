@@ -39,7 +39,7 @@ public class InitialCommandRunnerService implements CommandLineRunner {
             Users admin=new Users();
             admin.setUsername("admin");
             // **Crucial:** Encrypt the password before saving
-            admin.setPassword(passwordEncoder.bCryptPasswordEncoder().encode("admin123")); // Replace with a strong default password
+            admin.setPassword(passwordEncoder.bCryptPasswordEncoder().encode("admin123"));
             admin.setFirstName("Admin");
             admin.setUserRoles(userRolesRepo.findUserRolesByRoleName("ADMIN")
                     .orElseGet(() -> {
@@ -52,28 +52,30 @@ public class InitialCommandRunnerService implements CommandLineRunner {
     }
 
     private void initializeDatabaseRoles() {
+        String sql = """
+        DO $$
+        BEGIN
+            IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'user_roles') THEN
+                INSERT INTO public.user_roles(role_name)
+                SELECT 'ADMIN'
+                    WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'ADMIN')
+                UNION ALL
+                SELECT 'OWNER'
+                    WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'OWNER')
+                UNION ALL
+                SELECT 'STOCK_MANAGER'
+                    WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'STOCK_MANAGER')
+                UNION ALL
+                SELECT 'RETAIL_CUSTOMER'
+                    WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'RETAIL_CUSTOMER')
+                UNION ALL
+                SELECT 'MECHANIC'
+                    WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'MECHANIC');
+            END IF;
+        END $$;
+        """;
         try {
-            jdbcTemplate.execute(
-                    "DO $$BEGIN\n" +
-                            "    IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'user_roles') THEN\n" +
-                            "        INSERT INTO public.user_roles(role_name)\n" +
-                            "        SELECT 'ADMIN'\n" +
-                            "            WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'ADMIN')\n" +
-                            "        UNION ALL\n" +
-                            "        SELECT 'OWNER'\n" +
-                            "            WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'OWNER')\n" +
-                            "        UNION ALL\n" +
-                            "        SELECT 'STOCK_MANAGER'\n" +
-                            "            WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'STOCK_MANAGER')\n" +
-                            "        UNION ALL\n" +
-                            "        SELECT 'RETAIL_CUSTOMER'\n" +
-                            "            WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'RETAIL_CUSTOMER')\n" +
-                            "        UNION ALL\n" +
-                            "        SELECT 'MECHANIC'\n" +
-                            "            WHERE NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role_name = 'MECHANIC');\n" +
-                            "    END IF;\n" +
-                            "END $$;"
-            );
+            jdbcTemplate.execute(sql);
         } catch (Exception e) {
             throw new DbTableInitException("Failed to initialize default user roles"+e.getMessage());
         }

@@ -1,6 +1,5 @@
 package org.rtss.mosad_backend.service.login_user;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.Cookie;
@@ -15,15 +14,11 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.server.ServerErrorException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -103,7 +98,7 @@ class LoginServiceTest {
         //When
         try {
             when(response.getOutputStream()).thenReturn(new TestServletOutputStream(outputStream));
-            loginService.verifyUser(request,response,userLoginDto);
+            loginService.verifyUser(response,userLoginDto);
             // Assert that the correct object was written to the response.
             ObjectMapper objectMapper = new ObjectMapper();
             String expectedJson = objectMapper.writeValueAsString(authDTO);
@@ -132,7 +127,7 @@ class LoginServiceTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             when(response.getOutputStream()).thenReturn(new TestServletOutputStream(outputStream));
-            loginService.verifyUser(request,response,userLoginDto);
+            loginService.verifyUser(response,userLoginDto);
             // Assert that the correct object was written to the response.
             ObjectMapper objectMapper = new ObjectMapper();
             String expectedJson = objectMapper.writeValueAsString(authDTO);

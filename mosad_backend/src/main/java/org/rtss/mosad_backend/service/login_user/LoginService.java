@@ -42,7 +42,6 @@ public class LoginService {
 
     //Generate the refresh token and access token
     public void verifyUser(
-            HttpServletRequest request,
             HttpServletResponse response,
             UserLoginDTO userLoginDto) throws IOException {
         dtoValidator.validate(userLoginDto);

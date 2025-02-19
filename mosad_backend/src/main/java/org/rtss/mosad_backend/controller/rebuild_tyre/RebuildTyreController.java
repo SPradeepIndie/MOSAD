@@ -41,7 +41,7 @@ public class RebuildTyreController {
         List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
         List<RebuildTyreDto> dtoList = tyres.stream()
                 .map(RebuildTyreMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 
