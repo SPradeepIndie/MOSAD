@@ -4,11 +4,8 @@ import { Route,Routes,Navigate,useLocation} from 'react-router-dom';
 import { Box, Container } from '@mui/material'
 import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
-
 import LoginPage from './pages/LoginPage'
-
 import backgroundImage from './assets/bg-image.jpg'
-
 import HomePage from './pages/home/HomePage'
 import Footer from './component/Footer';
 import HeaderBar from './component/Header';
@@ -18,7 +15,7 @@ const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
-const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
+// const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
 const RetailPageLayout =lazy(()=>import( './pages/retail_section/layout/RetailPageLayout'));
 const BillSectionLayout =lazy(()=>import('./pages/bill_section/BillSectionLayout'));
 const ServicesPage =lazy(()=>import( './pages/services_section/ServicesPage'));
@@ -97,7 +94,7 @@ function App() {
               <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
           </Route>
 
-          <Route path="/future" element={ <ReportPredictionPage />} />
+          {/* <Route path="/future" element={ <ReportPredictionPage />} /> */}
           <Route path="/employee" element={ <EmployeePage />} />
           <Route path="/services" element={ <ServicesPage />} />
           
