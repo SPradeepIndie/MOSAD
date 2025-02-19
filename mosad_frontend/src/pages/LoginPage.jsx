@@ -12,10 +12,7 @@ import Cookies from "universal-cookie";
 const LoginPage = () => {
     const{auth,setAuth}= useAuth();
     const loginRequest=useLogin();
-    const [rememberMe, setRememberMe] = useState(()=>{
-        const remember_me=auth.remember_me;
-        return remember_me?remember_me:true
-    });
+    const [rememberMe, setRememberMe] = useState(auth.remember_me || true);
     const [openForgotPasswordPopup,setOpenForgotPasswordPopup]=useState(false);
     const navigate = useNavigate();
     const location = useLocation();

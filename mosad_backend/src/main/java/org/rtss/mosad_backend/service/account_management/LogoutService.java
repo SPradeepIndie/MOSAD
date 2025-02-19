@@ -60,6 +60,8 @@ public class LogoutService implements LogoutHandler {
         }
 
         Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(0); // Set expiration date to immediately expire it
         response.addCookie(cookie);

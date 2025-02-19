@@ -32,15 +32,15 @@ const initialErrors = {
     roleNameError: '',
   };
 
-const validateEmail = (email) => {
+  const validateEmail = (email) => {
     // More robust email validation regex
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
-};
-
+  };
+  
 const validateContactNum = (contactNum) => {
     // Basic phone number validation regex (numbers and optional hyphens/spaces)
-    const regex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+    const regex = /^[+]?[(]?\d{3}[)]?[-\s.]?\d{3}[-\s.]?\d{4,6}$/im;
     return regex.test(contactNum);
 }
 

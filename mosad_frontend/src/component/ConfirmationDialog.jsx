@@ -16,7 +16,7 @@ const ConfirmationDialog = ({
         <button className="close-button" onClick={onCancel}>
           &times;
         </button>
-        <h3>{title? title: "Confirmation"}</h3>
+        <h3>{title || "Confirmation"}</h3>
         <p>{message}</p>
         <div className="confirmation-dialog-actions">
           <button className="cancel-button" onClick={onCancel}>

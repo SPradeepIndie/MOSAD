@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -57,11 +59,13 @@ public class LoginService {
                     branchID=user.getBranch().getBranchId();
                 }
             }
+
             // Set HTTP-Only Cookie for Refresh Token (Access Token should not be stored in cookies)
             Cookie refreshTokenCookie = new Cookie("refreshToken", jwtService.generateRefreshToken(userLoginDto.getUsername()));
             refreshTokenCookie.setSecure(true); // Only transmit over HTTPS
             refreshTokenCookie.setHttpOnly(true); // Prevent JavaScript access
             refreshTokenCookie.setPath("/");
+
             refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
             response.addCookie(refreshTokenCookie);
 
@@ -77,44 +81,39 @@ public class LoginService {
     }
 
     //responsible for create access token with the refresh token when access token expires
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException,HttpServerErrorException {
-        Cookie[] cookies = request.getCookies();
-        String refreshToken ="";
-        final String username;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    refreshToken = cookie.getValue();
-                    break;
-                }
-            }
-        }else{
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"No valid refresh token found.");
-        }
-        if (!refreshToken.isEmpty()) {
-            username = jwtService.extractUsernameFromToken(refreshToken);
-            if(username != null) {
-                //Getting user details from the database according to the token username
-                UserDetails userDetails=usersRepo.findByUsername(username).orElseThrow();
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, HttpServerErrorException {
+        String refreshToken = getRefreshTokenFromCookies(request.getCookies())
+                .orElseThrow(() -> new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "No valid refresh token found."));
 
-                //Validate the given refresh token and generate access token
-                if(jwtService.validateToken(refreshToken,userDetails)){
-                    String role=((Users)userDetails).getUserRoles().getRoleName();
-                    var accessToken = jwtService.generateToken(username,role);
-                    authDTO.setAccessToken(accessToken);
-                    authDTO.setAuthenticated(true);
-                    new ObjectMapper().writeValue(response.getOutputStream(), authDTO);
-                } else{
-                    throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"Invalid refresh token");
-                }
-            } else{
-                throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"Invalid refresh token");
-            }
-        } else {
-            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"Refresh token is empty");
+        String username = jwtService.extractUsernameFromToken(refreshToken);
+        if (username == null) {
+            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
         }
 
+        UserDetails userDetails = usersRepo.findByUsername(username)
+                .orElseThrow(); // Assuming you have a proper exception for user not found
+
+        if (!jwtService.validateToken(refreshToken, userDetails)) {
+            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+        }
+
+        String role = ((Users) userDetails).getUserRoles().getRoleName();
+        String accessToken = jwtService.generateToken(username, role);
+
+        authDTO.setAccessToken(accessToken);
+        authDTO.setAuthenticated(true);
+        new ObjectMapper().writeValue(response.getOutputStream(), authDTO);
     }
 
 
+
+    private Optional<String> getRefreshTokenFromCookies(Cookie[] cookies) {
+        if (cookies == null) {
+            return Optional.empty();
+        }
+        return Arrays.stream(cookies)
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                .findFirst()
+                .map(Cookie::getValue);
+    }
 }
