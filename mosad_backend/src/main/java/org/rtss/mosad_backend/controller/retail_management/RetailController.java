@@ -37,6 +37,7 @@ public class RetailController {
     // New endpoint to fetch categories
     @GetMapping("/getAllCategoriesNames")
     public List<Category> getCategories() {
-        return retailService.getAllCategories();
+
+        return List.of();
     }
 }

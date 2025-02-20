@@ -67,6 +67,7 @@ public class RetailService {
         }
         return "Credit";
     }
+    
     //Purchase History
     public List<PurchaseHistoryDTO> getPurchaseHistory(String username) {
         // Fetch the logged-in user
