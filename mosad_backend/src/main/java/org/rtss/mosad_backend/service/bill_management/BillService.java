@@ -56,6 +56,13 @@ public class BillService {
 
     public ResponseDTO createBill(BillDetailsDTO billDetailsDTO, CustomerDetailsDTO customerDetailsDTO, List<BillItemDTO> billItemDTO) {
 
+
+
+        for(BillItemDTO item : billItemDTO){
+            System.out.println("\n"+item.getItemId()+"\n");
+        }
+
+
         Bill bill = billDTOMapper.toEntity(billDetailsDTO.getBillDTO());
         Customer customer = customerService.extractCustomer(customerDetailsDTO);
 
@@ -65,6 +72,7 @@ public class BillService {
                 .map(dto -> {
                     BillItem billItem = billItemDTOMapper.toBillItemEntity(dto);
                     billItem.setBill(bill);
+                    System.out.println(billItem.getItem().getItemId());
                     return billItem;
                 })
                 .collect(Collectors.toList());
