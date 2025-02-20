@@ -7,22 +7,37 @@ public class CustomerContact {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long customerContactId;
 
-    @Column(nullable = false,length = 10,unique = true)
     private String contactNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public CustomerContact(Long customerContactId, Customer customer, String contactNumber) {
+        this.customerContactId = customerContactId;
+        this.customer = customer;
+        this.contactNumber = contactNumber;
+    }
+    public CustomerContact(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+
+
+
+    public CustomerContact() {
+
+    }
+
+    public Long getCustomerContactId() {
+        return customerContactId;
+    }
+
+    public void setCustomerContactId(Long customerContactId) {
+        this.customerContactId = customerContactId;
     }
 
     public String getContactNumber() {

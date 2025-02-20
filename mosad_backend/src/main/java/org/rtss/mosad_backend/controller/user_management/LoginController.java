@@ -2,10 +2,8 @@ package org.rtss.mosad_backend.controller.user_management;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.rtss.mosad_backend.dto.user_dtos.AuthDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserLoginDTO;
 import org.rtss.mosad_backend.service.login_user.LoginService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +23,13 @@ public class LoginController {
     }
 
 
-    //normal login create refresh token and access token
+    // Normal login: Create refresh token and access token
     @PostMapping("/login")
-    public ResponseEntity<AuthDTO> login(@RequestBody UserLoginDTO userLoginDto) {
-        return ResponseEntity.ok(loginService.verifyUser(userLoginDto));
+    public void login(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestBody UserLoginDTO userLoginDto) throws IOException {
+        loginService.verifyUser(response,userLoginDto);
     }
 
     //request access token with the valid refresh token

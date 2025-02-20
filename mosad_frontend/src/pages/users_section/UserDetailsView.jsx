@@ -7,7 +7,7 @@ import {
  } from '@mui/material';
 import React,{ useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth"
-import { getUserDetailsByUsername,updateUserDetails } from "../../services/apiUserService";
+import {useGetUserDetailsByUsername,useUpdateUserDetails} from '../../hooks/servicesHook/useApiUserService';
 
 const initialUserData={
     userDto:{
@@ -23,11 +23,23 @@ const initialUserData={
         contactNum:""
     }]
 }
+const initialErrors = {
+    firstNameError: '',
+    lastNameError: '',
+    usernameError: '',
+    emailError: '',
+    contactNumError: '',
+    roleNameError: '',
+  };
+
 
 
 const UserDetailsView=()=>{
+    const [errors,setErrors]=useState(initialErrors);
     //Getting access to he global auth object to get logging state
     const{auth}= useAuth();
+    const getUserDetails = useGetUserDetailsByUsername();
+    const updateUserDetails=useUpdateUserDetails();
 
     //control data loading asynchronus nature 
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +51,7 @@ const UserDetailsView=()=>{
     const [userData, setUserData] = useState(initialUserData);
    
     const loadData=()=>{
-        getUserDetailsByUsername({params:{username:auth.username}}).then(response=>{
+        getUserDetails({params:{username:auth.username}}).then(response=>{
             setUserData(response.data)
         }).finally(()=>{
             setIsLoading(false)
@@ -77,7 +89,7 @@ const UserDetailsView=()=>{
         if (editMode) {
             updateUserDetails(userData,{params:{username: auth.username}})
                 .then((response)=>{
-                    const {success,message}=response.data
+                    const {message}=response.data
                     alert(message);
             })
            
@@ -94,8 +106,8 @@ const UserDetailsView=()=>{
         }
     }
 
- 
 
+ 
     return(
        <Container>
             <Typography sx={{pt:2}}>
@@ -104,7 +116,13 @@ const UserDetailsView=()=>{
 
             {/* Render the user details form */}
             {!isLoading &&
-            <UserDetailsForm onSubmit={handleUpdatedDataSubmit} userUpdateData={userData} editMode={editMode} setUserUpdateData={setUserData}/>
+            <UserDetailsForm 
+            onSubmit={handleUpdatedDataSubmit} 
+            userUpdateData={userData} 
+            editMode={editMode}
+            setUserUpdateData={setUserData}
+            errors={errors}
+            setErrors={setErrors}/>
             }         
 
              {/* form handling buttons */}

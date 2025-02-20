@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.service.account_management;
 
+import org.rtss.mosad_backend.config.security.PasswordEncoder;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.user_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
@@ -8,14 +9,22 @@ import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
+import org.rtss.mosad_backend.entity.user_management.UsersOTP;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
+import org.rtss.mosad_backend.repository.user_management.UsersOTPRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
+import org.rtss.mosad_backend.service.mail_service.EmailService;
+import org.rtss.mosad_backend.service.mail_service.MailBody;
 import org.rtss.mosad_backend.validator.DtoValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,14 +38,22 @@ public class AccountManagementService {
     private final UserRoleDTOMapper userRoleDTOMapper;
     private final DtoValidator dtoValidator;
     private final UserRolesRepo userRolesRepo;
+    private final UsersOTPRepo usersOTPRepo;
+    private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
+    private final SecureRandom random=new SecureRandom();
+    private boolean isOtpVerified = false;
 
-    public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo) {
+    public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
         this.userDTOMapper = userDTOMapper;
         this.userContactDTOMapper = userContactDTOMapper;
         this.userRoleDTOMapper = userRoleDTOMapper;
         this.dtoValidator = dtoValidator;
         this.userRolesRepo = userRolesRepo;
+        this.usersOTPRepo = usersOTPRepo;
+        this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //delete a given user
@@ -80,6 +97,7 @@ public class AccountManagementService {
         return new ResponseDTO(true, "Successfully updated " + username);
 
     }
+
     //map to the UserContactDto entity.
     private Set<UserContacts> convertToUserContacts(List<UserContactDTO> userContactDtoList,Users user) {
         Set<UserContacts> userContactsSet = new HashSet<>();
@@ -91,17 +109,63 @@ public class AccountManagementService {
         return userContactsSet;
     }
 
-    //Rerun all users usernames
+    //Return all users usernames
     public List<UserDetailsDTO> getAllUsers() {
         List<Users> users = usersRepo.findAll();
-        if(users.isEmpty()){
-            throw new RuntimeException("No users found");
-        }
         List<UserDetailsDTO> userDetails = new ArrayList<>();
+        if(users.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"No users found");
+        }
         for (Users user : users) {
             userDetails.add(convertToUserDetailsDTO(user));
         }
         return userDetails;
+    }
+
+    //send the otp
+    @Transactional
+    public ResponseDTO sendOtp(String email){
+        isOtpVerified=false;
+        Users user=verifyEmail(email);
+        if(user.getUsersOTP()==null){
+            String otp=generateRandomOTPCode();
+            sendEmailWithOtp(email,otp,user.getUsername());
+            saveOTP(otp,user);
+            return new ResponseDTO(true,"Successfully sent otp! check you email ");
+        }
+        otpDelete(user, user.getUsersOTP());
+        return new ResponseDTO(false,"Given user has already requested otp! Please wait another 2 minutes to retry ");
+    }
+
+    //verify otp
+    public ResponseDTO verifyOtp(String otp,String email) {
+        isOtpVerified=false;
+        Users user=verifyEmail(email);
+        UsersOTP userOtp=usersOTPRepo.findByOtpTokenAndUser(otp,user).orElseThrow(
+                () -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Otp not found for given mail")
+        );
+        if(userOtp.getOtpExpiryDate().before(Date.from(Instant.now()))){
+            otpDelete(user, userOtp);
+            throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,"Otp expired");
+        }
+        isOtpVerified=true;
+        return new ResponseDTO(true,"Successfully verified OTP");
+    }
+
+    //Change to new password
+    public ResponseDTO changeToNewPassword(String newPassword,String email) {
+        if(isOtpVerified){
+            Users user=verifyEmail(email);
+            String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
+            user.setPassword(encryptedNewPassword);
+            usersRepo.saveAndFlush(user);
+            isOtpVerified=false;
+            otpDelete(user, user.getUsersOTP());
+            return new ResponseDTO(true,"Successfully changed password");
+        }
+        else{
+            return new ResponseDTO(false,"Otp not verified");
+        }
     }
 
     //Return a specific user details
@@ -113,7 +177,7 @@ public class AccountManagementService {
         return convertToUserDetailsDTO(userOptional.get());
     }
 
-    //THis method convert given user to a UserDetailsDto object
+    //convert given user to a UserDetailsDto object
     private UserDetailsDTO convertToUserDetailsDTO(Users user) {
         UserDTO userDto=userDTOMapper.usersToUserDTO(user);
         ArrayList<UserContactDTO> userContactDTOs = user.getUserContacts()
@@ -123,4 +187,51 @@ public class AccountManagementService {
         UserRoleDTO userRoleDTO=userRoleDTOMapper.userRolesToUserRoleDTO(user.getUserRoles());
         return new UserDetailsDTO(userDto,userRoleDTO,userContactDTOs);
     }
+
+    //Verify Email
+    private Users verifyEmail(String email) {
+        return usersRepo.findByEmail(email).orElseThrow(
+                () -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Email not found. Please contact admin")
+        );
+    }
+
+    // Generate a 6-digit OTP
+    private String generateRandomOTPCode(){
+        int otp=100000 + random.nextInt(900000);
+        return String.valueOf(otp);
+    }
+
+    //Save OTP in database
+    private void saveOTP(String otpCode,Users user) {
+        int otpExpTime = 1000 * 60;
+        UsersOTP usersOtp=new UsersOTP();
+        usersOtp.setOtpToken(otpCode);
+        usersOtp.setOtpExpiryDate(new Date(System.currentTimeMillis()+ otpExpTime));
+        user.setUsersOTP(usersOtp);
+        usersOtp.setUser(user);
+        usersOTPRepo.saveAndFlush(usersOtp);
+    }
+
+    //Send the Email with OTP
+    private void sendEmailWithOtp(String emailAddress,String otpCode,String username){
+        MailBody mailBody=new MailBody(
+                emailAddress,
+                "Password Reset OTP",
+                "Dear "+username+" ,\n\n" +
+                        "Your OTP for password reset is: " + otpCode + "\n\n" +
+                        "Please enter this OTP on the password reset page within 10 minutes.\n\n" +
+                        "If you did not request a password reset, please ignore this email.\n\n" +
+                        "Sincerely,\n" +
+                        "Your Team"
+        );
+        emailService.sendMail(mailBody);
+    }
+
+    //Delete otp
+    private void otpDelete(Users user, UsersOTP userOtp) {
+        user.setUsersOTP(null);
+        usersRepo.saveAndFlush(user);
+        usersOTPRepo.deleteById(userOtp.getOtpId());
+    }
 }
+

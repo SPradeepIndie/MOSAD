@@ -1,41 +1,41 @@
-import apiClient from './api_config/apiClient';
+// import {apiClient} from './api_config/apiClient';
 
-export const fetchItems=(data)=>{
-    return apiClient.get('/item-view',data);
-}
+// export const fetchBranches =()=>{
+//     return apiClient.get('/item/allbranches');
+// };
 
-export const fetchBrands=()=>{
-    return apiClient.get('/search/brands');
-}
+// export const fetchCategories =()=>{
+//     return apiClient.get('/category');
+// };
 
-export const fetchBrandAndSizeData=(brand,size)=>{
-    return apiClient.get('/search/brand',{params:{brand:brand,size:size}});
-}
+// export const addCategory =(categoryName) => {
+//     return apiClient.post('/category', { categoryName });
+//   };
 
+// export const fetchBrands =(category)=>{
+//     return apiClient.get(`/brand?catName=${category}`);
+// };
 
-export const updateItem = (itemId, data) => {
-    return apiClient.put(`/api/v1/update/${itemId}`, data);
-};
+// export const addBrand =(data)=>{
+//     return apiClient.post('/brand', data);
+// };
 
+// export const fetchItems=(data)=>{
+//     return apiClient.get('/item/view',data);
+// }
 
-export const deleteItem = (category, brand, itemId) => {
-    return apiClient.delete('/api/v1/delete', { params: { category, brand, itemId } });
-};
+// export const addItem=(data)=>{
+//     return apiClient.post('/item/add',data);
+// } 
 
-//stock redesign
-export const fetchCategories =()=>{
-    return apiClient.get('/category');
-};
+// export const updateItem=(data)=>{
+//     return apiClient.put('/item/update',data);
+// } 
 
-export const getBrands =(category)=>{
-    return apiClient.get(`/brand?catName=${category}`);
-};
+// export const deleteItem = (itemId) => {
+//     return apiClient.delete('/item/delete', { params: { itemId } });
+// };
 
-export const addCategory =(categoryName) => {
-    return apiClient.post('/category', { categoryName });
-  };
-
-  export const addItem=(data)=>{
-    return apiClient.post('/item/add',data);
-} 
-
+// export const fetchBrandAndSizeData = (category,brand,name, size,branchId) => {
+//     return apiClient.get(`/item/search?Category=${category}&Brand=${brand}&name=${name}&tyreSize=${size}&branchId=${branchId}`);
+//   };

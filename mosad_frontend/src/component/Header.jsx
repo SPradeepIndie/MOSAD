@@ -2,26 +2,40 @@ import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { React } from 'react';
+import { React, useState } from 'react';
 import { Link ,useNavigate} from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import useAuth from "../hooks/useAuth"
-import { logout } from '../services/apiUserService';
-
+import { useLogout } from '../hooks/servicesHook/useApiUserService';
+import ConfirmationDialog from './ConfirmationDialog';
+import Cookies from 'universal-cookie';
 
 function HeaderBar() {
+  const [openConfirmationDialog,setOpenConfirmationDialog] =useState(false);
+  const logout = useLogout();
   const navigate = useNavigate();
-  const{setAuth}= useAuth();
+  const{auth,setAuth}= useAuth();
+  const cookies=new Cookies();
 
-  const handleLogout = () => {
-    setAuth({refresh_token:"",Authenticated:false,username:""}) 
-    // Remove token from local storage
-    localStorage.removeItem('token');
+  const setConfirmButtonAction=(event)=>{
+    handleLogout(event);
+    setOpenConfirmationDialog(false)
+  }
+  const setCancelButtonAction=()=>{
+    setOpenConfirmationDialog(false)
+  }
 
+  const handleLogout = (event) => {
     //send logout request to db
-    logout();
-   
-    navigate('/', { replace: true }); // Redirect to login page
+    logout().then((response)=>{
+      console.log(response.data)
+    }).finally(()=>{
+      if(!auth.remember_me){
+        cookies.remove("remember_me");
+      }
+      setAuth({})
+      navigate('/login', { replace: true }); // Redirect to login page
+    });
   };
 
   return (
@@ -56,9 +70,16 @@ function HeaderBar() {
         </Link>
 
         {/* Right Side: Logout Button */}
-        <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={handleLogout}>Logout</Button>
+        <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={()=>setOpenConfirmationDialog(true)}>Logout</Button>
+          <ConfirmationDialog
+              message={"Are you sure you want to logout"}
+              onCancel={setCancelButtonAction}
+              onConfirm={setConfirmButtonAction}
+              isOpen={openConfirmationDialog}
+            />
       </Toolbar>
     </AppBar>
+    
   );
 }
 

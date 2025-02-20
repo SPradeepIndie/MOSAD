@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.service.credit_management;
 
+import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
 import org.rtss.mosad_backend.entity.credit.Credit;
@@ -82,12 +83,12 @@ public class CreditService {
 
 
     // Get all credits with repayments
-    public List<CreditDetailsDTO> getAllCreditDetails(String CustomerType) {
-        System.out.println(CustomerType);
+    public List<CreditDetailsDTO> getAllCreditDetails(String customerType) {
+
         try {
 
             List<Object[]> results;
-            if (CustomerType.equalsIgnoreCase("Retail")) {
+            if (customerType.equalsIgnoreCase("Retail")) {
                 results = creditRepository.findAllRetailCustomerCreditDetails();
             } else {
                 results = creditRepository.findAllNormalCustomerCreditDetails();
@@ -159,16 +160,42 @@ public class CreditService {
     }
 
     // Delete repayment by id
-    public ResponseEntity<Void> deleteRepaymentById(Long repaymentId) {
+    public ResponseEntity<ResponseDTO> deleteRepaymentById(Long repaymentId) {
         try {
             Repayment repayment = repaymentRepository.findById(repaymentId)
                     .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Repayment not found"))));
 
             repaymentRepository.delete(repayment);
 
-            return ResponseEntity.noContent().build();
+            ResponseDTO responseDTO = new ResponseDTO(true, "Repayment deleted successfully");
+
+            return ResponseEntity.ok().body(responseDTO);
         } catch (Exception ex) {
             throw new ObjectNotValidException(new HashSet<>(List.of("Failed to delete repayment: " + ex.getMessage())));
+        }
+    }
+
+    //Update repayment
+    public ResponseEntity<RepaymentResponseDTO> updateRepayment(RepaymentResponseDTO repaymentUpdate) {
+        try {
+            Repayment repayment = repaymentRepository.findById(repaymentUpdate.getRepaymentId())
+                    .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Repayment not found"))));
+
+            repayment.setDate(repaymentUpdate.getDate());
+            repayment.setAmount(repaymentUpdate.getAmount());
+
+            repayment = repaymentRepository.save(repayment);
+
+            RepaymentResponseDTO responseDTO = new RepaymentResponseDTO(
+                    repayment.getRepaymentId(),
+                    repayment.getDate(),
+                    repayment.getAmount(),
+                    repayment.getCredit().getCreditId()
+            );
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception ex) {
+            throw new ObjectNotValidException(new HashSet<>(List.of("Failed to update repayment: " + ex.getMessage())));
         }
     }
 
@@ -177,7 +204,7 @@ public class CreditService {
         try {
             dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new ObjectNotValidException(new HashSet<>(List.of("Invalid date format")));
         }
         return creditRepository.findCreditByDueDate(dueDate);
     }

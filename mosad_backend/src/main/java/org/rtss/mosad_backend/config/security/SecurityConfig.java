@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -45,20 +46,27 @@ public class SecurityConfig {
                     //Configure Cross Origin configuration
                     .cors((cors)->cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests((request) -> request
-                            .requestMatchers("/api/v1/login").permitAll()
+                            .requestMatchers("/api/v1/login",
+                                    "/api/v1/user/forgot-pwd/**",
+                                    "/api/v1/refresh_token").permitAll()
                             .anyRequest().authenticated()
                     )
                     //disabled the csrf token
                     .csrf(AbstractHttpConfigurer::disable)
+                    //Enable stateless session
+                    .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
                     .httpBasic(Customizer.withDefaults())
                     //enable custom jwtFilter before the UPA Filter
                     .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
                     .logout(logout -> logout
                             .logoutUrl("/api/v1/logout")
                             .addLogoutHandler(logoutHandler)
+                            .deleteCookies("refreshToken")
                             .logoutSuccessHandler((request, response, authentication) ->
                                     SecurityContextHolder.clearContext()
                             ));
+
        return http.build();
    }
 
@@ -82,6 +90,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

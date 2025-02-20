@@ -6,16 +6,16 @@ import java.time.LocalDate;
 @Entity
 public class RebuildTyre {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long itemId;
 
     private Long customerId;
-    @Id
-    private Long itemId;
+    private Integer tyreNumber;
     private String tyreSize;
     private String tyreBrand;
-    private Integer tyreNumber;
     private String customerName;
-    private String contactNumber; // New field
+    private String contactNumber;
     private LocalDate dateReceived;
     private LocalDate dateSentToCompany;
     private String salesRepNumber;
@@ -32,8 +32,35 @@ public class RebuildTyre {
         IN_HOLD, SENT_TO_REBUILD, DONE
     }
 
-    // Getters and Setters
+    // Constructors
+    public RebuildTyre() {}
 
+    public RebuildTyre(Long customerId, Integer tyreNumber, String tyreSize, String tyreBrand, 
+                       String customerName, String contactNumber, LocalDate dateReceived, 
+                       LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, 
+                       LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, 
+                       String billNumber, Double price, TyreStatus status) {
+        this.customerId = customerId;
+        this.tyreNumber = tyreNumber;
+        this.tyreSize = tyreSize;
+        this.tyreBrand = tyreBrand;
+        this.customerName = customerName;
+        this.contactNumber = contactNumber;
+        this.dateReceived = dateReceived;
+        this.dateSentToCompany = dateSentToCompany;
+        this.salesRepNumber = salesRepNumber;
+        this.jobNumber = jobNumber;
+        this.dateReceivedFromCompany = dateReceivedFromCompany;
+        this.dateDeliveredToCustomer = dateDeliveredToCustomer;
+        this.billNumber = billNumber;
+        this.price = price;
+        this.status = status;
+    }
+
+    // Getters and Setters
+    public Long getItemId() {
+        return itemId;
+    }
 
     public Long getCustomerId() {
         return customerId;
@@ -43,12 +70,12 @@ public class RebuildTyre {
         this.customerId = customerId;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Integer getTyreNumber() {
+        return tyreNumber;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setTyreNumber(Integer tyreNumber) {
+        this.tyreNumber = tyreNumber;
     }
 
     public String getTyreSize() {
@@ -65,14 +92,6 @@ public class RebuildTyre {
 
     public void setTyreBrand(String tyreBrand) {
         this.tyreBrand = tyreBrand;
-    }
-
-    public Integer getTyreNumber() {
-        return tyreNumber;
-    }
-
-    public void setTyreNumber(Integer tyreNumber) {
-        this.tyreNumber = tyreNumber;
     }
 
     public String getCustomerName() {

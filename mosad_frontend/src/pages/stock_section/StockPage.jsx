@@ -3,7 +3,7 @@ import Tile from '../../component/Tile';
 import { Box, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Alert } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchCategories, addCategory } from '../../services/apiStockService';
+import {useFetchCategories,useAddCategory}  from '../../hooks/servicesHook/useStockService'
 
 // Icons for dynamic categories
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -20,6 +20,8 @@ const iconMap = {
 };
 
 function StockPage({ isFromBranch }) {
+  const fetchCategories = useFetchCategories();
+  const addCategory = useAddCategory();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,7 +70,20 @@ function StockPage({ isFromBranch }) {
   return (
     <>
       <Outlet />
-      <h1 style={{ textAlign: 'center' }}>Select a Category</h1>
+      <h1 style={{ textAlign: 'center',color:'black' }}>Select a Category</h1>
+
+    {/* Success or Error Messages */}
+    {successMessage && (
+        <Alert severity="success" sx={{ marginTop: 2,zIndex:1300 }}>
+          {successMessage}
+        </Alert>
+      )}
+      {error && (
+        <Alert severity="error" sx={{ marginTop: 2,zIndex:1300 }}>
+          {error}
+        </Alert>
+      )}
+
       <Box sx={{ marginTop: 4 }}>
         <Grid2 container spacing={4} justifyContent="center">
           {categories.map((category) => (
@@ -125,17 +140,7 @@ function StockPage({ isFromBranch }) {
         </DialogActions>
       </Dialog>
 
-      {/* Success or Error Messages */}
-      {successMessage && (
-        <Alert severity="success" sx={{ marginTop: 2,zIndex:1300 }}>
-          {successMessage}
-        </Alert>
-      )}
-      {error && (
-        <Alert severity="error" sx={{ marginTop: 2,zIndex:1300 }}>
-          {error}
-        </Alert>
-      )}
+      
     </>
   );
 }

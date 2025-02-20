@@ -18,7 +18,9 @@ import { blue } from '@mui/material/colors';
 import PropTypes from "prop-types";
 
 
-export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds}){
+export default function UserDetailsForm(
+    {onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds,errors,setErrors}
+){
     let location = useLocation();
 
     const handleUserDtoChange = (event) => {
@@ -44,6 +46,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
     };
 
     const [contactNum,setContactNum]=useState({contactNum:""});
+    
     const handleUserContactNumChange=(event)=>{
         setContactNum({...contactNum,[event.target.name]:event.target.value})
     }
@@ -72,7 +75,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
@@ -88,7 +91,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }}
                         />
@@ -106,7 +109,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                             fullWidth 
                             sx={{
                                 "& .MuiInputBase-input.Mui-disabled": {
-                                  WebkitTextFillColor: "#000000",
+                                  WebkitTextFillColor: "#616161",
                               },
                             }}
                         />
@@ -123,7 +126,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     />
@@ -139,24 +142,24 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         fullWidth
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                         />
                     </Grid>
                     <Grid size={{ xs: 2,sm:6}} alignContent={"end"}>
-                        <IconButton disabled={!editMode} aria-label="delete" onClick={addNewContact}>
+                        <IconButton disabled={!editMode} onClick={addNewContact}>
                             <AddIcon />
                         </IconButton>
                     </Grid>
                     <Grid size={{ xs: "auto" }}>
                     {userUpdateData.userContactDto.map((item, index) => (
                         item.contactNum === "" ? (
-                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
+                            <Paper key={"NoContactNumberCard"} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
                               No saved contact numbers
                             </Paper>
                           ) : (
-                            <Paper key={index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
+                            <Paper key={"ContactNumberCard"+index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
                               {item.contactNum}
                             </Paper>
                           )
@@ -185,7 +188,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
                         label="Role"
                         sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "#000000",
+                              WebkitTextFillColor: "#616161",
                           },
                         }} 
                     >
@@ -237,7 +240,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
     );
 }
 
-UserDetailsForm.prototype={
+UserDetailsForm.propTypes={
     onSubmit:PropTypes.func.isRequired,
     userUpdateData:PropTypes.shape({
         userDto:PropTypes.shape({
@@ -255,5 +258,12 @@ UserDetailsForm.prototype={
     }),
     editMode:PropTypes.bool.isRequired,
     setUserUpdateData:PropTypes.func,
+    handlePwds:PropTypes.func,
+    pwds:PropTypes.shape({
+        pwd_1:PropTypes.string,
+        pwd_2:PropTypes.string
+    }),
+    errors:PropTypes.object,
+    setErrors:PropTypes.func
 
 }

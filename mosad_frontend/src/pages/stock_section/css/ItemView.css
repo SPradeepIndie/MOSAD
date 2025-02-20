@@ -70,21 +70,21 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.item-table tbody tr {
-  background-color: white; /* Default row color */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
 .item-table tbody tr:hover {
   background-color: lightgray; /* Highlight row on hover */
 }
 
-.selected-row {
+.item-table tbody tr.selected-row {
   background-color: yellow; /* Color for the selected row */
   font-weight: bold; /* Make it visually distinct */
 }
 
+.inline{
+  display: inline;
+  width: 100%;
+  color: #000000;
+  
+}
 
 
 /* .item-table tbody tr.selected-row {
@@ -97,11 +97,6 @@ body {
 }
 
 
-.selected-row {
-  background-color: #ffc107;
-  font-weight: bold;
-}
-
 /* Buttons */
 .button-group {
   display: flex;
@@ -112,14 +107,14 @@ body {
 }
 
 .btn {
-  /* padding: 10px 20px; */
+
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   padding: 8px 12px;
-  cursor: pointer;
+ 
   font-size: 0.9rem;
 }
 

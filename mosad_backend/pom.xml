@@ -11,7 +11,7 @@
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
 <!--	MOSAD project version up here-->
-	<version>3.1.0</version>
+	<version>3.3.3</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>
@@ -49,6 +49,10 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
@@ -67,6 +71,8 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--	JSON web token-->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
