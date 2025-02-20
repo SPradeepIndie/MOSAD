@@ -42,3 +42,13 @@ export const useUpdateRepayment = () => {
 
     return updateRepayment;
 };
+
+export const useCreateCredit = () => {
+    const apiClient = useApiClient(); // Assuming you have a custom API client set up.
+  
+    const createCredit = (data) => {
+      return apiClient.post('/credit/add-credit', data); // Sends the POST request to the backend
+    };
+  
+    return createCredit;
+  };

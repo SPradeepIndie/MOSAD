@@ -4,6 +4,7 @@ import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.BillResponeDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
@@ -62,7 +63,7 @@ public class BillService {
     }
 
 
-    public ResponseDTO createBill(BillDetailsDTO billDetailsDTO, CustomerDetailsDTO customerDetailsDTO, List<BillItemDTO> billItemDTO) {
+    public BillResponeDTO createBill(BillDetailsDTO billDetailsDTO, CustomerDetailsDTO customerDetailsDTO, List<BillItemDTO> billItemDTO) {
 
 
 
@@ -118,7 +119,7 @@ public class BillService {
 
         // Convert the saved Bill entity back to DTO and return it
 
-        return new ResponseDTO(true,"Bill saved successfuly");
+        return new BillResponeDTO(bill.getBillId(),customer.getCustomerId());
     }
 
 

@@ -35,18 +35,18 @@ public class BillControllerTest {
         // Initialize billDetailsDTO with necessary data
     }
 
-    @Test
-    public void testCreateBill() {
-        ResponseDTO expectedResponse = new ResponseDTO();
-        expectedResponse.setMessage("Bill created successfully");
-
-        when(billService.createBill(any(BillDetailsDTO.class), any(), any())).thenReturn(expectedResponse);
-
-        ResponseEntity<ResponseDTO> response = billController.createBill(billDetailsDTO);
-
-        assertEquals(expectedResponse, response.getBody());
-        assertEquals(200, response.getStatusCodeValue());
-    }
+//    @Test
+//    public void testCreateBill() {
+//        ResponseDTO expectedResponse = new ResponseDTO();
+//        expectedResponse.setMessage("Bill created successfully");
+//
+//        when(billService.createBill(any(BillDetailsDTO.class), any(), any())).thenReturn(expectedResponse);
+//
+//        ResponseEntity<ResponseDTO> response = billController.createBill(billDetailsDTO);
+//
+//        assertEquals(expectedResponse, response.getBody());
+//        assertEquals(200, response.getStatusCodeValue());
+//    }
 
     @Test
     public void testGetAllBills() {

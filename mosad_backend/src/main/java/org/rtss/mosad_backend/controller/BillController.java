@@ -2,6 +2,7 @@ package org.rtss.mosad_backend.controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.BillResponeDTO;
 import org.rtss.mosad_backend.service.bill_management.BillService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class BillController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> createBill(@RequestBody BillDetailsDTO billDetailsDTO) {
+    public ResponseEntity<BillResponeDTO> createBill(@RequestBody BillDetailsDTO billDetailsDTO) {
         return  ResponseEntity.ok(billService.createBill(billDetailsDTO, billDetailsDTO.getAddCustomerDTO(), billDetailsDTO.getBillItemDTO()));
 
     }
