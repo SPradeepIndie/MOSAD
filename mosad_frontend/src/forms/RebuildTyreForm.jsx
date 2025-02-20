@@ -10,7 +10,6 @@ const statusOptions = [
 
 const RebuildTyreForm = ({ initialData = {}, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    customerId: '',
     tyreNumber: '',
     tyreSize: '',
     tyreBrand: '',
@@ -45,8 +44,8 @@ const RebuildTyreForm = ({ initialData = {}, onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { customerId, tyreNumber, tyreSize, tyreBrand, customerName, contactNumber, dateReceived, status } = formData;
-    if (!customerId || !tyreNumber || !tyreSize || !tyreBrand || !customerName || !contactNumber || !dateReceived || !status) {
+    const { tyreNumber, tyreSize, tyreBrand, customerName, contactNumber, dateReceived, status } = formData;
+    if (!tyreNumber || !tyreSize || !tyreBrand || !customerName || !contactNumber || !dateReceived || !status) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -57,7 +56,6 @@ const RebuildTyreForm = ({ initialData = {}, onSubmit, onCancel }) => {
     <Paper elevation={3} sx={{ p: 3, transition: 'all 0.3s ease-in-out' }}>
       <Box component="form" onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <TextField label="Customer ID" name="customerId" type="number" value={formData.customerId} onChange={handleChange} required fullWidth />
           <TextField label="Tyre Number" name="tyreNumber" type="number" value={formData.tyreNumber} onChange={handleChange} required fullWidth />
           <TextField label="Tyre Size" name="tyreSize" value={formData.tyreSize} onChange={handleChange} required fullWidth />
           <TextField label="Tyre Brand" name="tyreBrand" value={formData.tyreBrand} onChange={handleChange} required fullWidth />

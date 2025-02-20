@@ -35,7 +35,7 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getAllRebuildTyres() {
         List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(RebuildTyreMapper::toDto)
+                .map(rebuildTyreMapper::toDto)
                 .toList();
         return ResponseEntity.ok(dtoList);
     }
@@ -45,7 +45,7 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getTyresByContactNumber(@PathVariable String contactNumber) {
         List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(RebuildTyreMapper::toDto)
+                .map(rebuildTyreMapper::toDto)
                 .toList();
         return ResponseEntity.ok(dtoList);
     }

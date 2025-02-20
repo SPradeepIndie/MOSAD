@@ -43,7 +43,6 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell sx={headerStyle}>Customer ID</TableCell>
             <TableCell sx={headerStyle}>Item ID</TableCell>
             <TableCell sx={headerStyle}>Tyre Number</TableCell>
             <TableCell sx={headerStyle}>Customer Name</TableCell>
@@ -76,7 +75,6 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
                 transition: 'background-color 0.3s ease',
               }}
             >
-              <TableCell>{tyre.customerId}</TableCell>
               <TableCell>{tyre.itemId}</TableCell>
               <TableCell>{tyre.tyreNumber}</TableCell>
               <TableCell>{tyre.customerName}</TableCell>
@@ -113,7 +111,6 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
 RebuildTyreTable.propTypes = {
   tyres: PropTypes.arrayOf(
     PropTypes.shape({
-      customerId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       tyreNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       customerName: PropTypes.string.isRequired,
