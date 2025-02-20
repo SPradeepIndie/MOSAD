@@ -405,10 +405,6 @@ const BillPage = () => {
         <Button variant="contained" color="primary" onClick={handlePrint}>
           Print Bill
         </Button>
-          
-        <Button variant="contained" onClick={() => navigate("/AllBillsPage")} sx={{ backgroundColor: "yellow", color: "black", ml: 2 }}>
-          All Bills
-        </Button>
       </Box>
     </Box>
   );
