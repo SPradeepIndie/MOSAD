@@ -16,11 +16,14 @@ import { useLocation } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
 import PropTypes from "prop-types";
+import useAuth from "../hooks/useAuth";
 
 
 export default function UserDetailsForm(
     {onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds,errors,setErrors}
 ){
+    const {auth} = useAuth();
+
     let location = useLocation();
 
     const handleUserDtoChange = (event) => {
@@ -173,12 +176,12 @@ export default function UserDetailsForm(
                 <Grid container spacing={2} >
                 <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography>
-                     Choose your user role:
+                {!(editMode && auth.roles.includes("ADMIN"))? "Choose your user role:":"Your role:"}
                 </Typography>
                 <FormControl fullWidth>
                     <InputLabel id="role-label">Role</InputLabel>
                     <Select
-                        disabled={!editMode} 
+                        disabled={!(editMode && auth.roles.includes("ADMIN"))} 
                         required
                         name="roleName"
                         labelId="role-label" 
