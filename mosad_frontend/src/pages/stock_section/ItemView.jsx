@@ -25,17 +25,14 @@ const ItemView = () => {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
 
-
-
-
   const [rows, setRows] = useState([]);
 
-  const [filter,setFilters] =useState({tyreSize:"",itemName:"",vehicleType:""});
+  const [filter,setFilter] =useState({tyreSize:"",itemName:"",vehicleType:""});
 
 
   const handleFilterChange = (tireSize,itemName,vehicleType) => {
     
-    setFilters({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
+    setFilter({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
     setTimeout(() => {
       console.log(filter);
       console.log(selectedCategory,selectedBrand,selectedBranch);
