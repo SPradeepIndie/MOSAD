@@ -63,8 +63,8 @@ function App() {
         <Route path='/unathorized' element={<UnauthorizedPage/>}/>
         <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
-        <Route element={<HomeLayout/>}>
-            <Route path="/home" element={ <HomePage />} />
+          <Route element={<HomeLayout/>}>
+              <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
               <Route path="/stock" element={ <StockPageLayout />} >
@@ -106,7 +106,23 @@ function App() {
                   <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
                   <Route path="product-availability" element={ <FindProductAvailability />} />
               </Route>
-            </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
+                <Route path="/credit" element={ <CreditPage />} />
+                <Route path="/bill" element={ <BillPage />} />
+                <Route path="/dack" element={ <DackPage />} />
+                <Route path="/future" element={ <ReportPredictionPage />} />
+                <Route path="/services" element={ <ServicesPage />} />
+              </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
+                <Route path="/retail" element={ <RetailPageLayout />} >
+                    <Route index element={ <PaymentHistory />} />
+                    <Route path="purchase-history" element={ <PurchaseHistory />} />
+                    <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+                    <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+                </Route>
+              </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
               <Route path="/employee" element={ <EmployeePage />} />
