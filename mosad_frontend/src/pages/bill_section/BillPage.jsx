@@ -161,7 +161,7 @@ const BillPage = () => {
       x: 10, // Set starting position for content
       y: 10,
       html2canvas: {
-        scale: 0.15, // Try a higher scale value to capture the content better
+        scale: 0.22, // Try a higher scale value to capture the content better
         width: 250, // Ensure the content uses the full width of the page (A4 size)
         height: 297, // Ensure full height is captured (A4 size)
       },
