@@ -43,17 +43,17 @@ function HomePage() {
       link: '/employee',
     },
     {
-      title: 'Reports', 
+      title: 'Reports',
       icon:<AssessmentIcon fontSize="large"/>,
       link:"/future",
     },
     {
-      title:'Dack Tires', 
+      title:'Dack Tires',
       icon:<AssessmentIcon fontSize='large'/>,
       link:'/dack'
     }
   ];
-  
+
   return (
     <>
       <Slideshow />
@@ -77,10 +77,10 @@ function HomePage() {
           }}
         >
            {tiles.map((tile) => (
-            <Tile key={tile.title} 
+            <Tile key={tile.title}
               title={tile.title}
               icon={tile.icon}
-              link={tile.link}   
+              link={tile.link}
               />
             ))}
         </Stack>

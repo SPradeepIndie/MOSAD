@@ -14,4 +14,6 @@ import java.util.List;
 public interface ItemRepo extends JpaRepository<Item, Long> {
 
     List<Item> findByCategoryAndBrand(Category category, Brand brand);
+
+    List<Item> findByItemNameContainingIgnoreCase(String name);
 }

@@ -1,6 +1,6 @@
 // src/pages/RebuildTyrePage.js
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import { Container, Typography, TextField, Button, Box,Paper } from '@mui/material';
 import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
 import RebuildTyreForm from '../../forms/RebuildTyreForm.jsx';
 import {
@@ -31,9 +31,7 @@ const RebuildTyrePage = () => {
       } else {
         response = await getAllTyres();
       }
-      console.log(response.data)
-      
-      setTyres([]);
+      setTyres(response.data);
     } catch (error) {
       console.error(error);
       alert('Error fetching tyre data');
@@ -118,14 +116,17 @@ const RebuildTyrePage = () => {
         </Button>
       </Box>
       <RebuildTyreTable tyres={tyres} onEdit={handleEdit} onDelete={handleDeleteTyre} />
-      <Typography variant="h5" align="center" gutterBottom sx={{ mt: 4 }}>
-        {editingTyre ? 'Update Tyre' : 'Add New Tyre'}
-      </Typography>
-      <RebuildTyreForm
-        initialData={editingTyre || {}}
-        onSubmit={handleFormSubmit}
-        onCancel={editingTyre ? handleCancelEdit : null}
-      />
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <Typography variant="h5" align="center" gutterBottom sx={{ mt: 4 }}>
+          {editingTyre ? 'Update Tyre' : 'Add New Tyre'}
+        </Typography>
+
+        <RebuildTyreForm
+          initialData={editingTyre || {}}
+          onSubmit={handleFormSubmit}
+          onCancel={editingTyre ? handleCancelEdit : null}
+        />
+        </Paper>
     </Container>
   );
 };

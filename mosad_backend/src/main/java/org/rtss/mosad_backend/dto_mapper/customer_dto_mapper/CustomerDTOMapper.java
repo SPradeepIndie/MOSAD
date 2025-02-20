@@ -1,4 +1,6 @@
 package org.rtss.mosad_backend.dto_mapper.customer_dto_mapper;
+
+
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.entity.customer.Customer;
@@ -25,8 +27,8 @@ public class CustomerDTOMapper {
     public Customer toCustomerEntity(CustomerDTO customerDTO) {
         Customer customer = modelMapper.map(customerDTO, Customer.class);
 
-        if (customer.getContacts() != null) {
-            customer.getContacts().forEach(contact -> contact.setCustomer(customer));
+        if (customer.getCustomerContact() != null) {
+            customer.getCustomerContact().setCustomer(customer);
         }
 
         return customer;

@@ -19,7 +19,7 @@ import java.util.function.Function;
 public class JwtService {
     private final String secretKey;
     private static final long ACCESS_TOKEN_EXPIRATION_TIME =1000L*60;//15min
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME =1000L*60;//7days
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME =1000L*60*60*24*7;//7days
 
 
     //Generate Secret key, when OBJECT is created

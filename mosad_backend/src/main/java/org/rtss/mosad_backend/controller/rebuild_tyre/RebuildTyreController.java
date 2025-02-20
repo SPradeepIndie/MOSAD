@@ -20,11 +20,6 @@ public class RebuildTyreController {
         this.rebuildTyreService = rebuildTyreService;
     }
 
-    @GetMapping
-    public ResponseEntity<String> getAllTyres() {
-        return ResponseEntity.ok("Fetched");
-    }
-
     // Create a new tyre entry.
     @PostMapping
     public ResponseEntity<RebuildTyreDto> createRebuildTyre(@Valid @RequestBody RebuildTyreDto rebuildTyreDto) {
@@ -32,6 +27,15 @@ public class RebuildTyreController {
         RebuildTyre savedTyre = rebuildTyreService.createRebuildTyre(tyre);
         RebuildTyreDto responseDto = RebuildTyreMapper.toDto(savedTyre);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RebuildTyreDto>> getAllRebuildTyres() {
+        List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
+        List<RebuildTyreDto> dtoList = tyres.stream()
+                .map(RebuildTyreMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(dtoList);
     }
 
     // Find tyres by the customer's contact number.

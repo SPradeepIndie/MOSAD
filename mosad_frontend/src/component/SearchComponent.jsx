@@ -24,17 +24,26 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
   const fetchBrandAndSizeData = useFetchBrandAndSizeData();
 
   const [brand, setBrand] = useState(""); // Holds the selected brand
+  const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
+
   const [size, setSize] = useState(""); // Holds the entered size
+  const [name, setName] = useState(""); // Holds the entered name
+  const [type, setType] = useState(""); // Holds the entered type
+  const [categories, setCategories] = useState([]); // Holds the list of available categories
   const [brands, setBrands] = useState([]); // Holds the list of available brands
   const [results, setResults] = useState([]); // Holds search results
   const [error, setError] = useState(""); // Error message for search failures
   const [loadingBrands, setLoadingBrands] = useState(false); // Loading state for fetching brands
 
-  const branchId = 1; // Hardcoded branch ID for now
-
+  const branches = [
+    { branchId: 1, branchName: "Main" },
+    { branchId: 2, branchName: "Branch A" },
+    { branchId: 3, branchName: "Branch B" },
+    { branchId: 4, branchName: "Branch C" },
+  ]; // Sample branches
 
   async function getBrands(){
-    return fetchBrands("Tyre").then((result) => {
+    return fetchBrands(category).then((result) => {
         return result;
       }).catch((error) => {
         return null; 
@@ -42,16 +51,23 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
   }
 
   async function getBrandAndSizeData(){
-    return fetchBrandAndSizeData(brand,size,branchId).then((result) => {
+    return fetchBrandAndSizeData(brand,size,branch.branchId).then((result) => {
         return result;
       }).catch((error) => {
         return null;
       });
   }
 
-  // Fetch available brands when the component mounts
-  useEffect(() => {
-    const loadbrands = async () => {
+  async function getCategories(){
+    return fetchCategories().then((result) => {
+        return result;
+      }).catch((error) => {
+        return null;
+      });
+  }
+
+
+  const loadbrands = async () => {
     try {
       const response = await getBrands();
       if (response.status === 200 && Array.isArray(response.data)) {
@@ -59,7 +75,6 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
         setBrands(response.data.map((brand) => brand.brandName));
       } else {
         setBrands([]); // Default to an empty array if response is unexpected
-        console.log(response.data)
         console.error("Unexpected response from the server:", response);
       }
     } catch (err) {
@@ -69,16 +84,60 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
       setLoadingBrands(false);
     }
   }   
-    loadbrands();
+  const loadcategories = async () => {
+    try {
+      const response = await getCategories();
+      if (response.status === 200 && Array.isArray(response.data)) {
+        // Set brands using for-of loop
+        setCategories(response.data.map((category) => category.categoryName));
+      } else {
+        setCategories([]); // Default to an empty array if response is unexpected
+        console.error("Unexpected response from the server:", response);
+      }
+    } catch (err) {
+      console.error("Failed to fetch categories:", err);
+      setError("Failed to load categories. Please try again.");
+    } finally {
+      setLoadingBrands(false);
+    }
+  }
+
+  // Fetch available brands when the component mounts
+  useEffect(() => {
+
+  loadcategories();
+
+  loadbrands();
     
   }, []);
+useEffect(() => {
+  loadbrands();
+}, [category]);
+
+
+  const handleFilter=()=>{
+  console.log("handleFilter clicked");
+   try {
+      setSelectedBranch(branch.branchId);
+      setSelectedCategory(category);
+      setSelectedBrand(brand);
+      handleFilterChange(size, name, type);
+      fetchandSetItems();
+      console.log("handleFilter finished");
+   } catch (err) {
+      console.error("Error during filter operation:", err);
+   }
+  }
 
   const handleSearch = async () => {
+    console.log("Search clicked");
+
     try {
       setError(""); // Clear any previous error
+
+
+
       const response = await getBrandAndSizeData();
-      
-      
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
         console.log("Search results:", results);
@@ -105,71 +164,157 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
     }
 };
 
-  
+
+
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: "center" }}>
         Search 
       </Typography>
-      {loadingBrands ? (
-        <Typography>Loading brands...</Typography>
-      ) : (
-        <FormControl fullWidth>
-          <InputLabel id="brand-select-label">Brand</InputLabel>
-          <Select
-            labelId="brand-select-label"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
-            variant="outlined"
-          >
-            {brands.map((b) => (
-              <MenuItem key={b} value={b}>
-                {b}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-      <TextField
-        label="Size"
-        variant="outlined"
-        value={size}
-        onChange={(e) => setSize(e.target.value)}
-        fullWidth
-      />
+
+      <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid size={3} gap={2} spacing={3} direction="column">
+
+          <FormControl fullWidth>
+            <InputLabel id="branch-select-label">Branch</InputLabel>
+            <Select
+              labelId="branch-select-label"
+              value={branch.branchId} // Use branchId here
+              onChange={(e) => {
+                const selectedBranch = branches.find(b => b.branchId === e.target.value);
+                setBranch(selectedBranch); // Set the whole object
+                console.log(selectedBranch);
+              }}
+              variant="outlined"
+            >
+              {branches.map((b) => (
+                <MenuItem key={b.branchId} value={b.branchId}>
+                  {b.branchName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+        </Grid>
+        <Grid size={3} gap={2} spacing={3} direction="column">
+          <FormControl fullWidth>
+            <InputLabel id="category-select-label">Category</InputLabel>
+            <Select
+              labelId="category-select-label"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              variant="outlined"
+            >
+              {categories.map((c) => (
+                <MenuItem key={c} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
+            </Select>
+
+
+          </FormControl>
+        </Grid>
+        <Grid size={3} gap={2} spacing={3} direction="column">
+
+          <FormControl fullWidth>
+            <InputLabel id="brand-select-label">Brand</InputLabel>
+            <Select
+              labelId="brand-select-label"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+              variant="outlined"
+            >
+              {brands.map((b) => (
+                <MenuItem key={b} value={b}>
+                  {b}
+                </MenuItem>
+              ))}
+            </Select>
+
+
+          </FormControl>
+        </Grid>
+        <Grid >
+        </Grid>
+
+        <Grid container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid >
+            <TextField
+              label="Tyre Size"
+              variant="outlined"
+              value={size}
+              onChange={(e) => {setSize(e.target.value);handleFilterChange(e.target.value,null,null);}}
+              fullWidth
+            />
+          </Grid>
+          <Grid >
+            <TextField
+              label="Name"
+              variant="outlined"
+              value={name}
+              onChange={(e) => {setName(e.target.value);handleFilterChange(null,e.target.value,null);}}
+              fullWidth
+            />
+          </Grid>
+          <Grid >
+            <TextField
+              label="Vehicle Type"
+              variant="outlined"
+              value={type}
+              onChange={(e) => {setType(e.target.value);handleFilterChange(null,null,e.target.value);}}
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+
+
+
       <Button
         variant="contained"
         color="primary"
-        onClick={handleSearch}
-        disabled={loadingBrands || !brand || !size}
+        onClick={onAddToBill ? handleSearch : handleFilter}
+        //disabled={loadingBrands || !brand || !size}
       >
         Search
       </Button>
+
       {error && <Typography color="error">{error}</Typography>}
 
       {/* Results Table */}
-      {results.length > 0 && (
+      {onAddToBill && results.length > 0 && (
         <TableContainer component={Paper} sx={{ mt: 2 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>Brand</TableCell>
-                <TableCell>Size</TableCell>
-                <TableCell>Pattern</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Store Count</TableCell>
+
+                {category==="Tyre" &&
+                  <>
+                <TableCell>Size</TableCell>
+                <TableCell>Pattern</TableCell>
+                </>
+                }
+
                 <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {results.map((result, index) => (
-                <TableRow key={"row"+index}>
+              {results.map((result) => (
+                <TableRow key={result.id}>
                   <TableCell>{brand}</TableCell>
-                  <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
-                  <TableCell>{result.itemTyreDTO.pattern}</TableCell>
                   <TableCell>{result.itemDTO.companyPrice}</TableCell>
                   <TableCell>{result.itemBranchDTO.availableQuantity}</TableCell>
+                  { category==="Tyre" &&
+                   <>
+                    <TableCell>{result.itemTyreDTO.tyreSize}</TableCell>
+                    <TableCell>{result.itemTyreDTO.pattern}</TableCell>
+                   </>
+                  }
                   <TableCell>
               <TextField
                 type="number"
@@ -201,6 +346,11 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
 };
 
 SearchComponent.propTypes = {
+  setSelectedBranch: PropTypes.func.isRequired, // A required function for setting the selected branch
+  setSelectedCategory: PropTypes.func.isRequired, // A required function for setting the selected category
+  setSelectedBrand: PropTypes.func.isRequired, // A required function for setting the selected brand
+  fetchandSetItems: PropTypes.func.isRequired, // A required function for fetching and setting items
+  handleFilterChange: PropTypes.func.isRequired, // A required function for handling filter changes
   //onSearchResult: PropTypes.func.isRequired,  // A required function for handling search results
   onAddToBill: PropTypes.func.isRequired,    // A required function for adding to the bill
   
