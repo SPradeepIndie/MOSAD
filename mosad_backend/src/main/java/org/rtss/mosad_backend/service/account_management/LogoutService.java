@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.service.account_management;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.rtss.mosad_backend.entity.user_management.BlackListTokens;
@@ -11,10 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Service
 public class LogoutService implements LogoutHandler {
@@ -27,22 +28,27 @@ public class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        Cookie[] cookies = request.getCookies();
+        String refreshToken ="";
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                    break;
+                }
+            }
+        }else{
+            throw new HttpServerErrorException(HttpStatus.UNAUTHORIZED,"No valid refresh token found.");
+        }
+
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String jwtToken = null;
-        String refreshToken = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwtToken = authHeader.substring(7);
             blackListTokensRepo.saveAndFlush(new BlackListTokens(
                     jwtToken.trim(),
                     TokenType.ACCESS_TOKEN
             ));
-        }
-        // Read refresh token from request body
-        try {
-            Map<String, String> body = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-            refreshToken = body.get("refreshToken"); // Extract refresh token from JSON
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Failed to parse request body", e);
         }
 
         // Blacklist the refresh token
@@ -53,10 +59,17 @@ public class LogoutService implements LogoutHandler {
             ));
         }
 
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Set expiration date to immediately expire it
+        response.addCookie(cookie);
         try {
             new ObjectMapper().writeValue(response.getOutputStream(),"Successfully logged out");
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"ObjectMapper writing value error", e);
         }
     }
+
 }

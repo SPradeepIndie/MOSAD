@@ -1,4 +1,5 @@
 import useApiClient from '../apiClientHooks/useApiClient'
+import { usePrivateApiClient } from '../apiClientHooks/usePrivateApiClient';
 
 export const useGetUserDetailsByUsername = () => {
     const apiClient=useApiClient();
@@ -11,10 +12,10 @@ export const useGetUserDetailsByUsername = () => {
 };
 
 export const useLogin = () => {
-  const apiClient = useApiClient();
+  const privateApiClient=usePrivateApiClient();
 
   const login = (data) => {
-    return apiClient.post('/login', JSON.stringify(data));
+    return privateApiClient.post('/login', JSON.stringify(data));
   };
 
   return login;
@@ -61,10 +62,10 @@ export const useGetAllUsername = () => {
 };
 
 export const useLogout = () => {
-  const apiClient = useApiClient();
+  const privateApiClient=usePrivateApiClient();
 
   const logout = (data) => {
-    return apiClient.post('/logout', data);
+    return privateApiClient.get('/logout',data);
   };
 
   return logout;

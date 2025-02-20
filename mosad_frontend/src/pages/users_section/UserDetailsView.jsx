@@ -23,9 +23,19 @@ const initialUserData={
         contactNum:""
     }]
 }
+const initialErrors = {
+    firstNameError: '',
+    lastNameError: '',
+    usernameError: '',
+    emailError: '',
+    contactNumError: '',
+    roleNameError: '',
+  };
+
 
 
 const UserDetailsView=()=>{
+    const [errors,setErrors]=useState(initialErrors);
     //Getting access to he global auth object to get logging state
     const{auth}= useAuth();
     const getUserDetails = useGetUserDetailsByUsername();
@@ -96,8 +106,8 @@ const UserDetailsView=()=>{
         }
     }
 
- 
 
+ 
     return(
        <Container>
             <Typography sx={{pt:2}}>
@@ -106,7 +116,13 @@ const UserDetailsView=()=>{
 
             {/* Render the user details form */}
             {!isLoading &&
-            <UserDetailsForm onSubmit={handleUpdatedDataSubmit} userUpdateData={userData} editMode={editMode} setUserUpdateData={setUserData}/>
+            <UserDetailsForm 
+            onSubmit={handleUpdatedDataSubmit} 
+            userUpdateData={userData} 
+            editMode={editMode}
+            setUserUpdateData={setUserData}
+            errors={errors}
+            setErrors={setErrors}/>
             }         
 
              {/* form handling buttons */}

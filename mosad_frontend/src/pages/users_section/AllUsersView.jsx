@@ -3,9 +3,18 @@ import PopUp from '../../component/PopUp'
 import { Container,Grid2,Button,Paper} from "@mui/material";
 import UserDetailsForm from "../../forms/UserDetailForm";
 import { DataGrid } from '@mui/x-data-grid';
-import {useGetAllUsername} from '../../hooks/useApiUserService'
-import { useRegister } from "../../hooks/servicesHook/useApiUserService";
+import {useGetAllUsername,useRegister} from '../../hooks/servicesHook/useApiUserService'
 
+const initialErrors = {
+    firstNameError: '',
+    lastNameError: '',
+    usernameError: '',
+    emailError: '',
+    contactNumError: '',
+    roleNameError: '',
+    pwd_1Error: '',
+    pwd_2Error: '',
+  };
 
 const initialUserRegData={
     userDto:{
@@ -36,13 +45,18 @@ const columns = [
     { field: 'role',headerName: 'Role',width: 120,},
 ];
 
+
+
 const AllUsersView=()=>{
+    const [errors,setErrors]=useState(initialErrors);
     const [users,setUsers]=useState([]);
     const getAllUsername=useGetAllUsername();
     const registerUser = useRegister();
     
     //control data loading asynchronus nature 
     const [isLoading, setIsLoading] = useState(false);
+
+
 
     //fetch all users data
     const loadAllUsers=()=>{
@@ -166,7 +180,9 @@ const AllUsersView=()=>{
         editMode={true} 
         setUserUpdateData={setUserRegData}
         handlePwds={handlePwds}
-        pwds={pwds}/>
+        pwds={pwds}
+        errors={errors}
+        setErrors={setErrors}/>
         </PopUp>
         </Container>
        

@@ -46,7 +46,9 @@ public class SecurityConfig {
                     //Configure Cross Origin configuration
                     .cors((cors)->cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests((request) -> request
-                            .requestMatchers("/api/v1/login","/api/v1/user/forgot-pwd/**").permitAll()
+                            .requestMatchers("/api/v1/login",
+                                    "/api/v1/user/forgot-pwd/**",
+                                    "/api/v1/refresh_token").permitAll()
                             .anyRequest().authenticated()
                     )
                     //disabled the csrf token
@@ -60,9 +62,11 @@ public class SecurityConfig {
                     .logout(logout -> logout
                             .logoutUrl("/api/v1/logout")
                             .addLogoutHandler(logoutHandler)
+                            .deleteCookies("refreshToken")
                             .logoutSuccessHandler((request, response, authentication) ->
                                     SecurityContextHolder.clearContext()
                             ));
+
        return http.build();
    }
 
@@ -86,6 +90,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

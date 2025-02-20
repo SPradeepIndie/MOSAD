@@ -33,6 +33,10 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getServletPath().equals("/api/v1/refresh_token")) {
+            filterChain.doFilter(request, response); // Skip the filter for refresh token endpoint
+            return;
+        }
         // Bearer [token] : This is the request get from the client side
         String authHeader = request.getHeader("Authorization");
         String jwtToken = null;

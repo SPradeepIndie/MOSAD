@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/rebuild-tyres")
@@ -22,7 +21,6 @@ public class RebuildTyreController {
         this.rebuildTyreService = rebuildTyreService;
         this.rebuildTyreMapper = rebuildTyreMapper;
     }
-
 
     // Create a new tyre entry.
     @PostMapping
@@ -37,8 +35,8 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getAllRebuildTyres() {
         List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(rebuildTyreMapper::toDto)
-                .collect(Collectors.toList());
+                .map(RebuildTyreMapper::toDto)
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 
@@ -47,8 +45,8 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getTyresByContactNumber(@PathVariable String contactNumber) {
         List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(rebuildTyreMapper::toDto)
-                .collect(Collectors.toList());
+                .map(RebuildTyreMapper::toDto)
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 

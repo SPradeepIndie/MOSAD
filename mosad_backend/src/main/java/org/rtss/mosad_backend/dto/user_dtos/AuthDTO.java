@@ -9,17 +9,14 @@ public class AuthDTO {
     private boolean authenticated;
     @JsonProperty("access_token")
     private String accessToken;
-    @JsonProperty("refresh_token")
-    private String refreshToken;
     @JsonProperty("role")
     private String role;
     @JsonProperty("branchId")
     private Long branchId;
 
-    public AuthDTO(boolean authenticated, String accessToken, String refreshToken, String role, Long branchId) {
+    public AuthDTO(boolean authenticated, String accessToken, String role, Long branchId) {
         this.authenticated = authenticated;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
         this.role = role;
         this.branchId = branchId;
     }
@@ -33,14 +30,6 @@ public class AuthDTO {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
     }
 
     public boolean isAuthenticated() {
@@ -72,7 +61,6 @@ public class AuthDTO {
         return "AuthDTO{" +
                 "authenticated=" + authenticated +
                 ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
                 ", role='" + role + '\'' +
                 ", branchID='" + branchId + '\'' +
                 '}';
