@@ -5,6 +5,7 @@ import { Container } from '@mui/material'
 import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
 import LoginPage from './pages/LoginPage'
+
 import backgroundImage from './assets/bg-image.jpg'
 import HomePage from './pages/home/HomePage'
 import HomeLayout from './pages/home/HomeLayout';
@@ -13,7 +14,6 @@ import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const BillPage=lazy(()=>import('./pages/bill_section/BillPage'));
-const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
@@ -63,8 +63,8 @@ function App() {
         <Route path='/unathorized' element={<UnauthorizedPage/>}/>
         <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
-        <Route element={<HomeLayout/>}>
-            <Route path="/home" element={ <HomePage />} />
+          <Route element={<HomeLayout/>}>
+              <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
               <Route path="/stock" element={ <StockPageLayout />} >
@@ -83,9 +83,7 @@ function App() {
                   <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
                   <Route path="item-view" element={<ItemView />}/>
                 </Route>
-                <Route path="employee-view" element={<EmployeePage />}/>
               </Route>
-            </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER", "ADMIN"]} />}>
               <Route path="/credit" element={<CreditPage />} />
@@ -106,19 +104,36 @@ function App() {
                   <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
                   <Route path="product-availability" element={ <FindProductAvailability />} />
               </Route>
-            </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
-              <Route path="/employee" element={ <EmployeePage />} />
-            </Route>
-
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
-              <Route path="/user" element={ <UserManagementLayout />} >
-                <Route index element={<UserDetailsView/>}/>
-                <Route path="view-all" element={<AllUsersView />}/>
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
+                <Route path="/credit" element={ <CreditPage />} />
+                <Route path="/bill" element={ <BillPage />} />
+                <Route path="/dack" element={ <DackPage />} />
+                <Route path="/future" element={ <ReportPredictionPage />} />
+                <Route path="/services" element={ <ServicesPage />} />
               </Route>
-            </Route>
 
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
+                <Route path="/retail" element={ <RetailPageLayout />} >
+                    <Route index element={ <PaymentHistory />} />
+                    <Route path="purchase-history" element={ <PurchaseHistory />} />
+                    <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+                    <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+                </Route>
+              </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+                <Route path="/employee" element={ <EmployeePage />} />
+              </Route>
+
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+                <Route path="/user" element={ <UserManagementLayout />} >
+                  <Route index element={<UserDetailsView/>}/>
+                  <Route path="view-all" element={<AllUsersView />}/>
+                </Route>
+              </Route>
+          </Route>
+        </Route>
         </Route>
         </Route>
       </Routes>
