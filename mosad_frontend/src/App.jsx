@@ -67,7 +67,7 @@ function App() {
             <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
-              <Route path="/stock" element={ <StockPageLayout />} >
+              <Route path="/stock" element={ <ItemView />} >
                 <Route index element={<StockPage isFromBranch={false}/>}/>
                 <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
                 <Route path="item-view" element={<ItemView />} />
@@ -87,12 +87,16 @@ function App() {
               </Route>
             </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
-              <Route path="/credit" element={ <CreditPage />} />
-              <Route path="/bill" element={ <BillPage />} />
-              <Route path="/dack" element={ <DackPage />} />
-              <Route path="/future" element={ <ReportPredictionPage />} />
-              <Route path="/services" element={ <ServicesPage />} />
+            <Route element={<CheckPrivileges allowedRoles={["OWNER", "ADMIN"]} />}>
+              <Route path="/credit" element={<CreditPage />} />
+              <Route path="/bill" element={<BillSectionLayout />} >
+                <Route index element={<BillPage />} />
+                <Route path="AllBillsPage" element={<AllBillsPage />} />
+
+              </Route>
+              <Route path="/dack" element={<DackPage />} />
+              {/* <Route path="/future" element={ <ReportPredictionPage />} /> */}
+              <Route path="/services" element={<ServicesPage />} />
             </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>

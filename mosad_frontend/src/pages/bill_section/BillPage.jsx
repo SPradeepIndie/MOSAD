@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from "jspdf"; // Import jsPDF library
+import { useUpdateItemQuantity } from "../../hooks/servicesHook/useBillService";
 
 
 
@@ -26,6 +27,7 @@ function ccyFormat(num) {
 }
 
 const BillPage = () => {
+  const updateStock = useUpdateItemQuantity();
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
@@ -34,17 +36,23 @@ const BillPage = () => {
   const [telephone, setTelephone] = useState("");
 
   const handleAddToBill = (item) => {
+    console.log(item);
+    const fullItemDetails = item.row;
     setRows((prevRows) => [
       ...prevRows,
       {
-        brand: item.brand || "N/A",
-        tyreSize: item.tyreSize || "N/A",
+        fulldetails:fullItemDetails,
+        itemId: fullItemDetails.itemDTO.itemId || "N/A",
+        branchId: fullItemDetails.itemBranchDTO.branchId || "N/A",
+        brand: fullItemDetails.itemDTO.brand || "N/A",
+        tyreSize: fullItemDetails.itemTyreDTO.tyreSize || "N/A",
         description: item.description || "",
         unitPrice: parseFloat(item.unitPrice) || 0,
         quantity: parseInt(item.quantity, 10) || 1,
         subtotal: (parseFloat(item.unitPrice) || 0) * (parseInt(item.quantity, 10) || 1),
       },
     ]);
+    console.log(rows);
   };
 
   const handleInputChange = (index, field, value) => {
@@ -81,16 +89,24 @@ const BillPage = () => {
     setRows((prevRows) => prevRows.filter((_, i) => i !== index));
   };
 
-  const updateStock = () => {
+  const handleUpdateStock = () => {
     rows.forEach((row) => {
-      
-      // Call the API to update the stock
-      console.log(`Updating stock for ${row} with quantity ${row.quantity}`);
+      const data = {
+        itemId: row.itemId,
+        branchId: row.branchId,
+        quantity: row.fulldetails.itemBranchDTO.availableQuantity - row.quantity,
+      };
+      updateStock(data);
     });
+   
   };
 
   const handlePrint = () => {
-    updateStock();
+    
+
+    console.log(rows);
+
+    handleUpdateStock();
 
     const doc = new jsPDF();
   

@@ -14,7 +14,9 @@ import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerDTOMapper;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
+import org.rtss.mosad_backend.repository.stock_management_repository.ItemBranchRepository;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,14 +40,17 @@ public class BillService {
     //Repository Injection
     private final BillRepository billRepository;
 
+    private final ItemBranchRepository itemBranchRepository;
 
-    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper) {
+
+    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, ItemBranchRepository itemBranchRepository) {
         this.billRepository = billRepository;
         this.customerService = customerService;
         this.billDTOMapper = billDTOMapper;
         this.customerDTOMapper = customerDTOMapper;
         this.customerContactDTOMapper = customerContactDTOMapper;
         this.billItemDTOMapper = billItemDTOMapper;
+        this.itemBranchRepository = itemBranchRepository;
     }
 
 
@@ -111,5 +116,23 @@ public class BillService {
         }).toList();
 
     }
+
+    public ResponseDTO updateItemQuantity(Long itemId, Long branchId, Integer quantity) {
+        // Find the ItemBranch entity by itemId and branchId
+        ItemBranch itemBranch = itemBranchRepository.findByItemIdAndBranchId(itemId, branchId);
+
+        if (itemBranch != null) {
+            // Update the availableQuantity
+            itemBranch.setAvailableQuantity(quantity);
+
+            // Save the updated entity
+            itemBranchRepository.save(itemBranch);
+
+            return new ResponseDTO(true, "Stock updated");
+        } else {
+            return new ResponseDTO(false, "ItemBranch not found for the given itemId and branchId");
+        }
+    }
+
 
 }

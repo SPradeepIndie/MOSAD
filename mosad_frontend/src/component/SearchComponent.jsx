@@ -18,19 +18,22 @@ import {
   Paper,
   Grid2
 } from "@mui/material";
-import { fetchBrands,fetchBrandAndSizeData,fetchCategories,addCategory,addBrand,fetchBranches } from "../services/apiStockService";
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import PopUp from "./PopUp";
 import GeneralMessage from "./GeneralMessage";
-
-
-
-
-
-
+import { useFetchBrandAndSizeData,useFetchCategories,useFetchBrands,useAddBrand,useAddCategory,useFetchBranches } from "../hooks/servicesHook/useStockService";
 
 const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
+  
+  const fetchCategories = useFetchCategories();
+  const fetchBrands = useFetchBrands();
+  const fetchBranches = useFetchBranches();
+  const addCategory = useAddCategory();
+  const addBrand = useAddBrand();
+  const fetchBrandAndSizeData = useFetchBrandAndSizeData();
+
+  
   const [category,setCategory] = useState("Tyre"); // Holds the selected category
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
@@ -256,19 +259,34 @@ useEffect(() => {
     }
   };
 
-  const handleAddToBill = (row) => {
-    if (quantity > 0) {
-        const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
-        onAddToBill({
-            brand: row.itemDTO.brand,
-            description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
-            unitPrice: unitPrice,
-            quantity: quantity,
-            subtotal: unitPrice * quantity,
-        });
-    }
-};
+//   const handleAddToBill = (row) => {
+//     console.log("Adding to bill:", row);
+//     if (quantity > 0) {
+//         const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
+//         onAddToBill({
+//             brand: row.itemDTO.brand,
+//             description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
+//             unitPrice: unitPrice,
+//             quantity: quantity,
+//             subtotal: unitPrice * quantity,
+//         });
+//     }
+// };
 
+const handleAddToBill = (row) => {
+  //console.log("Adding to bill:", row);
+  if (quantity > 0) {
+      const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
+      onAddToBill({
+          row: row,
+          brand: row.itemDTO.brand,
+          description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
+          unitPrice: unitPrice,
+          quantity: quantity,
+          subtotal: unitPrice * quantity,
+      });
+  }
+};
 
 
 
