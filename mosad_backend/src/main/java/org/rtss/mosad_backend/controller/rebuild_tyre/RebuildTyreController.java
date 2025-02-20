@@ -16,17 +16,19 @@ import java.util.stream.Collectors;
 public class RebuildTyreController {
 
     private final RebuildTyreService rebuildTyreService;
+    private final RebuildTyreMapper rebuildTyreMapper;
 
-    public RebuildTyreController(RebuildTyreService rebuildTyreService) {
+    public RebuildTyreController(RebuildTyreService rebuildTyreService, RebuildTyreMapper rebuildTyreMapper) {
         this.rebuildTyreService = rebuildTyreService;
+        this.rebuildTyreMapper = rebuildTyreMapper;
     }
 
     // Create a new tyre entry.
     @PostMapping
     public ResponseEntity<RebuildTyreDto> createRebuildTyre(@Valid @RequestBody RebuildTyreDto rebuildTyreDto) {
-        RebuildTyre tyre = RebuildTyreMapper.toEntity(rebuildTyreDto);
+        RebuildTyre tyre = rebuildTyreMapper.toEntity(rebuildTyreDto);
         RebuildTyre savedTyre = rebuildTyreService.createRebuildTyre(tyre);
-        RebuildTyreDto responseDto = RebuildTyreMapper.toDto(savedTyre);
+        RebuildTyreDto responseDto = rebuildTyreMapper.toDto(savedTyre);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -34,7 +36,7 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getAllRebuildTyres() {
         List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(RebuildTyreMapper::toDto)
+                .map(rebuildTyreMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
@@ -44,7 +46,7 @@ public class RebuildTyreController {
     public ResponseEntity<List<RebuildTyreDto>> getTyresByContactNumber(@PathVariable String contactNumber) {
         List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
         List<RebuildTyreDto> dtoList = tyres.stream()
-                .map(RebuildTyreMapper::toDto)
+                .map(rebuildTyreMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtoList);
     }
@@ -52,10 +54,10 @@ public class RebuildTyreController {
     // Update a tyre entry by its id.
     @PutMapping("/{id}")
     public ResponseEntity<RebuildTyreDto> updateRebuildTyre(@PathVariable Long id, @Valid @RequestBody RebuildTyreDto rebuildTyreDto) {
-        RebuildTyre tyreToUpdate = RebuildTyreMapper.toEntity(rebuildTyreDto);
+        RebuildTyre tyreToUpdate = rebuildTyreMapper.toEntity(rebuildTyreDto);
         return rebuildTyreService.updateRebuildTyre(id, tyreToUpdate)
                 .map(updatedTyre -> {
-                    RebuildTyreDto updatedDto = RebuildTyreMapper.toDto(updatedTyre);
+                    RebuildTyreDto updatedDto = rebuildTyreMapper.toDto(updatedTyre);
                     return ResponseEntity.ok(updatedDto);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

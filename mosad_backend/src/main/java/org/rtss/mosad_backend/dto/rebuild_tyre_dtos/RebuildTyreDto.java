@@ -9,8 +9,6 @@ public class RebuildTyreDto {
 
     private Long itemId;
 
-    @NotNull(message = "Customer ID cannot be null")
-    private Long customerId;
 
     @NotNull(message = "Tyre number cannot be null")
     private Integer tyreNumber;
@@ -44,124 +42,22 @@ public class RebuildTyreDto {
     // No-argument constructor
     public RebuildTyreDto() {}
 
-    // Remove the long constructor to satisfy SonarCloud rule S107.
-    // Instead, use the Builder pattern to construct instances.
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private Long customerId;
-        private Integer tyreNumber;
-        private String tyreSize;
-        private String tyreBrand;
-        private String customerName;
-        private String contactNumber;
-        private LocalDate dateReceived;
-        private LocalDate dateSentToCompany;
-        private String salesRepNumber;
-        private String jobNumber;
-        private LocalDate dateReceivedFromCompany;
-        private LocalDate dateDeliveredToCustomer;
-        private String billNumber;
-        private Double price;
-        private TyreStatus status;
-
-        public Builder customerId(Long customerId) {
-            this.customerId = customerId;
-            return this;
-        }
-
-        public Builder tyreNumber(Integer tyreNumber) {
-            this.tyreNumber = tyreNumber;
-            return this;
-        }
-
-        public Builder tyreSize(String tyreSize) {
-            this.tyreSize = tyreSize;
-            return this;
-        }
-
-        public Builder tyreBrand(String tyreBrand) {
-            this.tyreBrand = tyreBrand;
-            return this;
-        }
-
-        public Builder customerName(String customerName) {
-            this.customerName = customerName;
-            return this;
-        }
-
-        public Builder contactNumber(String contactNumber) {
-            this.contactNumber = contactNumber;
-            return this;
-        }
-
-        public Builder dateReceived(LocalDate dateReceived) {
-            this.dateReceived = dateReceived;
-            return this;
-        }
-
-        public Builder dateSentToCompany(LocalDate dateSentToCompany) {
-            this.dateSentToCompany = dateSentToCompany;
-            return this;
-        }
-
-        public Builder salesRepNumber(String salesRepNumber) {
-            this.salesRepNumber = salesRepNumber;
-            return this;
-        }
-
-        public Builder jobNumber(String jobNumber) {
-            this.jobNumber = jobNumber;
-            return this;
-        }
-
-        public Builder dateReceivedFromCompany(LocalDate dateReceivedFromCompany) {
-            this.dateReceivedFromCompany = dateReceivedFromCompany;
-            return this;
-        }
-
-        public Builder dateDeliveredToCustomer(LocalDate dateDeliveredToCustomer) {
-            this.dateDeliveredToCustomer = dateDeliveredToCustomer;
-            return this;
-        }
-
-        public Builder billNumber(String billNumber) {
-            this.billNumber = billNumber;
-            return this;
-        }
-
-        public Builder price(Double price) {
-            this.price = price;
-            return this;
-        }
-
-        public Builder status(TyreStatus status) {
-            this.status = status;
-            return this;
-        }
-
-        public RebuildTyreDto build() {
-            RebuildTyreDto dto = new RebuildTyreDto();
-            dto.setCustomerId(this.customerId);
-            dto.setTyreNumber(this.tyreNumber);
-            dto.setTyreSize(this.tyreSize);
-            dto.setTyreBrand(this.tyreBrand);
-            dto.setCustomerName(this.customerName);
-            dto.setContactNumber(this.contactNumber);
-            dto.setDateReceived(this.dateReceived);
-            dto.setDateSentToCompany(this.dateSentToCompany);
-            dto.setSalesRepNumber(this.salesRepNumber);
-            dto.setJobNumber(this.jobNumber);
-            dto.setDateReceivedFromCompany(this.dateReceivedFromCompany);
-            dto.setDateDeliveredToCustomer(this.dateDeliveredToCustomer);
-            dto.setBillNumber(this.billNumber);
-            dto.setPrice(this.price);
-            dto.setStatus(this.status);
-            return dto;
-        }
+    public RebuildTyreDto(Long itemId, Integer tyreNumber, String tyreSize, String tyreBrand, String customerName, String contactNumber, LocalDate dateReceived, LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, String billNumber, Double price, TyreStatus status) {
+        this.itemId = itemId;
+        this.tyreNumber = tyreNumber;
+        this.tyreSize = tyreSize;
+        this.tyreBrand = tyreBrand;
+        this.customerName = customerName;
+        this.contactNumber = contactNumber;
+        this.dateReceived = dateReceived;
+        this.dateSentToCompany = dateSentToCompany;
+        this.salesRepNumber = salesRepNumber;
+        this.jobNumber = jobNumber;
+        this.dateReceivedFromCompany = dateReceivedFromCompany;
+        this.dateDeliveredToCustomer = dateDeliveredToCustomer;
+        this.billNumber = billNumber;
+        this.price = price;
+        this.status = status;
     }
 
     // Getters and Setters
@@ -171,13 +67,6 @@ public class RebuildTyreDto {
     }
     public void setItemId(Long itemId) {
         this.itemId = itemId;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
     }
 
     public Integer getTyreNumber() {
