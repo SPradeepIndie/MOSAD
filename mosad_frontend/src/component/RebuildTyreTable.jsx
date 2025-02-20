@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Table,
@@ -9,61 +9,96 @@ import {
   TableRow,
   Paper,
   IconButton,
+  TableSortLabel,
+  Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 
-const RebuildTyreTable = ({ tyres, onEdit, onDelete }) => {
+const headerStyle = {
+  fontWeight: 'bold',
+  backgroundColor: '#1976d2', // professional blue header
+  color: '#fff',
+};
+
+const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
+  const [sortOrder, setSortOrder] = useState('asc');
+
+  const handleSort = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  const sortedTyres = [...tyres].sort((a, b) =>
+    sortOrder === 'asc'
+      ? a.status.localeCompare(b.status)
+      : b.status.localeCompare(a.status)
+  );
+
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="rebuild tyre table">
+    <TableContainer
+      component={Paper}
+      sx={{ mt: 3, boxShadow: 3, borderRadius: 2 }}
+    >
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Customer ID</TableCell>
-            <TableCell>Tyre Number</TableCell>
-            <TableCell>Tyre Size</TableCell>
-            <TableCell>Tyre Brand</TableCell>
-            <TableCell>Customer Name</TableCell>
-            <TableCell>Contact Number</TableCell>
-            <TableCell>Date Received</TableCell>
-            <TableCell>Date Sent To Company</TableCell>
-            <TableCell>Sales Rep Number</TableCell>
-            <TableCell>Job Number</TableCell>
-            <TableCell>Date Received From Company</TableCell>
-            <TableCell>Date Delivered To Customer</TableCell>
-            <TableCell>Bill Number</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell sx={headerStyle}>Item ID</TableCell>
+            <TableCell sx={headerStyle}>Tyre Number</TableCell>
+            <TableCell sx={headerStyle}>Customer Name</TableCell>
+            <TableCell sx={headerStyle}>Contact Number</TableCell>
+            <TableCell sx={headerStyle}>Date Received</TableCell>
+            <TableCell sx={headerStyle}>Bill Number</TableCell>
+            <TableCell sx={headerStyle}>Price</TableCell>
+            <TableCell sx={headerStyle}>
+              <TableSortLabel
+                active
+                direction={sortOrder}
+                onClick={handleSort}
+                sx={{ color: '#fff' }}
+              >
+                Status
+              </TableSortLabel>
+            </TableCell>
+            <TableCell sx={headerStyle} align="center">
+              Actions
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {tyres.map((tyre) => (
-            <TableRow key={tyre.itemId}>
+          {sortedTyres.map((tyre, index) => (
+            <TableRow
+              key={index}
+              sx={{
+                backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#fff',
+                '&:hover': { backgroundColor: '#e3f2fd' },
+                transition: 'background-color 0.3s ease',
+              }}
+            >
               <TableCell>{tyre.itemId}</TableCell>
-              <TableCell>{tyre.customerId}</TableCell>
               <TableCell>{tyre.tyreNumber}</TableCell>
-              <TableCell>{tyre.tyreSize}</TableCell>
-              <TableCell>{tyre.tyreBrand}</TableCell>
               <TableCell>{tyre.customerName}</TableCell>
               <TableCell>{tyre.contactNumber}</TableCell>
               <TableCell>{tyre.dateReceived}</TableCell>
-              <TableCell>{tyre.dateSentToCompany || '-'}</TableCell>
-              <TableCell>{tyre.salesRepNumber || '-'}</TableCell>
-              <TableCell>{tyre.jobNumber || '-'}</TableCell>
-              <TableCell>{tyre.dateReceivedFromCompany || '-'}</TableCell>
-              <TableCell>{tyre.dateDeliveredToCustomer || '-'}</TableCell>
-              <TableCell>{tyre.billNumber || '-'}</TableCell>
-              <TableCell>{tyre.price || '-'}</TableCell>
+              <TableCell>{tyre.billNumber}</TableCell>
+              <TableCell>{tyre.price}</TableCell>
               <TableCell>{tyre.status}</TableCell>
-              <TableCell>
-                <IconButton onClick={() => onEdit(tyre)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => onDelete(tyre.itemId)}>
-                  <DeleteIcon />
-                </IconButton>
+              <TableCell align="center">
+                <Tooltip title="Edit">
+                  <IconButton onClick={() => onUpdate(tyre)} color="primary">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="More Info">
+                  <IconButton onClick={() => onInfo(tyre)} color="info">
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton onClick={() => onDelete(tyre.itemId)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
@@ -72,30 +107,30 @@ const RebuildTyreTable = ({ tyres, onEdit, onDelete }) => {
     </TableContainer>
   );
 };
+
 RebuildTyreTable.propTypes = {
   tyres: PropTypes.arrayOf(
     PropTypes.shape({
-      itemId: PropTypes.number.isRequired,
-      customerId: PropTypes.number.isRequired,
-      tyreNumber: PropTypes.string.isRequired,
-      tyreSize: PropTypes.string.isRequired,
-      tyreBrand: PropTypes.string.isRequired,
+      itemId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      tyreNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       customerName: PropTypes.string.isRequired,
       contactNumber: PropTypes.string.isRequired,
       dateReceived: PropTypes.string.isRequired,
+      billNumber: PropTypes.string.isRequired,
+      price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      status: PropTypes.string.isRequired,
+      tyreSize: PropTypes.string,
+      tyreBrand: PropTypes.string,
       dateSentToCompany: PropTypes.string,
       salesRepNumber: PropTypes.string,
       jobNumber: PropTypes.string,
       dateReceivedFromCompany: PropTypes.string,
       dateDeliveredToCustomer: PropTypes.string,
-      billNumber: PropTypes.string,
-      price: PropTypes.string,
-      status: PropTypes.string.isRequired,
     })
   ).isRequired,
-  onEdit: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onInfo: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
 export default RebuildTyreTable;
-

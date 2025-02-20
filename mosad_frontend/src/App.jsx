@@ -17,7 +17,7 @@ const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
-// const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
+const SalesReport =lazy(()=>import( './pages/report_section/SalesReport'));
 const RetailPageLayout =lazy(()=>import( './pages/retail_section/layout/RetailPageLayout'));
 const BillSectionLayout =lazy(()=>import('./pages/bill_section/BillSectionLayout'));
 const ServicesPage =lazy(()=>import( './pages/services_section/ServicesPage'));
@@ -63,7 +63,7 @@ function App() {
         <Route path='/unathorized' element={<UnauthorizedPage/>}/>
         <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
-        <Route element={<HomeLayout/>}>
+          <Route element={<HomeLayout/>}>
             <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
@@ -92,10 +92,9 @@ function App() {
               <Route path="/bill" element={<BillSectionLayout />} >
                 <Route index element={<BillPage />} />
                 <Route path="AllBillsPage" element={<AllBillsPage />} />
-
               </Route>
               <Route path="/dack" element={<DackPage />} />
-              {/* <Route path="/future" element={ <ReportPredictionPage />} /> */}
+              <Route path="/future" element={ <SalesReport />} />
               <Route path="/services" element={<ServicesPage />} />
             </Route>
 
@@ -106,19 +105,22 @@ function App() {
                   <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
                   <Route path="product-availability" element={ <FindProductAvailability />} />
               </Route>
-            </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
               <Route path="/employee" element={ <EmployeePage />} />
             </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+           
               <Route path="/user" element={ <UserManagementLayout />} >
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC","RETAIL_CUSTOMER"]}/>}>
                 <Route index element={<UserDetailsView/>}/>
+              </Route>
+              <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
                 <Route path="view-all" element={<AllUsersView />}/>
               </Route>
-            </Route>
+           </Route>
 
+        </Route>
         </Route>
         </Route>
       </Routes>
