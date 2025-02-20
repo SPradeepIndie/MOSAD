@@ -22,7 +22,7 @@ export const useFetchPurchaseHistory = () => {
 export const useFetchIncompleteTransactions = () => {
     const apiClient=useApiClient();
     
-    const fetchIncompleteTransactions=()=>{
+    const fetchIncompleteTransactions=(data)=>{
         return apiClient.get('/retail/incompleteTransaction',{params:{username:data}});
     }
     return fetchIncompleteTransactions;

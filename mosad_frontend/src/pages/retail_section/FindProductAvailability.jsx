@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
-import { fetchCategories, fetchBrands, fetchItems } from '../../services/apiStockService';
+import { useFetchCategories, useFetchBrands, useFetchItems } from '../../hooks/servicesHook/useStockService';
 import ProductCardComponent from './components/ProductCardComponent';
 
+
 const FindProductAvailability = () => {
+
+  const fetchCategories=useFetchCategories();
+  const fetchItems = useFetchItems();
+  const fetchBrands = useFetchBrands();
+  
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [tyreSizes, setTyreSizes] = useState([]);
@@ -23,7 +29,7 @@ const FindProductAvailability = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      getBrands(selectedCategory)
+      fetchBrands(selectedCategory)
         .then((response) => setBrands(response.data))
         .catch((error) => console.error('Error fetching brands:', error));
 

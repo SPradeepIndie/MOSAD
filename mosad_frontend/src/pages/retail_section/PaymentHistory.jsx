@@ -32,7 +32,7 @@ const PaymentHistory = () => {
     // Define columns for the DataGrid
     const columns = [
         { field: "date", headerName: "Date", width: 150 },
-        { field: "description", headerName: "Description", width: 300 },
+        { field: "description", headerName: "Retail Customer Name", width: 300 },
         { field: "paymentStatus", headerName: "Payment Status", width: 200 },
         { field: "amount", headerName: "Amount", width: 150, type: "number" }
     ];

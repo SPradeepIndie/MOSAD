@@ -173,6 +173,50 @@ public class RetailService {
         }
     }
     // IncompleteTransaction
+//    public List<IncompleteTransactionsDTO> getIncompleteTransactions(String username) {
+//        // Fetch the logged-in user to check their role
+//        Optional<Users> retailUser = userRepository.findByUsername(username);
+//        if (retailUser.isEmpty()) {
+//            throw new IllegalArgumentException(RETAIL_USER_NOT_FOUND);
+//        }
+//        Users user = retailUser.get();
+//        // Check if the logged-in user is an admin
+//        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
+//            // Admin: Fetch all users' transactions
+//            List<Bill> allBills = billRepository.findAll();
+//            return allBills.stream()
+//                    .filter(bill -> bill.getBalance() > 0)
+//                    .map(bill -> new IncompleteTransactionsDTO(
+//                            bill.getDate(), // Directly use the date
+//                            bill.getBillItems().stream()
+//                                    .map(BillItem::getDescription)
+//                                    .collect(Collectors.joining(", ")),
+//                            bill.getBalance(),
+//                            calculateDueDate(bill.getDate()) // Directly use the date
+//                    ))
+//                    .toList();
+//        } else {
+//            // Regular user: Fetch only their transactions
+//            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
+//            return userBills.stream()
+//                    .filter(bill -> bill.getBalance() > 0)
+//                    .map(bill -> new IncompleteTransactionsDTO(
+//                            bill.getDate(), // Directly use the date
+//                            bill.getBillItems().stream()
+//                                    .map(BillItem::getDescription)
+//                                    .collect(Collectors.joining(", ")),
+//                            bill.getBalance(),
+//                            calculateDueDate(bill.getDate()) // Directly use the date
+//                    ))
+//                    .toList();
+//        }
+//    }
+    private Date calculateDueDate(LocalDate date) {
+        // Add 30 days
+        LocalDate dueDate = date.plusDays(30);
+        // Convert back to java.util.Date
+        return Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
     public List<IncompleteTransactionsDTO> getIncompleteTransactions(String username) {
         // Fetch the logged-in user to check their role
         Optional<Users> retailUser = userRepository.findByUsername(username);
@@ -180,41 +224,31 @@ public class RetailService {
             throw new IllegalArgumentException(RETAIL_USER_NOT_FOUND);
         }
         Users user = retailUser.get();
+
+        List<Bill> bills;
+
         // Check if the logged-in user is an admin
         if (ADMIN.equalsIgnoreCase(user.getUsername())) {
-            // Admin: Fetch all users' transactions
-            List<Bill> allBills = billRepository.findAll();
-            return allBills.stream()
-                    .filter(bill -> bill.getBalance() > 0)
-                    .map(bill -> new IncompleteTransactionsDTO(
-                            bill.getDate(), // Directly use the date
-                            bill.getBillItems().stream()
-                                    .map(BillItem::getDescription)
-                                    .collect(Collectors.joining(", ")),
-                            bill.getBalance(),
-                            calculateDueDate(bill.getDate()) // Directly use the date
-                    ))
-                    .toList();
+            // Admin: Fetch all retail customers' transactions, excluding completed bills (balance > 0)
+            bills = billRepository.findAll().stream()
+                    .filter(bill -> bill.getUser() != null && bill.getCustomer() == null && bill.getBalance() > 0)
+                    .collect(Collectors.toList());
         } else {
-            // Regular user: Fetch only their transactions
-            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
-            return userBills.stream()
+            // Regular user: Fetch only their transactions, excluding completed bills (balance > 0)
+            bills = billRepository.findBillByUser(user); // Assuming this method exists in billRepository
+            // Filter for only unpaid bills (balance > 0)
+            bills = bills.stream()
                     .filter(bill -> bill.getBalance() > 0)
-                    .map(bill -> new IncompleteTransactionsDTO(
-                            bill.getDate(), // Directly use the date
-                            bill.getBillItems().stream()
-                                    .map(BillItem::getDescription)
-                                    .collect(Collectors.joining(", ")),
-                            bill.getBalance(),
-                            calculateDueDate(bill.getDate()) // Directly use the date
-                    ))
-                    .toList();
+                    .collect(Collectors.toList());
         }
-    }
-    private Date calculateDueDate(LocalDate date) {
-        // Add 30 days
-        LocalDate dueDate = date.plusDays(30);
-        // Convert back to java.util.Date
-        return Date.from(dueDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        return bills.stream()
+                .map(bill -> new IncompleteTransactionsDTO(
+                        bill.getDate(), // Directly use the date
+                        combineUserName(bill.getUser()), // Use the new method to combine the name
+                        bill.getBalance(),
+                        calculateDueDate(bill.getDate()) // Directly use the date
+                ))
+                .toList();
     }
 }
