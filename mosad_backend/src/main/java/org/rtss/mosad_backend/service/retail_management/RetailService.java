@@ -4,10 +4,8 @@ import org.rtss.mosad_backend.dto.retail_management.PaymentHistoryDTO;
 import org.rtss.mosad_backend.dto.retail_management.PurchaseHistoryDTO;
 import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
-import org.rtss.mosad_backend.entity.stock_management_entity.Category;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
-import org.rtss.mosad_backend.repository.stock_management_repository.CategoryRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.springframework.stereotype.Service;
 
@@ -28,46 +26,120 @@ public class RetailService {
         this.billRepository = billRepository;
         this.userRepository = userRepository;
     }
+//    public List<PaymentHistoryDTO> getPaymentHistory(String username) {
+//        // Fetch the logged-in user
+//        Users user = userRepository.findByUsername(username)
+//                .orElseThrow(() -> new IllegalArgumentException(RETAIL_USER_NOT_FOUND));
+//        // Check if the logged-in user is an admin
+//        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
+//            // Admin: Fetch all users' payment history
+//            List<Bill> allBills = billRepository.findAll();
+//            return allBills.stream()
+//                    .map(bill -> new PaymentHistoryDTO(
+//                            bill.getDate(),
+//                            bill.getBillItems().stream()
+//                                    .map(BillItem::getDescription)
+//                                    .collect(Collectors.joining(", ")),
+//                            returnPaymentStatus(bill),
+//                            bill.getTotalAmount()
+//                    ))
+//                    .toList();
+//        } else {
+//            // Regular user: Fetch only their payment history
+//            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
+//            return userBills.stream()
+//                    .map(bill -> new PaymentHistoryDTO(
+//                            bill.getDate(),
+//                            bill.getBillItems().stream()
+//                                    .map(BillItem::getDescription)
+//                                    .collect(Collectors.joining(", ")),
+//                            returnPaymentStatus(bill),
+//                            bill.getTotalAmount()
+//                    ))
+//                    .toList();
+//        }
+//    }
+//    private String returnPaymentStatus(Bill bill) {
+//        if (bill.getBalance() == 0) {
+//            return "Completed";
+//        }
+//        return "Credit";
+//    }
+
     public List<PaymentHistoryDTO> getPaymentHistory(String username) {
         // Fetch the logged-in user
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException(RETAIL_USER_NOT_FOUND));
+
+        List<Bill> bills;
+
         // Check if the logged-in user is an admin
         if (ADMIN.equalsIgnoreCase(user.getUsername())) {
-            // Admin: Fetch all users' payment history
-            List<Bill> allBills = billRepository.findAll();
-            return allBills.stream()
-                    .map(bill -> new PaymentHistoryDTO(
-                            bill.getDate(),
-                            bill.getBillItems().stream()
-                                    .map(BillItem::getDescription)
-                                    .collect(Collectors.joining(", ")),
-                            returnPaymentStatus(bill),
-                            bill.getTotalAmount()
-                    ))
-                    .toList();
+            // Admin: Fetch all retail customers' payment history
+            // Fetch only bills with userId (retail customer bills where userId is not null)
+            bills = billRepository.findAll().stream()
+                    .filter(bill -> bill.getUser() != null && bill.getCustomer() == null)
+                    .collect(Collectors.toList());
         } else {
             // Regular user: Fetch only their payment history
-            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
-            return userBills.stream()
-                    .map(bill -> new PaymentHistoryDTO(
-                            bill.getDate(),
-                            bill.getBillItems().stream()
-                                    .map(BillItem::getDescription)
-                                    .collect(Collectors.joining(", ")),
-                            returnPaymentStatus(bill),
-                            bill.getTotalAmount()
-                    ))
-                    .toList();
+            bills = billRepository.findBillByUser(user); // Assuming this method exists in billRepository
         }
+
+        return bills.stream()
+                .map(bill -> new PaymentHistoryDTO(
+                        bill.getDate(),
+                        combineUserName(bill.getUser()), // Use the new method to combine the name
+                        returnPaymentStatus(bill),
+                        bill.getTotalAmount()
+                ))
+                .toList();
     }
+
+
+    private String combineUserName(Users user) {
+        if (user != null) {
+            return user.getFirstName() + " " + user.getLastName();
+        }
+        return "Unknown"; // Return "Unknown" if the user is null
+    }
+
+
+
     private String returnPaymentStatus(Bill bill) {
-        if (bill.getBalance() == 0) {
-            return "Completed";
+        // Null check for the bill object
+        if (bill == null) {
+            throw new IllegalArgumentException("Bill cannot be null");
         }
-        return "Credit";
+
+        // Null checks for the balance, advance, and totalAmount
+        if (bill.getBalance() == null) {
+            throw new IllegalArgumentException("Balance cannot be null for bill ID: " + bill.getBillId());
+        }
+        if (bill.getAdvance() == null) {
+            throw new IllegalArgumentException("Advance cannot be null for bill ID: " + bill.getBillId());
+        }
+        if (bill.getTotalAmount() == null) {
+            throw new IllegalArgumentException("Total Amount cannot be null for bill ID: " + bill.getBillId());
+        }
+
+        // Handle various cases based on the balance, advance, and totalAmount
+        if (bill.getBalance() == 0 && bill.getAdvance().equals(bill.getTotalAmount())) {
+            return "Completed";  // Fully paid with advance equal to total amount
+        } else if (bill.getBalance() > 0) {
+            return "Credit";  // Outstanding balance remains
+        } else if (bill.getBalance() < 0) {
+            return "Overpaid";  // Advance was more than total amount
+        } else if (bill.getAdvance() < bill.getTotalAmount()) {
+            return "Pending";  // The customer hasn't paid enough to cover the full bill
+        }
+
+        // Default case (if for some reason the balance is zero but conditions aren't met)
+        return "Unknown Status";
     }
-    
+
+
+
+
     //Purchase History
     public List<PurchaseHistoryDTO> getPurchaseHistory(String username) {
         // Fetch the logged-in user
