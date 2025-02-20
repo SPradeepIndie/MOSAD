@@ -11,7 +11,7 @@
 	<groupId>org.rtss</groupId>
 	<artifactId>mosad_backend</artifactId>
 <!--	MOSAD project version up here-->
-	<version>3.3.0</version>
+	<version>3.3.3</version>
 	<name>mosad_backend</name>
 	<description>E-Business web application for Rashmi Tyre center</description>
 	<properties>

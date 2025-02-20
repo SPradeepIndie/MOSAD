@@ -1,6 +1,18 @@
-// src/pages/RebuildTyrePage.js
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Box,Dialog,DialogTitle,DialogContent } from '@mui/material';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Slide,
+  Grid2 as Grid,
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
 import RebuildTyreForm from '../../forms/RebuildTyreForm.jsx';
 import PopUp from '../../component/PopUp.jsx';
@@ -13,6 +25,21 @@ import {
 } from '../../hooks/servicesHook/useDackService.js'
 
 
+const theme = createTheme({
+  palette: {
+    primary: { main: '#1976d2' },
+    secondary: { main: '#dc004e' },
+    background: { default: '#f5f5f5' },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  },
+});
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const RebuildTyrePage = () => {
   const getAllTyres = useFetchRebuildTyres();
   const getTyresByContactNumber=useFetchRebuildTyresByContact();
@@ -23,11 +50,10 @@ const RebuildTyrePage = () => {
   const [filter, setFilter] = useState('');
   const [editingTyre, setEditingTyre] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const [openUpdatePopup, setOpenUpdatePopup] = useState(false);
+  const [openFormPopup, setOpenFormPopup] = useState(false);
   const [openInfoPopup, setOpenInfoPopup] = useState(false);
   const [infoTyre, setInfoTyre] = useState(null);
 
-  // Fetch tyre data from the API
   const fetchTyres = async () => {
     try {
       let response;
@@ -36,7 +62,6 @@ const RebuildTyrePage = () => {
       } else {
         response = await getAllTyres();
       }
-      console.log('Fetched tyres:', response.data);
       setTyres(response.data);
     } catch (error) {
       console.error(error);
@@ -48,12 +73,8 @@ const RebuildTyrePage = () => {
     fetchTyres();
   }, [filter, refresh]);
 
-  // Handlers for search/filter inputs
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-  };
+  const handleFilterChange = (e) => setFilter(e.target.value);
 
-  // Form submission for both add and update
   const handleFormSubmit = async (formData) => {
     try {
       if (editingTyre) {
@@ -63,14 +84,13 @@ const RebuildTyrePage = () => {
         await createTyre(formData);
       }
       setRefresh(!refresh);
-      setOpenUpdatePopup(false);
+      setOpenFormPopup(false);
     } catch (error) {
       console.error(error);
       alert(editingTyre ? 'Error updating tyre' : 'Error creating tyre');
     }
   };
 
-  // Handler for deletion
   const handleDeleteTyre = async (id) => {
     if (window.confirm('Are you sure you want to delete this tyre?')) {
       try {
@@ -83,109 +103,134 @@ const RebuildTyrePage = () => {
     }
   };
 
-  // When clicking "Update" on a row, open the update popup with the form pre-filled
   const handleUpdate = (tyre) => {
     setEditingTyre(tyre);
-    setOpenUpdatePopup(true);
+    setOpenFormPopup(true);
   };
 
-  // When clicking "More Info", open the info popup with the removed fields
   const handleInfo = (tyre) => {
     setInfoTyre(tyre);
     setOpenInfoPopup(true);
   };
 
-  // Cancel the update form
   const handleCancelUpdate = () => {
     setEditingTyre(null);
-    setOpenUpdatePopup(false);
+    setOpenFormPopup(false);
   };
 
-  // Close the info popup
   const handleCloseInfo = () => {
     setInfoTyre(null);
     setOpenInfoPopup(false);
   };
 
-  // When clicking "Add Order", open the update popup with an empty form
   const handleAddOrder = () => {
     setEditingTyre(null);
-    setOpenUpdatePopup(true);
+    setOpenFormPopup(true);
   };
 
   return (
-    <Container>
-      <Typography variant="h4" align="center" gutterBottom>
-        Rebuild Tyre Management
-      </Typography>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        {/* Left side: search/filter controls */}
-        <Box display="flex" alignItems="center">
-          <TextField
-            label="Filter by Contact Number"
-            value={filter}
-            onChange={handleFilterChange}
-            variant="outlined"
-            sx={{ mr: 2 }}
-          />
-          <Button variant="contained" onClick={fetchTyres}>
-            Search
-          </Button>
-          <Button variant="outlined" onClick={() => setFilter('')} sx={{ ml: 2 }}>
-            Clear Filter
+    <ThemeProvider theme={theme}>
+      <Container sx={{ py: 4 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Rebuild Tyre Management
+        </Typography>
+
+        <Paper sx={{ p: 2, mb: 3, boxShadow: 3, borderRadius: 2 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={8}>
+              <TextField
+                label="Filter by Contact Number"
+                value={filter}
+                onChange={handleFilterChange}
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} container spacing={1}>
+              <Grid item xs={6}>
+                <Button variant="contained" color="primary" onClick={fetchTyres} fullWidth>
+                  Search
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="outlined" onClick={() => setFilter('')} fullWidth>
+                  Clear Filter
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Button variant="contained" color="primary" onClick={handleAddOrder}>
+            Add Order
           </Button>
         </Box>
-        {/* Right side: Add Order button */}
-        <Button variant="contained" color="primary" onClick={handleAddOrder}>
-          Add Order
-        </Button>
-      </Box>
 
-      {/* Table displaying current items from the database */}
-      <RebuildTyreTable tyres={tyres} onUpdate={handleUpdate} onInfo={handleInfo} onDelete={handleDeleteTyre} />
-
-      {/* Pop-up form for Add/Update */}
-      <PopUp
-        popUpTitle={editingTyre ? "Update Order" : "Add New Order"}
-        openPopup={openUpdatePopup}
-        setOpenPopup={setOpenUpdatePopup}
-        setCancelButtonAction={handleCancelUpdate}
-        paperSx={{
-          position: 'absolute',
-          right: 20,
-          top: 50,
-          m: 0,
-        }}
-        isDefaultButtonsDisplay={false}
-      >
-        <RebuildTyreForm
-          initialData={editingTyre || {}}
-          onSubmit={handleFormSubmit}
-          onCancel={handleCancelUpdate}
+        <RebuildTyreTable
+          tyres={tyres}
+          onUpdate={handleUpdate}
+          onInfo={handleInfo}
+          onDelete={handleDeleteTyre}
         />
-      </PopUp>
 
-      {/* Pop-up for More Info to display removed fields */}
-      <Dialog open={openInfoPopup} onClose={handleCloseInfo} maxWidth="sm" fullWidth>
-        <DialogTitle>More Info</DialogTitle>
-        <DialogContent dividers>
-          {infoTyre && (
-            <Box>
-              <Typography><strong>Tyre Size:</strong> {infoTyre.tyreSize}</Typography>
-              <Typography><strong>Tyre Brand:</strong> {infoTyre.tyreBrand}</Typography>
-              <Typography><strong>Date Sent To Company:</strong> {infoTyre.dateSentToCompany}</Typography>
-              <Typography><strong>Sales Rep Number:</strong> {infoTyre.salesRepNumber}</Typography>
-              <Typography><strong>Job Number:</strong> {infoTyre.jobNumber}</Typography>
-              <Typography><strong>Date Received From Company:</strong> {infoTyre.dateReceivedFromCompany}</Typography>
-              <Typography><strong>Date Delivered To Customer:</strong> {infoTyre.dateDeliveredToCustomer}</Typography>
-            </Box>
-          )}
-        </DialogContent>
-        <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button variant="outlined" onClick={handleCloseInfo}>Close</Button>
-        </Box>
-      </Dialog>
-    </Container>
+        <PopUp
+          popUpTitle={editingTyre ? 'Update Order' : 'Add New Order'}
+          openPopup={openFormPopup}
+          setOpenPopup={setOpenFormPopup}
+          setCancelButtonAction={handleCancelUpdate}
+          isDefaultButtonsDisplay={false}
+        >
+          <RebuildTyreForm
+            initialData={editingTyre || {}}
+            onSubmit={handleFormSubmit}
+            onCancel={handleCancelUpdate}
+          />
+        </PopUp>
+
+        <Dialog
+          open={openInfoPopup}
+          onClose={handleCloseInfo}
+          maxWidth="sm"
+          fullWidth
+          TransitionComponent={Transition}
+        >
+          <DialogTitle>More Info</DialogTitle>
+          <DialogContent dividers>
+            {infoTyre && (
+              <Box>
+                <Typography variant="body1">
+                  <strong>Tyre Size:</strong> {infoTyre.tyreSize}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Tyre Brand:</strong> {infoTyre.tyreBrand}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Date Sent To Company:</strong> {infoTyre.dateSentToCompany}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Sales Rep Number:</strong> {infoTyre.salesRepNumber}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Job Number:</strong> {infoTyre.jobNumber}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Date Received From Company:</strong> {infoTyre.dateReceivedFromCompany}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Date Delivered To Customer:</strong> {infoTyre.dateDeliveredToCustomer}
+                </Typography>
+              </Box>
+            )}
+          </DialogContent>
+          <Box display="flex" justifyContent="flex-end" p={2}>
+            <Button variant="outlined" onClick={handleCloseInfo}>
+              Close
+            </Button>
+          </Box>
+        </Dialog>
+      </Container>
+    </ThemeProvider>
   );
 };
 

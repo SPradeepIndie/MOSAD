@@ -1,4 +1,3 @@
-// src/component/RebuildTyreTable.jsx
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -9,47 +8,39 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
   IconButton,
-  TableSortLabel
+  TableSortLabel,
+  Tooltip,
 } from '@mui/material';
-import RIcon from '../assets/R.png'; // adjust path if necessary
-import redIcon from '../assets/red.png';
-import yellowIcon from '../assets/yellow.png';
-import greenIcon from '../assets/green.png';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 
 const headerStyle = {
   fontWeight: 'bold',
-  backgroundColor: '#f5f5f5', // Customize header background color here
-};
-
-const getStatusImage = (status) => {
-  if (status === "IN_HOLD") return redIcon;
-  if (status === "SENT_TO_REBUILD") return yellowIcon;
-  if (status === "DONE") return greenIcon;
-  return null;
+  backgroundColor: '#1976d2', // professional blue header
+  color: '#fff',
 };
 
 const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
-  const [sortOrder, setSortOrder] = useState("asc"); // Track sorting order
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  // Function to handle sorting
   const handleSort = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  // Sorting logic
-  const sortedTyres = [...tyres].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.status.localeCompare(b.status);
-    } else {
-      return b.status.localeCompare(a.status);
-    }
-  });
+  const sortedTyres = [...tyres].sort((a, b) =>
+    sortOrder === 'asc'
+      ? a.status.localeCompare(b.status)
+      : b.status.localeCompare(a.status)
+  );
 
   return (
-    <TableContainer component={Paper} sx={{ mt: 2 }}>
-      <Table>
+    <TableContainer
+      component={Paper}
+      sx={{ mt: 3, boxShadow: 3, borderRadius: 2 }}
+    >
+      <Table stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell sx={headerStyle}>Customer ID</TableCell>
@@ -61,16 +52,30 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
             <TableCell sx={headerStyle}>Bill Number</TableCell>
             <TableCell sx={headerStyle}>Price</TableCell>
             <TableCell sx={headerStyle}>
-              <TableSortLabel active direction={sortOrder} onClick={handleSort}>
+              <TableSortLabel
+                active
+                direction={sortOrder}
+                onClick={handleSort}
+                sx={{ color: '#fff' }}
+              >
                 Status
               </TableSortLabel>
             </TableCell>
-            <TableCell sx={headerStyle}>Actions</TableCell>
+            <TableCell sx={headerStyle} align="center">
+              Actions
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {sortedTyres.map((tyre, index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              sx={{
+                backgroundColor: index % 2 === 0 ? '#f9f9f9' : '#fff',
+                '&:hover': { backgroundColor: '#e3f2fd' },
+                transition: 'background-color 0.3s ease',
+              }}
+            >
               <TableCell>{tyre.customerId}</TableCell>
               <TableCell>{tyre.itemId}</TableCell>
               <TableCell>{tyre.tyreNumber}</TableCell>
@@ -79,27 +84,23 @@ const RebuildTyreTable = ({ tyres, onUpdate, onInfo, onDelete }) => {
               <TableCell>{tyre.dateReceived}</TableCell>
               <TableCell>{tyre.billNumber}</TableCell>
               <TableCell>{tyre.price}</TableCell>
-              <TableCell>
-                {getStatusImage(tyre.status) ? (
-                  <img
-                    src={getStatusImage(tyre.status)}
-                    alt={tyre.status}
-                    style={{ width: 24, height: 24 }}
-                  />
-                ) : (
-                  tyre.status
-                )}
-              </TableCell>
-              <TableCell>
-                <Button variant="contained" onClick={() => onUpdate(tyre)} sx={{ mr: 1 }}>
-                  Update
-                </Button>
-                <IconButton onClick={() => onInfo(tyre)}>
-                  <img src={RIcon} alt="More Info" style={{ width: 24, height: 24 }} />
-                </IconButton>
-                <Button variant="outlined" color="error" onClick={() => onDelete(tyre.itemId)} sx={{ ml: 1 }}>
-                  Delete
-                </Button>
+              <TableCell>{tyre.status}</TableCell>
+              <TableCell align="center">
+                <Tooltip title="Edit">
+                  <IconButton onClick={() => onUpdate(tyre)} color="primary">
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="More Info">
+                  <IconButton onClick={() => onInfo(tyre)} color="info">
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Delete">
+                  <IconButton onClick={() => onDelete(tyre.itemId)} color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}
@@ -119,7 +120,7 @@ RebuildTyreTable.propTypes = {
       contactNumber: PropTypes.string.isRequired,
       dateReceived: PropTypes.string.isRequired,
       billNumber: PropTypes.string.isRequired,
-      price: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       status: PropTypes.string.isRequired,
       tyreSize: PropTypes.string,
       tyreBrand: PropTypes.string,

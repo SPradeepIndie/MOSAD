@@ -1,10 +1,14 @@
 package org.rtss.mosad_backend.dto_mapper.rebuild_tyre_dto_mapper;
 
-
 import org.rtss.mosad_backend.dto.rebuild_tyre_dtos.RebuildTyreDto;
 import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre;
 
 public class RebuildTyreMapper {
+
+    
+    private RebuildTyreMapper() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
     public static RebuildTyre toEntity(RebuildTyreDto dto) {
         RebuildTyre tyre = new RebuildTyre();
