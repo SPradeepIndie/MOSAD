@@ -64,8 +64,8 @@ public class Bill {
         return billItems;
     }
 
-    public void setBillItems() {
-        this.billItems = billItems;
+    public void setBillItems(List<BillItem> billItems) {
+        this.billItems = this.billItems;
     }
 
     public Long getBillId() {

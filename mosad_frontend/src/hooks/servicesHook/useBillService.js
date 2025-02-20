@@ -29,5 +29,16 @@ export const useUpdateItemQuantity = () => {
     return updateItemQuantity;
 };
 
+export const useCreateBill=()=>{
+  const apiClient = useApiClient();
+
+  const createBill = (data) =>{
+    return apiClient.post('/bills',data)
+  };
+
+  return createBill;
+
+};
+
 
 
