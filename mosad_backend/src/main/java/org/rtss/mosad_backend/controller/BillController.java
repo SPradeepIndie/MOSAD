@@ -1,4 +1,4 @@
-package org.rtss.mosad_backend.controller.bill_management;
+package org.rtss.mosad_backend.controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
@@ -27,4 +27,10 @@ public class BillController {
     public ResponseEntity<List<BillDetailsDTO>> getAllBills() {
         return ResponseEntity.ok(billService.getAllBills());
     }
+
+    @PutMapping("/updatestock")
+    public ResponseEntity<ResponseDTO> updateItemQuantity(@RequestParam Long itemId, @RequestParam Long branchId, @RequestParam Integer quantity) {
+        return ResponseEntity.ok(billService.updateItemQuantity(itemId, branchId, quantity));
+    }
+
 }
