@@ -64,7 +64,7 @@ public class Bill {
         return billItems;
     }
 
-    public void setBillItems(List<BillItem> billItems) {
+    public void setBillItems() {
         this.billItems = billItems;
     }
 

@@ -83,9 +83,19 @@ export const useDeleteItem = () => {
 export const useFetchBrandAndSizeData = () => {
   const apiClient = useApiClient();
 
-  const fetchBrandAndSizeData = (brand, size, branchId) => {
-    return apiClient.get(`/item/search?brand=${brand}&size=${size}&branchId=${branchId}`);
+  const fetchBrandAndSizeData = (category,brand,name, size,branchId) => {
+    return apiClient.get(`/item/search?Category=${category}&Brand=${brand}&name=${name}&tyreSize=${size}&branchId=${branchId}`);
   };
 
   return fetchBrandAndSizeData;
 };
+
+export const useFetchBranches = () => {
+  const apiClient = useApiClient();
+
+  const fetchBranches = () => {
+    return apiClient.get('/item/allbranches');
+  };
+
+  return fetchBranches;
+}
