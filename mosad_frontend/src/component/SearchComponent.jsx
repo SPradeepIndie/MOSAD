@@ -238,9 +238,9 @@ useEffect(() => {
 
     try {
       setError(""); // Clear any previous error
-      
-     
-      
+
+
+
       const response = await getBrandAndSizeData();
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
@@ -270,7 +270,7 @@ useEffect(() => {
 };
 
 
-  
+
 
   return (
    <> 

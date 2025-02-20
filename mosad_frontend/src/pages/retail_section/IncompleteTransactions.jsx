@@ -1,10 +1,11 @@
 import React, {  useState ,useEffect } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Typography } from "@mui/material";
-import { fetchIncompleteTransactions } from "../../services/apiRetailService";
 import useAuth from "../../hooks/useAuth";
+import { useFetchIncompleteTransactions } from "../../hooks/servicesHook/useRetailService";
 
-const IncompleteTransactions = () => {  
+const IncompleteTransactions = () => {
+    const fetchIncompleteTransactions=useFetchIncompleteTransactions();  
     const [rows, setRows] = useState([]);
     const {auth}=useAuth();
     const loadingData = async () => {

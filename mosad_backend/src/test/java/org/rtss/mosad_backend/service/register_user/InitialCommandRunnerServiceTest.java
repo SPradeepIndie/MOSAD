@@ -10,18 +10,20 @@ import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
-class AdminInitialRegisteringServiceTest {
+class InitialCommandRunnerServiceTest {
 
     private PasswordEncoder passwordEncoder;
     private UsersRepo usersRepo;
     private UserRolesRepo userRolesRepo;
+    private JdbcTemplate jdbcTemplate;
 
     //Service to be tested
-    private AdminInitialRegisteringService service;
+    private InitialCommandRunnerService service;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +31,8 @@ class AdminInitialRegisteringServiceTest {
         when(passwordEncoder.bCryptPasswordEncoder()).thenReturn(mock(BCryptPasswordEncoder.class));
         usersRepo = mock(UsersRepo.class);
         userRolesRepo = mock(UserRolesRepo.class);
-        service = new AdminInitialRegisteringService(passwordEncoder, usersRepo, userRolesRepo);
+        jdbcTemplate = mock(JdbcTemplate.class);
+        service = new InitialCommandRunnerService(passwordEncoder, usersRepo, userRolesRepo,jdbcTemplate);
     }
 
     @Test

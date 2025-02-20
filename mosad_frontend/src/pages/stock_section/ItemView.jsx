@@ -9,7 +9,7 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
+import { useAddItem, useFetchItems, useDeleteItem, useUpdateItem } from "../../hooks/servicesHook/useStockService";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
@@ -17,15 +17,15 @@ import SearchComponent from "../../component/SearchComponent";
 import Box from '@mui/material/Box';
 
 const ItemView = () => {
-
+  const addItem = useAddItem(); 
+  const fetchItems = useFetchItems(); 
+  const deleteItem =useDeleteItem(); 
+  const updateItem= useUpdateItem();
   //Store passed Category and Brand using Link state & useLocation
   const [selectedCategory, setSelectedCategory] = useState("Tyre");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
   const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
-
-
-
 
 
   const [rows, setRows] = useState([]);
