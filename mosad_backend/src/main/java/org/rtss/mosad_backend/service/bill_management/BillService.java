@@ -68,7 +68,7 @@ public class BillService {
                     return billItem;
                 })
                 .collect(Collectors.toList());
-        bill.setBillItems(billItems);
+        bill.setBillItems();
 
         Bill savedBill = billRepository.save(bill);
 
