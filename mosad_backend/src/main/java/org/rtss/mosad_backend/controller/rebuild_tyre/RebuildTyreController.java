@@ -23,6 +23,7 @@ public class RebuildTyreController {
         this.rebuildTyreMapper = rebuildTyreMapper;
     }
 
+
     // Create a new tyre entry.
     @PostMapping
     public ResponseEntity<RebuildTyreDto> createRebuildTyre(@Valid @RequestBody RebuildTyreDto rebuildTyreDto) {

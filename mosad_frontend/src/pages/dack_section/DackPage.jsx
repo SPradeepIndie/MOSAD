@@ -17,12 +17,13 @@ import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
 import RebuildTyreForm from '../../forms/RebuildTyreForm.jsx';
 import PopUp from '../../component/PopUp.jsx';
 import {
-  fetchRebuildTyres as getAllTyres,
-  fetchRebuildTyresByContact as getTyresByContactNumber,
-  createRebuildTyre as createTyre,
-  updateRebuildTyre as updateTyre,
-  deleteRebuildTyre as deleteTyre,
-} from '../../services/apiDackService';
+  useFetchRebuildTyres,
+  useCreateRebuildTyre,
+  useFetchRebuildTyresByContact,
+  useDeleteRebuildTyre,
+  useUpdateRebuildTyre
+} from '../../hooks/servicesHook/useDackService.js'
+
 
 const theme = createTheme({
   palette: {
@@ -40,6 +41,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const RebuildTyrePage = () => {
+  const getAllTyres = useFetchRebuildTyres();
+  const getTyresByContactNumber=useFetchRebuildTyresByContact();
+  const createTyre=useCreateRebuildTyre();
+  const updateTyre=useUpdateRebuildTyre();
+  const deleteTyre=useDeleteRebuildTyre();
   const [tyres, setTyres] = useState([]);
   const [filter, setFilter] = useState('');
   const [editingTyre, setEditingTyre] = useState(null);

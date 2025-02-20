@@ -9,14 +9,17 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
+import { useAddItem, useFetchItems, useDeleteItem, useUpdateItem } from "../../hooks/servicesHook/useStockService";
 import { useLocation } from "react-router-dom";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 
 const ItemView = () => {
- 
+  const addItem = useAddItem(); 
+  const fetchItems = useFetchItems(); 
+  const deleteItem =useDeleteItem(); 
+  const updateItem= useUpdateItem();
   //Store passed Category and Brand using Link state & useLocation
   const location = useLocation();
   const states = location.state; //ex: states={category: 'Tyre', brand: 'RAPID'} can use for selectedCategory, selectedBrand props

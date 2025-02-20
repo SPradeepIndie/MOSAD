@@ -11,7 +11,12 @@ export const AuthProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('auth', JSON.stringify(auth)); 
+    localStorage.setItem('auth', JSON.stringify({
+      Authenticated: true,
+      branch: null,
+      roles: ["ADMIN"],
+      username: "admin"})); 
+    
   }, [auth]); 
 
     return (

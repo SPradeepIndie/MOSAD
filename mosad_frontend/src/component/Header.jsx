@@ -6,24 +6,21 @@ import { React } from 'react';
 import { Link ,useNavigate} from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import useAuth from "../hooks/useAuth"
-import { logout } from '../services/apiUserService';
+import { useLogout } from '../hooks/servicesHook/useApiUserService';
 
 
 function HeaderBar() {
+  const logout = useLogout();
   const navigate = useNavigate();
-  const{setAuth}= useAuth();
+  const{auth,setAuth}= useAuth();
 
   const handleLogout = () => {
     //send logout request to db
-    logout({"refreshToken":localStorage.getItem("refresh_token")}).then((response)=>{
+    logout({"refreshToken":auth.refreshToken}).then((response)=>{
       alert(response.data);
     }).finally(()=>{
       setAuth({refresh_token:"",Authenticated:false,username:""}) 
-      // Remove token from local storage
-      localStorage.removeItem('token');
-      localStorage.removeItem('refresh_token');
-      navigate('/', { replace: true }); // Redirect to login page
-  
+      navigate('/login', { replace: true }); // Redirect to login page
     });
    
   };

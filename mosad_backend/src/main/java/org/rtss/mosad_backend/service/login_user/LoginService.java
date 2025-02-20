@@ -46,12 +46,19 @@ public class LoginService {
         if(authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
             String role=null;
+            Long branchID=null;
             if(principal instanceof UserDetails userDetails) {
-                role=((Users)userDetails).getUserRoles().getRoleName();
-             }
+                Users user=((Users)userDetails);
+                role=user.getUserRoles().getRoleName();
+                if(user.getBranch()!=null) {
+                    branchID=user.getBranch().getBranchId();
+                }
+            }
             authDTO.setAuthenticated(true);
             authDTO.setAccessToken(jwtService.generateToken(userLoginDto.getUsername(),role));//generate access token
             authDTO.setRefreshToken(jwtService.generateRefreshToken(userLoginDto.getUsername()));//generate refresh token
+            authDTO.setRole(role);
+            authDTO.setBranchId(branchID);
         }
         else{
             authDTO.setAuthenticated(false);

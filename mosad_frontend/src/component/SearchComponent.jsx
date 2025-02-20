@@ -17,9 +17,12 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { fetchBrands,fetchBrandAndSizeData } from "../services/apiStockService";
+import { useFetchBrandAndSizeData,useFetchBrands } from "../hooks/servicesHook/useStockService";
 
-const SearchComponent = ({ onAddToBill, quantity, setQuantity}) => {
+const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
+  const fetchBrands = useFetchBrands();
+  const fetchBrandAndSizeData = useFetchBrandAndSizeData();
+
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [size, setSize] = useState(""); // Holds the entered size
   const [brands, setBrands] = useState([]); // Holds the list of available brands

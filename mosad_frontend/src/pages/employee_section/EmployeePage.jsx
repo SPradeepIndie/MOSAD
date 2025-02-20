@@ -3,7 +3,7 @@ import React from "react";
 
 const EmployeePage=()=>{
     return(
-       <UnderConstruction displayTxt={<p> Employee page is under constuction</p>}/>
+        <UnderConstruction displayTxt={<p> Employee page is under constuction</p>}/>
     )
 }
 

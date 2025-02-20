@@ -2,20 +2,19 @@ import { CheckBox, LockOutlined } from "@mui/icons-material";
 import { Avatar, Button,Grid2, Container, FormControlLabel, Input, Paper, TextField, Typography } from "@mui/material";
 import { useState, useRef } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { loginRequest } from "../services/apiUserService";
 import useAuth from "../hooks/useAuth"
 import PopUp from "../component/PopUp";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
+import { useLogin } from "../hooks/servicesHook/useApiUserService";
 
 const LoginPage = () => {
     const{setAuth}= useAuth();
+    const loginRequest=useLogin();
 
     const [openForgotPasswordPopup,setOpenForgotPasswordPopup]=useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
-
-    
     const forgotPasswordFormRef = useRef();
 
   const handleCancelButtonAction = () => {
@@ -42,15 +41,13 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await loginRequest(loginData);
-        const { Authenticated, access_token,refresh_token } = response.data;
-        localStorage.setItem("token",access_token)
-        localStorage.setItem("refresh_token",refresh_token)
-        setAuth({refresh_token,Authenticated,username:loginData.username})
+        const { Authenticated, access_token,refresh_token,role,branchId } = response.data;
+        setAuth({refreshToken:refresh_token,accessToken:access_token,Authenticated,username:loginData.username,roles:[role],branch:branchId})
         navigate('/home', { replace: true }); // Used replace to prevent back navigation
        
     }
     return (
-        <Container maxWidth="xs">
+        <Container maxWidth="xs" sx={{p:2}}>
             <Paper elevation={10} sx={{ m: 1, p: 2 ,height:"85vh" }} >
                 <Grid2 container spacing={2} sx={{textAlign:"center",mt:1}}>
                     <Grid2 size={{xs:12}} sx={{display:"flex",justifyContent:"center",textAlign:"center"}}>
@@ -140,6 +137,7 @@ const LoginPage = () => {
                 <ForgotPasswordForm/>
             </PopUp>
         </Container>
+        
     )
 }
 export default LoginPage;
