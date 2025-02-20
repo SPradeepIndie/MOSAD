@@ -77,7 +77,7 @@ function App() {
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","BRANCH_MANAGER"]}/>}>
               <Route path="/branch" element={ <BranchPageLayout />} >
                 <Route index element={<BranchPage/>}/>
-                <Route path="bill-history" element={<BillPage />}/>
+                <Route path="bill-history" element={<AllBillsPage />}/>
                 <Route path="stock" element={<BranchStockLayout />}>
                   <Route index element={<StockPage isFromBranch={true}/>}/>
                   <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>

@@ -6,9 +6,10 @@ import ProductCardComponent from "../../component/ProductCardComponent";
 
 const FindProductAvailability = () => {
   // State for filters and search results
-  const [selectedBranch, setSelectedBranch] = useState(null); // Not used anymore
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
+  const [size, setSize] = useState(""); // Store user-inputted size
+  const [vehicleType, setVehicleType] = useState(""); // Store user-inputted vehicle type
   const [searchedResults, setSearchedResults] = useState([]);
   const [quantity, setQuantity] = useState(0);
 
@@ -17,23 +18,32 @@ const FindProductAvailability = () => {
     try {
       // Mock API Call (Replace this with actual API call)
       const mockData = [
-        { id: 1, category: "Tyre", brand: "BrandA", size: "16 inch", ptr: 200 },
-        { id: 2, category: "Tyre", brand: "BrandB", size: "18 inch", ptr: 250 },
-        { id: 3, category: "Oil", brand: "BrandC", size: "5L", ptr: 100 },
+        { id: 1, category: "Tyre", brand: "DSI", size: "16", vehicleType: "SUV" },
+        { id: 2, category: "Tyre", brand: "Presa", size: "18", vehicleType: "Truck" },
+        { id: 3, category: "Tube", brand: "DSI", size: "", vehicleType: "" }
       ];
 
-      // Filter data based on selected criteria
+      // Filter data based on selected inputs
       const filteredResults = mockData.filter(
         (item) =>
           (!selectedCategory || item.category === selectedCategory) &&
-          (!selectedBrand || item.brand === selectedBrand)
+          (!selectedBrand || item.brand === selectedBrand) &&
+          (!size || item.size === size) &&
+          (!vehicleType || item.vehicleType === vehicleType)
       );
 
+      // Set filtered results
       setSearchedResults(filteredResults);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  // Trigger search when filters change
+  const handleSearchChange = () => {
+    fetchAndSetItems();
+  };
+
   return (
     <Box sx={{ padding: 3 }}>
       {/* Search & Filter Component */}
@@ -43,10 +53,13 @@ const FindProductAvailability = () => {
         fetchandSetItems={fetchAndSetItems}
         quantity={quantity}
         setQuantity={setQuantity}
-        handleSearchChange={() => {}} // If necessary, pass actual handler
+        handleSearchChange={handleSearchChange} // Trigger search on change
+        onRetail={true}
+        setSize={setSize} // Capture size input
+        setVehicleType={setVehicleType} // Capture vehicle type input
       />
 
-      {/* Display Search Results as Tiles */}
+      {/* Display Search Results as Product Cards */}
       <Typography variant="h6" sx={{ marginTop: 3, marginBottom: 2 }}>
         Search Results:
       </Typography>
@@ -58,7 +71,7 @@ const FindProductAvailability = () => {
                 category={product.category}
                 brand={product.brand}
                 size={product.size}
-                ptr={product.ptr}
+                vehicleType={product.vehicleType}
               />
             </Grid2>
           ))
