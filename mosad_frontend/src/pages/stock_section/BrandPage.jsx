@@ -99,6 +99,7 @@ function BrandPage({ isFromBranch }) {
           {brands.map((brand) => (
             <Grid2 xs={12} sm={6} md={4} key={brand.brandName}>
               <Tile
+                allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}
                 title={brand.brandName}
                 icon={iconMap[brand.brandName] || <DescriptionIcon fontSize="large" />}
                 link={`${isFromBranch ? '/branch/stock/brand/item-view' : '/stock/item-view'}`}
@@ -109,6 +110,7 @@ function BrandPage({ isFromBranch }) {
           {/* Add New Brand Tile */}
           <Grid2 xs={12} sm={6} md={4}>
             <Tile
+              allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}
               title="Add New Brand"
               icon={<AddIcon fontSize="large" />}
               onClick={() => setDialogOpen(true)}
