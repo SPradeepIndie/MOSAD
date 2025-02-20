@@ -24,7 +24,7 @@ import PopUp from "./PopUp";
 import GeneralMessage from "./GeneralMessage";
 import { useFetchBrandAndSizeData,useFetchCategories,useFetchBrands,useAddBrand,useAddCategory,useFetchBranches } from "../hooks/servicesHook/useStockService";
 
-const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange}) => {
+const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleSearchChange,onRetail}) => {
   
   const fetchCategories = useFetchCategories();
   const fetchBrands = useFetchBrands();
@@ -259,20 +259,6 @@ useEffect(() => {
     }
   };
 
-//   const handleAddToBill = (row) => {
-//     console.log("Adding to bill:", row);
-//     if (quantity > 0) {
-//         const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
-//         onAddToBill({
-//             brand: row.itemDTO.brand,
-//             description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
-//             unitPrice: unitPrice,
-//             quantity: quantity,
-//             subtotal: unitPrice * quantity,
-//         });
-//     }
-// };
-
 const handleAddToBill = (row) => {
   //console.log("Adding to bill:", row);
   if (quantity > 0) {
@@ -299,7 +285,7 @@ const handleAddToBill = (row) => {
         Search
       </Typography>
   
-          {!fetchandSetItems &&
+          {(!fetchandSetItems || onRetail ) &&
             <Grid2 container gap={1} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
 
             {/* Branch Select with "+" Icon */}
