@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, Box, Button, TextField } from '@mui/material';
 
-function ProductCardComponent({ category, brand, size, ptr }) {
+function ProductCardComponent({ category, brand, size, vehicleType }) {
   if (!category) {
     throw new Error("Category is a required field.");
   }
@@ -18,7 +18,7 @@ function ProductCardComponent({ category, brand, size, ptr }) {
 
   return (
     <Card
-      sx={{            
+      sx={{
         width: '250px',
         borderRadius: '12px',
         boxShadow: 3,
@@ -50,9 +50,9 @@ function ProductCardComponent({ category, brand, size, ptr }) {
             <strong>Size:</strong> {size}
           </Typography>
         )}
-        {ptr && (
+        {vehicleType && (
           <Typography variant="body1" sx={{ marginBottom: '16px' }}>
-            <strong>PTR:</strong> {ptr}
+            <strong>Vehicle Type:</strong> {vehicleType}
           </Typography>
         )}
         <Box
@@ -105,6 +105,23 @@ function ProductCardComponent({ category, brand, size, ptr }) {
           </Button>
         </Box>
       </CardContent>
+      {/* Check Button */}
+      <Button
+        sx={{
+          width: '100%',
+          backgroundColor: '#2E8B58',  // Green color
+          color: 'white',
+          padding: '12px',
+          borderRadius: '0 0 12px 12px',
+          fontSize: '16px',
+          textTransform: 'none',
+          '&:hover': {
+            backgroundColor: '#218838',  // Darker green on hover
+          },
+        }}
+      >
+        Check
+      </Button>
     </Card>
   );
 }
