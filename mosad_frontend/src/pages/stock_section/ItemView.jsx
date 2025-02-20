@@ -9,31 +9,30 @@ import default_baner from "../../assets/default.png"
 import dsi_baner from "../../assets/dsi.png"
 import rapid_baner from "../../assets/rapid.jpg"
 import linglong_baner from "../../assets/linglong.png"
-import { addItem, fetchItems, deleteItem, updateItem } from "../../services/apiStockService";
-import { useLocation } from "react-router-dom";
+import { useAddItem, useFetchItems, useDeleteItem, useUpdateItem } from "../../hooks/servicesHook/useStockService";
 import PopUp from "../../component/PopUp";
 import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
 
 const ItemView = () => {
- 
+  const addItem = useAddItem(); 
+  const fetchItems = useFetchItems(); 
+  const deleteItem =useDeleteItem(); 
+  const updateItem= useUpdateItem();
   //Store passed Category and Brand using Link state & useLocation
   const [selectedCategory, setSelectedCategory] = useState("Tyre");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
 
-
-
-
   const [rows, setRows] = useState([]);
 
-  const [filter,setFilters] =useState({tyreSize:"",itemName:"",vehicleType:""});
+  const [filter,setFilter] =useState({tyreSize:"",itemName:"",vehicleType:""});
 
 
   const handleFilterChange = (tireSize,itemName,vehicleType) => {
     
-    setFilters({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
+    setFilter({tyreSize:tireSize,itemName:itemName,vehicleType:vehicleType});
     setTimeout(() => {
       console.log(filter);
       console.log(selectedCategory,selectedBrand,selectedBranch);

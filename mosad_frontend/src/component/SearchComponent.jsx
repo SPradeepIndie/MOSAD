@@ -17,14 +17,15 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { fetchBrands,fetchBrandAndSizeData,fetchCategories } from "../services/apiStockService";
-import { Grid } from "@mui/system";
+import { useFetchBrandAndSizeData,useFetchBrands } from "../hooks/servicesHook/useStockService";
 
-const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranch,setSelectedCategory,setSelectedBrand,fetchandSetItems,handleFilterChange}) => {
-  const [category,setCategory] = useState("Tyre"); // Holds the selected category
+const SearchComponent = ({ onAddToBill , quantity , setQuantity }) => {
+  const fetchBrands = useFetchBrands();
+  const fetchBrandAndSizeData = useFetchBrandAndSizeData();
+
   const [brand, setBrand] = useState(""); // Holds the selected brand
   const [branch, setBranch] = useState( { branchId: 1, branchName: "Main" }); // Holds the selected branch
-  
+
   const [size, setSize] = useState(""); // Holds the entered size
   const [name, setName] = useState(""); // Holds the entered name
   const [type, setType] = useState(""); // Holds the entered type
@@ -103,7 +104,7 @@ const SearchComponent = ({ onAddToBill , quantity , setQuantity,setSelectedBranc
 
   // Fetch available brands when the component mounts
   useEffect(() => {
-    
+
   loadcategories();
 
   loadbrands();
@@ -133,9 +134,9 @@ useEffect(() => {
 
     try {
       setError(""); // Clear any previous error
-      
-     
-      
+
+
+
       const response = await getBrandAndSizeData();
       if (response.status === 200 && Array.isArray(response.data)) {
         setResults(response.data); // Set search results
@@ -164,7 +165,7 @@ useEffect(() => {
 };
 
 
-  
+
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
@@ -298,7 +299,7 @@ useEffect(() => {
                 <TableCell>Pattern</TableCell>
                 </>
                 }
-                
+
                 <TableCell>Quantity</TableCell>
               </TableRow>
             </TableHead>

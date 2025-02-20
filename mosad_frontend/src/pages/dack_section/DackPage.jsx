@@ -4,14 +4,20 @@ import { Container, Typography, TextField, Button, Box,Paper } from '@mui/materi
 import RebuildTyreTable from '../../component/RebuildTyreTable.jsx';
 import RebuildTyreForm from '../../forms/RebuildTyreForm.jsx';
 import {
-  fetchRebuildTyres as getAllTyres,
-  fetchRebuildTyresByContact as getTyresByContactNumber,
-  createRebuildTyre as createTyre,
-  updateRebuildTyre as updateTyre,
-  deleteRebuildTyre as deleteTyre,
-} from '../../services/apiDackService';
+  useFetchRebuildTyres,
+  useCreateRebuildTyre,
+  useFetchRebuildTyresByContact,
+  useDeleteRebuildTyre,
+  useUpdateRebuildTyre
+} from '../../hooks/servicesHook/useDackService.js'
+
 
 const RebuildTyrePage = () => {
+  const getAllTyres = useFetchRebuildTyres();
+  const getTyresByContactNumber=useFetchRebuildTyresByContact();
+  const createTyre=useCreateRebuildTyre();
+  const updateTyre=useUpdateRebuildTyre();
+  const deleteTyre=useDeleteRebuildTyre();
   const [tyres, setTyres] = useState([]);
   const [filter, setFilter] = useState('');
   const [editingTyre, setEditingTyre] = useState(null);
@@ -114,7 +120,7 @@ const RebuildTyrePage = () => {
         <Typography variant="h5" align="center" gutterBottom sx={{ mt: 4 }}>
           {editingTyre ? 'Update Tyre' : 'Add New Tyre'}
         </Typography>
-      
+
         <RebuildTyreForm
           initialData={editingTyre || {}}
           onSubmit={handleFormSubmit}

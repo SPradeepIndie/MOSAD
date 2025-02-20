@@ -1,17 +1,18 @@
 import './App.css'
 import React,{useEffect, lazy} from 'react';
 import { Route,Routes,Navigate,useLocation} from 'react-router-dom';
-import { Box, Container } from '@mui/material'
+import { Container } from '@mui/material'
 import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
 
 import LoginPage from './pages/LoginPage'
-
 import backgroundImage from './assets/bg-image.jpg'
 
 import HomePage from './pages/home/HomePage'
-import Footer from './component/Footer';
-import HeaderBar from './component/Header';
+import HomeLayout from './pages/home/HomeLayout';
+import CheckPrivileges from './CheckPrivileges';
+import { UnauthorizedPage } from './pages/UnauthorizedPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const BillPage=lazy(()=>import('./pages/bill_section/BillPage'));
 const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
@@ -53,66 +54,71 @@ function App() {
 
   return (
     <Container maxWidth="xl" disableGutters sx={{
-      width:'100vw',
-      backgroundImage: `url(${!auth.Authenticated && backgroundImage})`, // Apply background only on login page
-      backgroundSize: 'cover', 
-      backgroundPosition: 'center' ,
-      height:'100vh'}}>
-     <Box maxWidth="xl">
-        { auth.Authenticated && <HeaderBar/>} 
-      </Box>
-      
-      <Box  sx={{ p: 2,minHeight: '100vh'}} >
-        <Routes>
-        <Route path='/' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} /> 
+        width:'100vw',height:'100vh',
+        backgroundImage: `url(${!auth.Authenticated && backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+    }}>
+      <Routes>
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path='/unathorized' element={<UnauthorizedPage/>}/>
+        <Route path='/login' element={auth.Authenticated ? <Navigate to="/home" replace /> : <LoginPage/>} />
         <Route element={<RoutesProtector />}>
-          <Route path="/home" element={ <HomePage />} />
+        <Route element={<HomeLayout/>}>
+            <Route path="/home" element={ <HomePage />} />
 
-          <Route path="/stock" element={ <StockPageLayout />} > 
-            <Route index element={<StockPage isFromBranch={false}/>}/>
-            <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
-            <Route path="item-view" element={<ItemView />} /> 
-          </Route>
-
-          <Route path="/branch" element={ <BranchPageLayout />} >
-            <Route index element={<BranchPage/>}/>
-            <Route path="bill-history" element={<BillPage />}/>
-            <Route path="stock" element={<BranchStockLayout />}>
-              <Route index element={<StockPage isFromBranch={true}/>}/>
-              <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
-              <Route path="item-view" element={<ItemView />}/>
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
+              <Route path="/stock" element={ <StockPageLayout />} >
+                <Route index element={<StockPage isFromBranch={false}/>}/>
+                <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
+                <Route path="item-view" element={<ItemView />} />
+              </Route>
             </Route>
-            <Route path="employee-view" element={<EmployeePage />}/>
-          </Route>
 
-          <Route path="/credit" element={ <CreditPage />} />
-          <Route path="/bill" element={ <BillPage />} />
-          <Route path="/dack" element={ <DackPage />} />
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","BRANCH_MANAGER"]}/>}>
+              <Route path="/branch" element={ <BranchPageLayout />} >
+                <Route index element={<BranchPage/>}/>
+                <Route path="bill-history" element={<BillPage />}/>
+                <Route path="stock" element={<BranchStockLayout />}>
+                  <Route index element={<StockPage isFromBranch={true}/>}/>
+                  <Route path="brand" element={<BrandPage isFromBranch={true}/>}/>
+                  <Route path="item-view" element={<ItemView />}/>
+                </Route>
+                <Route path="employee-view" element={<EmployeePage />}/>
+              </Route>
+            </Route>
 
-          <Route path="/retail" element={ <RetailPageLayout />} >
-              <Route index element={ <PaymentHistory />} />
-              <Route path="purchase-history" element={ <PurchaseHistory />} />
-              <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
-              <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
-          </Route>
-          <Route path="/future" element={ <ReportPredictionPage />} />
-          <Route path="/employee" element={ <EmployeePage />} />
-          <Route path="/services" element={ <ServicesPage />} />
-          
-          <Route path="/user" element={ <UserManagementLayout />} >
-            <Route index element={<UserDetailsView/>}/>
-            <Route path="view-all" element={<AllUsersView />}/>
-          </Route>
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
+              <Route path="/credit" element={ <CreditPage />} />
+              <Route path="/bill" element={ <BillPage />} />
+              <Route path="/dack" element={ <DackPage />} />
+              <Route path="/future" element={ <ReportPredictionPage />} />
+              <Route path="/services" element={ <ServicesPage />} />
+            </Route>
+
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
+              <Route path="/retail" element={ <RetailPageLayout />} >
+                  <Route index element={ <PaymentHistory />} />
+                  <Route path="purchase-history" element={ <PurchaseHistory />} />
+                  <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
+                  <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+              </Route>
+            </Route>
+
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+              <Route path="/employee" element={ <EmployeePage />} />
+            </Route>
+
+            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER","MECHANIC"]}/>}>
+              <Route path="/user" element={ <UserManagementLayout />} >
+                <Route index element={<UserDetailsView/>}/>
+                <Route path="view-all" element={<AllUsersView />}/>
+              </Route>
+            </Route>
+
         </Route>
-
-        
-        <Route path="/AllBillsPage" element={<AllBillsPage />} />
-        </Routes>
-      </Box>
-
-      <Box maxWidth="xl">
-        {auth.Authenticated && <Footer />}
-      </Box>
+        </Route>
+      </Routes>
     </Container>
   )
 
