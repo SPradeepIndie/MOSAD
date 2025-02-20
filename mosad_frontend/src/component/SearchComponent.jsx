@@ -299,103 +299,106 @@ const handleAddToBill = (row) => {
         Search
       </Typography>
   
-      <Grid2 container gap={1} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
-        
-        {/* Branch Select with "+" Icon */}
-        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
-          <FormControl fullWidth sx={{ minWidth: 120 }}>
-            <InputLabel id="branch-select-label">Branch</InputLabel>
-            <Select
-              labelId="branch-select-label"
-              value={branch.branchId}
-              onChange={(e) => {
-                const selectedBranch = branches.find(b => b.branchId === e.target.value);
-                setBranch(selectedBranch);
-                if (setSelectedBranch) {
-                  setSelectedBranch(selectedBranch.branchId);
-                }
-              }}
-              variant="outlined"
-              fullWidth
-            >
-              {branches.map((b) => (
-                <MenuItem key={b.branchId} value={b.branchId}>
-                  {b.branchName}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-         
-        </Grid2>
-  
-        {/* Category Select with "+" Icon */}
-        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
-          <FormControl fullWidth sx={{ minWidth: 120 }}>
-            <InputLabel id="category-select-label">Category</InputLabel>
-            <Select
-              labelId="category-select-label"
-              value={category}
-              onChange={(e) => {
-                setCategory(e.target.value);
-                if (setSelectedCategory) {
-                  setSelectedCategory(e.target.value);
-                }
-              }}
-              variant="outlined"
-              fullWidth
-            >
-              {categories.map((c) => (
-                <MenuItem key={c} value={c}>
-                  {c}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {/* Plus Icon for Category */}
-          <IconButton
-            color="primary"
-            onClick={() => {handleAddCategory();}}
-            sx={{ ml: 1 }}
-          >
-            <AddIcon />
-          </IconButton>
-        </Grid2>
-  
-        {/* Brand Select with "+" Icon */}
-        <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
-          <FormControl fullWidth sx={{ minWidth: 120 }}>
-            <InputLabel id="brand-select-label">Brand</InputLabel>
-            <Select
-              labelId="brand-select-label"
-              value={brand}
-              onChange={(e) => {
-                setBrand(e.target.value);
-                if (fetchandSetItems && setSelectedBrand) {
-                  setSelectedBrand(e.target.value);
-                  fetchandSetItems();
-                }
-              }}
-              variant="outlined"
-              fullWidth
-            >
-              {brands.map((b) => (
-                <MenuItem key={b} value={b}>
-                  {b}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          {/* Plus Icon for Brand */}
-          <IconButton
-            color="primary"
-            onClick={() => {handleAddBrand();}}
-            sx={{ ml: 1 }}
-          >
-            <AddIcon />
-          </IconButton>
-        </Grid2>
-  
-      </Grid2>
+          {!fetchandSetItems &&
+            <Grid2 container gap={1} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
+
+            {/* Branch Select with "+" Icon */}
+            <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+              <FormControl fullWidth sx={{ minWidth: 120 }}>
+                <InputLabel id="branch-select-label">Branch</InputLabel>
+                <Select
+                  labelId="branch-select-label"
+                  value={branch.branchId}
+                  onChange={(e) => {
+                    const selectedBranch = branches.find(b => b.branchId === e.target.value);
+                    setBranch(selectedBranch);
+                    if (setSelectedBranch) {
+                      setSelectedBranch(selectedBranch.branchId);
+                    }
+                  }}
+                  variant="outlined"
+                  fullWidth
+                >
+                  {branches.map((b) => (
+                    <MenuItem key={b.branchId} value={b.branchId}>
+                      {b.branchName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+            </Grid2>
+
+            {/* Category Select with "+" Icon */}
+            <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+              <FormControl fullWidth sx={{ minWidth: 120 }}>
+                <InputLabel id="category-select-label">Category</InputLabel>
+                <Select
+                  labelId="category-select-label"
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    if (setSelectedCategory) {
+                      setSelectedCategory(e.target.value);
+                    }
+                  }}
+                  variant="outlined"
+                  fullWidth
+                >
+                  {categories.map((c) => (
+                    <MenuItem key={c} value={c}>
+                      {c}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* Plus Icon for Category 
+      <IconButton
+        color="primary"
+        onClick={() => {handleAddCategory();}}
+        sx={{ ml: 1 }}
+      >
+        <AddIcon />
+      </IconButton>
+      */}
+            </Grid2>
+
+            {/* Brand Select with "+" Icon */}
+            <Grid2 xs={12} sm={6} md={3} sx={{ display: "flex", alignItems: "center" }}>
+              <FormControl fullWidth sx={{ minWidth: 120 }}>
+                <InputLabel id="brand-select-label">Brand</InputLabel>
+                <Select
+                  labelId="brand-select-label"
+                  value={brand}
+                  onChange={(e) => {
+                    setBrand(e.target.value);
+                    if (fetchandSetItems && setSelectedBrand) {
+                      setSelectedBrand(e.target.value);
+                      fetchandSetItems();
+                    }
+                  }}
+                  variant="outlined"
+                  fullWidth
+                >
+                  {brands.map((b) => (
+                    <MenuItem key={b} value={b}>
+                      {b}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* Plus Icon for Brand 
+      <IconButton
+        color="primary"
+        onClick={() => {handleAddBrand();}}
+        sx={{ ml: 1 }}
+      >
+        <AddIcon />
+      </IconButton>
+      */}
+            </Grid2>
+
+          </Grid2>}
   
       <Grid2 container gap={2} direction="row" rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="space-between">
         <Grid2 xs={12} sm={6} md={4}>
