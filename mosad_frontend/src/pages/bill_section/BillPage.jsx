@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -17,12 +17,17 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 import { useNavigate } from 'react-router-dom';
+import { jsPDF } from "jspdf"; // Import jsPDF library
+import { useUpdateItemQuantity } from "../../hooks/servicesHook/useBillService";
+
+
 
 function ccyFormat(num) {
   return num.toFixed(2);
 }
 
 const BillPage = () => {
+  const updateStock = useUpdateItemQuantity();
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
@@ -31,17 +36,23 @@ const BillPage = () => {
   const [telephone, setTelephone] = useState("");
 
   const handleAddToBill = (item) => {
+    console.log(item);
+    const fullItemDetails = item.row;
     setRows((prevRows) => [
       ...prevRows,
       {
-        brand: item.brand || "N/A",
-        tyreSize: item.tyreSize || "N/A",
+        fulldetails:fullItemDetails,
+        itemId: fullItemDetails.itemDTO.itemId || "N/A",
+        branchId: fullItemDetails.itemBranchDTO.branchId || "N/A",
+        brand: fullItemDetails.itemDTO.brand || "N/A",
+        tyreSize: fullItemDetails.itemTyreDTO.tyreSize || "N/A",
         description: item.description || "",
         unitPrice: parseFloat(item.unitPrice) || 0,
         quantity: parseInt(item.quantity, 10) || 1,
         subtotal: (parseFloat(item.unitPrice) || 0) * (parseInt(item.quantity, 10) || 1),
       },
     ]);
+    console.log(rows);
   };
 
   const handleInputChange = (index, field, value) => {
@@ -78,32 +89,47 @@ const BillPage = () => {
     setRows((prevRows) => prevRows.filter((_, i) => i !== index));
   };
 
-  const handlePrint = () => {
-  const details = rows
-    .map((row, index) => {
-      return `Item ${index + 1}:
-        - Brand: ${row.brand || "N/A"}
-        - Size: ${row.tyreSize || "N/A"}
-        - Quantity: ${row.quantity || "N/A"}
-        - Unit Price: ${ccyFormat(row.unitPrice || 0)}
-        - Subtotal: ${ccyFormat(row.subtotal || 0)};`;
-    })
-    .join("\n\n");
+  const handleUpdateStock = () => {
+    rows.forEach((row) => {
+      const data = {
+        itemId: row.itemId,
+        branchId: row.branchId,
+        quantity: row.fulldetails.itemBranchDTO.availableQuantity - row.quantity,
+      };
+      updateStock(data);
+    });
+   
+  };
 
-  const alertMessage = `
-    Rashmi Tyre Center - Bill Details
-    Date : ${new Date().toLocaleDateString()}
-    Customer Name: ${customerName || "N/A"}
-    Telephone: ${telephone || "N/A"}
-    Total: ${ccyFormat(total)}
-    Advance: ${ccyFormat(advance)}
-    Balance: ${ccyFormat(balance)}
-    Items:
-    ${details}
-    Thank you for your business!
-  `;
-  alert(alertMessage);
-};
+  const handlePrint = () => {
+    
+
+    console.log(rows);
+
+    handleUpdateStock();
+
+    const doc = new jsPDF();
+  
+    const billSection = document.getElementById("bill-section"); // Ensure the bill section has this id
+  
+    // Adjusting the scale and margins for better fit in PDF
+    doc.html(billSection, {
+      callback: function (doc) {
+        doc.save("Bill.pdf");
+      },
+      margin: [10, 10, 10, 10], // Adjust margins to allow content to fit
+      // Ensure content fits onto pages and is properly paged
+      x: 10, // Set starting position for content
+      y: 10,
+      html2canvas: {
+        scale: 0.15, // Try a higher scale value to capture the content better
+        width: 250, // Ensure the content uses the full width of the page (A4 size)
+        height: 297, // Ensure full height is captured (A4 size)
+      },
+    });
+  };
+  
+  
 
   return (
     <Box sx={{ p: 4 }}>
@@ -120,6 +146,7 @@ const BillPage = () => {
           boxShadow: "0 4px 10px rgba(0, 128, 0, 0.15)",
           padding: "16px",
         }}
+        id="bill-section"
       >
         {/* Business Info */}
         <Box
@@ -163,60 +190,38 @@ const BillPage = () => {
 
         {/* Customer Info */}
         <Grid2 container spacing={2} sx={{ mb: 2 }}>
-  <Grid2 item xs={12} sm={4}>
-    <Typography
-      sx={{
-        fontSize: "1.2rem",
-        fontWeight: "500",
-        color: "#333",
-        textAlign: "left",
-      }}
-    >
-      Customer Name:
-    </Typography>
-    <TextField
-      variant="outlined"
-      size="small"
-      fullWidth
-      sx={{ fontSize: "1.2rem" }}
-      value={customerName} // Bind to state
-      onChange={(e) => setCustomerName(e.target.value)} // Update state on input
-    />
-  </Grid2>
-  <Grid2 item xs={12} sm={4}>
-    <Typography
-      sx={{
-        fontSize: "1.2rem",
-        fontWeight: "500",
-        color: "#333",
-        textAlign: "left",
-      }}
-    >
-      Telephone Number:
-    </Typography>
-    <TextField
-      variant="outlined"
-      size="small"
-      fullWidth
-      sx={{ fontSize: "1.2rem" }}
-      value={telephone} // Bind to state
-      onChange={(e) => setTelephone(e.target.value)} // Update state on input
-    />
-  </Grid2>
-  <Grid2 item xs={12} sm={4}>
-    <Typography
-      sx={{
-        fontSize: "1.2rem",
-        fontWeight: "500",
-        color: "#333",
-        textAlign: "center",
-      }}
-    >
-      Date: {new Date().toLocaleDateString()}
-    </Typography>
-  </Grid2>
-</Grid2>
-
+          <Grid2 item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
+              Customer Name:
+            </Typography>
+            <TextField
+              variant="outlined"
+              size="small"
+              fullWidth
+              sx={{ fontSize: "1.2rem" }}
+              value={customerName} 
+              onChange={(e) => setCustomerName(e.target.value)} 
+            />
+          </Grid2>
+          <Grid2 item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "left" }}>
+              Telephone Number:
+            </Typography>
+            <TextField
+              variant="outlined"
+              size="small"
+              fullWidth
+              sx={{ fontSize: "1.2rem" }}
+              value={telephone} 
+              onChange={(e) => setTelephone(e.target.value)} 
+            />
+          </Grid2>
+          <Grid2 item xs={12} sm={4}>
+            <Typography sx={{ fontSize: "1.2rem", fontWeight: "500", color: "#333", textAlign: "center" }}>
+              Date: {new Date().toLocaleDateString()}
+            </Typography>
+          </Grid2>
+        </Grid2>
 
         {/* Table and Bill */}
         <TableContainer component={Paper}>
@@ -235,7 +240,7 @@ const BillPage = () => {
                 <TableCell align="center" sx={{ width: "20%", fontWeight: "bold", fontSize: "1.2rem" }}>
                   Subtotal
                 </TableCell>
-                <TableCell align="center" sx={{ width: "10%" }}></TableCell> {/* Column for delete button */}
+                <TableCell align="center" sx={{ width: "10%" }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -335,7 +340,7 @@ const BillPage = () => {
                   Advance
                 </TableCell>
                 <TableCell align="center">
-                <TextField
+                  <TextField
                     variant="outlined"
                     size="small"
                     type="number"
@@ -348,7 +353,6 @@ const BillPage = () => {
                     }}
                     sx={{ width: "90%" }}
                   />
-
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -398,16 +402,10 @@ const BillPage = () => {
 
       {/* Print Button */}
       <Box sx={{ textAlign: "center", mt: 3 }}>
-      <Button variant="contained" color="primary" onClick={handlePrint}>
-        Print Bill
-      </Button>
-          
-      <Button variant="contained" onClick={() => navigate("/AllBillsPage")} sx={{ backgroundColor: "yellow", color: "black", ml: 2 }}>
-          All Bills
+        <Button variant="contained" color="primary" onClick={handlePrint}>
+          Print Bill
         </Button>
-
       </Box>
-      
     </Box>
   );
 };

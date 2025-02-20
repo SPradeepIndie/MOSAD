@@ -23,5 +23,5 @@ public interface ItemTyreRepo extends JpaRepository<ItemTyre,Long> {
 
     List<ItemTyre> findItemTyreByVehicleType(String vehicleType);
 
-
+    ItemTyre findByTyreSize(String tyreSize);
 }

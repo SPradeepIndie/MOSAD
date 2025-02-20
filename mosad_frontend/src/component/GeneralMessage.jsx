@@ -18,7 +18,7 @@ const GeneralMessage = ({ message}) => {
   );
 };
 
-GeneralMessage.prototype={
+GeneralMessage.propTypes={
   message: PropTypes.shape({
     type:PropTypes.string.isRequired,
     text:PropTypes.string.isRequired

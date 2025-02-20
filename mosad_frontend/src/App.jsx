@@ -4,10 +4,8 @@ import { Route,Routes,Navigate,useLocation} from 'react-router-dom';
 import { Container } from '@mui/material'
 import RoutesProtector from './RoutesProtector'
 import useAuth  from "./hooks/useAuth";
-
 import LoginPage from './pages/LoginPage'
 import backgroundImage from './assets/bg-image.jpg'
-
 import HomePage from './pages/home/HomePage'
 import HomeLayout from './pages/home/HomeLayout';
 import CheckPrivileges from './CheckPrivileges';
@@ -19,8 +17,9 @@ const AllBillsPage = lazy(() => import('./pages/bill_section/AllBillsPage'));
 const CreditPage=lazy(()=>import('./pages/credit_section/CreditPage'));
 const DackPage =lazy(()=>import( './pages/dack_section/DackPage'));
 const EmployeePage =lazy(()=>import( './pages/employee_section/EmployeePage'));
-const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
+// const ReportPredictionPage =lazy(()=>import( './pages/prediction_report_section/ReportPredictionPage'));
 const RetailPageLayout =lazy(()=>import( './pages/retail_section/layout/RetailPageLayout'));
+const BillSectionLayout =lazy(()=>import('./pages/bill_section/BillSectionLayout'));
 const ServicesPage =lazy(()=>import( './pages/services_section/ServicesPage'));
 
 const UserManagementLayout =lazy(()=>import( './pages/users_section/UserManagementLayout'));
@@ -40,7 +39,7 @@ const BranchStockLayout =lazy(()=>import( './pages/branch_section/BranchStockLay
 const PaymentHistory =lazy(()=>import( './pages/retail_section/PaymentHistory'));
 const PurchaseHistory =lazy(()=>import( './pages/retail_section/PurchaseHistory'));
 const IncompleteTransactions =lazy(()=>import( './pages/retail_section/IncompleteTransactions'));
-const ProductAvailabilityChecker =lazy(()=>import( './pages/retail_section/ProductAvailabilityChecker'));
+const FindProductAvailability =lazy(()=>import( './pages/retail_section/FindProductAvailability'));
 
 function App() {
   const {auth}=useAuth();
@@ -88,12 +87,16 @@ function App() {
               </Route>
             </Route>
 
-            <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN"]}/>}>
-              <Route path="/credit" element={ <CreditPage />} />
-              <Route path="/bill" element={ <BillPage />} />
-              <Route path="/dack" element={ <DackPage />} />
-              <Route path="/future" element={ <ReportPredictionPage />} />
-              <Route path="/services" element={ <ServicesPage />} />
+            <Route element={<CheckPrivileges allowedRoles={["OWNER", "ADMIN"]} />}>
+              <Route path="/credit" element={<CreditPage />} />
+              <Route path="/bill" element={<BillSectionLayout />} >
+                <Route index element={<BillPage />} />
+                <Route path="AllBillsPage" element={<AllBillsPage />} />
+
+              </Route>
+              <Route path="/dack" element={<DackPage />} />
+              {/* <Route path="/future" element={ <ReportPredictionPage />} /> */}
+              <Route path="/services" element={<ServicesPage />} />
             </Route>
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","RETAIL_CUSTOMER"]}/>}>
@@ -101,7 +104,7 @@ function App() {
                   <Route index element={ <PaymentHistory />} />
                   <Route path="purchase-history" element={ <PurchaseHistory />} />
                   <Route path="incomplete-transactions" element={ <IncompleteTransactions />} />
-                  <Route path="product-availability" element={ <ProductAvailabilityChecker />} />
+                  <Route path="product-availability" element={ <FindProductAvailability />} />
               </Route>
             </Route>
 

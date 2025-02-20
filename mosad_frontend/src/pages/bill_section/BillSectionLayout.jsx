@@ -3,21 +3,18 @@ import {Box} from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Link, Outlet } from "react-router-dom";
-import "./RetailPageLayout.css";
-
-const RetailPageLayout=()=>{
+const BillSectionLayout=()=>{
 
     const [value, setValue] = useState(0);
     
-    const handleChange = (event, newValue) => {
+    const handleChange = ( event, newValue) => {
         setValue(newValue);
     };
 
     const tabRoutes = [
-        { path: '/retail/', label: 'Payment History', id: 'payment_history' },
-        // { path: '/retail/purchase-history', label: 'Purchase History', id: 'purchase_history',isHidden:true },
-        { path: '/retail/incomplete-transactions', label: 'Incomplete Transactions', id: 'incomplete_transactions'},
-        { path: '/retail/product-availability', label: 'Find Product Availability', id: 'product_availability'}
+        { path: '/bill', label: 'bill page', id: 'bill_page' },
+        { path: '/bill/AllBillsPage', label: 'all bill page', id: 'all_bill_page' }
+        
 
         ];
     
@@ -46,4 +43,4 @@ const RetailPageLayout=()=>{
         )
 }
 
-export default RetailPageLayout;
+export default BillSectionLayout;
