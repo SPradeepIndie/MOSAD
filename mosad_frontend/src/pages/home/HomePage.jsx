@@ -9,20 +9,50 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
-  const navigate = useNavigate();
-
-  const handleTileClick = (title) => {
-    if (title === 'Stock') {
-      navigate('/stock');
-    } else if (title === 'Bill Generate') {
-      navigate('/BillGenerator');
-    } else if (title === 'Credit') {
-      navigate('/credits');
+  const tiles = [
+    {
+      title: 'Bill Generate',
+      icon: <DescriptionIcon fontSize="large" />,
+      link: '/bill',
+    },
+    {
+      title: 'Stock',
+      icon: <InventoryIcon fontSize="large" />,
+      link: '/stock',
+    },
+    {
+      title: 'Retail',
+      icon: <StorefrontIcon fontSize="large" />,
+      link: '/retail',
+    },
+    {
+      title: 'Credit',
+      icon: <CreditCardIcon fontSize="large" />,
+      link: '/credit',
+    },
+    {
+      title: 'Branches',
+      icon: <AccountTreeIcon fontSize="large" />,
+      link: '/branch',
+    },
+    {
+      title: 'Employee',
+      icon: <PeopleIcon fontSize="large" />,
+      link: '/employee',
+    },
+    {
+      title: 'Reports',
+      icon:<AssessmentIcon fontSize="large"/>,
+      link:"/future",
+    },
+    {
+      title:'Dack Tires',
+      icon:<AssessmentIcon fontSize='large'/>,
+      link:'/dack'
     }
-  };
+  ];
 
   return (
     <>
@@ -46,48 +76,13 @@ function HomePage() {
             justifyContent: 'center',
           }}
         >
-          <Tile
-            title="Bill Generate"
-            icon={<DescriptionIcon fontSize="large" />}
-            link="/bill"
-          />
-          <Tile
-            title="Stock"
-            icon={<InventoryIcon fontSize="large" />}
-            link="/stock/item-view"
-          />
-          <Tile
-            title="Retail"
-            icon={<StorefrontIcon fontSize="large" />}
-            link="/retail"
-          />
-
-          <Tile
-            title="Credit"
-            icon={<CreditCardIcon fontSize="large" />}
-            link="/credit"
-          />
-          <Tile
-            title="Branches"
-            icon={<AccountTreeIcon fontSize="large" />}
-            link="/branch"
-          />
-          <Tile
-            title="Employee"
-            icon={<PeopleIcon fontSize="large" />}
-            link="/employee"
-          />
-
-          <Tile
-            title="Reports"
-            icon={<AssessmentIcon fontSize="large" />}
-            link="/future"
-          />
-           <Tile
-            title="Dack Tires"
-            icon={<AssessmentIcon fontSize="large" />}
-            link="/dack"
-          />
+           {tiles.map((tile) => (
+            <Tile key={tile.title}
+              title={tile.title}
+              icon={tile.icon}
+              link={tile.link}
+              />
+            ))}
         </Stack>
       </Box>
     </>

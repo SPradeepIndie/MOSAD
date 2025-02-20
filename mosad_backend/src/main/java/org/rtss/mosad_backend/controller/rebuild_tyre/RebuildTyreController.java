@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/rebuild-tyres")
@@ -35,7 +34,7 @@ public class RebuildTyreController {
         List<RebuildTyre> tyres = rebuildTyreService.getAllRebuildTyres();
         List<RebuildTyreDto> dtoList = tyres.stream()
                 .map(RebuildTyreMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 
@@ -45,7 +44,7 @@ public class RebuildTyreController {
         List<RebuildTyre> tyres = rebuildTyreService.getTyresByContactNumber(contactNumber);
         List<RebuildTyreDto> dtoList = tyres.stream()
                 .map(RebuildTyreMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 

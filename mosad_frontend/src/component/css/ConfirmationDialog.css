@@ -12,7 +12,7 @@
   }
   
   .confirmation-dialog {
-    background: #fff;
+    background: #2E8B58;
     border-radius: 8px;
     width: 400px;
     padding: 20px;
@@ -25,13 +25,20 @@
     position: absolute;
     top: 10px;
     right: 10px;
+    padding: 4px 8px 4px 8px;
     background: none;
     border: none;
     font-size: 18px;
     cursor: pointer;
   }
-  
+  .close-button:hover{
+    background-color:#1d5336;
+    transform :scale(1.1);
+    transition-duration:.2s;
+ 
+ }
   .confirmation-dialog h3 {
+    border-bottom: 2px solid white;
     margin: 0;
     font-size: 20px;
     font-weight: bold;
@@ -45,6 +52,7 @@
   .confirmation-dialog-actions {
     display: flex;
     justify-content: space-between;
+    gap:.5rem;
   }
   
   .cancel-button,
@@ -60,10 +68,21 @@
     background: #f0f0f0;
     color: #333;
   }
+  .cancel-button:hover{
+    background-color:rgb(202, 8, 8);
+    color: #f0f0f0;
+    transition-duration :.2s;
+  }
   
   .confirm-button {
     background: #000;
     color: #fff;
+  }
+  .confirm-button:hover{
+    transform:(scale(.95)) rotate(-5deg) translateX(-2%);
+    transition-duration :.3s;
+    background-color:#494948;
+    color:white
   }
 
   .confirmation-success{
@@ -71,6 +90,4 @@
     padding: 20px;
     border-radius: 10px;
     border: 1px solid rgb(0, 0, 0);
-    
-
   }
