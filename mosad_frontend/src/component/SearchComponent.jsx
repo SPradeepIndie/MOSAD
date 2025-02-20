@@ -260,6 +260,7 @@ useEffect(() => {
     if (quantity > 0) {
         const unitPrice = parseFloat(row.itemDTO.companyPrice) || 0;
         onAddToBill({
+            brand: row.itemDTO.brand,
             description: row.itemTyreDTO? `${row.itemTyreDTO.tyreSize} ${brand}` : `${row.itemDTO.itemName} ${brand}`,
             unitPrice: unitPrice,
             quantity: quantity,
