@@ -15,8 +15,10 @@ import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
+import org.rtss.mosad_backend.repository.bill_repository.BillItemRepository;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemBranchRepository;
+import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -42,8 +44,12 @@ public class BillService {
 
     private final ItemBranchRepository itemBranchRepository;
 
+    private final ItemRepo itemRepository;
 
-    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, ItemBranchRepository itemBranchRepository) {
+    private final BillItemRepository billItemRepository;
+
+
+    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, ItemBranchRepository itemBranchRepository, ItemRepo itemRepository, BillItemRepository billItemRepository) {
         this.billRepository = billRepository;
         this.customerService = customerService;
         this.billDTOMapper = billDTOMapper;
@@ -51,6 +57,8 @@ public class BillService {
         this.customerContactDTOMapper = customerContactDTOMapper;
         this.billItemDTOMapper = billItemDTOMapper;
         this.itemBranchRepository = itemBranchRepository;
+        this.itemRepository = itemRepository;
+        this.billItemRepository = billItemRepository;
     }
 
 
@@ -70,19 +78,28 @@ public class BillService {
 
         List<BillItem> billItems = billItemDTO.stream()
                 .map(dto -> {
-                    BillItem billItem = billItemDTOMapper.toBillItemEntity(dto);
+                    System.out.println("\n inside map"+dto.getItemId()+"\n");
+                    //BillItem billItem = billItemDTOMapper.toBillItemEntity(dto);
+                    BillItem billItem = new BillItem();
                     billItem.setBill(bill);
-                    System.out.println(billItem.getItem().getItemId());
+                    billItem.setDescription(dto.getDescription());
+                    billItem.setQuantity(dto.getQuantity());
+                    billItem.setUnitPrice(dto.getUnitPrice());
+                    billItem.setItem(itemRepository.findById(dto.getItemId()).orElseThrow(() -> new RuntimeException("Item not found")));
+                    System.out.println("\n inside map"+billItem.getItem().getItemId()+"\n");
+
+
                     return billItem;
                 })
                 .collect(Collectors.toList());
-        bill.setBillItems();
+
+        bill.setBillItems(billItems);
 
         Bill savedBill = billRepository.save(bill);
 
-        // Save all BillItems
-//        billItemRepository.saveAll(billItems);
-//
+         //Save all BillItems
+        billItemRepository.saveAll(billItems);
+
 //        for (BillItem billItem : billItems) {
 //            // Fetch the corresponding item from the database
 //            Item item = itemRepository.findById(billItem.getItem().getId())

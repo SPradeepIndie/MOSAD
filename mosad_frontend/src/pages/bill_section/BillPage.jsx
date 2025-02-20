@@ -18,7 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from "jspdf"; // Import jsPDF library
-import { useUpdateItemQuantity } from "../../hooks/servicesHook/useBillService";
+import { useUpdateItemQuantity ,useCreateBill} from "../../hooks/servicesHook/useBillService";
 
 
 
@@ -28,6 +28,8 @@ function ccyFormat(num) {
 
 const BillPage = () => {
   const updateStock = useUpdateItemQuantity();
+  const createBill = useCreateBill();
+
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
@@ -101,12 +103,49 @@ const BillPage = () => {
    
   };
 
+  const handleCreateBill = () => {
+    const data = {
+      billDTO: {
+        totalAmount: total,  // total amount
+        advance: advance,    // advance payment
+        balance: balance,    // balance payment
+        date: new Date().toISOString().split('T')[0], // today's date in yyyy-mm-dd format
+      },
+      addCustomerDTO: {
+        customerDTO: {
+          customerName: customerName,  // customer name
+          customerType: 'NORMAL',      // You can modify this value if needed
+        },
+        customerContactDTO: {
+          contactNumber: telephone,    // customer's contact number
+        },
+      },
+      billItemDTO: rows.map((row) => ({
+        itemId: row.itemId,          // item ID
+        description: row.description, // description of the item
+        quantity: row.quantity,      // quantity of the item
+        unitPrice: row.unitPrice,    // unit price of the item
+      })),
+    };
+  
+    console.log(data);
+    createBill(data);
+    
+  };
+
+  const clearAllFields = () => {
+    setRows([]);
+    setAdvance(0);
+    setCustomerName("");
+    setTelephone("");
+  };
   const handlePrint = () => {
     
 
     console.log(rows);
 
     handleUpdateStock();
+    handleCreateBill();
 
     const doc = new jsPDF();
   
@@ -127,6 +166,7 @@ const BillPage = () => {
         height: 297, // Ensure full height is captured (A4 size)
       },
     });
+    //clearAllFields();
   };
   
   
