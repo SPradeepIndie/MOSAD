@@ -1,202 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
-import { useFetchCategories, useFetchBrands, useFetchItems } from '../../hooks/servicesHook/useStockService';
-import ProductCardComponent from './components/ProductCardComponent';
-
+import Grid2 from '@mui/material/Grid2'; // Import Grid2
+import React, { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import SearchComponent from "../../component/SearchComponent";
+import ProductCardComponent from "../../component/ProductCardComponent";
 
 const FindProductAvailability = () => {
+  // State for filters and search results
+  const [selectedBranch, setSelectedBranch] = useState(null); // Not used anymore
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
+  const [quantity, setQuantity] = useState(0);
 
-  const fetchCategories=useFetchCategories();
-  const fetchItems = useFetchItems();
-  const fetchBrands = useFetchBrands();
-  
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [tyreSizes, setTyreSizes] = useState([]);
-  const [ptrOptions, setPtrOptions] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedBrand, setSelectedBrand] = useState('');
-  const [selectedTyreSize, setSelectedTyreSize] = useState('');
-  const [selectedPTR, setSelectedPTR] = useState('');
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  // Function to simulate fetching items based on selected filters
+  const fetchAndSetItems = async () => {
+    try {
+      // Mock API Call (Replace this with actual API call)
+      const mockData = [
+        { id: 1, category: "Tyre", brand: "BrandA", size: "16 inch", ptr: 200 },
+        { id: 2, category: "Tyre", brand: "BrandB", size: "18 inch", ptr: 250 },
+        { id: 3, category: "Oil", brand: "BrandC", size: "5L", ptr: 100 },
+      ];
 
-  useEffect(() => {
-    fetchCategories()
-      .then((response) => setCategories(response.data))
-      .catch((error) => console.error('Error fetching categories:', error));
-  }, []);
+      // Filter data based on selected criteria
+      const filteredResults = mockData.filter(
+        (item) =>
+          (!selectedCategory || item.category === selectedCategory) &&
+          (!selectedBrand || item.brand === selectedBrand)
+      );
 
-  useEffect(() => {
-    if (selectedCategory) {
-      fetchBrands(selectedCategory)
-        .then((response) => setBrands(response.data))
-        .catch((error) => console.error('Error fetching brands:', error));
-
-      if (selectedCategory.toLowerCase() === 'tyre') {
-        fetchItems({ category: selectedCategory })
-          .then((response) => {
-            setTyreSizes(response.data.tyreSizes || []);
-            setPtrOptions(response.data.ptrOptions || []);
-          })
-          .catch((error) => console.error('Error fetching tyre and PTR data:', error));
-      } else {
-        setTyreSizes([]);
-        setPtrOptions([]);
-      }
-    } else {
-      setBrands([]);
-      setTyreSizes([]);
-      setPtrOptions([]);
+      setSearchedResults(filteredResults);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  }, [selectedCategory]);
-
-  const handleFindNow = () => {
-    fetchItems({ category: selectedCategory, brand: selectedBrand, size: selectedTyreSize, ptr: selectedPTR })
-      .then((response) => {
-        setProducts(response.data);
-        setFilteredProducts(response.data);
-      })
-      .catch((error) => console.error('Error fetching products:', error));
   };
-
-  const filterProducts = () => {
-    let filtered = products;
-    if (selectedTyreSize) {
-      filtered = filtered.filter((product) => product.size === selectedTyreSize);
-    }
-    if (selectedPTR) {
-      filtered = filtered.filter((product) => product.ptr === selectedPTR);
-    }
-    setFilteredProducts(filtered);
-  };
-
-  useEffect(() => {
-    filterProducts();
-  }, [selectedTyreSize, selectedPTR]);
-
-
-
   return (
-    <Box sx={{ padding: 4 }}>
-      <Typography variant="h4" sx={{ marginBottom: 4, textAlign: 'center' }}>
-        Find Product Availability
+    <Box sx={{ padding: 3 }}>
+      {/* Search & Filter Component */}
+      <SearchComponent
+        setSelectedCategory={setSelectedCategory}
+        setSelectedBrand={setSelectedBrand}
+        fetchandSetItems={fetchAndSetItems}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        handleSearchChange={() => {}} // If necessary, pass actual handler
+      />
+
+      {/* Display Search Results as Tiles */}
+      <Typography variant="h6" sx={{ marginTop: 3, marginBottom: 2 }}>
+        Search Results:
       </Typography>
-
-      <Grid container spacing={2} sx={{ marginBottom: 4 }}>
-        {/* Category Dropdown */}
-        <Grid item xs={12} sm={6} md={3}>
-          <FormControl fullWidth>
-            <InputLabel id="category-select-label">Category</InputLabel>
-            <Select
-              labelId="category-select-label"
-              id="category-select"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {categories.map((category) => (
-                <MenuItem key={category.id} value={category.name}>
-                  {category.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {/* Brand Dropdown */}
-        <Grid item xs={12} sm={6} md={3}>
-          <FormControl fullWidth disabled={!selectedCategory}>
-            <InputLabel id="brand-select-label">Brand</InputLabel>
-            <Select
-              labelId="brand-select-label"
-              id="brand-select"
-              value={selectedBrand}
-              onChange={(e) => setSelectedBrand(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {brands.map((brand) => (
-                <MenuItem key={brand.id} value={brand.name}>
-                  {brand.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {/* Conditional Fields for Tyre */}
-        {selectedCategory.toLowerCase() === 'tyre' && (
-          <>
-            {/* Tyre Size Dropdown */}
-            <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth>
-                <InputLabel id="tyre-size-select-label">Tyre Size</InputLabel>
-                <Select
-                  labelId="tyre-size-select-label"
-                  id="tyre-size-select"
-                  value={selectedTyreSize}
-                  onChange={(e) => setSelectedTyreSize(e.target.value)}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {tyreSizes.map((size, index) => (
-                    <MenuItem key={index} value={size}>
-                      {size}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* PTR Dropdown */}
-            <Grid item xs={12} sm={6} md={3}>
-              <FormControl fullWidth>
-                <InputLabel id="ptr-select-label">PTR</InputLabel>
-                <Select
-                  labelId="ptr-select-label"
-                  id="ptr-select"
-                  value={selectedPTR}
-                  onChange={(e) => setSelectedPTR(e.target.value)}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {ptrOptions.map((ptr, index) => (
-                    <MenuItem key={index} value={ptr}>
-                      {ptr}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          </>
+      <Grid2 container spacing={2}>
+        {searchedResults.length > 0 ? (
+          searchedResults.map((product) => (
+            <Grid2 xs={12} sm={6} md={4} key={product.id}>
+              <ProductCardComponent
+                category={product.category}
+                brand={product.brand}
+                size={product.size}
+                ptr={product.ptr}
+              />
+            </Grid2>
+          ))
+        ) : (
+          <Grid2 xs={12}>
+            <Typography>No results found.</Typography>
+          </Grid2>
         )}
-
-        {/* Find Now Button */}
-        <Grid item xs={12} sm={6} md={3} display="flex" alignItems="center">
-          <Button variant="contained" onClick={handleFindNow} fullWidth disabled={!selectedCategory} >
-            Find Now
-          </Button>
-        </Grid>
-      </Grid>
-
-      {/* Product Results */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
-        {filteredProducts.map((product) => (
-          <ProductCardComponent
-            key={product.id}
-            category={product.category}
-            brand={product.brand}
-            size={product.size}
-            ptr={product.ptr}
-          />
-        ))}
-      </Box>
+      </Grid2>
     </Box>
   );
 };
