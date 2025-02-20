@@ -5,7 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the build JAR file 
-COPY target/mosad_backend-0.0.1.jar app.jar
+COPY target/mosad_backend-**.jar app.jar
 
 # Expose the port on which the Spring Boot application will run
 EXPOSE 8080

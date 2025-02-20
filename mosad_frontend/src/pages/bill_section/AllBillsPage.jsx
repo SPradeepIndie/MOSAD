@@ -18,10 +18,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { fetchAllBills } from "../../services/apiBillService";
+import {useFetchAllBills} from '../../hooks/servicesHook/useBillService'
 
 
 const BillList = () => {
+  const fetchAllBills=useFetchAllBills();
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [filterPhone, setFilterPhone] = useState("");

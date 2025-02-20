@@ -4,21 +4,24 @@ import {
   TableContainer, TableHead, TableRow, Typography, Paper, TextField,
   FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, RadioGroup, Radio, FormControl
 } from '@mui/material';
-import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
-import { addRepayment,deleteRepayment, fetchAllCreditDetails } from '../../services/apiCreditService';
+import { Delete, KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from '@mui/icons-material';
+import {useAddRepayment,useDeleteRepayment,useFetchAllCreditDetails}from '../../hooks/servicesHook/useCreditService'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import GeneralMessage from '../../component/GeneralMessage';
 import Loading from '../../component/Loading';
+import ConfirmationDialog from '../../component/ConfirmationDialog';
 import PropTypes from 'prop-types';
 
+//Table row handling
 function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,columns }) {
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [newRepayment, setNewRepayment] = useState({ date: '', amount: '' });
-  const [conformationDialog, setConformationDialog] = useState(false);
+  const [newRepayment, setNewRepayment] = useState({ date: dayjs().format('YYYY-MM-DD'), amount: '' });
+  const [deleteConformationDialog, setDeleteConformationDialog] = useState(false);
+  const [repaymentIdForDeletion, setRepaymentIdForDeletion] = useState(null);
 
 
   const handleDialogOpen = () => {
@@ -42,8 +45,10 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
   };
 
   const handleDeleteRepayment = (id) => {
+    console.log("Repayment Id = "+id);
     onDeleteRepayment(row.creditId,id);
-    setConformationDialog(false);
+    setDeleteConformationDialog(false);
+    setRepaymentIdForDeletion(null);
   };
 
   
@@ -93,11 +98,23 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
                 </TableHead>
                 <TableBody>
                   {row.repayments.map((repayment) => (
-                    <TableRow key={repayment.repaymentId}>
-                      <TableCell>{repayment.repaymentId}</TableCell>
-                      <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
-                      <TableCell align="right">{repayment.amount}</TableCell>
-                    </TableRow>
+                    <>
+                      <TableRow key={repayment.repaymentId}>
+                        <TableCell>{repayment.repaymentId}</TableCell>
+                        <TableCell>{dayjs(repayment.date).format('YYYY-MM-DD')}</TableCell>
+                        <TableCell align="right">{repayment.amount}</TableCell>
+                        <TableCell align="right"><Delete onClick={() =>{setRepaymentIdForDeletion(repayment.repaymentId); setDeleteConformationDialog(true);}} sx={{ scale: 0.75, cursor: 'pointer' }} /></TableCell>
+
+                      </TableRow>
+                      {deleteConformationDialog &&
+                        <ConfirmationDialog
+                          message='Are you sure you want to delete this repayment?'
+                          isOpen={open}
+                          onCancel={() => setDeleteConformationDialog(false)}
+                          onConfirm={() => handleDeleteRepayment(repaymentIdForDeletion)}
+                        />
+                      }
+                    </>
                   ))}
                   <TableRow sx={{ borderTop: 2 }}>
                     <TableCell colSpan={2}>
@@ -143,7 +160,7 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
             <DemoContainer components={['DatePicker']}>
               <DatePicker
                 label="Basic date picker"
-                value={dayjs()}
+                value={ dayjs(newRepayment.date)}
                 onChange={(newValue) =>
                   setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : value.format('YYYY-MM-DD') })
                 }
@@ -188,6 +205,9 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
 
 
 const CreditPage = () => {
+  const addRepayment=useAddRepayment();
+  const deleteRepayment=useDeleteRepayment(); 
+  const fetchAllCreditDetails=useFetchAllCreditDetails();
   const [rows, setRows] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -304,10 +324,11 @@ const CreditPage = () => {
     return false;
   }).filter(
     (row) =>
-      row.customerName.toLowerCase().includes(searchText.toLowerCase()) ||
-      row.contactNumber.toLowerCase().includes(searchText.toLowerCase()) ||
-      row.creditId.toString().includes(searchText)
+      (row.customerName && row.customerName.toLowerCase().includes(searchText.toLowerCase())) ||
+      (row.contactNumber && row.contactNumber.toLowerCase().includes(searchText.toLowerCase())) ||
+      row.billId.toString().includes(searchText)
   );
+  
 
 
 
@@ -355,7 +376,7 @@ const CreditPage = () => {
             <TextField
               fullWidth
               size="small"
-              label="Search By Name / Contact Number / Credit ID"
+              label="Search By Name / Contact Number / Bill ID"
               variant="outlined"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}

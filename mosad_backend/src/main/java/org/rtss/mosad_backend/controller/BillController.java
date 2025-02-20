@@ -27,4 +27,10 @@ public class BillController {
     public ResponseEntity<List<BillDetailsDTO>> getAllBills() {
         return ResponseEntity.ok(billService.getAllBills());
     }
+
+    @PutMapping("/updatestock")
+    public ResponseEntity<ResponseDTO> updateItemQuantity(@RequestParam Long itemId, @RequestParam Long branchId, @RequestParam Integer quantity) {
+        return ResponseEntity.ok(billService.updateItemQuantity(itemId, branchId, quantity));
+    }
+
 }

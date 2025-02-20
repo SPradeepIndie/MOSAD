@@ -3,7 +3,7 @@ import Tile from '../../component/Tile';
 import { Box, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Alert } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchBrands, addBrand } from '../../services/apiStockService';
+import { useAddBrand,useFetchBrands } from '../../hooks/servicesHook/useStockService';
 
 // Icons for dynamic brands
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -20,6 +20,8 @@ const iconMap = {
 };
 
 function BrandPage({ isFromBranch }) {
+  const fetchBrands = useFetchBrands(); 
+  const addBrand = useAddBrand();
   const location = useLocation();
   const states = location.state;
 

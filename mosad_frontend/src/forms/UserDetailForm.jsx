@@ -18,7 +18,9 @@ import { blue } from '@mui/material/colors';
 import PropTypes from "prop-types";
 
 
-export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds}){
+export default function UserDetailsForm(
+    {onSubmit,userUpdateData,editMode,setUserUpdateData,handlePwds,pwds,errors,setErrors}
+){
     let location = useLocation();
 
     const handleUserDtoChange = (event) => {
@@ -44,6 +46,7 @@ export default function UserDetailsForm({onSubmit,userUpdateData,editMode,setUse
     };
 
     const [contactNum,setContactNum]=useState({contactNum:""});
+    
     const handleUserContactNumChange=(event)=>{
         setContactNum({...contactNum,[event.target.name]:event.target.value})
     }
@@ -259,6 +262,8 @@ UserDetailsForm.propTypes={
     pwds:PropTypes.shape({
         pwd_1:PropTypes.string,
         pwd_2:PropTypes.string
-    })
+    }),
+    errors:PropTypes.object,
+    setErrors:PropTypes.func
 
 }
