@@ -67,7 +67,7 @@ function App() {
             <Route path="/home" element={ <HomePage />} />
 
             <Route element={<CheckPrivileges allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}/>}>
-              <Route path="/stock" element={ <ItemView />} >
+              <Route path="/stock" element={ <StockPageLayout />} >
                 <Route index element={<StockPage isFromBranch={false}/>}/>
                 <Route path="brand" element={<BrandPage isFromBranch={false}/>}/>
                 <Route path="item-view" element={<ItemView />} />
