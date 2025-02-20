@@ -29,16 +29,16 @@ const ForgotPasswordForm = () =>{
           return false;
         }
         else if (!email.includes("@")) {
-          setErrorMessage("Enter a valid email.");   
-          return false;       
+          setErrorMessage("Enter a valid email.");
+          return false;
         }               
         try {
           setIsLoading(true); // Set loading state to true
-          const response = await fgtPwdMailCheckAndOtpSend(email); 
+          const response = await fgtPwdMailCheckAndOtpSend(email);
           if (response.data.success) {
             setStep(2);
             setErrorMessage("");
-            startTimer(); 
+            startTimer();
           } else {
             setErrorMessage(response.data.message);
           }
@@ -51,7 +51,7 @@ const ForgotPasswordForm = () =>{
     };
 
     //Otp submisson to backend
-    const handleOtpSubmit = () => {     
+    const handleOtpSubmit = () => {
       if (!otp) {
         setErrorMessage("OTP cannot be empty.");
         return false;
@@ -88,7 +88,7 @@ const ForgotPasswordForm = () =>{
     //Otp resending....
     const handleResendOtp = () => {
       if (!isResendDisabled) {
-        setOtp(""); 
+        setOtp("");
         setTimer(30);
         setIsResendDisabled(true);
         startResendTimer();
@@ -119,7 +119,7 @@ const ForgotPasswordForm = () =>{
       if (newPassword.includes(' ')) {
         setErrorMessage('Password cannot contain spaces.');
         return;
-      }       
+      }
       if (!/\d/.test(newPassword)) {
         setErrorMessage("Password must contain at least one number.");
         return;
@@ -134,10 +134,10 @@ const ForgotPasswordForm = () =>{
     const handlePasswordChange = (password) => {
       setNewPassword(password);
       if (password === "") {
-        setPasswordStrength(""); 
+        setPasswordStrength("");
         return;
-      }    
-      
+      }
+
       const hasUpperCase = /[A-Z]/.test(password);
       const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
       if (hasUpperCase && hasSpecialChar) {
@@ -161,7 +161,7 @@ const ForgotPasswordForm = () =>{
       } else {
         setIsResendDisabled(false); // Enable resend button after timer ends
       }
-  
+
       return () => clearInterval(interval); // Cleanup interval on component unmount
     }, [timer]);
 
@@ -306,9 +306,9 @@ const ForgotPasswordForm = () =>{
                         Continue to Login
                     </Button>
                 </Box>)}
-      </Box>    
+      </Box>
    );
-   
+
 }
 
 export default ForgotPasswordForm;
