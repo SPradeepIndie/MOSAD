@@ -19,6 +19,7 @@ import SearchComponent from "../../component/SearchComponent"; // Import SearchC
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from "jspdf"; // Import jsPDF library
 import { useUpdateItemQuantity ,useCreateBill} from "../../hooks/servicesHook/useBillService";
+import { useCreateCredit } from "../../hooks/servicesHook/useCreditService";
 
 
 
@@ -29,6 +30,7 @@ function ccyFormat(num) {
 const BillPage = () => {
   const updateStock = useUpdateItemQuantity();
   const createBill = useCreateBill();
+  const createCredit = useCreateCredit();
 
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
@@ -103,35 +105,63 @@ const BillPage = () => {
    
   };
 
-  const handleCreateBill = () => {
+  const handleCreateBill = async () => {
     const data = {
-      billDTO: {
-        totalAmount: total,  // total amount
-        advance: advance,    // advance payment
-        balance: balance,    // balance payment
-        date: new Date().toISOString().split('T')[0], // today's date in yyyy-mm-dd format
-      },
-      addCustomerDTO: {
-        customerDTO: {
-          customerName: customerName,  // customer name
-          customerType: 'NORMAL',      // You can modify this value if needed
+        billDTO: {
+            totalAmount: total,  
+            advance: advance,    
+            balance: balance,    
+            date: new Date().toISOString().split('T')[0], 
         },
-        customerContactDTO: {
-          contactNumber: telephone,    // customer's contact number
+        addCustomerDTO: {
+            customerDTO: {
+                customerName: customerName,  
+                customerType: 'NORMAL',      
+            },
+            customerContactDTO: {
+                contactNumber: telephone,    
+            },
         },
-      },
-      billItemDTO: rows.map((row) => ({
-        itemId: row.itemId,          // item ID
-        description: row.description, // description of the item
-        quantity: row.quantity,      // quantity of the item
-        unitPrice: row.unitPrice,    // unit price of the item
-      })),
+        billItemDTO: rows.map((row) => ({
+            itemId: row.itemId,          
+            description: row.description, 
+            quantity: row.quantity,      
+            unitPrice: row.unitPrice,    
+        })),
     };
-  
-    console.log(data);
-    createBill(data);
-    
+
+    console.log("Request Data:", data);
+
+    try {
+        const response = await createBill(data); // Wait for the API call to complete
+        console.log("Response Data:", response.data); // Now it will log the actual API response
+        const creditData=response.data;
+        if(balance>0){
+          handleCreateCredit(creditData);
+        }
+
+    } catch (error) {
+        console.error("Error creating bill:", error);
+    }
+};
+
+const handleCreateCredit = async (creditData) => {
+  const data = {
+    customerId:creditData.customerId ,  // Example customer ID
+    billId: creditData.billId,      // Example bill ID
+    balance: balance, // Negative balance indicating credit
+    dueDate: new Date().toISOString().split('T')[0] , // Due date for the credit payment
   };
+
+  try {
+    const response = await createCredit(data); // Call the API to create the credit record
+    console.log('Credit created successfully:', response);
+    // You can handle the response here, like showing a success message or navigating away.
+  } catch (error) {
+    console.error('Error creating credit:', error);
+    // Optionally, handle the error (e.g., show an error message).
+  }
+};
 
   const clearAllFields = () => {
     setRows([]);
