@@ -9,6 +9,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import BackHandIcon from '@mui/icons-material/BackHand';
 
 function HomePage() {
   const tiles = [
@@ -50,7 +51,12 @@ function HomePage() {
     {
       title:'Dack Tires',
       icon:<AssessmentIcon fontSize='large'/>,
-      link:'/dack'
+      link:'/dack',
+    },
+    {
+      title: 'Service',
+      icon:<BackHandIcon fontSize="large"/>,
+      link:'/services',
     }
   ];
 
