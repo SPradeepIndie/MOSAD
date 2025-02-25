@@ -18,12 +18,9 @@ public class BillDTOMapper {
 
     public BillDTO toDTO(Bill bill) {
         return modelMapper.map(bill, BillDTO.class);
-
     }
 
-
     public Bill toEntity(BillDTO dto) {
-
         return modelMapper.map(dto, Bill.class);
 
     }
