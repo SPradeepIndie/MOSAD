@@ -6,6 +6,15 @@ import java.time.LocalDate;
 public class ServicesDTO {
     private Long servicesId;
     private LocalDate servicesDate;
+    private Double Amount;
+
+    public Double getAmount() {
+        return Amount;
+    }
+
+    public void setAmount(Double amount) {
+        Amount = amount;
+    }
 
     public ServicesDTO() {
     }

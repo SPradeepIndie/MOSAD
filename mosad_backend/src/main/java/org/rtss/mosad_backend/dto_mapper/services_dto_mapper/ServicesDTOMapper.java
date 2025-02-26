@@ -2,7 +2,7 @@ package org.rtss.mosad_backend.dto_mapper.services_dto_mapper;
 
 import org.modelmapper.ModelMapper;
 import org.rtss.mosad_backend.dto.services_dtos.ServicesDTO;
-import org.rtss.mosad_backend.entity.services_section.servicesSection;
+import org.rtss.mosad_backend.entity.services_section.ServicesSection;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +14,12 @@ public class ServicesDTOMapper {
         this.modelMapper = modelMapper;
     }
 
-    public ServicesDTO toDTO(servicesSection services) {
+    public ServicesDTO toDTO(ServicesSection services) {
         return modelMapper.map(services, ServicesDTO.class);
     }
 
-    public servicesSection toEntity(ServicesDTO dto) {
-        return modelMapper.map(dto, servicesSection.class);
+    public ServicesSection toEntity(ServicesDTO dto) {
+        return modelMapper.map(dto, ServicesSection.class);
     }
 
 }
