@@ -15,9 +15,9 @@ const RetailPageLayout=()=>{
 
     const tabRoutes = [
         { path: '/retail/', label: 'Payment History', id: 'payment_history' },
-        { path: '/retail/purchase-history', label: 'Purchase History', id: 'purchase_history' },
-        { path: '/retail/incomplete-transactions', label: 'Incomplete Transactions', id: 'incomplete_transactions' },
-        { path: '/retail/product-availability', label: 'Find Product Availability', id: 'product_availability' }
+        // { path: '/retail/purchase-history', label: 'Purchase History', id: 'purchase_history',isHidden:true },
+        { path: '/retail/incomplete-transactions', label: 'Incomplete Transactions', id: 'incomplete_transactions'},
+        { path: '/retail/product-availability', label: 'Find Product Availability', id: 'product_availability'}
 
         ];
     

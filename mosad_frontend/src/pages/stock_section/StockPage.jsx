@@ -94,6 +94,7 @@ function StockPage({ isFromBranch }) {
               key={category.categoryName}
             >
               <Tile
+                allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}
                 title={category.categoryName}
                 icon={iconMap[category.categoryName] || <DescriptionIcon fontSize="large" />}
                 link={`${isFromBranch ? '/branch/stock/brand' : '/stock/brand'}`}
@@ -108,6 +109,7 @@ function StockPage({ isFromBranch }) {
             md={4}
           >
             <Tile
+              allowedRoles={["OWNER","ADMIN","STOCK_MANAGER"]}
               title="Add New Category"
               icon={<AddIcon fontSize="large" />}
               onClick={() => setDialogOpen(true)}

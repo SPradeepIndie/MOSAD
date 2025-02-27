@@ -7,8 +7,8 @@ import org.rtss.mosad_backend.entity.rebuild_tyre.RebuildTyre.TyreStatus;
 
 public class RebuildTyreDto {
 
-    @NotNull(message = "Customer ID cannot be null")
-    private Long customerId;
+    private Long itemId;
+
 
     @NotNull(message = "Tyre number cannot be null")
     private Integer tyreNumber;
@@ -39,15 +39,11 @@ public class RebuildTyreDto {
     @NotNull(message = "Tyre status cannot be null")
     private TyreStatus status;
 
-    // Constructors
+    // No-argument constructor
     public RebuildTyreDto() {}
 
-    public RebuildTyreDto(Long customerId, Integer tyreNumber, String tyreSize, String tyreBrand, 
-                          String customerName, String contactNumber, LocalDate dateReceived, 
-                          LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, 
-                          LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, 
-                          String billNumber, Double price, TyreStatus status) {
-        this.customerId = customerId;
+    public RebuildTyreDto(Long itemId, Integer tyreNumber, String tyreSize, String tyreBrand, String customerName, String contactNumber, LocalDate dateReceived, LocalDate dateSentToCompany, String salesRepNumber, String jobNumber, LocalDate dateReceivedFromCompany, LocalDate dateDeliveredToCustomer, String billNumber, Double price, TyreStatus status) {
+        this.itemId = itemId;
         this.tyreNumber = tyreNumber;
         this.tyreSize = tyreSize;
         this.tyreBrand = tyreBrand;
@@ -65,18 +61,17 @@ public class RebuildTyreDto {
     }
 
     // Getters and Setters
-    public Long getCustomerId() {
-        return customerId;
+    
+    public Long getItemId() {
+        return itemId;
     }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public Integer getTyreNumber() {
         return tyreNumber;
     }
-
     public void setTyreNumber(Integer tyreNumber) {
         this.tyreNumber = tyreNumber;
     }
@@ -84,7 +79,6 @@ public class RebuildTyreDto {
     public String getTyreSize() {
         return tyreSize;
     }
-
     public void setTyreSize(String tyreSize) {
         this.tyreSize = tyreSize;
     }
@@ -92,7 +86,6 @@ public class RebuildTyreDto {
     public String getTyreBrand() {
         return tyreBrand;
     }
-
     public void setTyreBrand(String tyreBrand) {
         this.tyreBrand = tyreBrand;
     }
@@ -100,7 +93,6 @@ public class RebuildTyreDto {
     public String getCustomerName() {
         return customerName;
     }
-
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
@@ -108,7 +100,6 @@ public class RebuildTyreDto {
     public String getContactNumber() {
         return contactNumber;
     }
-
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
@@ -116,7 +107,6 @@ public class RebuildTyreDto {
     public LocalDate getDateReceived() {
         return dateReceived;
     }
-
     public void setDateReceived(LocalDate dateReceived) {
         this.dateReceived = dateReceived;
     }
@@ -124,7 +114,6 @@ public class RebuildTyreDto {
     public LocalDate getDateSentToCompany() {
         return dateSentToCompany;
     }
-
     public void setDateSentToCompany(LocalDate dateSentToCompany) {
         this.dateSentToCompany = dateSentToCompany;
     }
@@ -132,7 +121,6 @@ public class RebuildTyreDto {
     public String getSalesRepNumber() {
         return salesRepNumber;
     }
-
     public void setSalesRepNumber(String salesRepNumber) {
         this.salesRepNumber = salesRepNumber;
     }
@@ -140,7 +128,6 @@ public class RebuildTyreDto {
     public String getJobNumber() {
         return jobNumber;
     }
-
     public void setJobNumber(String jobNumber) {
         this.jobNumber = jobNumber;
     }
@@ -148,7 +135,6 @@ public class RebuildTyreDto {
     public LocalDate getDateReceivedFromCompany() {
         return dateReceivedFromCompany;
     }
-
     public void setDateReceivedFromCompany(LocalDate dateReceivedFromCompany) {
         this.dateReceivedFromCompany = dateReceivedFromCompany;
     }
@@ -156,7 +142,6 @@ public class RebuildTyreDto {
     public LocalDate getDateDeliveredToCustomer() {
         return dateDeliveredToCustomer;
     }
-
     public void setDateDeliveredToCustomer(LocalDate dateDeliveredToCustomer) {
         this.dateDeliveredToCustomer = dateDeliveredToCustomer;
     }
@@ -164,7 +149,6 @@ public class RebuildTyreDto {
     public String getBillNumber() {
         return billNumber;
     }
-
     public void setBillNumber(String billNumber) {
         this.billNumber = billNumber;
     }
@@ -172,7 +156,6 @@ public class RebuildTyreDto {
     public Double getPrice() {
         return price;
     }
-
     public void setPrice(Double price) {
         this.price = price;
     }
@@ -180,7 +163,6 @@ public class RebuildTyreDto {
     public TyreStatus getStatus() {
         return status;
     }
-
     public void setStatus(TyreStatus status) {
         this.status = status;
     }

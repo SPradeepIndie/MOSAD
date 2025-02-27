@@ -7,6 +7,18 @@ public class BillItemDTO {
     private Integer quantity;
     private Double unitPrice;
 
+    public BillItemDTO(Long billItemId, Long itemId, String description, Integer quantity, Double unitPrice) {
+        this.billItemId = billItemId;
+        this.itemId = itemId;
+        this.description = description;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    public BillItemDTO() {
+
+    }
+
     // Getters and Setters
     public Long getBillItemId() {
         return billItemId;

@@ -1,5 +1,6 @@
 #remove docker-compose file from git commits
 ./docker-compose.yml
+/mosad_chatbot/venv/
 
 ### IntelliJ IDEA ###
 .idea
@@ -11,3 +12,6 @@
 
 mosad_backend/src/test/java/org/rtss/mosad_backend/PasswordEncryptor.java
 *.xml~
+
+#Environemnt variables
+.env.*

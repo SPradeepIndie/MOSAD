@@ -213,7 +213,7 @@ const CreditPage = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   const [state, setState] = useState({ all: false, completed: false, incompleted: true, });
-  const [customerType, setCustomerType] = useState('RETAIL');
+  const [customerType, setCustomerType] = useState('NORMAL');
   const columns = {'creditId':false,'billId':true,'customerName':true,'contactNumber':true,'balance':true,'dueDate':true,'remainingBalance':true};
 
   const handleRadioChange = (event) => {
@@ -355,7 +355,7 @@ const CreditPage = () => {
               gap: 1, // Add spacing for stacked layout
             }}
           >
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            {/* <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant={customerType === 'RETAIL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('RETAIL')}
@@ -370,7 +370,7 @@ const CreditPage = () => {
               >
                 Normal
               </Button>
-            </Box>
+            </Box> */}
 
             {/* Search Field */}
             <TextField

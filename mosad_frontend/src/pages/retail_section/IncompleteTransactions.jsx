@@ -11,7 +11,6 @@ const IncompleteTransactions = () => {
     const loadingData = async () => {
         try {
             const response = await fetchIncompleteTransactions(auth.username); // Fetching data using `auth`
-    
             // Update rows with id for DataGrid
             const updatedRows = response.data.map((transaction, index) => ({
                 id: index, // Unique id for each row
@@ -31,7 +30,7 @@ const IncompleteTransactions = () => {
 
     const columns = [
         { field: "date", headerName: "Date", flex: 1 }, 
-        { field: "description", headerName: "Description", flex: 2 },
+        { field: "description", headerName: "Retail Customer Name", flex: 2 },
         { field: "balance", headerName: "Credit Balance", flex: 1, type: "number" },
         { field: "dueDate", headerName: "Due Date", flex: 1 }
     ];

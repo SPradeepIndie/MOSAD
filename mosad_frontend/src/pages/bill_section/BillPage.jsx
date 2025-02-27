@@ -18,7 +18,8 @@ import DeleteIcon from "@mui/icons-material/Delete"; // Import DeleteIcon
 import SearchComponent from "../../component/SearchComponent"; // Import SearchComponent
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from "jspdf"; // Import jsPDF library
-import { useUpdateItemQuantity } from "../../hooks/servicesHook/useBillService";
+import { useUpdateItemQuantity ,useCreateBill} from "../../hooks/servicesHook/useBillService";
+import { useCreateCredit } from "../../hooks/servicesHook/useCreditService";
 
 
 
@@ -28,6 +29,9 @@ function ccyFormat(num) {
 
 const BillPage = () => {
   const updateStock = useUpdateItemQuantity();
+  const createBill = useCreateBill();
+  const createCredit = useCreateCredit();
+
   const navigate = useNavigate();
   const [rows, setRows] = React.useState([]); // Start with an empty array
   const [advance, setAdvance] = React.useState(0);
@@ -101,12 +105,77 @@ const BillPage = () => {
    
   };
 
+  const handleCreateBill = async () => {
+    const data = {
+        billDTO: {
+            totalAmount: total,  
+            advance: advance,    
+            balance: balance,    
+            date: new Date().toISOString().split('T')[0], 
+        },
+        addCustomerDTO: {
+            customerDTO: {
+                customerName: customerName,  
+                customerType: 'NORMAL',      
+            },
+            customerContactDTO: {
+                contactNumber: telephone,    
+            },
+        },
+        billItemDTO: rows.map((row) => ({
+            itemId: row.itemId,          
+            description: row.description, 
+            quantity: row.quantity,      
+            unitPrice: row.unitPrice,    
+        })),
+    };
+
+    console.log("Request Data:", data);
+
+    try {
+        const response = await createBill(data); // Wait for the API call to complete
+        console.log("Response Data:", response.data); // Now it will log the actual API response
+        const creditData=response.data;
+        if(balance>0){
+          handleCreateCredit(creditData);
+        }
+
+    } catch (error) {
+        console.error("Error creating bill:", error);
+    }
+};
+
+const handleCreateCredit = async (creditData) => {
+  const data = {
+    customerId:creditData.customerId ,  // Example customer ID
+    billId: creditData.billId,      // Example bill ID
+    balance: balance, // Negative balance indicating credit
+    dueDate: new Date().toISOString().split('T')[0] , // Due date for the credit payment
+  };
+
+  try {
+    const response = await createCredit(data); // Call the API to create the credit record
+    console.log('Credit created successfully:', response);
+    // You can handle the response here, like showing a success message or navigating away.
+  } catch (error) {
+    console.error('Error creating credit:', error);
+    // Optionally, handle the error (e.g., show an error message).
+  }
+};
+
+  const clearAllFields = () => {
+    setRows([]);
+    setAdvance(0);
+    setCustomerName("");
+    setTelephone("");
+  };
   const handlePrint = () => {
     
 
     console.log(rows);
 
     handleUpdateStock();
+    handleCreateBill();
 
     const doc = new jsPDF();
   
@@ -122,11 +191,12 @@ const BillPage = () => {
       x: 10, // Set starting position for content
       y: 10,
       html2canvas: {
-        scale: 0.15, // Try a higher scale value to capture the content better
+        scale: 0.22, // Try a higher scale value to capture the content better
         width: 250, // Ensure the content uses the full width of the page (A4 size)
         height: 297, // Ensure full height is captured (A4 size)
       },
     });
+    //clearAllFields();
   };
   
   

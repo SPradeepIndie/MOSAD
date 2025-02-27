@@ -3,10 +3,12 @@ package org.rtss.mosad_backend.service.credit_management;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
+import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.entity.credit.Repayment;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
@@ -29,15 +31,18 @@ public class CreditService {
 
     private final CustomerRepository customerRepository;
 
-    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, CustomerRepository customerRepository) {
+    private final BillRepository billRepository;
+
+    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, CustomerRepository customerRepository, BillRepository billRepository) {
         this.creditRepository = creditRepository;
         this.repaymentRepository = repaymentRepository;
         this.creditDTOMapper = creditDTOMapper;
         this.customerRepository = customerRepository;
+        this.billRepository = billRepository;
     }
 
     // Save credit
-    public ResponseEntity<CreditDTO> saveCredit(CreditDTO creditDTO) {
+    public ResponseEntity<CreditDTO> saveCredit(AddCreditDTO creditDTO) {
 
         if (creditDTO.getCustomerId() == null) {
             throw new IllegalArgumentException("Customer ID must not be null ");
@@ -47,9 +52,14 @@ public class CreditService {
         Customer customer = customerRepository.findById(creditDTO.getCustomerId())
                 .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found"))));
 
+        Bill bill=billRepository.findById(creditDTO.getBillId())
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Bill not found"))));
         // Map the CreditDTO to a Credit entity
-        Credit credit=creditDTOMapper.toEntity(creditDTO);
+        Credit credit=new Credit();
+        credit.setBalance(creditDTO.getBalance());
+        credit.setDueDate(creditDTO.getDueDate());
         credit.setCustomer(customer); // Associate the Customer entity
+        credit.setBill(bill);
 
         // Save the Credit entity
         Credit savedCredit = creditRepository.save(credit);

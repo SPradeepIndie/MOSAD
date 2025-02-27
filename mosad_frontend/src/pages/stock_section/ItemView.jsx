@@ -15,15 +15,20 @@ import PriceDetailsSection from "../../component/PriceDetailsSection";
 import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
 import Box from '@mui/material/Box';
+import { useLocation } from "react-router-dom";
 
 const ItemView = () => {
   const addItem = useAddItem(); 
   const fetchItems = useFetchItems(); 
   const deleteItem =useDeleteItem(); 
   const updateItem= useUpdateItem();
+
+  const passedStates=useLocation();
+  const states=passedStates.state;
+  console.log("Location State:",passedStates.state);
   //Store passed Category and Brand using Link state & useLocation
-  const [selectedCategory, setSelectedCategory] = useState("Tyre");
-  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(states?.category);
+  const [selectedBrand, setSelectedBrand] = useState(states?.brand );
   const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
   const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
 

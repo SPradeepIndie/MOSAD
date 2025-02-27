@@ -17,7 +17,11 @@ jobs:
       - name: npm_install_dependencies
         run: npm install
         working-directory: ./mosad_frontend
-
+      - name: Generate .env file
+        run: |
+          echo "VITE_API_URL=${{env.VITE_DEV_API_URL}}" > .env.development
+          echo "VITE_API_URL=${{env.VITE_PROD_API_URL}}" > .env.prodcution
+     
       - name: npm_build
         run: npm run build
         working-directory: ./mosad_frontend

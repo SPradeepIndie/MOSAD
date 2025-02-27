@@ -2,6 +2,7 @@ package org.rtss.mosad_backend.config.security;
 
 import org.rtss.mosad_backend.filter_pacakge.JwtSecurityFilter;
 import org.rtss.mosad_backend.service.login_user.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${CORS_ALLOWED_ORIGINS}")
+    private String[] allowedOrigins;
 
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService customUserDetailsService;
@@ -87,7 +91,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(allowedOrigins));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

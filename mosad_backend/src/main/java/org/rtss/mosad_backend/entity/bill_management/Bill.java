@@ -65,7 +65,7 @@ public class Bill {
     }
 
     public void setBillItems(List<BillItem> billItems) {
-        this.billItems = billItems;
+        this.billItems = this.billItems;
     }
 
     public Long getBillId() {
