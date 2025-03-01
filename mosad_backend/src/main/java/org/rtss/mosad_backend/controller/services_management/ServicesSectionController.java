@@ -1,7 +1,6 @@
 package org.rtss.mosad_backend.controller.services_management;
 
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
+
 import org.rtss.mosad_backend.dto.services_dtos.ServicesDTO;
 import org.rtss.mosad_backend.service.services_management.ServicesSectionService;
 import org.springframework.http.ResponseEntity;

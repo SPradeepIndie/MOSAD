@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.rtss.mosad_backend.controller.bill_management.BillController;
-import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
 import org.rtss.mosad_backend.service.bill_management.BillService;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)

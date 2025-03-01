@@ -1,10 +1,8 @@
 package org.rtss.mosad_backend.service.services_management;
 
 
-import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.services_dtos.ServicesDTO;
 import org.rtss.mosad_backend.dto_mapper.services_dto_mapper.ServicesDTOMapper;
-import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.services_section.ServicesSection;
 import org.rtss.mosad_backend.repository.services_repository.ServicesSectionRepository;
 import org.springframework.http.HttpStatus;
