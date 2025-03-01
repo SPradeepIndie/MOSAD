@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class AddCreditDTO {
     private Long customerId;
+    private Long userId;
     private Long billId;
     private double balance;
     private Date dueDate;
@@ -11,8 +12,9 @@ public class AddCreditDTO {
     public AddCreditDTO() {
     }
 
-    public AddCreditDTO(Long customerId, Long billId, double balance, Date dueDate) {
+    public AddCreditDTO(Long customerId,Long userId, Long billId, double balance, Date dueDate) {
         this.customerId = customerId;
+        this.userId=userId;
         this.billId = billId;
         this.balance = balance;
         this.dueDate = dueDate;
@@ -24,6 +26,14 @@ public class AddCreditDTO {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public Long getUserId(){
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getBillId() {

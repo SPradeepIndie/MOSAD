@@ -14,8 +14,8 @@ public class CreditDTO {
     private Date dueDate;
     @NotEmpty(message = "Customer id can not be empty")
     private Long customerId;
-
-    private boolean isCompleted;
+    @NotEmpty(message = "Is completed can not be empty")
+    private Boolean isCompleted;
 
 
 
@@ -63,7 +63,7 @@ public class CreditDTO {
         this.customerId = customerId;
     }
 
-    public boolean isCompleted() {
+    public boolean getCompleted() {
         return isCompleted;
     }
 

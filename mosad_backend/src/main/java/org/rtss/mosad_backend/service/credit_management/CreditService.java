@@ -100,7 +100,7 @@ public class CreditService {
             List<Object[]> results;
             if (customerType.equalsIgnoreCase("Retail")) {
                 results = creditRepository.findAllRetailCustomerCreditDetails();
-                System.out.println(results);
+
             } else {
                 results = creditRepository.findAllNormalCustomerCreditDetails();
             }
@@ -108,7 +108,7 @@ public class CreditService {
             Map<Long, CreditDetailsDTO> creditDetailsMap = new HashMap<>();
 
             for (Object[] row : results) {
-                System.out.println("\nrow[5]"+row[5]+"\n");
+
                 Long creditId = (Long) row[0];
                 double balance = (double) row[1];
                 Date dueDate = (Date) row[2];
@@ -224,14 +224,20 @@ public class CreditService {
         return creditRepository.findCreditByDueDate(dueDate);
     }
 
-    public ResponseEntity<ResponseDTO> updateCredit(Long creditId) {
-        Optional<Credit> creditOptional = creditRepository.findById(creditId);
+    public ResponseEntity<ResponseDTO> updateCredit(CreditDTO creditDTO) {
+        Optional<Credit> creditOptional = creditRepository.findById(creditDTO.getCreditId());
 
         if (creditOptional.isPresent()) {
             Credit credit = creditOptional.get();
-            credit.setCompleted(true);  // Update the attribute
+            credit.setCompleted(creditDTO.getCompleted());  // Update the attribute
+            credit.setDueDate(creditDTO.getDueDate());
 
-            creditRepository.save(credit);  // Save the updated entity
+
+
+            Credit savedCredit = creditRepository.save(credit);  // Save the updated entity
+            creditRepository.flush();
+
+
 
             ResponseDTO responseDTO = new ResponseDTO(true, "Credit updated successfully");
             return ResponseEntity.ok().body(responseDTO);

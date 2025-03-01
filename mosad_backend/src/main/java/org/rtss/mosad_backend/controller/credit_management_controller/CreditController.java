@@ -66,4 +66,9 @@ public class CreditController {
     public List<Credit> getCreditsBtDueDate(@RequestParam String date) {
             return creditService.getCreditsBtDueDate(date);
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDTO> updateCredit(@RequestBody CreditDTO updateCreditDTO) {
+        return ResponseEntity.ok(creditService.updateCredit(updateCreditDTO).getBody());
+    }
 }

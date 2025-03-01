@@ -52,3 +52,13 @@ export const useCreateCredit = () => {
   
     return createCredit;
   };
+
+export const useUpdateCredit = () => {
+    const apiClient = useApiClient(); // Assuming you have a custom API client set up.
+  
+    const updateCredit = (data) => {
+      return apiClient.put('/credit/update', data); // Sends the PUT request to the backend
+    };
+  
+    return updateCredit;
+  };  

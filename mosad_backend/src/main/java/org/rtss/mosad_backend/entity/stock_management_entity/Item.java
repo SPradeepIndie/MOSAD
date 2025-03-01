@@ -36,6 +36,10 @@ public class Item {
     @OneToOne(mappedBy = "item", cascade = CascadeType.ALL)
     private ItemTyre itemTyre;
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private Set<StockIn> stockIn;
+
+
 
 
 

@@ -43,13 +43,14 @@ public class Credit {
     public Credit() {
     }
 
-    public Credit(double balance, Date dueDate,Boolean isCompleted, Customer customer, List<Repayment> repayments,Bill bill) {
+    public Credit(double balance, Date dueDate,Boolean isCompleted, Customer customer, List<Repayment> repayments,Bill bill,Users user) {
         this.balance = balance;
         this.dueDate = dueDate;
         this.customer = customer;
         this.repayments = repayments;
         this.bill = bill;
         this.isCompleted=isCompleted;
+        this.user=user;
 
     }
 
@@ -101,12 +102,20 @@ public class Credit {
         this.bill = bill;
     }
 
-    public boolean isCompleted() {
+    public boolean getCompleted() {
         return isCompleted;
     }
 
     public void setCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     @Override

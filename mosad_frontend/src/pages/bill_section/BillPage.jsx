@@ -143,12 +143,18 @@ const BillPage = () => {
     }
 };
 
+const addOneMonth = (date) => {
+  const result = new Date(date);
+  result.setMonth(result.getMonth() + 1);
+  return result.toISOString().split('T')[0];
+};
+
 const handleCreateCredit = async (creditData) => {
   const data = {
     customerId:creditData.customerId ,  // Example customer ID
     billId: creditData.billId,      // Example bill ID
     balance: balance, // Negative balance indicating credit
-    dueDate: new Date().toISOString().split('T')[0] , // Due date for the credit payment
+    dueDate: addOneMonth(new Date()), // Due date for the credit payment
   };
 
   try {
