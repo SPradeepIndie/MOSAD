@@ -53,7 +53,7 @@ const ServicesPage = () => {
                         
                     <tr>
                         <td style={{ paddingRight: '20px' }}>
-                            <label style={{ fontSize: "18px" }}>Date: </label>
+                            <label for = "date" style={{ fontSize: "18px" }}>Date: </label>
                         </td>
                         <td style={{ paddingRight: '40px' }}> 
                             <DatePicker
@@ -65,7 +65,7 @@ const ServicesPage = () => {
                         </td>
 
                         <td style={{ paddingRight: '20px' }}>
-                            <label style={{ fontSize: "18px" }}>Amount: </label>
+                            <label for = "amount" style={{ fontSize: "18px" }}>Amount: </label>
                         </td>
 
                         <td>
