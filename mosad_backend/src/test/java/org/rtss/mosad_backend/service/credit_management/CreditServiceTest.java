@@ -99,7 +99,7 @@ class CreditServiceTest {
 
         List<Credit> credits = List.of(credit);
         when(creditRepository.findAll()).thenReturn(credits);
-        when(creditDTOMapper.toDTOList(credits)).thenReturn(List.of(new CreditDTO(1L, 5000.0, new Date(), 1L)));
+        when(creditDTOMapper.toDTOList(credits)).thenReturn(List.of(new CreditDTO(1L, 5000.0, new Date(), 1L,true)));
 
         // Act
         List<CreditDTO> result = creditService.getAllCredits();
@@ -119,7 +119,7 @@ class CreditServiceTest {
         credit.setBalance(5000.0);
 
         when(creditRepository.findById(creditId)).thenReturn(Optional.of(credit));
-        when(creditDTOMapper.toDTOWithCustomer(any(Credit.class))).thenReturn(new CreditDTO(1L, 5000.0, new Date(), 1L));
+        when(creditDTOMapper.toDTOWithCustomer(any(Credit.class))).thenReturn(new CreditDTO(1L, 5000.0, new Date(), 1L,true));
 
         // Act
         CreditDTO result = creditService.getCreditById(creditId);

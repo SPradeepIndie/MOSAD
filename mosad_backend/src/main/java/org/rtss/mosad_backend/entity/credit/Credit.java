@@ -22,6 +22,9 @@ public class Credit {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dueDate;
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isCompleted;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = true)
     private Customer customer;
@@ -40,12 +43,13 @@ public class Credit {
     public Credit() {
     }
 
-    public Credit(double balance, Date dueDate, Customer customer, List<Repayment> repayments,Bill bill) {
+    public Credit(double balance, Date dueDate,Boolean isCompleted, Customer customer, List<Repayment> repayments,Bill bill) {
         this.balance = balance;
         this.dueDate = dueDate;
         this.customer = customer;
         this.repayments = repayments;
         this.bill = bill;
+        this.isCompleted=isCompleted;
 
     }
 
@@ -95,6 +99,14 @@ public class Credit {
 
     public void setBill(Bill bill) {
         this.bill = bill;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        this.isCompleted = isCompleted;
     }
 
     @Override

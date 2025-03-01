@@ -100,6 +100,7 @@ public class CreditService {
             List<Object[]> results;
             if (customerType.equalsIgnoreCase("Retail")) {
                 results = creditRepository.findAllRetailCustomerCreditDetails();
+                System.out.println(results);
             } else {
                 results = creditRepository.findAllNormalCustomerCreditDetails();
             }
@@ -107,24 +108,28 @@ public class CreditService {
             Map<Long, CreditDetailsDTO> creditDetailsMap = new HashMap<>();
 
             for (Object[] row : results) {
+                System.out.println("\nrow[5]"+row[5]+"\n");
                 Long creditId = (Long) row[0];
                 double balance = (double) row[1];
                 Date dueDate = (Date) row[2];
-                String customerName = (String) row[3];
-                String contactNumber = (String) row[4];
+                boolean isCompleted = Boolean.TRUE.equals(row[3]);
+                String customerName = (String) row[4];
+                String contactNumber = (String) row[5];
+
+
 
                 // Repayment details
-                Long repaymentId = (Long) row[5];
-                Date repaymentDate = (Date) row[6];
-                Double repaymentAmount = (Double) row[7];
+                Long repaymentId = (Long) row[6];
+                Date repaymentDate = (Date) row[7];
+                Double repaymentAmount = (Double) row[8];
 
                 //Bill details
-                Long billId = (Long) row[8];
+                Long billId = (Long) row[9];
 
 
                 // Get or create CreditDetailsDTO
                 CreditDetailsDTO creditDetails = creditDetailsMap.computeIfAbsent(creditId, id ->
-                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId)
+                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId,isCompleted)
                 );
 
                 // Add repayment if not already present
@@ -217,6 +222,23 @@ public class CreditService {
             throw new ObjectNotValidException(new HashSet<>(List.of("Invalid date format")));
         }
         return creditRepository.findCreditByDueDate(dueDate);
+    }
+
+    public ResponseEntity<ResponseDTO> updateCredit(Long creditId) {
+        Optional<Credit> creditOptional = creditRepository.findById(creditId);
+
+        if (creditOptional.isPresent()) {
+            Credit credit = creditOptional.get();
+            credit.setCompleted(true);  // Update the attribute
+
+            creditRepository.save(credit);  // Save the updated entity
+
+            ResponseDTO responseDTO = new ResponseDTO(true, "Credit updated successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO(false, "Credit not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
     }
 
 

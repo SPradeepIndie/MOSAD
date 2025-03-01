@@ -16,6 +16,7 @@ import ConfirmationDialog from "../../component/ConfirmationDialog";
 import SearchComponent from "../../component/SearchComponent";
 import Box from '@mui/material/Box';
 import { useLocation } from "react-router-dom";
+import useAuth from '../../hooks/useAuth';
 
 const ItemView = () => {
   const addItem = useAddItem(); 
@@ -23,13 +24,16 @@ const ItemView = () => {
   const deleteItem =useDeleteItem(); 
   const updateItem= useUpdateItem();
 
+  const {auth}=useAuth();
+  console.log("Auth:",auth);
+
   const passedStates=useLocation();
   const states=passedStates.state;
   console.log("Location State:",passedStates.state);
   //Store passed Category and Brand using Link state & useLocation
   const [selectedCategory, setSelectedCategory] = useState(states?.category);
   const [selectedBrand, setSelectedBrand] = useState(states?.brand );
-  const [selectedBranch, setSelectedBranch] = useState(1); //Adjust based on your branch ID
+  const [selectedBranch, setSelectedBranch] = useState(3); //Adjust based on your branch ID
   const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
 
 
@@ -357,7 +361,7 @@ const ItemView = () => {
             {
               console.log("Rows:", rows.length)
             }
-            {filteredRows && filteredRows.map((row) => (
+            {filteredRows?.map((row) => (
               <tr
                 key={row.itemDTO.itemId}
                 className={selectedRowId === row.itemDTO.itemId ? "selected-row" : ""}

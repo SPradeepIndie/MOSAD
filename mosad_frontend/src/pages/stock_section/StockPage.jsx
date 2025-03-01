@@ -136,7 +136,7 @@ function StockPage({ isFromBranch }) {
           <Button onClick={() => setDialogOpen(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleAddCategory} color="primary">
+          <Button onClick={handleAddCategory} color="primary" disabled={!newCategory.trim()}>
             Add
           </Button>
         </DialogActions>

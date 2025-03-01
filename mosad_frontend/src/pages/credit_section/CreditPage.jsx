@@ -159,7 +159,7 @@ function Row({ row, onAddRepayment,onDeleteRepayment, setMessage, message,column
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DatePicker']}>
               <DatePicker
-                label="Basic date picker"
+                label="Date"
                 value={ dayjs(newRepayment.date)}
                 onChange={(newValue) =>
                   setNewRepayment({ ...newRepayment, date: newValue ? newValue.format('YYYY-MM-DD') : value.format('YYYY-MM-DD') })
@@ -324,8 +324,8 @@ const CreditPage = () => {
     return false;
   }).filter(
     (row) =>
-      (row.customerName && row.customerName.toLowerCase().includes(searchText.toLowerCase())) ||
-      (row.contactNumber && row.contactNumber.toLowerCase().includes(searchText.toLowerCase())) ||
+      (row.customerName?.toLowerCase().includes(searchText.toLowerCase())) ||
+      (row.contactNumber?.toLowerCase().includes(searchText.toLowerCase())) ||
       row.billId.toString().includes(searchText)
   );
   
@@ -355,7 +355,7 @@ const CreditPage = () => {
               gap: 1, // Add spacing for stacked layout
             }}
           >
-            {/* <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant={customerType === 'RETAIL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('RETAIL')}
@@ -370,7 +370,7 @@ const CreditPage = () => {
               >
                 Normal
               </Button>
-            </Box> */}
+            </Box>
 
             {/* Search Field */}
             <TextField
