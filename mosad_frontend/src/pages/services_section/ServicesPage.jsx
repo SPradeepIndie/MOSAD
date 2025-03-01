@@ -40,13 +40,14 @@ const ServicesPage = () => {
                 <h1>Services Page</h1>
                 
                 <table>
+                    
                     <tbody>
                         
                     <tr>
                         <td style={{ paddingRight: '20px' }}>
                             <label style={{ fontSize: "18px" }}>Date: </label>
                         </td>
-                        <td style={{ paddingRight: '40px' }}> {/* Increased gap between date field and amount label */}
+                        <td style={{ paddingRight: '40px' }}> 
                             <DatePicker
                                 label="Select Date"
                                 value={date}
