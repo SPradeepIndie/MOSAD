@@ -40,6 +40,10 @@ const ServicesPage = () => {
                 <h1>Services Page</h1>
                 
                 <table>
+
+                <thead>
+                    
+                </thead>
                     
                     <tbody>
                         
