@@ -179,7 +179,6 @@ function HomePage() {
     { title: 'Retail', icon: <StorefrontIcon />, link: '/retails', authorizedRoles: ["OWNER", "ADMIN", "RETAIL_CUSTOMER"] },
     { title: 'Credit', icon: <CreditCardIcon />, link: '/credits', authorizedRoles: ["OWNER", "ADMIN"] },
     { title: 'Branches', icon: <AccountTreeIcon />, link: '/branches', authorizedRoles: ["OWNER", "ADMIN", "BRANCH_MANAGER"] },
-    { title: 'Employee', icon: <PeopleIcon />, link: '/employees', authorizedRoles: ["OWNER", "ADMIN", "STOCK_MANAGER", "BRANCH_MANAGER", "MECHANIC"] },
     { title: 'Reports', icon: <AssessmentIcon />, link: "/reports", authorizedRoles: ["OWNER", "ADMIN"] },
     { title: 'Dack Tires', icon: <AssessmentIcon />, link: '/dacks', authorizedRoles: ["OWNER", "ADMIN"] }
   ];
