@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Divider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Button, Paper, Typography,Grid2 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SalesGraph from '../../component/GraphComponent';
 import { cyan } from '@mui/material/colors';
+
 
 const StockReport = () => {
   const [reportName, setReportName] = useState('');
@@ -14,6 +15,19 @@ const StockReport = () => {
   const handleGenerateReport = async () => {
     console.log(`Generating report for: ${reportName}`);
   };
+  const handleDownloadReport = async () => {
+    try{
+      const response = await fetch("http://127.0.0.1:8001/forecast/tyres-json");
+      const data = await response.json();
+      console.log(data);
+    }catch(error){
+      console.error("Error downloading report:", error);
+    }
+  }
+
+  useEffect(() => {
+    handleDownloadReport();
+  }, []);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
