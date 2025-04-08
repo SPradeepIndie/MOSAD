@@ -1,9 +1,7 @@
 package org.rtss.mosad_backend.controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillResponeDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.*;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.user_dtos.UserDTO;
 import org.rtss.mosad_backend.service.bill_management.BillService;
@@ -44,15 +42,15 @@ public class BillController {
     }
 
     @GetMapping("/getnormal")
-    public ResponseEntity<List<CustomerDTO>> getCustomerByContact(@RequestParam String contactNumber){
-        List<CustomerDTO> customerDTOS=billService.getCustomersByContact(contactNumber);
+    public ResponseEntity<List<BillNormalCustomerDTO>> getCustomerByContact(@RequestParam String contactNumber){
+        List<BillNormalCustomerDTO> customerDTOS=billService.getCustomersByContact(contactNumber);
         return ResponseEntity.ok(customerDTOS);
 
 
     }
     @GetMapping("/getretail")
-    public ResponseEntity<List<UserDTO>> getUsersByContact(@RequestParam String contactNumber){
-        List<UserDTO> userDTOS=billService.getUsersByContact(contactNumber);
+    public ResponseEntity<List<BillRetailCustomerDTO>> getUsersByContact(@RequestParam String contactNumber){
+        List<BillRetailCustomerDTO> userDTOS=billService.getUsersByContact(contactNumber);
         return ResponseEntity.ok(userDTOS);
     }
 

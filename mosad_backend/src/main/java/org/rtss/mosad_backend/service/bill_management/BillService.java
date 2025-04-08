@@ -2,15 +2,10 @@ package org.rtss.mosad_backend.service.bill_management;
 
 import org.rtss.mosad_backend.dto.NotificationDTO;
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillDetailsDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillItemDTO;
-import org.rtss.mosad_backend.dto.bill_dtos.BillResponeDTO;
+import org.rtss.mosad_backend.dto.bill_dtos.*;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerContactDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDTO;
 import org.rtss.mosad_backend.dto.customer_dtos.CustomerDetailsDTO;
-import org.rtss.mosad_backend.dto.user_dtos.UserDTO;
-import org.rtss.mosad_backend.dto.user_dtos.UserDetailsDTO;
 import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.bill_dto_mapper.BillItemDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.customer_dto_mapper.CustomerContactDTOMapper;
@@ -26,20 +21,20 @@ import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.repository.bill_repository.BillItemRepository;
 import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerContactRepository;
+import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemBranchRepository;
 import org.rtss.mosad_backend.repository.stock_management_repository.ItemRepo;
 import org.rtss.mosad_backend.repository.user_management.UserContactsRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.service.NotificationService;
 import org.rtss.mosad_backend.service.customer_management.CustomerService;
-import org.rtss.mosad_backend.service.mail_service.ScheduledWANotifications;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,9 +67,10 @@ public class BillService {
     private final UserContactsRepo userContactsRepo;
     private final UserDTOMapper userDTOMapper;
     private final CustomerContactRepository customerContactRepository;
+    private final CustomerRepository customerRepository;
 
 
-    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, ItemBranchRepository itemBranchRepository, ItemRepo itemRepository, BillItemRepository billItemRepository, NotificationService notifications, UsersRepo usersRepo, UserContactsRepo userContactsRepo, UserDTOMapper userDTOMapper, CustomerContactRepository customerContactRepository) {
+    public BillService(BillRepository billRepository, CustomerService customerService, BillDTOMapper billDTOMapper, CustomerDTOMapper customerDTOMapper, CustomerContactDTOMapper customerContactDTOMapper, BillItemDTOMapper billItemDTOMapper, ItemBranchRepository itemBranchRepository, ItemRepo itemRepository, BillItemRepository billItemRepository, NotificationService notifications, UsersRepo usersRepo, UserContactsRepo userContactsRepo, UserDTOMapper userDTOMapper, CustomerContactRepository customerContactRepository, CustomerRepository customerRepository) {
         this.billRepository = billRepository;
         this.customerService = customerService;
         this.billDTOMapper = billDTOMapper;
@@ -89,6 +85,7 @@ public class BillService {
         this.userContactsRepo = userContactsRepo;
         this.userDTOMapper = userDTOMapper;
         this.customerContactRepository = customerContactRepository;
+        this.customerRepository = customerRepository;
     }
 
 
@@ -103,8 +100,23 @@ public class BillService {
 
         Bill bill = billDTOMapper.toEntity(billDetailsDTO.getBillDTO());
         Customer customer = customerService.extractCustomer(customerDetailsDTO);
+        if(customerDetailsDTO.getCustomerId() !=null || customerDetailsDTO.getUserId()!=null){
+            if(customerDetailsDTO.getCustomerId()!=null){
+                customer = customerRepository.findById(customerDetailsDTO.getCustomerId()).orElse(null);
+                bill.setCustomer(customer);
 
-        bill.setCustomer(customer);
+            }
+            else{
+                Users user = usersRepo.findById(Math.toIntExact(customerDetailsDTO.getUserId())).orElse(null);
+                bill.setUser(user);
+            }
+        }
+        else{
+            bill.setCustomer(customer);
+        }
+
+
+
 
         List<BillItem> billItems = billItemDTO.stream()
                 .map(dto -> {
@@ -117,7 +129,6 @@ public class BillService {
                     billItem.setUnitPrice(dto.getUnitPrice());
                     billItem.setItem(itemRepository.findById(dto.getItemId()).orElseThrow(() -> new RuntimeException("Item not found")));
                     System.out.println("\n inside map"+billItem.getItem().getItemId()+"\n");
-
 
                     return billItem;
                 })
@@ -161,7 +172,7 @@ public class BillService {
             BillDTO billDTO = billDTOMapper.toDTO(bill);
             CustomerDTO customerDTO = customerDTOMapper.toCustomerDTO(bill.getCustomer());
             CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(bill.getCustomer().getCustomerContact());
-            CustomerDetailsDTO customerDetailsDTO = new CustomerDetailsDTO(customerDTO,customerContactDTO);
+            CustomerDetailsDTO customerDetailsDTO = new CustomerDetailsDTO(customerDTO,customerContactDTO,null,null);
 
             List<BillItemDTO> billItems = bill.getBillItems().stream()
                     .map(billItemDTOMapper::toBillItemDTO)
@@ -194,25 +205,32 @@ public class BillService {
         }
     }
 
-    public List<UserDTO> getUsersByContact(String contactNumber){
+    public List<BillRetailCustomerDTO> getUsersByContact(String contactNumber){
         List<Users> users = new ArrayList<>();
+        List<BillRetailCustomerDTO> billRetailCustomerDTOS = new ArrayList<>();
         List<UserContacts> userContacts = userContactsRepo.findByContactNum(contactNumber);
         for (UserContacts userContact : userContacts) {
             Users user = userContact.getUser();
-            users.add(user);
-        }
+            billRetailCustomerDTOS.add(new BillRetailCustomerDTO(user.getUserId(),user.getFirstName(),user.getLastName()));
 
-        return  users.stream().map(userDTOMapper::usersToUserDTO).toList();
+        }
+        return billRetailCustomerDTOS;
+
+        //return  users.stream().map(userDTOMapper::usersToUserDTO).toList();
 
     }
-    public List<CustomerDTO> getCustomersByContact(String contactNumber) {
+    public List<BillNormalCustomerDTO> getCustomersByContact(String contactNumber) {
+        List<BillNormalCustomerDTO> normalCustomerDTOS = new ArrayList<>();
         List<CustomerContact> customersContacts = customerContactRepository.findCustomersByContactNumber(contactNumber);
-        List<Customer> customers = customersContacts.stream()
-                .map(CustomerContact::getCustomer)
-                .toList();
+
+        for (CustomerContact customerContact : customersContacts) {
+            Customer customer = customerContact.getCustomer();
+            normalCustomerDTOS.add(new BillNormalCustomerDTO(customer.getCustomerId(),customer.getCustomerName()));
+        }
 
 
-        return customers.stream().map(customerDTOMapper::toCustomerDTO).toList();
+
+        return normalCustomerDTOS;
     }
 
 
