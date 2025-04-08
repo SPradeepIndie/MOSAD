@@ -1,4 +1,4 @@
-// stock_tools.py (Upgraded Full Version)
+
 
 from crewai.tools.base_tool import BaseTool
 import psycopg2
