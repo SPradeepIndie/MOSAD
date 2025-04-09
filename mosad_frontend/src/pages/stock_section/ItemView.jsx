@@ -60,7 +60,7 @@ const ItemView = () => {
 
   const handleRestockSubmit =async () => {
     try {
-      const response = await sendRestockRequest({msg:selectedBranch+" is low on "+selectedCategory+selectedBrand,type:"Low Stock"});
+      const response = await sendRestockRequest({msg:"Branch Id: "+selectedBranch+" is low on "+selectedCategory+" "+selectedBrand,type:"Low Stock"});
       setAlertMsg(response.data .message|| 'Success.')
       setAlertType("success")
       setShowSnack(true)
