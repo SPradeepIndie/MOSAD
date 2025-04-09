@@ -29,45 +29,7 @@ public class RetailService {
         this.userRepository = userRepository;
         this.creditRepository = creditRepository;
     }
-//    public List<PaymentHistoryDTO> getPaymentHistory(String username) {
-//        // Fetch the logged-in user
-//        Users user = userRepository.findByUsername(username)
-//                .orElseThrow(() -> new IllegalArgumentException(RETAIL_USER_NOT_FOUND));
-//        // Check if the logged-in user is an admin
-//        if (ADMIN.equalsIgnoreCase(user.getUsername())) {
-//            // Admin: Fetch all users' payment history
-//            List<Bill> allBills = billRepository.findAll();
-//            return allBills.stream()
-//                    .map(bill -> new PaymentHistoryDTO(
-//                            bill.getDate(),
-//                            bill.getBillItems().stream()
-//                                    .map(BillItem::getDescription)
-//                                    .collect(Collectors.joining(", ")),
-//                            returnPaymentStatus(bill),
-//                            bill.getTotalAmount()
-//                    ))
-//                    .toList();
-//        } else {
-//            // Regular user: Fetch only their payment history
-//            List<Bill> userBills = billRepository.findBillByUser(user); // Assuming this method exists
-//            return userBills.stream()
-//                    .map(bill -> new PaymentHistoryDTO(
-//                            bill.getDate(),
-//                            bill.getBillItems().stream()
-//                                    .map(BillItem::getDescription)
-//                                    .collect(Collectors.joining(", ")),
-//                            returnPaymentStatus(bill),
-//                            bill.getTotalAmount()
-//                    ))
-//                    .toList();
-//        }
-//    }
-//    private String returnPaymentStatus(Bill bill) {
-//        if (bill.getBalance() == 0) {
-//            return "Completed";
-//        }
-//        return "Credit";
-//    }
+
 
     public List<PaymentHistoryDTO> getPaymentHistory(String username) {
         // Fetch the logged-in user

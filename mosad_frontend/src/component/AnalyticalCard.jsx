@@ -14,10 +14,6 @@ import { teal } from '@mui/material/colors'; // Import the teal color palette
 
 function AnalyticalCard({stats}) {
   const theme = useTheme();
-
-  console.log(stats);
-
-
   
 const customLimits = {
   categories:50,

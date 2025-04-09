@@ -105,7 +105,7 @@ const BranchPage=()=>{
     }
     //Handle Update
     const handleUpdatedDetailsSubmit=(event)=>{
-        if(!validateForm()){
+        if(!validateUpdateForm()){
             return;
         }
         if(!addBranchPopUp){
@@ -164,6 +164,30 @@ const BranchPage=()=>{
         let isValid = true;
         let newErrors = { ...initialErrors };
         // Check empty fields
+        if (newBranchDetails.branchDto.branchName === "") {
+            isValid = false;
+            newErrors.branchNameError = "Branch Name cannot be empty";
+        }
+        if (newBranchDetails.branchDto.addressNumber === "") {
+            isValid = false;
+            newErrors.addressNumberError = "Address Number cannot be empty";
+        }
+        if (newBranchDetails.branchDto.streetName === "") {
+            isValid = false;
+            newErrors.streetNameError = "Street Name cannot be empty";
+        }
+        if (newBranchDetails.branchDto.city === "") {
+            isValid = false;
+            newErrors.cityError = "City cannot be empty";
+        }
+        
+        setBranchDetailsErrors(newErrors);
+        return isValid
+    }  
+    const validateUpdateForm =()=>{
+        let isValid = true;
+        let newErrors = { ...initialErrors };
+        // Check empty fields
         if (branchDetails.branchDto.branchName === "") {
             isValid = false;
             newErrors.branchNameError = "Branch Name cannot be empty";
@@ -183,7 +207,7 @@ const BranchPage=()=>{
         
         setBranchDetailsErrors(newErrors);
         return isValid
-    }  
+    } 
 
     return(
         <>

@@ -443,20 +443,20 @@ const CreditPage = () => {
             }}
           >
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
+              {/* <Button
                 variant={customerType === 'RETAIL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('RETAIL')}
                 sx={{ flex: 1 }} // Take available space
               >
                 Retail
-              </Button>
-              <Button
+              </Button> */}
+              {/* <Button
                 variant={customerType === 'NORMAL' ? 'contained' : 'outlined'}
                 onClick={() => setCustomerType('NORMAL')}
                 sx={{ flex: 1 }} // Take available space
               >
                 Normal
-              </Button>
+              </Button> */}
             </Box>
 
             {/* Search Field */}

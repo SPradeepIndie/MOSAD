@@ -41,9 +41,19 @@ const StockReport = () => {
     loadItemCount();
   },[])
 
-  const handleGenerateReport = () => { 
-    console.log(`Generating report with name: ${reportName}`);
-  };
+  const handleDownloadReport = async () => {
+    try{
+      const response = await fetch("http://127.0.0.1:8001/forecast/tyres-json");
+      const data = await response.json();
+      console.log(data);
+    }catch(error){
+      console.error("Error downloading report:", error);
+    }
+  }
+
+  useEffect(() => {
+    handleDownloadReport();
+  }, []);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -57,7 +67,7 @@ const StockReport = () => {
       <GeneralSnackbarAlerts open={showSnack} type={alertType} msg={alertMsg} setOpen={setShowSnack}/>
       <Paper elevation={3} sx={{px:5,py:3,width:'100%'}}>
         <Stack spacing={2}>
-            <Typography variant="h6" gutterBottom>
+            {/* <Typography variant="h6" gutterBottom>
                   Sales graph acros past 7 days
             </Typography>
           <Paper elevation={3}>  
@@ -70,7 +80,7 @@ const StockReport = () => {
               ]}
               xaxis={['Q1', 'Q2', 'Q3', 'Q4']}
             />
-          </Paper>
+          </Paper> */}
           <Grid2 size={{xs:12}}>
           <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
             <Divider
@@ -84,7 +94,7 @@ const StockReport = () => {
           </Box>
         </Grid2>
           <Grid2 container spacing={2}>
-            <Grid2 item xs={12} md={6}>
+            <Grid2 size={{xs:12}}>
               <Typography variant="h6" gutterBottom>
                 Table of All Products
               </Typography>
@@ -115,7 +125,8 @@ const StockReport = () => {
                   label="Select Report Name"
                   onChange={handleReportNameChange}
                 >
-                  <MenuItem value="stock_summary">Stock Summary</MenuItem>
+                  <MenuItem value="tyre_forecast">Tyre Forecast</MenuItem> 
+                  <MenuItem value="tube_forecast">Tube Forecast</MenuItem> 
                   <MenuItem value="sales_overview">Sales Overview</MenuItem>
                 </Select>
               </FormControl>
@@ -144,30 +155,29 @@ const StockReport = () => {
                 </a>
               )}
 
-{reportName === 'tube_forecast' && (
-  <a
-    href="http://127.0.0.1:8001/forecast/download/tube-forecast"
-    download="tube_forecast.csv"
-    style={{ textDecoration: 'none' }}
-  >
-    <Button variant="contained" color="primary">
-      Download Tube Forecast
-    </Button>
-  </a>
-)}
+              {reportName === 'tube_forecast' && (
+                <a
+                  href="http://127.0.0.1:8001/forecast/download/tube-forecast"
+                  download="tube_forecast.csv"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Button variant="contained" color="primary">
+                    Download Tube Forecast
+                  </Button>
+                </a>
+              )}
 
-{(reportName !== 'sales_overview' &&
-  reportName !== 'tyre_forecast' &&
-  reportName !== 'tube_forecast') && (
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={handleGenerateReport}
-    disabled={!reportName}
-  >
-    Generate Report
-  </Button>
-)}
+              {(reportName !== 'sales_overview' &&
+                reportName !== 'tyre_forecast' &&
+                reportName !== 'tube_forecast') && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={!reportName}
+                >
+                  Generate Report
+                </Button>
+              )}
             </Box>
           </Paper>
         </Stack>

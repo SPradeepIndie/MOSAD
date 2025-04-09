@@ -36,6 +36,8 @@ const columns = [
     { field: 'lastName', headerName: 'Last name', width: 150 },
     { field: 'email', headerName: 'Email', type: 'email', width: 250, },
     { field: 'role', headerName: 'Role', width: 250, },
+    { field: 'branchName', headerName: 'Branch Name', width: 250, },
+    { field: 'userContact', headerName: 'Contact number', width: 250, },
 ];
 
 const AllUsersView = () => {
@@ -51,6 +53,7 @@ const AllUsersView = () => {
         setIsLoading(true)
         getAllUsername().then((response) => {
             setUsers(response.data);
+            console.log(response.data)
         }).finally(() => {
             setIsLoading(false);
         })
@@ -60,14 +63,22 @@ const AllUsersView = () => {
         loadAllUsers();
     }, []);
 
-    const rows = users.map((item, index) => ({
-        id: index,
+    const rows = users.map((item, index) => {
+        // Find the first non-empty contact number
+        const contactNumber = item.userContactDto.find(contact => contact.contactNum !== "")?.contactNum || ""
+        
+        return{
+            id: index,
         username: item.userDto.username,
         firstName: item.userDto.firstName,
         lastName: item.userDto.lastName,
         email: item.userDto.email,
-        role: item.userRoleDto.roleName
-    }));
+        role: item.userRoleDto.roleName,
+        branchName:item.branchName,
+        userContact:contactNumber
+        }
+        
+    });
 
     const [openPopup, setOpenPopup] = useState(false);
     const setOkButtonAction = (event) => {

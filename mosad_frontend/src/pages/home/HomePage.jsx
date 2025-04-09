@@ -76,7 +76,9 @@ function HomePage() {
     const fetchDueDates = async () => {
       try {
         const response = await fetchHomeCalDates();
-        setDueDates(response.data); // Update stats state with the fetched data
+        const backendData =response.data
+        const dateArray = backendData.map(item => item.date);
+        setDueDates(dateArray); // Update stats state with the fetched data
       } catch (error) {
         console.error("Error fetching home stats:", error);
       }
@@ -84,11 +86,9 @@ function HomePage() {
     fetchDueDates();
   }, []);
 
-  console.log("Home stats after :", stats);
-
-  console.log("Home stats before :", stats.past7DaysBillCount);
+ 
   const billsData = stats.past7DaysBillCount?.map(item => item.billsCount);
-  console.log(billsData);
+
 
   const fetchBrands = useFetchBrands();
   const [dialogOpen, setDialogOpen] = useState(false);

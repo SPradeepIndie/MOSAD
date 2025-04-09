@@ -15,6 +15,7 @@ import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.bill_management.BillItem;
 import org.rtss.mosad_backend.entity.customer.Customer;
 import org.rtss.mosad_backend.entity.customer.CustomerContact;
+import org.rtss.mosad_backend.entity.customer.CustomerType;
 import org.rtss.mosad_backend.entity.stock_management_entity.ItemBranch;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.Users;
@@ -90,21 +91,15 @@ public class BillService {
 
 
     public BillResponeDTO createBill(BillDetailsDTO billDetailsDTO, CustomerDetailsDTO customerDetailsDTO, List<BillItemDTO> billItemDTO) {
-
-
-
         for(BillItemDTO item : billItemDTO){
             System.out.println("\n"+item.getItemId()+"\n");
         }
-
-
         Bill bill = billDTOMapper.toEntity(billDetailsDTO.getBillDTO());
         Customer customer = customerService.extractCustomer(customerDetailsDTO);
         if(customerDetailsDTO.getCustomerId() !=null || customerDetailsDTO.getUserId()!=null){
             if(customerDetailsDTO.getCustomerId()!=null){
                 customer = customerRepository.findById(customerDetailsDTO.getCustomerId()).orElse(null);
                 bill.setCustomer(customer);
-
             }
             else{
                 Users user = usersRepo.findById(Math.toIntExact(customerDetailsDTO.getUserId())).orElse(null);
@@ -114,9 +109,6 @@ public class BillService {
         else{
             bill.setCustomer(customer);
         }
-
-
-
 
         List<BillItem> billItems = billItemDTO.stream()
                 .map(dto -> {
@@ -135,12 +127,9 @@ public class BillService {
                 .collect(Collectors.toList());
 
         bill.setBillItems(billItems);
-
         Bill savedBill = billRepository.save(bill);
-
          //Save all BillItems
         billItemRepository.saveAll(billItems);
-
 //        for (BillItem billItem : billItems) {
 //            // Fetch the corresponding item from the database
 //            Item item = itemRepository.findById(billItem.getItem().getId())
@@ -170,10 +159,19 @@ public class BillService {
         }
         return bills.stream().map(bill -> {
             BillDTO billDTO = billDTOMapper.toDTO(bill);
-            CustomerDTO customerDTO = customerDTOMapper.toCustomerDTO(bill.getCustomer());
-            CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(bill.getCustomer().getCustomerContact());
-            CustomerDetailsDTO customerDetailsDTO = new CustomerDetailsDTO(customerDTO,customerContactDTO,null,null);
+            CustomerDetailsDTO customerDetailsDTO=null;
+            if(bill.getCustomer()!=null){
+                CustomerDTO customerDTO = customerDTOMapper.toCustomerDTO(bill.getCustomer());
+                CustomerContactDTO customerContactDTO = customerContactDTOMapper.customerContactToCustomerContactDTO(bill.getCustomer().getCustomerContact());
+                customerDetailsDTO = new CustomerDetailsDTO(customerDTO,customerContactDTO,null,null);
 
+            }
+            if(bill.getUser()!=null){
+                Users user=bill.getUser();
+                CustomerDTO customerDTO=new CustomerDTO();
+                customerDTO.setCustomerName(user.getUsername());
+                customerDetailsDTO=new CustomerDetailsDTO(customerDTO,null,null,null);
+            }
             List<BillItemDTO> billItems = bill.getBillItems().stream()
                     .map(billItemDTOMapper::toBillItemDTO)
                     .toList();
