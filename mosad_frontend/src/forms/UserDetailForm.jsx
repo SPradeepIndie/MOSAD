@@ -20,6 +20,7 @@ import { blue } from '@mui/material/colors';
 import PropTypes from "prop-types";
 import useAuth from "../hooks/useAuth";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useFetchAllBranchNames } from "../hooks/servicesHook/useBranchService";
 
@@ -116,6 +117,17 @@ export default function UserDetailsForm(
         setContactNum({contactNum:""})
         setContactNumErrors({contactNumError:""})
     }
+    const removeNumber = (index) => {
+        if (window.confirm(`Do you want to delete ${userUpdateData.userContactDto[index].contactNumber}?`)) { 
+            const updatedContactList = [...userUpdateData.userContactDto]; 
+            updatedContactList.splice(index, 1); 
+            setUserUpdateData({ 
+                ...userUpdateData, 
+                userContactDto: updatedContactList 
+            });
+            setContactNum({contactNumber:""})
+        }
+    };
 
     
     return(
@@ -225,22 +237,24 @@ export default function UserDetailsForm(
                         }} 
                         />
                     </Grid>
-                    <Grid size={{ xs: 2,sm:6}} alignContent={"end"}>
-                        <IconButton disabled={!editMode} onClick={addNewContact}>
-                            <AddIcon />
-                        </IconButton>
+                    <Grid size={{ xs: 4}} alignContent={"end"}>
+                        <Button disabled={!editMode} variant="contained" startIcon={<AddIcon />} onClick={addNewContact}>
+                            Add
+                        </Button>
                     </Grid>
                     <Grid size={{ xs: "auto" }}>
                     {userUpdateData.userContactDto.map((item, index) => (
-                        item.contactNum === "" ? (
-                            <Paper key={"NoContactNumberCard"} sx={{ backgroundColor: blue[100], textAlign: "center" }} component={Button}>
-                              No saved contact numbers
-                            </Paper>
-                          ) : (
-                            <Paper key={"ContactNumberCard"+index} sx={{ backgroundColor: blue[100], textAlign: "center", p: 1, mr: 2 }} component={Button}>
-                              {item.contactNum}
-                            </Paper>
-                          )
+                        item.contactNum !== ""  &&
+                            <Button key={"ContactNumberCard"+index} 
+                                    disabled={!editMode}
+                                    sx={{ textAlign: "center", mr: 2 }} 
+                                    variant="contained" 
+                                    endIcon={<DeleteIcon />} 
+                                    size='small'
+                                    onClick={()=>removeNumber(index)}>
+                                {item.contactNum}
+                            </Button>
+                            
                     ))}
                     </Grid>
                 </Grid>

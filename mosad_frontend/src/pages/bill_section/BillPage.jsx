@@ -167,6 +167,9 @@ const BillPage = () => {
             customerContactDTO: {
                 contactNumber: telephone,    
             },
+            
+            customerId: selectedNormalCustomer? selectedNormalCustomer[0].customerId:null, // Use the customer ID from the selected customer
+            userId: selectedRetailCustomer? selectedRetailCustomer[0].userId:null, // Replace with actual user ID if needed
         },
         billItemDTO: rows.map((row) => ({
             itemId: row.itemId,          
@@ -174,7 +177,7 @@ const BillPage = () => {
             quantity: row.quantity,      
             unitPrice: row.unitPrice,    
         })),
-    };
+  };
 
     console.log("Request Data:", data);
 
@@ -200,6 +203,7 @@ const addOneMonth = (date) => {
 const handleCreateCredit = async (creditData) => {
   const data = {
     customerId:creditData.customerId ,  // Example customer ID
+    userId: creditData.userId, // Example user ID
     billId: creditData.billId,      // Example bill ID
     balance: balance, // Negative balance indicating credit
     dueDate: addOneMonth(new Date()), // Due date for the credit payment
@@ -220,6 +224,9 @@ const handleCreateCredit = async (creditData) => {
     setAdvance(0);
     setCustomerName("");
     setTelephone("");
+    setQuantity(1);
+    setSelectedNormalCustomer(null);
+    setSelectedRetailCustomer(null);
   };
   const handlePrint = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -263,6 +270,8 @@ const handleCreateCredit = async (creditData) => {
     setTimeout(() => {
       clearAllFields();
     }, 2000);
+    // Clear the fields after printing
+    
   };
  
   
@@ -343,6 +352,7 @@ const handleCreateCredit = async (creditData) => {
               onClick={() => {
                 if (customerType === "normal") {
                   fetchAndSetNormalCustomer(telephone);
+
                 } else {
                   fetchAndSetRetailCustomer(telephone);
                 }

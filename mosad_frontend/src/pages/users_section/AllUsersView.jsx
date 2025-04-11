@@ -45,6 +45,7 @@ const AllUsersView = () => {
     const [showSnack, setShowSnack] = useState(false);
     const [alertType, setAlertType] = useState("warning");
     const [alertMsg, setAlertMsg] = useState("");
+    
     const getAllUsername = useGetAllUsername();
     const loadAllUsers = () => {
         setIsLoading(true)

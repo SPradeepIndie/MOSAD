@@ -20,6 +20,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import StockInHistory from "./StockInHistory";
 import { Button, Typography } from "@mui/material";
+import { useAddRestockRequest } from "../../hooks/servicesHook/useNotificationService";
+import GeneralSnackbarAlerts from "../../component/GeneralSnackbarAlerts";
 
 const ItemView = () => {
   const addItem = useAddItem();
@@ -27,11 +29,12 @@ const ItemView = () => {
   const deleteItem = useDeleteItem();
   const updateItem = useUpdateItem();
   const fetchStockInHistory = useFetchStockInHistory();
-
+  const sendRestockRequest = useAddRestockRequest();
+  //Show alerts using snack bar
+  const [showSnack, setShowSnack] = useState(false);
+  const [alertType, setAlertType] = useState("warning");
+  const [alertMsg, setAlertMsg] = useState("");
   const { auth } = useAuth();
-
-
-
   const passedStates = useLocation();
   const states = passedStates.state;
 
@@ -40,30 +43,34 @@ const ItemView = () => {
   const [selectedBrand, setSelectedBrand] = useState(states?.brand);
   const [selectedBranch, setSelectedBranch] = useState(auth.branch); //Adjust based on your branch ID
   const [searchFilters, setSearchFilters] = useState({ itemName: "", tyreSize: "", vehicleType: "" });
-
-
   const [rows, setRows] = useState([]);
   const [stockInHistory, setStockInHistory] = useState([]);
-
   const [restockRequestDialog, setRestockRequestDialog] = useState(false);
-
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [bannerImage, setBannerImage] = useState("");
-
   const [currentItem, setCurrentItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState(setItemAddFromFields(selectedCategory, selectedBrand));
   const [message, setMessage] = useState(null);
   const [inputFieldErrors, setInputFieldErrors] = useState({});
   const [stockIn, setStockIn] = useState({ stockIn: "", date: new Date().toISOString().split("T")[0] });
-
-
   const [confirmationDialog, setConfirmationDialog] = useState(false);
   const dialogOpenRef = useRef(false); // Track whether dialog is open
   const [openStockInHistory, setOpenStockInHistory] = useState(false);
 
-  const handleRestockSubmit = () => {
-    console.log("send")
+  const handleRestockSubmit =async () => {
+    try {
+      const response = await sendRestockRequest({msg:selectedBranch+" is low on "+selectedCategory+selectedBrand,type:"Low Stock"});
+      setAlertMsg(response.data .message|| 'Success.')
+      setAlertType("success")
+      setShowSnack(true)
+      setRestockRequestDialog(false);
+    } catch (error) {
+      setAlertMsg(error.response?.data || error.message || 'Table data  fetching failed.')
+      setAlertType("warning")
+      setShowSnack(true)
+      setRestockRequestDialog(false);
+    } 
   }
 
   const closeRestockDialog = () => {
@@ -337,6 +344,7 @@ const ItemView = () => {
 
   return (
     <>
+   <GeneralSnackbarAlerts open={showSnack} type={alertType} msg={alertMsg} setOpen={setShowSnack}/>
       {message && <GeneralMessage message={message} />}
       {confirmationDialog && (
         <ConfirmationDialog
@@ -349,7 +357,6 @@ const ItemView = () => {
           isOpen={confirmationDialog}
         />
       )}
-
       <section className="banner">
         <img src={bannerImage} alt="Brand Banner" className="brand-banner" />
 

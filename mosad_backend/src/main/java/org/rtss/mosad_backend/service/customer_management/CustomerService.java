@@ -41,10 +41,10 @@ public class CustomerService {
     }
 
     // Get a specific customer by ID
-    public CustomerDTO getCustomerById(Long id) {
+    public Customer getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found with ID: " + id))));
-        return customerDTOMapper.toCustomerDTO(customer);
+        return customer;
     }
 
     @Transactional

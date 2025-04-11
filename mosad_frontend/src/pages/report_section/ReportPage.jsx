@@ -1,19 +1,48 @@
 import React, { useState,useEffect } from 'react';
 import { Divider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Button, Paper, Typography,Grid2 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import SalesGraph from '../../component/GraphComponent';
+import SalesGraph from '../../component/GraphComponent'; // Assuming this path is correct
 import { cyan } from '@mui/material/colors';
+import { useItemCounts } from '../../hooks/servicesHook/useReportService';
+import GeneralSnackbarAlerts from '../../component/GeneralSnackbarAlerts';
 
 
 const StockReport = () => {
   const [reportName, setReportName] = useState('');
+  const [itemCount,setItemCount]=useState([]);
+  const fetchItemCount=useItemCounts();
+  //Show alerts using snack bar
+  const [showSnack, setShowSnack] = useState(false);
+  const [alertType, setAlertType] = useState("warning");
+  const [alertMsg, setAlertMsg] = useState("");
+
+  const [loading, setLoading] = useState(true);
 
   const handleReportNameChange = (event) => {
     setReportName(event.target.value);
   };
 
-  const handleGenerateReport = async () => {
-    console.log(`Generating report for: ${reportName}`);
+  const loadItemCount=async ()=>{
+    try {
+      const response = await fetchItemCount();
+      const dataWithIds = response.data.map((item, index) => ({
+        id: index + 1,
+        ...item,
+      }));
+      setItemCount(dataWithIds);
+    } catch (error) {
+      setAlertMsg(error.response?.data || error.message || 'Table data  fetching failed.')
+      setShowSnack(true)
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(()=>{
+    loadItemCount();
+  },[])
+
+  const handleGenerateReport = () => { 
+    console.log(`Generating report with name: ${reportName}`);
   };
   const handleDownloadReport = async () => {
     try{
@@ -31,28 +60,20 @@ const StockReport = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'category', headerName: 'Category', width: 150 },
+    { field: 'categoryName', headerName: 'Category', width: 150 },
     { field: 'totalBrands', headerName: 'Total Brands', width: 130 },
     { field: 'totalItems', headerName: 'Total Items', width: 130 },
   ];
 
-  const rows = [
-    { id: 1, category: 'Electronics', totalBrands: 5, totalItems: 25 },
-    { id: 2, category: 'Clothing', totalBrands: 10, totalItems: 150 },
-    { id: 3, category: 'Books', totalBrands: 20, totalItems: 500 },
-    { id: 4, category: 'Home Goods', totalBrands: 8, totalItems: 80 },
-    { id: 5, category: 'Food', totalBrands: 15, totalItems: 200 },
-  ];
-
   return (
-    <Box sx={{ mx: 5 }}>
-      <Paper elevation={3} sx={{ px: 5, py: 3, width: '100%' }}>
+    <Box sx={{mx:5}}>
+      <GeneralSnackbarAlerts open={showSnack} type={alertType} msg={alertMsg} setOpen={setShowSnack}/>
+      <Paper elevation={3} sx={{px:5,py:3,width:'100%'}}>
         <Stack spacing={2}>
-          <Typography variant="h6" gutterBottom>
-            Sales Graph Across Past 7 Days
-          </Typography>
-
-          <Paper elevation={3}>
+            <Typography variant="h6" gutterBottom>
+                  Sales graph acros past 7 days
+            </Typography>
+          <Paper elevation={3}>  
             <SalesGraph
               dataSet={[
                 { data: [35, 44, 24, 34] },
@@ -63,7 +84,7 @@ const StockReport = () => {
               xaxis={['Q1', 'Q2', 'Q3', 'Q4']}
             />
           </Paper>
-
+          <Grid2 size={{xs:12}}>
           <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
             <Divider
               variant="middle"
@@ -74,7 +95,7 @@ const StockReport = () => {
               }}
             />
           </Box>
-
+        </Grid2>
           <Grid2 container spacing={2}>
             <Grid2 item xs={12} md={6}>
               <Typography variant="h6" gutterBottom>
@@ -82,23 +103,12 @@ const StockReport = () => {
               </Typography>
               <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
-                  rows={rows}
+                  rows={itemCount}
                   columns={columns}
                   pageSizeOptions={[5, 10, 25]}
                   checkboxSelection
                 />
               </div>
-            </Grid2>
-
-            <Grid2 item xs={12} md={6}>
-              <Paper elevation={3} sx={{ p: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Calendar with Due Dates
-                </Typography>
-                <Typography variant="body2">
-                  (Calendar component will be implemented here)
-                </Typography>
-              </Paper>
             </Grid2>
           </Grid2>
 
@@ -112,17 +122,14 @@ const StockReport = () => {
               <FormControl fullWidth>
                 <InputLabel id="report-name-label">Select Report Name</InputLabel>
                 <Select
-                 labelId="report-name-label"
-                 id="report-name"
-                 value={reportName}
-                 label="Select Report Name"
-                 onChange={handleReportNameChange}
+                  labelId="report-name-label"
+                  id="report-name"
+                  value={reportName}
+                  label="Select Report Name"
+                  onChange={handleReportNameChange}
                 >
-                 
-                 
-                 <MenuItem value="sales_overview">Sales Overview</MenuItem>
-                 <MenuItem value="tyre_forecast">Tyre Forecast</MenuItem> {/* new */}
-                 <MenuItem value="tube_forecast">Tube Forecast</MenuItem> {/* new */}
+                  <MenuItem value="stock_summary">Stock Summary</MenuItem>
+                  <MenuItem value="sales_overview">Sales Overview</MenuItem>
                 </Select>
               </FormControl>
 

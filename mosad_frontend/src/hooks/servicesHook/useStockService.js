@@ -128,8 +128,18 @@ export const useHomeStats = () => {
   const apiClient = useApiClient();
 
   const fetchHomeStats = () => {
-    return apiClient.get('/homestats');
+    return apiClient.get('/homestats/cards');
   };
 
   return fetchHomeStats;
+}
+
+export const useHomeCalDueDates = () => {
+  const apiClient = useApiClient();
+
+  const fetchHomeCalDates = () => {
+    return apiClient.get('/homestats/cal');
+  };
+
+  return fetchHomeCalDates;
 }

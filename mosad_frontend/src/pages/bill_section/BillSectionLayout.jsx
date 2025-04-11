@@ -12,8 +12,8 @@ const BillSectionLayout=()=>{
     };
 
     const tabRoutes = [
-        { path: '/bill', label: 'bill page', id: 'bill_page' },
-        { path: '/bill/AllBillsPage', label: 'all bill page', id: 'all_bill_page' }
+        { path: '/bills', label: 'bill page', id: 'bill_page' },
+        { path: '/bills/all-bills', label: 'all bill page', id: 'all_bill_page' }
         
 
         ];

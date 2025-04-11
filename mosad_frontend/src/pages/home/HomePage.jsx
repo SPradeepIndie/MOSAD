@@ -20,10 +20,10 @@ import { styled } from "@mui/material/styles";
 import Chatbot from '../../component/chatbot';
 import { teal, cyan } from '@mui/material/colors';
 import Calendar from '../../component/Calendar';
-import LineGraph from "../../component/LineGraph";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../../component/PopUp";
-import { useFetchBrands,useHomeStats } from "../../hooks/servicesHook/useStockService";
+import { useFetchBrands,useHomeStats,useHomeCalDueDates } from "../../hooks/servicesHook/useStockService";
+import GeneralSnackbarAlerts from "../../component/GeneralSnackbarAlerts";
 
 // Styled Tile Component for a modern look
 const ModernTile = styled(Tile)(({ theme }) => ({
@@ -48,15 +48,16 @@ const ModernTile = styled(Tile)(({ theme }) => ({
   },
 }));
 
-const mockData = {
-  dueDates: ['2025.04.01', '2025.03.02'],
-};
-
 function HomePage() {
-
+  //Show alerts using snack bar
+  const [showSnack, setShowSnack] = useState(false);
+  const [alertType, setAlertType] = useState("warning");
+  const [alertMsg, setAlertMsg] = useState("");
   const homestats = useHomeStats();
   const { theme } = useTheme();
-  const [stats, setStats] = useState({}); // Initialize stats with an empty object
+  const [stats, setStats] = useState({});
+  const fetchHomeCalDates = useHomeCalDueDates();
+  const [dueDates,setDueDates] =useState([]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -69,6 +70,18 @@ function HomePage() {
       }
     };
     fetchStats();
+  }, []);
+
+  useEffect(() => {
+    const fetchDueDates = async () => {
+      try {
+        const response = await fetchHomeCalDates();
+        setDueDates(response.data); // Update stats state with the fetched data
+      } catch (error) {
+        console.error("Error fetching home stats:", error);
+      }
+    };
+    fetchDueDates();
   }, []);
 
   console.log("Home stats after :", stats);
@@ -101,7 +114,8 @@ function HomePage() {
         const response = await fetchBrands("Tyre");
         setAllBrands(response.data.map((brand) => brand.brandName));
       } catch (err) {
-        setError(err.message);
+        setAlertMsg(error.response?.data || error.message || 'fetching failed.')
+        setShowSnack(true)
       } finally {
         setLoading(false);
       }
@@ -113,6 +127,7 @@ function HomePage() {
   const brandSelectForm=()=>{
     return (
       <Box sx={{ p: 3, maxWidth: '400px', mx: 'auto' }}>
+        <GeneralSnackbarAlerts open={showSnack} type={alertType} msg={alertMsg} setOpen={setShowSnack}/>
             <Stack spacing={2} direction="column">
                 <Typography variant="body1" gutterBottom>
                   Please select the brand
@@ -208,7 +223,7 @@ function HomePage() {
                 Upcoming Due Dates
               </Typography>
               <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
-                <Calendar highlightedDates={mockData.dueDates} />
+                <Calendar highlightedDates={dueDates} />
               </Box>
               <Typography variant="body2" color="text.secondary" textAlign="center" mt={2}>
                 This calendar displays the due dates for each credit.
@@ -332,18 +347,6 @@ function HomePage() {
                 </Box>
               </Stack>
             </Paper>
-          </Grid2>
-
-          <Grid2 size={{xs:10}} >
-            <Typography variant="h5" color="text.secondary" textAlign="center" mt={2}>
-              Sales Snapshot
-            </Typography>
-            <LineGraph
-            dataSet={[{
-              data: [2, 5.5, 2, 8.5, 1.5, 5,23,43,3],
-            }]}
-              xaxis={[1, 2, 3, 5, 8, 10,12,14,16]}/>
-
           </Grid2>
         </Grid2>
 

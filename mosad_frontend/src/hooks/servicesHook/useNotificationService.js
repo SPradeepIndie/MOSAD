@@ -10,3 +10,12 @@ export const useFetchNotificationsByType = () => {
     return fetchNotificationsByType;
   };
   
+export const useAddRestockRequest = () => {
+  const apiClient = useApiClient();
+
+  const sendRestockRequest = (data) => {
+    return apiClient.post(`/notifications/add`,data);
+  };
+
+  return sendRestockRequest;
+};
