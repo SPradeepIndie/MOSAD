@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: MOSAD - Rashmi tyre stramline solution
+  description: >-
+    This is the API specification for a mosad application service layer with the postgresql database for data store.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Choreo
+  url: https://choreo.dev
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: users
+    description: User handle
+paths:
+  /api/v1/login:
+    summary: Login the application
+    post:
+      summary: Login to the application
+      operationId: SetNewBook
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid request body
+      tags:
+        - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeyValue"
+
+
+components:
+  schemas:
+    KeyValue:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "user"
+        password:
+          type: string
+          example: "password"
