@@ -91,7 +91,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(allowedOrigins));
+        configuration.setAllowedOrigins(List.of("https://8a14fa11-fd03-49f9-ab62-97567a24af24.e1-us-east-azure.choreoapps.dev"));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
