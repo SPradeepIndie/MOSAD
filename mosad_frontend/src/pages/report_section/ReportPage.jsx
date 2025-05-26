@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Divider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
-import { Paper, Typography, Grid2 } from '@mui/material';
+import React, { useState,useEffect } from 'react';
+import { Divider, Stack, Box, FormControl, InputLabel, Select, MenuItem, Button, Paper, Typography,Grid2 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SalesGraph from '../../component/GraphComponent'; // Assuming this path is correct
 import { cyan } from '@mui/material/colors';
 import { useItemCounts } from '../../hooks/servicesHook/useReportService';
 import GeneralSnackbarAlerts from '../../component/GeneralSnackbarAlerts';
+
 
 const StockReport = () => {
   const [reportName, setReportName] = useState('');
@@ -44,6 +44,19 @@ const StockReport = () => {
   const handleGenerateReport = () => { 
     console.log(`Generating report with name: ${reportName}`);
   };
+  const handleDownloadReport = async () => {
+    try{
+      const response = await fetch("http://127.0.0.1:8001/forecast/tyres-json");
+      const data = await response.json();
+      console.log(data);
+    }catch(error){
+      console.error("Error downloading report:", error);
+    }
+  }
+
+  useEffect(() => {
+    handleDownloadReport();
+  }, []);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
