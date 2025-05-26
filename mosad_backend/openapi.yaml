@@ -1,51 +1,65 @@
 openapi: 3.0.3
 info:
-  title: MOSAD - Rashmi tyre stramline solution
-  description: >-
-    This is the API specification for a mosad application service layer with the postgresql database for data store.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Mosad Backend API
   version: 1.0.0
-externalDocs:
-  description: Choreo
-  url: https://choreo.dev
+  description: API for authenticating users
+
 servers:
-  - url: https://340c4950-f308-4a9a-bad5-d27d93a21a6b-dev.e1-us-east-azure.choreoapis.dev/mosad/mosadbackend/v1.0
-tags:
-  - name: users
-    description: User handle
+  - url: https://313dce28-5c14-4990-8e70-661764f55665-dev.e1-us-east-azure.choreoapis.dev/mosad-deploying/mosadbackend/v1.0
+
 paths:
   /api/v1/login:
-    summary: Login the application
     post:
-      summary: Login to the application
-      operationId: SetNewBook
-      responses:
-        "200":
-          description: Successful operation
-        "400":
-          description: Invalid request body
+      summary: User Login
+      operationId: loginUser
       tags:
-        - users
+        - Authentication
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/KeyValue"
-
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  format: password
+                  example: admin123
+      parameters:
+        - name: Test-Key
+          in: header
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  token: your.jwt.token.here
+        '401':
+          description: Invalid credentials
+        '403':
+          description: Forbidden — insufficient permissions or CORS issue
+        '500':
+          description: Server error
 
 components:
-  schemas:
-    KeyValue:
-      type: object
-      required:
-        - username
-        - password
-      properties:
-        username:
-          type: string
-          example: "user"
-        password:
-          type: string
-          example: "password"
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Test-Key
+
+security:
+  - ApiKeyAuth: []
