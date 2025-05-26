@@ -1,12 +1,14 @@
 import React,{Suspense}  from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "./hooks/useAuth"
+import Loading from "./component/Loading"
 
 const RoutesProtector = () => {
   const{ auth }= useAuth()
-  if (!auth.Authenticated) return <Navigate to="/" />;
+  if (!auth.Authenticated ) 
+    return <Navigate to="/login" />;
   return (
-    <Suspense fallback={<h1>Loading...</h1>}>
+    <Suspense fallback={<Loading WhatsLoading={'Please wait'} />}>
       <Outlet />
     </Suspense>
     

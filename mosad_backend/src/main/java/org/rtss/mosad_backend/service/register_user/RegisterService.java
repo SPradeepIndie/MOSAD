@@ -9,10 +9,12 @@ import org.rtss.mosad_backend.dto.user_dtos.UserRoleDTO;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
@@ -45,6 +47,7 @@ public class RegisterService {
     ------------------------------*/
     private final UsersRepo usersRepo;
     private final UserRolesRepo userRolesRepo;
+    private final BranchRepo branchRepo;
 
     /*-----------------------------
     * Inject the DtoValidator
@@ -52,7 +55,7 @@ public class RegisterService {
     private final DtoValidator dtoValidator;
 
 
-    public RegisterService(UserDTOMapper userDTOMapper, UserRoleDTOMapper userRoleDTOMapper, UserContactDTOMapper userContactDTOMapper, ResponseDTO responseDTO, PasswordEncoder passwordEncoder, UsersRepo usersRepo, UserRolesRepo userRolesRepo, DtoValidator dtoValidator) {
+    public RegisterService(UserDTOMapper userDTOMapper, UserRoleDTOMapper userRoleDTOMapper, UserContactDTOMapper userContactDTOMapper, ResponseDTO responseDTO, PasswordEncoder passwordEncoder, UsersRepo usersRepo, UserRolesRepo userRolesRepo, BranchRepo branchRepo, DtoValidator dtoValidator) {
         this.userDTOMapper = userDTOMapper;
         this.userRoleDTOMapper = userRoleDTOMapper;
         this.userContactDTOMapper = userContactDTOMapper;
@@ -60,6 +63,7 @@ public class RegisterService {
         this.passwordEncoder = passwordEncoder;
         this.usersRepo = usersRepo;
         this.userRolesRepo = userRolesRepo;
+        this.branchRepo = branchRepo;
         this.dtoValidator = dtoValidator;
     }
 
@@ -93,12 +97,33 @@ public class RegisterService {
         }
         users.setUserContacts(convertToUserContacts(userContactDtoS));
 
+        users.setBranch(extractBranch(userRegistrationDto.getBranchName(),users));
+
         storeData(users);
 
         return generateResponse(true,"User registered successfully");
 
 
     }
+
+    private Branch extractBranch(String branchName,Users users) {
+        Optional<Branch> branches= branchRepo.findBranchByBranchName(branchName);
+        if(branches.isEmpty()){
+            throw new ObjectNotValidException(new HashSet<>(List.of(branchName+" is not found")));
+        }
+        Branch branch=branches.get();
+        Set<Users> existingUsers=branch.getUsers();
+        Set<Users> newUsers=new HashSet<>();
+        if(!existingUsers.isEmpty()){
+            newUsers.addAll(existingUsers);
+        }
+        newUsers.add(users);
+        branch.setUsers(newUsers);
+
+        branch.setUsers(newUsers);
+        return branch;
+    }
+
 
     //Extract userDTO from UserRegistrationDTO
     private UserDTO extractUserDTO(UserRegistrationDTO userRegistrationDTO) {

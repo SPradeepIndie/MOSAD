@@ -6,13 +6,15 @@ public class AddItemDTO {
     private ItemDTO itemDTO;
     private ItemTyreDTO itemTyreDTO;
     private ItemBranchDTO itemBranchDTO;
+    private StockInDTO stockInDTO;
 
     public AddItemDTO(){}
 
-    public AddItemDTO(ItemDTO itemDTO, ItemTyreDTO itemTyreDTO, ItemBranchDTO itemBranchDTO) {
+    public AddItemDTO(ItemDTO itemDTO, ItemTyreDTO itemTyreDTO, ItemBranchDTO itemBranchDTO,StockInDTO stockInDTO) {
         this.itemDTO = itemDTO;
         this.itemTyreDTO = itemTyreDTO;
         this.itemBranchDTO = itemBranchDTO;
+        this.stockInDTO=stockInDTO;
     }
 
     public AddItemDTO(ItemDTO itemDTO, ItemBranchDTO itemBranchDTO) {
@@ -45,4 +47,11 @@ public class AddItemDTO {
         this.itemBranchDTO = itemBranchDTO;
     }
 
+    public StockInDTO getStockInDTO() {
+        return stockInDTO;
+    }
+
+    public void setStockInDTO(StockInDTO stockInDTO) {
+        this.stockInDTO = stockInDTO;
+    }
 }

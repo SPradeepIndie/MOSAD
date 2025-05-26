@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -48,13 +49,19 @@ public class AccountManagerController {
         return ResponseEntity.ok().body(users);
     }
 
-    @PostMapping("/forgot-pwd/email")
+    @GetMapping("/forgot-pwd/email")
     public ResponseEntity<ResponseDTO> sendOtp(@RequestParam String email) {
         String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
         return ResponseEntity.ok().body(accountManagementService.sendOtp(escapedEmail));
     }
 
-    @PostMapping("/forgot-pwd/otp")
+    @GetMapping("/forgot-pwd/otp/resend")
+    public ResponseEntity<String> resendOtp(@RequestParam String email) {
+        String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
+        return ResponseEntity.ok().body(escapedEmail);
+    }
+
+    @GetMapping("/forgot-pwd/otp")
     public ResponseEntity<ResponseDTO> verifyOtp(@RequestParam String otp,@RequestParam String email) {
         String escapedOtp=validateHtmlPathVariable.escapeHTMLSpecialCharacters(otp);
         String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
@@ -62,9 +69,12 @@ public class AccountManagerController {
     }
 
     @PostMapping("/forgot-pwd/change")
-    public ResponseEntity<String> newPasswordSet(@RequestParam String email) {
+    public ResponseEntity<ResponseDTO> newPasswordSet(@RequestParam String email,@RequestBody Map<String, String> passwordDto) {
+        String newPassword = passwordDto.get("password");
         String escapedEmail=validateHtmlPathVariable.escapeHTMLSpecialCharacters(email);
-        return ResponseEntity.ok().body(escapedEmail);
+        return ResponseEntity.ok().body(accountManagementService.changeToNewPassword(newPassword,escapedEmail));
     }
+
+
 
 }

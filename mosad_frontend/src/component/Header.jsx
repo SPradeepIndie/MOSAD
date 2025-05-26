@@ -2,37 +2,48 @@ import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { React } from 'react';
+import { React, useState } from 'react';
 import { Link ,useNavigate} from 'react-router-dom';
 import SideDrawer from './SideDrawer';
 import useAuth from "../hooks/useAuth"
-import { logout } from '../services/apiUserService';
-
+import { useLogout } from '../hooks/servicesHook/useApiUserService';
+import ConfirmationDialog from './ConfirmationDialog';
+import Cookies from 'universal-cookie';
+import loadashboard from "../utils/loadDashboard"
 
 function HeaderBar() {
+  const [openConfirmationDialog,setOpenConfirmationDialog] =useState(false);
+  const logout = useLogout();
   const navigate = useNavigate();
-  const{setAuth}= useAuth();
+  const{auth,setAuth}= useAuth();
+  const cookies=new Cookies();
 
-  const handleLogout = () => {
+  const setConfirmButtonAction=(event)=>{
+    handleLogout(event);
+    setOpenConfirmationDialog(false)
+  }
+  const setCancelButtonAction=()=>{
+    setOpenConfirmationDialog(false)
+  }
+
+  const handleLogout = (event) => {
     //send logout request to db
-    logout({"refreshToken":localStorage.getItem("refresh_token")}).then((response)=>{
-      alert(response.data);
+    logout().then((response)=>{
+      console.log(response.data)
     }).finally(()=>{
-      setAuth({refresh_token:"",Authenticated:false,username:""}) 
-      // Remove token from local storage
-      localStorage.removeItem('token');
-      localStorage.removeItem('refresh_token');
-      navigate('/', { replace: true }); // Redirect to login page
-  
+      if(!auth.remember_me){
+        cookies.remove("remember_me");
+      }
+      setAuth({})
+      navigate('/login', { replace: true }); // Redirect to login page
     });
-   
   };
 
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: 'gray',
+        backgroundColor: '#085c47',
         maxWidth: '1600px',
         margin: 'auto',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -44,7 +55,7 @@ function HeaderBar() {
 
         
         {/* Center: Professional Text */}
-        <Link to="/home" style={{ textDecoration: 'none' ,flexGrow: 1}}> 
+        <Link to={loadashboard()} style={{ textDecoration: 'none' ,flexGrow: 1}}> 
         <Typography
           component="div"
           sx={{  
@@ -60,9 +71,16 @@ function HeaderBar() {
         </Link>
 
         {/* Right Side: Logout Button */}
-        <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={handleLogout}>Logout</Button>
+        <Button sx={{ color: 'black', fontWeight: 'bold' }} onClick={()=>setOpenConfirmationDialog(true)}>Logout</Button>
+          <ConfirmationDialog
+              message={"Are you sure you want to logout"}
+              onCancel={setCancelButtonAction}
+              onConfirm={setConfirmButtonAction}
+              isOpen={openConfirmationDialog}
+            />
       </Toolbar>
     </AppBar>
+    
   );
 }
 

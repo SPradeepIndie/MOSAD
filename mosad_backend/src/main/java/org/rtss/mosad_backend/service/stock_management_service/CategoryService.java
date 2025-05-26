@@ -38,7 +38,7 @@ public class CategoryService {
     //Update category
     public ResponseDTO updateCategory(CategoryDTO category,String oldCatName) {
         dtoValidator.validate(category);
-        Category oldCategory=categoryRepo.findCategoryByCategoryName(oldCatName).orElseThrow(
+        Category oldCategory= categoryRepo.findCategoryByCategoryName(oldCatName).orElseThrow(
                 ()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Old category name is mandatory")
         );
         Category newCategory= categoryDTOMapper.categoryDtoToEntity(category);
@@ -50,7 +50,7 @@ public class CategoryService {
 
     //Delete category
     public ResponseDTO deleteCategory(String catName) {
-        Category oldCategory=categoryRepo.findCategoryByCategoryName(catName).orElseThrow(
+        Category oldCategory= categoryRepo.findCategoryByCategoryName(catName).orElseThrow(
                 ()->new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Couldn't find category name called: "+catName)
         );
         categoryRepo.delete(oldCategory);

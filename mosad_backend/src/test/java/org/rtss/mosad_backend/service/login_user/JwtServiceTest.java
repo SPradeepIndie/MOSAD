@@ -23,9 +23,10 @@ class JwtServiceTest {
         // Given
         String username = "testUser";
         String role = "Admin";
+        Long branchId = 123L;
 
         // When
-        String token = jwtService.generateToken(username, role);
+        String token = jwtService.generateToken(username, role,branchId);
 
         // Then
         assertNotNull(token);
@@ -56,7 +57,8 @@ class JwtServiceTest {
         //Given
         String username = "testUser";
         String role = "Admin";
-        String token = jwtService.generateToken(username, role);
+        Long branchId = 123L;
+        String token = jwtService.generateToken(username, role, branchId);
 
         //when
         String extractedUsername = jwtService.extractUsernameFromToken(token);
@@ -70,7 +72,8 @@ class JwtServiceTest {
         //Given
         String username = "testUser";
         String role = "Admin";
-        String token = jwtService.generateToken(username, role);
+        Long branchId = 123L;
+        String token = jwtService.generateToken(username, role,branchId);
         UserDetails userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn(username);
 
@@ -84,7 +87,7 @@ class JwtServiceTest {
     @Test
     void validateToken_ShouldReturnFalseForInvalidUsername() {
         // Given
-        String token = jwtService.generateToken("testUser", "Admin");
+        String token = jwtService.generateToken("testUser", "Admin", 123L);
 
         UserDetails userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn("wrongUser");

@@ -163,18 +163,4 @@ public class Users implements UserDetails {
         this.usersOTP = usersOTP;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", userRoles=" + userRoles +
-                ", userContacts=" + userContacts +
-                ", branch=" + branch +
-                '}';
-    }
 }

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Tile from '../../component/Tile';
-import { Box, Grid2, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Alert } from '@mui/material';
+import { Box, TextField, Alert,Typography,Grid2 as Grid,Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { fetchBrands, addBrand } from '../../services/apiStockService';
+import { useAddBrand, useFetchBrands } from '../../hooks/servicesHook/useStockService';
+import PopUp from '../../component/PopUp';
 
 // Icons for dynamic brands
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -19,7 +20,9 @@ const iconMap = {
   RAPID: <CreditCardIcon fontSize="large" />,
 };
 
-function BrandPage({ isFromBranch }) {
+function BrandPage({ allowedRoles }) {
+  const fetchBrands = useFetchBrands();
+  const addBrand = useAddBrand();
   const location = useLocation();
   const states = location.state;
 
@@ -48,6 +51,7 @@ function BrandPage({ isFromBranch }) {
   const handleAddBrand = async () => {
     if (!newBrandName.trim()) {
       setError('Brand name cannot be empty.');
+      setDialogOpen(false);
       return;
     }
 
@@ -76,9 +80,22 @@ function BrandPage({ isFromBranch }) {
     return <h2 style={{ textAlign: 'center' }}>Loading...</h2>;
   }
 
+
+  const linkForRoutes = ()=>{
+    if( allowedRoles.includes("ADMIN") || allowedRoles.includes("OWNER")){
+      return '/stocks/category/brands/item-view'
+    }
+    if( allowedRoles.includes("STOCK_MANAGER")){
+      return '/stock/category/brand/item-view'
+    }
+    if( allowedRoles.includes("BRANCH_MANAGER")){
+      return '/branch/stock/category/brand/item-view'
+    }
+  } 
+ 
   return (
     <>
-      <h1 style={{ textAlign: 'center' ,color:'black'}}>Select a Brand</h1>
+      <h1 style={{ textAlign: 'center', color: 'black' }}>Select a Brand</h1>
 
       {/* Success or Error Messages */}
       {successMessage && (
@@ -91,61 +108,83 @@ function BrandPage({ isFromBranch }) {
           {error}
         </Alert>
       )}
-      
+
       <Box sx={{ marginTop: 4 }}>
-        <Grid2 container spacing={4} justifyContent="center">
+        <Grid container spacing={4} justifyContent="center">
           {brands.map((brand) => (
-            <Grid2 xs={12} sm={6} md={4} key={brand.brandName}>
+            <Grid key={brand.brandName}>
               <Tile
+                allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER"]}
                 title={brand.brandName}
                 icon={iconMap[brand.brandName] || <DescriptionIcon fontSize="large" />}
-                link={`${isFromBranch ? '/branch/stock/brand/item-view' : '/stock/item-view'}`}
+                link={linkForRoutes()}
                 state={{ ...states, brand: brand.brandName }}
               />
-            </Grid2>
+            </Grid>
           ))}
           {/* Add New Brand Tile */}
-          <Grid2 xs={12} sm={6} md={4}>
+          <Grid>
             <Tile
+              allowedRoles={["OWNER","ADMIN","STOCK_MANAGER","BRANCH_MANAGER"]}
               title="Add New Brand"
               icon={<AddIcon fontSize="large" />}
               onClick={() => setDialogOpen(true)}
             />
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Box>
 
       {/* Dialog for Adding New Brand */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>Add New Brand</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Brand Name"
-            fullWidth
-            variant="outlined"
-            value={newBrandName}
-            onChange={(e) => setNewBrandName(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddBrand} color="primary">
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      
+      <PopUp
+          popUpTitle="Add New Brand"
+          openPopup={dialogOpen}
+          setOpenPopup={setDialogOpen}
+          setOkButtonAction={handleAddBrand}
+          setCancelButtonAction={() => setDialogOpen(false)}
+          isDefaultButtonsDisplay={false}
+          width="md">
+            <Box sx={{ p: 3, maxWidth: '400px', mx: 'auto' }}>
+              <Grid container spacing={2} direction="column">
+                <Grid size={{ xs:12}}>
+                  <Typography variant="body1" gutterBottom>
+                    Please provide the name of the brand you wish to add to the system:
+                  </Typography>
+                </Grid>
+                <Grid size={{ xs:12}}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Brand Name"
+                  fullWidth
+                  variant="outlined"
+                  value={newBrandName}
+                  onChange={(e) => setNewBrandName(e.target.value)}
+                />
+                </Grid>
+                <Grid size={{ xs:12}} container justifyContent="flex-end" spacing={2}>
+                  <Grid >
+                    <Button onClick={() => setDialogOpen(false)} color="secondary">
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid >
+                    <Button
+                      onClick={handleAddBrand}
+                      sx={{ color: 'white', backgroundColor: 'green', '&:hover': { backgroundColor: 'darkgreen' } }}
+                    >
+                      Add
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Box>
+      </PopUp>
     </>
   );
 }
 
 BrandPage.propTypes = {
-  isFromBranch: PropTypes.bool.isRequired,
+  allowedRoles: PropTypes.object.isRequired,
 };
 
 export default BrandPage;

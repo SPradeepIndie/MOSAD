@@ -11,8 +11,7 @@ public class BranchDTO {
     @NotBlank(message = "Address number is mandatory")
     @Size(max = 10)
     private String addressNumber;
-    @NotBlank(message = "Street number is mandatory")
-    @Size(max = 10)
+    @NotBlank(message = "Street name is mandatory")
     private String streetName;
     @NotBlank(message = "City name is mandatory")
     private String city;

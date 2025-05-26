@@ -1,10 +1,7 @@
 package org.rtss.mosad_backend.controller.credit_management_controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.RepaymentRequestDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.RepaymentResponseDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
-import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
+import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.service.credit_management.CreditService;
 import org.springframework.data.repository.query.Param;
@@ -44,7 +41,7 @@ public class CreditController {
     }
 
     @PostMapping("/add-credit")
-    public ResponseEntity<CreditDTO> addCredit(@RequestBody CreditDTO creditDTO) {
+    public ResponseEntity<CreditDTO> addCredit(@RequestBody AddCreditDTO creditDTO) {
         return ResponseEntity.ok(creditService.saveCredit(creditDTO)).getBody();
     }
 
@@ -68,5 +65,10 @@ public class CreditController {
     @GetMapping("/get-credits-by-due-date")
     public List<Credit> getCreditsBtDueDate(@RequestParam String date) {
             return creditService.getCreditsBtDueDate(date);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<ResponseDTO> updateCredit(@RequestBody CreditDTO updateCreditDTO) {
+        return ResponseEntity.ok(creditService.updateCredit(updateCreditDTO).getBody());
     }
 }

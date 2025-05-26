@@ -1,6 +1,7 @@
 package org.rtss.mosad_backend.dto_mapper.credit_dto_mapper;
 
 import org.modelmapper.ModelMapper;
+import org.rtss.mosad_backend.dto.credit_dtos.AddCreditDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.CreditDTO;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ public class CreditDTOMapper {
         return modelMapper.map(creditDTO,Credit.class);
     }
 
+    public Credit toEntityAddCredit(AddCreditDTO addCreditDTO){
+        return modelMapper.map(addCreditDTO,Credit.class);
+    }
     public List<CreditDTO> toDTOList(List<Credit> credits){
         List<CreditDTO> creditDTOS=new ArrayList<>();
         for(Credit credit:credits){
@@ -34,6 +38,6 @@ public class CreditDTOMapper {
     }
 
     public CreditDTO toDTOWithCustomer(Credit credit){
-        return new CreditDTO(credit.getCreditId(),credit.getBalance(),credit.getDueDate(),credit.getCustomer().getId());
+        return new CreditDTO(credit.getCreditId(),credit.getBalance(),credit.getDueDate(),credit.getCustomer().getCustomerId(), credit.getCompleted());
     }
 }

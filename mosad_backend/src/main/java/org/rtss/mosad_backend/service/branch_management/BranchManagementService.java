@@ -9,6 +9,7 @@ import org.rtss.mosad_backend.dto_mapper.branch_dto_mapper.BranchContactDTOMappe
 import org.rtss.mosad_backend.dto_mapper.branch_dto_mapper.BranchDTOMapper;
 import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.branch_management.BranchContact;
+import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
 import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
@@ -17,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,11 +81,13 @@ public class BranchManagementService {
     //Return branch details and contact number for a specific branch
     public BranchDetailsDTO getBranchDetailsByName(String branchName) {
         Branch branch=getBranchByName(branchName);
+        return getBranchDetailsDto(branch);
+    }
+
+    private BranchDetailsDTO getBranchDetailsDto(Branch branch) {
         BranchDTO branchDTO=branchDTOMapper.branchtoBranchDTO(branch);
-        List<BranchContactDTO> branchContactDTO=branch.getBranchContacts().stream().map(branchContactDTOMapper::branchContactToBranchContactDTO).toList();
-        return new BranchDetailsDTO(branchDTO,branchContactDTO);
-
-
+        List<BranchContactDTO> branchContactDTO= branch.getBranchContacts().stream().map(branchContactDTOMapper::branchContactToBranchContactDTO).toList();
+        return new BranchDetailsDTO(branchDTO, branchContactDTO);
     }
 
     //Update the branch Details by  branch username
@@ -110,10 +115,12 @@ public class BranchManagementService {
 
     //Return the Branch details according to the branch name
     public BranchDetailsDTO getBranchByUsername(String username) {
-        if(usersRepo.findByUsername(username).isPresent()){
-            return new BranchDetailsDTO();
+        Optional<Users> users=usersRepo.findByUsername(username);
+        if(users.isEmpty()){
+            throw new ObjectNotValidException(new HashSet<>(List.of("Internal Error occurred")));
         }
-        return null;
+        Branch branch=users.get().getBranch();
+        return getBranchDetailsDto(branch);
     }
 
     //Check the branchDetailsDTO is valid

@@ -4,7 +4,9 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
 
-export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDetails,editMode,contactNum,setContactNum}) {
+export default function BranchDetailForm(
+    {handleSubmit,branchDetails,setBranchDetails,editMode,contactNum,setContactNum,errors,setErrors}
+) {
     const handleBranchDtoDetails=(event)=>{
         const {name,value}=event.target;
         setBranchDetails({
@@ -50,12 +52,15 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                     Branch Name:
                 </Typography>
                 <TextField
+                required
                 size='small'
                 id="Branch_name"
                 name="branchName"
                 variant="outlined"
                 disabled={!editMode}
                 fullWidth
+                error={!!errors.branchNameError}
+                helperText={errors.branchNameError}
                 value={branchDetails.branchDto.branchName}
                 onChange={handleBranchDtoDetails}
                 sx={{
@@ -70,11 +75,14 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 Address:
                 </Typography>
                 <TextField
+                required
                 size='small'
                 id="address"
                 name="addressNumber"
                 variant="outlined"
                 disabled={!editMode}
+                error={!!errors.addressNumberError}
+                helperText={errors.addressNumberError}
                 fullWidth
                 value={branchDetails.branchDto.addressNumber}
                 onChange={handleBranchDtoDetails}
@@ -90,11 +98,14 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 Street name:
                 </Typography>
                 <TextField
+                required
                 size='small'
                 id="streetName"
                 name="streetName"
                 variant="outlined"
                 disabled={!editMode}
+                error={!!errors.streetNameError}
+                helperText={errors.streetNameError}
                 fullWidth
                 value={branchDetails.branchDto.streetName}
                 onChange={handleBranchDtoDetails}
@@ -110,11 +121,14 @@ export default function BranchDetailForm({handleSubmit,branchDetails,setBranchDe
                 City:
                 </Typography>
                 <TextField
+                required
                 size='small'
                 id="city"
                 name="city"
                 variant="outlined"
                 disabled={!editMode}
+                error={!!errors.cityError}
+                helperText={errors.cityError}
                 fullWidth
                 value={branchDetails.branchDto.city}
                 onChange={handleBranchDtoDetails}
@@ -181,16 +195,24 @@ BranchDetailForm.propTypes = {
             streetName:PropTypes.string,
             city:PropTypes.string
         }),
-        branchContactDTOList:PropTypes.arrayOf([
+        branchContactDTOList:PropTypes.arrayOf(
             PropTypes.shape({
                 contactNumber:PropTypes.string
             })
-        ])
+        )
     }).isRequired,
     setBranchDetails:PropTypes.func.isRequired,
     editMode:PropTypes.oneOfType([PropTypes.bool,PropTypes.func]),
     contactNum:PropTypes.shape({
         contactNumber:PropTypes.string
     }).isRequired,
-    setContactNum:PropTypes.func.isRequired
+    setContactNum:PropTypes.func.isRequired,
+    errors:PropTypes.shape({
+        branchNameError:PropTypes.string,
+        addressNumberError:PropTypes.string,
+        streetNameError:PropTypes.string,
+        cityError:PropTypes.string,
+        contactNumberError:PropTypes.string
+    }),
+    setErrors:PropTypes.func
 };

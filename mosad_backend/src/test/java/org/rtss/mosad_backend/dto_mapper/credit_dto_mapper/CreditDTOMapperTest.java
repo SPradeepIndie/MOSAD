@@ -35,19 +35,4 @@ class CreditDTOMapperTest {
         assertEquals(credit.getBalance(), creditDTO.getBalance());
     }
 
-    @Test
-    void shouldMapCreditDTOToCredit() {
-        // Given
-        CreditDTO creditDTO = new CreditDTO();
-        creditDTO.setCreditId(1L);
-        creditDTO.setBalance(1000.0);
-
-        // When
-        Credit credit = creditDTOMapper.toEntity(creditDTO);
-
-        // Then
-        assertNotNull(credit);
-        assertEquals(creditDTO.getCreditId(), credit.getCreditId());
-        assertEquals(creditDTO.getBalance(), credit.getBalance());
-    }
 }

@@ -15,11 +15,12 @@ public class CreditDetailsDTO {
     private Date dueDate;
     private List<RepaymentDTO> repayments;
     private Long billId;
+    private boolean isCompleted;
 
     public CreditDetailsDTO() {
     }
 
-    public CreditDetailsDTO(Long creditId, String customerName, String contactNumber, double balance, Date dueDate, List<RepaymentDTO> repayments,Long billId) {
+    public CreditDetailsDTO(Long creditId, String customerName, String contactNumber, double balance, Date dueDate, List<RepaymentDTO> repayments,Long billId,boolean isCompleted) {
         this.creditId = creditId;
         this.customerName = customerName;
         this.contactNumber = contactNumber;
@@ -27,6 +28,7 @@ public class CreditDetailsDTO {
         this.dueDate = dueDate;
         this.repayments = repayments;
         this.billId = billId;
+        this.isCompleted = isCompleted;
     }
 
     public Long getCreditId() {
@@ -83,6 +85,14 @@ public class CreditDetailsDTO {
 
     public void setBillId(Long billId) {
         this.billId = billId;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean isCompleted) {
+        this.isCompleted = isCompleted;
     }
 }
 

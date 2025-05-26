@@ -3,13 +3,17 @@ package org.rtss.mosad_backend.service.credit_management;
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.credit_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.credit_dto_mapper.CreditDTOMapper;
+import org.rtss.mosad_backend.entity.bill_management.Bill;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.rtss.mosad_backend.entity.credit.Repayment;
 import org.rtss.mosad_backend.entity.customer.Customer;
+import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.bill_repository.BillRepository;
 import org.rtss.mosad_backend.repository.credit_repository.CreditRepository;
 import org.rtss.mosad_backend.repository.credit_repository.RepaymentRepository;
 import org.rtss.mosad_backend.repository.customer_repository.CustomerRepository;
+import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,27 +33,45 @@ public class CreditService {
 
     private final CustomerRepository customerRepository;
 
-    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, CustomerRepository customerRepository) {
+    private final BillRepository billRepository;
+     private final UsersRepo usersRepo;
+
+    public CreditService(CreditRepository creditRepository, RepaymentRepository repaymentRepository, CreditDTOMapper creditDTOMapper, CustomerRepository customerRepository, BillRepository billRepository, UsersRepo usersRepo) {
         this.creditRepository = creditRepository;
         this.repaymentRepository = repaymentRepository;
         this.creditDTOMapper = creditDTOMapper;
         this.customerRepository = customerRepository;
+        this.billRepository = billRepository;
+        this.usersRepo = usersRepo;
     }
 
     // Save credit
-    public ResponseEntity<CreditDTO> saveCredit(CreditDTO creditDTO) {
-
+    public ResponseEntity<CreditDTO> saveCredit(AddCreditDTO creditDTO) {
+        Users user;
+        Customer customer;
+        Credit credit=new Credit();
         if (creditDTO.getCustomerId() == null) {
-            throw new IllegalArgumentException("Customer ID must not be null ");
+            user=usersRepo.findById(Math.toIntExact(creditDTO.getUserId())).orElse(null);
+            credit.setUser(user);
+        }
+        else {
+
+            // Fetch the Customer entity using customer_id from the DTO
+            customer = customerRepository.findById(creditDTO.getCustomerId())
+                    .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found"))));
+            credit.setCustomer(customer); // Associate the Customer entity
         }
 
-        // Fetch the Customer entity using customer_id from the DTO
-        Customer customer = customerRepository.findById(creditDTO.getCustomerId())
-                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Customer not found"))));
 
+        Bill bill=billRepository.findById(creditDTO.getBillId())
+                .orElseThrow(() -> new ObjectNotValidException(new HashSet<>(List.of("Bill not found"))));
         // Map the CreditDTO to a Credit entity
-        Credit credit=creditDTOMapper.toEntity(creditDTO);
-        credit.setCustomer(customer); // Associate the Customer entity
+
+        credit.setBalance(creditDTO.getBalance());
+        credit.setDueDate(creditDTO.getDueDate());
+
+
+        credit.setBill(bill);
 
         // Save the Credit entity
         Credit savedCredit = creditRepository.save(credit);
@@ -90,6 +112,7 @@ public class CreditService {
             List<Object[]> results;
             if (customerType.equalsIgnoreCase("Retail")) {
                 results = creditRepository.findAllRetailCustomerCreditDetails();
+
             } else {
                 results = creditRepository.findAllNormalCustomerCreditDetails();
             }
@@ -97,24 +120,28 @@ public class CreditService {
             Map<Long, CreditDetailsDTO> creditDetailsMap = new HashMap<>();
 
             for (Object[] row : results) {
+
                 Long creditId = (Long) row[0];
                 double balance = (double) row[1];
                 Date dueDate = (Date) row[2];
-                String customerName = (String) row[3];
-                String contactNumber = (String) row[4];
+                boolean isCompleted = Boolean.TRUE.equals(row[3]);
+                String customerName = (String) row[4];
+                String contactNumber = (String) row[5];
+
+
 
                 // Repayment details
-                Long repaymentId = (Long) row[5];
-                Date repaymentDate = (Date) row[6];
-                Double repaymentAmount = (Double) row[7];
+                Long repaymentId = (Long) row[6];
+                Date repaymentDate = (Date) row[7];
+                Double repaymentAmount = (Double) row[8];
 
                 //Bill details
-                Long billId = (Long) row[8];
+                Long billId = (Long) row[9];
 
 
                 // Get or create CreditDetailsDTO
                 CreditDetailsDTO creditDetails = creditDetailsMap.computeIfAbsent(creditId, id ->
-                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId)
+                        new CreditDetailsDTO(creditId, customerName, contactNumber, balance, dueDate, new ArrayList<>(),billId,isCompleted)
                 );
 
                 // Add repayment if not already present
@@ -207,6 +234,29 @@ public class CreditService {
             throw new ObjectNotValidException(new HashSet<>(List.of("Invalid date format")));
         }
         return creditRepository.findCreditByDueDate(dueDate);
+    }
+
+    public ResponseEntity<ResponseDTO> updateCredit(CreditDTO creditDTO) {
+        Optional<Credit> creditOptional = creditRepository.findById(creditDTO.getCreditId());
+
+        if (creditOptional.isPresent()) {
+            Credit credit = creditOptional.get();
+            credit.setCompleted(creditDTO.getCompleted());  // Update the attribute
+            credit.setDueDate(creditDTO.getDueDate());
+
+
+
+            Credit savedCredit = creditRepository.save(credit);  // Save the updated entity
+            creditRepository.flush();
+
+
+
+            ResponseDTO responseDTO = new ResponseDTO(true, "Credit updated successfully");
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = new ResponseDTO(false, "Credit not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+        }
     }
 
 

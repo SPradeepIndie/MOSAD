@@ -2,9 +2,12 @@ import React from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import useAuth from '../hooks/useAuth';
 
-function Tile({ title, icon, link, state, onClick }) {
+function Tile({ title, icon, link, state, onClick ,allowedRoles}) {
+  const {auth}=useAuth();
   const isClickable = Boolean(onClick) || Boolean(link);
+  const cardPrivilledges = auth?.roles?.find(role=>allowedRoles?.includes(role)) 
 
   return (
     <Card
@@ -22,10 +25,10 @@ function Tile({ title, icon, link, state, onClick }) {
         boxShadow: 3,
         borderRadius: 2,
         cursor: isClickable ? 'pointer' : 'default', // Ensure pointer cursor only when clickable
-        backgroundColor: '#2E8B58',
-        ':hover': isClickable
+        backgroundColor: cardPrivilledges ? '#2E8B58' : 'gray',
+        ':hover': isClickable && cardPrivilledges
           ? { backgroundColor: '#FFC220', boxShadow: 6 }
-          : undefined, // Disable hover effect if not clickable
+          : { backgroundColor: 'rgb(184, 187, 24)', boxShadow: 6 }, // Disable hover effect if not clickable
       }}
     >
       <CardActionArea
@@ -64,7 +67,8 @@ Tile.propTypes = {
   icon: PropTypes.node.isRequired,
   link: PropTypes.string,
   state: PropTypes.object,
-  onClick: PropTypes.func, // Allow onClick for tiles that trigger actions instead of navigation
+  onClick: PropTypes.func,
+  allowedRoles:PropTypes.arrayOf(PropTypes.string) // Allow onClick for tiles that trigger actions instead of navigation
 };
 
 export default Tile;

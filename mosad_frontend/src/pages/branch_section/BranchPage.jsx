@@ -1,7 +1,12 @@
 import React, { useState,useEffect } from 'react';
 import { Box, Button, Paper, Typography,Stack} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { fetchAllBranchNames,fetchBranchDetailsByName,deleteBranch,udpateBranch,addBranch } from '../../services/apiBranchService';
+import {
+    useFetchAllBranchNames, 
+    useAddBranch,
+    useUdpateBranch,
+    useFetchBranchDetailsByName, 
+    useDeleteBranch} from '../../hooks/servicesHook/useBranchService'
 import BranchDetailForm from '../../forms/BranchDetailForm';
 import PopUp from '../../component/PopUp';
 
@@ -21,7 +26,21 @@ const initialBranch={
 const initialContact={
     contactNumber:""
 }
-const BranchPage=()=>{    
+const initialErrors={
+    branchNameError:"",
+    addressNumberError:"",
+    streetNameError:"",
+    cityError:"",
+    contactNumberError:""
+}
+
+const BranchPage=()=>{  
+    const fetchAllBranchNames=useFetchAllBranchNames();
+    const fetchBranchDetailsByName=useFetchBranchDetailsByName();
+    const deleteBranch=useDeleteBranch();
+    const udpateBranch=useUdpateBranch();
+    const addBranch=useAddBranch();
+    
     //--------------------------------Main page------------------------------------
     const userRole="admin";
     const [contactNumber, setContactNumber] = useState(initialContact);//handle contact number
@@ -29,6 +48,7 @@ const BranchPage=()=>{
     const [allBranchNames, setAllBranchNames] = useState([]);// load the all branch names at the rendering
     const [isLoadingBranchNames, setIsLoadingBranchNames] = useState(false);
     const [branchDetails, setBranchDetails] = useState(initialBranch);//load a branch detials according to the selcted card
+    const [branchDetailsErrors,setBranchDetailsErrors]=useState(initialErrors);
     const [isLoadingBranchDetails, setIsLoadingBranchDetails] = useState(false);
     const [editMode, setEditMode]=useState(false); //Set text feilds disability
     const loadAllBranches=()=>{
@@ -85,6 +105,9 @@ const BranchPage=()=>{
     }
     //Handle Update
     const handleUpdatedDetailsSubmit=(event)=>{
+        if(!validateForm()){
+            return;
+        }
         if(!addBranchPopUp){
             udpateBranch(branchDetails,selectedBranch).then((response)=>{
                 alert(response.data.message);
@@ -92,6 +115,7 @@ const BranchPage=()=>{
                 setEditMode(false)
             })
         }
+        setBranchDetailsErrors(initialErrors);
     }
     //Rest the BranchPage Form
     const handleEditMode=()=>{
@@ -112,7 +136,9 @@ const BranchPage=()=>{
     //Handle new branch submition
     const handleNewDetailsSubmit = (event) => {
         event.preventDefault();
-        console.log(newBranchDetails);
+        if(!validateForm()){
+            return;
+        }
         addBranch(newBranchDetails).then((response)=>{
             alert(response.data.message);
         }).finally(()=>{
@@ -130,7 +156,34 @@ const BranchPage=()=>{
     const resetNewBranchAddingForm=()=>{
         setNewBranchDetails(initialBranch);
         setContactNumber(initialContact);
-    }
+        setBranchDetailsErrors(initialErrors);
+    };
+
+    //--------------------------------branch form validation------------------------------------ 
+    const validateForm =()=>{
+        let isValid = true;
+        let newErrors = { ...initialErrors };
+        // Check empty fields
+        if (branchDetails.branchDto.branchName === "") {
+            isValid = false;
+            newErrors.branchNameError = "Branch Name cannot be empty";
+        }
+        if (branchDetails.branchDto.addressNumber === "") {
+            isValid = false;
+            newErrors.addressNumberError = "Address Number cannot be empty";
+        }
+        if (branchDetails.branchDto.streetName === "") {
+            isValid = false;
+            newErrors.streetNameError = "Street Name cannot be empty";
+        }
+        if (branchDetails.branchDto.city === "") {
+            isValid = false;
+            newErrors.cityError = "City cannot be empty";
+        }
+        
+        setBranchDetailsErrors(newErrors);
+        return isValid
+    }  
 
     return(
         <>
@@ -164,6 +217,8 @@ const BranchPage=()=>{
                             editMode={editMode}
                             contactNum={contactNumber}
                             setContactNum={setContactNumber}
+                            errors={branchDetailsErrors}
+                            setErrors={setBranchDetailsErrors}
                         />
                     }
                 </Paper>
@@ -199,6 +254,8 @@ const BranchPage=()=>{
                     editMode={true}
                     contactNum={contactNumber}
                     setContactNum={setContactNumber}
+                    errors={branchDetailsErrors}
+                    setErrors={setBranchDetailsErrors}
                 />
                 </PopUp>
         </Box>

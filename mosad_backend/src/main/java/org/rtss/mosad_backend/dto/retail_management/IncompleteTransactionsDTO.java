@@ -1,16 +1,17 @@
 package org.rtss.mosad_backend.dto.retail_management;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class IncompleteTransactionsDTO {
 
-    private Date date;
+    private LocalDate date;
     private String description;
     private Double balance;
     private Date dueDate;
 
-    public IncompleteTransactionsDTO(Date date, String description, Double balance, Date dueDate) {
+    public IncompleteTransactionsDTO(LocalDate date, String description, Double balance, Date dueDate) {
         this.date = date;
         this.description = description;
         this.balance = balance;
@@ -20,11 +21,11 @@ public class IncompleteTransactionsDTO {
     public IncompleteTransactionsDTO() {
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

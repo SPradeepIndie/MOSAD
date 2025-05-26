@@ -18,7 +18,7 @@ public interface CustomerContactRepository extends JpaRepository<CustomerContact
     List<CustomerContact> findCustomerContactsByContactNumber(@Param("contactNumber") String contactNumber);
 
     @Query("SELECT c  FROM CustomerContact c WHERE c.contactNumber = :contactNumber")
-    List<Customer> findCustomersByContactNumber(@Param("contactNumber") String contactNumber);
+    List<CustomerContact> findCustomersByContactNumber(@Param("contactNumber") String contactNumber);
 
 
 }

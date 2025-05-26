@@ -6,6 +6,7 @@ const GeneralMessage = ({ message}) => {
     <Alert
       variant="filled"
       severity={message.type}
+      color={message.color}
       style={{
         position: "fixed", // Makes the message fixed on the screen
         top: "10px", // Distance from the top
@@ -18,10 +19,11 @@ const GeneralMessage = ({ message}) => {
   );
 };
 
-GeneralMessage.prototype={
+GeneralMessage.propTypes={
   message: PropTypes.shape({
     type:PropTypes.string.isRequired,
-    text:PropTypes.string.isRequired
+    text:PropTypes.string.isRequired,
+    color:PropTypes.string
   })
 }
 

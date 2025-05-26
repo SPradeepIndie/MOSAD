@@ -1,39 +1,44 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
-import java.util.List;
+
+import java.time.LocalDate;
+
 
 public class BillDTO {
-    private Long id; // Unique identifier for the bill
-    private String customerName; // Optional, if needed
-    private String customerContact; // Optional, if needed
+    private Long billId;
+    private Double totalAmount;
     private Double advance;
-    private Double total;
     private Double balance;
-    private List<BillItemDTO> items; // List of bill items
+    private LocalDate date;
+
+
+    public BillDTO() {
+    }
+
+    public BillDTO(Long billId, Double totalAmount, Double advance, Double balance, LocalDate date) {
+        this.billId = billId;
+        this.totalAmount = totalAmount;
+        this.advance = advance;
+        this.balance = balance;
+        this.date = date;
+    }
+
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getBillId() {
+        return billId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerContact() {
-        return customerContact;
-    }
-
-    public void setCustomerContact(String customerContact) {
-        this.customerContact = customerContact;
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public Double getAdvance() {
@@ -44,14 +49,6 @@ public class BillDTO {
         this.advance = advance;
     }
 
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
     public Double getBalance() {
         return balance;
     }
@@ -60,12 +57,15 @@ public class BillDTO {
         this.balance = balance;
     }
 
-    public List<BillItemDTO> getItems() {
-        return items;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setItems(List<BillItemDTO> items) {
-        this.items = items;
+    public void setDate(LocalDate date) {
+        this.date = date;
+
     }
+
+
+
 }
-

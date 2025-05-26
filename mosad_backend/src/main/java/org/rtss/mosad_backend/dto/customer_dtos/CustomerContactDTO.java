@@ -1,16 +1,25 @@
 package org.rtss.mosad_backend.dto.customer_dtos;
 
+import org.rtss.mosad_backend.entity.customer.CustomerContact;
+
 public class CustomerContactDTO {
-    private Long id;
+    private Long customerContactId;
     private String contactNumber;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public CustomerContactDTO(CustomerContact customerContact) {
+        this.customerContactId = customerContact.getCustomerContactId();
+        this.contactNumber = customerContact.getContactNumber();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public CustomerContactDTO() {
+    }
+
+    public Long getCustomerContactId() {
+        return customerContactId;
+    }
+
+    public void setCustomerContactId(Long customerContactId) {
+        this.customerContactId = customerContactId;
     }
 
     public String getContactNumber() {

@@ -9,13 +9,10 @@ public class AuthDTO {
     private boolean authenticated;
     @JsonProperty("access_token")
     private String accessToken;
-    @JsonProperty("refresh_token")
-    private String refreshToken;
 
-    public AuthDTO(boolean authenticated, String accessToken, String refreshToken) {
+    public AuthDTO(boolean authenticated, String accessToken) {
         this.authenticated = authenticated;
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
     }
 
     public AuthDTO() {
@@ -29,14 +26,6 @@ public class AuthDTO {
         this.accessToken = accessToken;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
-
     public boolean isAuthenticated() {
         return authenticated;
     }
@@ -45,12 +34,4 @@ public class AuthDTO {
         this.authenticated = authenticated;
     }
 
-    @Override
-    public String toString() {
-        return "AuthDTO{" +
-                "authenticated=" + authenticated +
-                ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                '}';
-    }
 }

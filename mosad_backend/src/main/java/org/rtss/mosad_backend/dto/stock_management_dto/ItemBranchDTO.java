@@ -4,6 +4,16 @@ public class ItemBranchDTO {
     private Long branchId;
     private Integer availableQuantity;
 
+    public ItemBranchDTO() {}
+
+    public ItemBranchDTO(Long branchId, Integer availableQuantity) {
+        this.branchId = branchId;
+        this.availableQuantity = availableQuantity;
+    }
+
+    public ItemBranchDTO(Integer availableQuantity) {
+    }
+
     // Getters and Setters
     public Long getBranchId() {
         return branchId;

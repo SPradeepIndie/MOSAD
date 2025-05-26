@@ -6,11 +6,13 @@ import org.rtss.mosad_backend.dto.user_dtos.*;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.entity.user_management.UsersOTP;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersOTPRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
@@ -39,11 +41,13 @@ public class AccountManagementService {
     private final DtoValidator dtoValidator;
     private final UserRolesRepo userRolesRepo;
     private final UsersOTPRepo usersOTPRepo;
+    private final BranchRepo branchRepo;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final SecureRandom random=new SecureRandom();
+    private boolean isOtpVerified = false;
 
-    public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
+    public AccountManagementService(UsersRepo usersRepo, UserDTOMapper userDTOMapper, UserContactDTOMapper userContactDTOMapper, UserRoleDTOMapper userRoleDTOMapper, DtoValidator dtoValidator, UserRolesRepo userRolesRepo, UsersOTPRepo usersOTPRepo, BranchRepo branchRepo, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.usersRepo = usersRepo;
         this.userDTOMapper = userDTOMapper;
         this.userContactDTOMapper = userContactDTOMapper;
@@ -51,12 +55,12 @@ public class AccountManagementService {
         this.dtoValidator = dtoValidator;
         this.userRolesRepo = userRolesRepo;
         this.usersOTPRepo = usersOTPRepo;
+        this.branchRepo = branchRepo;
         this.emailService = emailService;
         this.passwordEncoder = passwordEncoder;
     }
 
     //delete a given user
-    @Transactional
     public ResponseDTO deleteUser(String username) {
         Users user = usersRepo.findByUsername(username)
                 .orElseThrow(() -> new HttpServerErrorException(HttpStatus.BAD_REQUEST, USERNAME_NOT_FOUND_MSG));
@@ -65,7 +69,6 @@ public class AccountManagementService {
     }
 
     //update a given user
-    @Transactional
     public ResponseDTO updateUser(String username, UserDetailsDTO userUpdateDto){
         Optional<Users> userOptional = usersRepo.findByUsername(username);
         if (userOptional.isEmpty()) {
@@ -93,10 +96,29 @@ public class AccountManagementService {
             dtoValidator.validate(userContactDto);
         }
         user.setUserContacts(convertToUserContacts(userContactDtoS,currentUser));
+
+        Branch newBranch=extractNewBranch(userUpdateDto.getBranchName(),currentUser.getBranch(),user);
+        user.setBranch(newBranch);
         usersRepo.saveAndFlush(user);
 
         return new ResponseDTO(true, "Successfully updated " + username);
 
+    }
+
+    private Branch extractNewBranch(String newBranchName,Branch currentBranch,Users user) {
+        Optional<Branch> branches=branchRepo.findBranchByBranchName(newBranchName);
+        if(branches.isEmpty()){
+            throw new ObjectNotValidException(new HashSet<>(List.of(newBranchName+" does not exist")));
+        }
+        currentBranch.getUsers().remove(user);
+        Branch newBranch=branches.get();
+        Set<Users> newUsers=new HashSet<>();
+        if(!newBranch.getUsers().isEmpty()){
+            newUsers.addAll(newBranch.getUsers());
+        }
+        newUsers.add(user);
+        newBranch.setUsers(newUsers);
+        return newBranch;
     }
 
     //map to the UserContactDto entity.
@@ -126,37 +148,47 @@ public class AccountManagementService {
     //send the otp
     @Transactional
     public ResponseDTO sendOtp(String email){
+        isOtpVerified=false;
         Users user=verifyEmail(email);
-        String otp=generateRandomOTPCode();
-        sendEmailWithOtp(email,otp);
-        saveOTP(otp,user);
-
-        return new ResponseDTO(true,"Successfully sent otp! check you email ");
+        if(user.getUsersOTP()==null){
+            String otp=generateRandomOTPCode();
+            sendEmailWithOtp(email,otp,user.getUsername());
+            saveOTP(otp,user);
+            return new ResponseDTO(true,"Successfully sent otp! check you email ");
+        }
+        otpDelete(user, user.getUsersOTP());
+        return new ResponseDTO(false,"Given user has already requested otp! Please wait another 2 minutes to retry ");
     }
 
     //verify otp
-    @Transactional
     public ResponseDTO verifyOtp(String otp,String email) {
+        isOtpVerified=false;
         Users user=verifyEmail(email);
         UsersOTP userOtp=usersOTPRepo.findByOtpTokenAndUser(otp,user).orElseThrow(
                 () -> new HttpServerErrorException(HttpStatus.BAD_REQUEST,"Otp not found for given mail")
         );
         if(userOtp.getOtpExpiryDate().before(Date.from(Instant.now()))){
-            usersOTPRepo.deleteById(userOtp.getOtpId());
+            otpDelete(user, userOtp);
             throw new HttpServerErrorException(HttpStatus.EXPECTATION_FAILED,"Otp expired");
         }
-
+        isOtpVerified=true;
         return new ResponseDTO(true,"Successfully verified OTP");
     }
 
     //Change to new password
-    @Transactional
     public ResponseDTO changeToNewPassword(String newPassword,String email) {
-        Users user=verifyEmail(email);
-        String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
-        user.setPassword(encryptedNewPassword);
-        usersRepo.saveAndFlush(user);
-        return new ResponseDTO(true,"Successfully changed password");
+        if(isOtpVerified){
+            Users user=verifyEmail(email);
+            String encryptedNewPassword=passwordEncoder.bCryptPasswordEncoder().encode(newPassword);
+            user.setPassword(encryptedNewPassword);
+            usersRepo.saveAndFlush(user);
+            isOtpVerified=false;
+            otpDelete(user, user.getUsersOTP());
+            return new ResponseDTO(true,"Successfully changed password");
+        }
+        else{
+            return new ResponseDTO(false,"Otp not verified");
+        }
     }
 
     //Return a specific user details
@@ -176,7 +208,7 @@ public class AccountManagementService {
                 .map(userContactDTOMapper::userContactsToUserContactDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
         UserRoleDTO userRoleDTO=userRoleDTOMapper.userRolesToUserRoleDTO(user.getUserRoles());
-        return new UserDetailsDTO(userDto,userRoleDTO,userContactDTOs);
+        return new UserDetailsDTO(userDto,userRoleDTO,userContactDTOs,user.getBranch().getBranchName());
     }
 
     //Verify Email
@@ -204,12 +236,25 @@ public class AccountManagementService {
     }
 
     //Send the Email with OTP
-    private void sendEmailWithOtp(String emailAddress,String otpCode){
+    private void sendEmailWithOtp(String emailAddress,String otpCode,String username){
         MailBody mailBody=new MailBody(
                 emailAddress,
-                "",
-                "OTP:"+otpCode
+                "Password Reset OTP",
+                "Dear "+username+" ,\n\n" +
+                        "Your OTP for password reset is: " + otpCode + "\n\n" +
+                        "Please enter this OTP on the password reset page within 10 minutes.\n\n" +
+                        "If you did not request a password reset, please ignore this email.\n\n" +
+                        "Sincerely,\n" +
+                        "Your Team"
         );
         emailService.sendMail(mailBody);
     }
+
+    //Delete otp
+    private void otpDelete(Users user, UsersOTP userOtp) {
+        user.setUsersOTP(null);
+        usersRepo.saveAndFlush(user);
+        usersOTPRepo.deleteById(userOtp.getOtpId());
+    }
 }
+

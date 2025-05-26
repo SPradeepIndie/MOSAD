@@ -1,38 +1,26 @@
-/* General Styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-}
-
 /* Container */
 .item-view-container {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
+  width: 100%;
   background: white;
   border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Banner */
 .banner {
   width: 100%;
   height: 300px;
-  overflow: hidden;
-  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
+  margin: auto;
 }
 
 .brand-banner {
-  width: 100%;
+  width: 90%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
 }
-
-
 
 
 /* Table */
@@ -70,28 +58,18 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.item-table tbody tr {
-  background-color: white; /* Default row color */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.item-table tbody tr:hover {
-  background-color: lightgray; /* Highlight row on hover */
-}
-
 .item-table tbody tr.selected-row {
   background-color: yellow; /* Color for the selected row */
   font-weight: bold; /* Make it visually distinct */
 }
 
-
-
-/* .item-table tbody tr.selected-row {
-  background-color: yellow;
+.inline{
+  display: inline;
+  width: 100%;
+  color: #000000;
+  
 }
 
-/* Non-selected row */
 .item-table tbody tr:hover {
   background-color: lightgray;
 }
@@ -107,14 +85,14 @@ body {
 }
 
 .btn {
-  /* padding: 10px 20px; */
+
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   padding: 8px 12px;
-  cursor: pointer;
+ 
   font-size: 0.9rem;
 }
 

@@ -1,5 +1,6 @@
 package org.rtss.mosad_backend.repository.credit_repository;
 
+import org.rtss.mosad_backend.dto.credit_dtos.CreditDetailsDTO;
 import org.rtss.mosad_backend.entity.credit.Credit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,15 +11,15 @@ import java.util.List;
 
 @Repository
 public interface CreditRepository extends JpaRepository<Credit,Long> {
-    @Query("SELECT c.creditId, c.balance, c.dueDate, cu.name, cc.contactNumber, r.repaymentId, r.date, r.amount,b.id " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate,c.isCompleted, cu.customerName, cc.contactNumber, r.repaymentId, r.date, r.amount,b.id " +
             "FROM Credit c " +
             "JOIN c.customer cu " +
-            "JOIN cu.contacts cc " +
+            "JOIN cu.customerContact cc " +
             "JOIN c.bill b " +
             "LEFT JOIN c.repayments r")
     List<Object[]> findAllNormalCustomerCreditDetails();
 
-    @Query("SELECT c.creditId, c.balance, c.dueDate, CONCAT(u.firstName, ' ', u.lastName) AS name , uc.contactNum AS contactNumber, r.repaymentId, r.date, r.amount,b.id " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate,c.isCompleted, CONCAT(u.firstName, ' ', u.lastName) AS name , uc.contactNum AS contactNumber, r.repaymentId, r.date, r.amount,b.id " +
             "FROM Credit c " +
             "JOIN c.user u " +
             "JOIN u.userContacts uc " +
@@ -26,24 +27,18 @@ public interface CreditRepository extends JpaRepository<Credit,Long> {
             "LEFT JOIN c.repayments r")
     List<Object[]> findAllRetailCustomerCreditDetails();
 
-    @Query("SELECT c.creditId, c.balance, c.dueDate, cu.name, cc.contactNumber, r.repaymentId, r.date, r.amount " +
+    @Query("SELECT c.creditId, c.balance, c.dueDate,c.isCompleted, cu.customerName, cc.contactNumber, r.repaymentId, r.date, r.amount " +
             "FROM Credit c " +
             "JOIN c.customer cu " +
-            "JOIN cu.contacts cc " +
+            "JOIN cu.customerContact cc " +
             "LEFT JOIN c.repayments r " +
-            "WHERE c.customer.id = :customerId")
+            "WHERE c.customer.customerId = :customerId")
     List<Object[]> findAllCreditDetailsByCustomerId(Long customerId);
 
     @Query(value="SELECT * FROM credit WHERE due_date=?1 ", nativeQuery = true)
     List<Credit> findCreditByDueDate(Date date);
 
 
-
-
-
-
-
-
-
-
+    @Query("SELECT c FROM Credit c WHERE c.bill.id = :billId")
+    Credit findCreditByBillId(Long billId);
 }

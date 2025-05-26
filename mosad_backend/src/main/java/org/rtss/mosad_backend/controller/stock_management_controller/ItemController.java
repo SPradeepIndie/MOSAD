@@ -2,6 +2,8 @@ package org.rtss.mosad_backend.controller.stock_management_controller;
 
 import org.rtss.mosad_backend.dto.ResponseDTO;
 import org.rtss.mosad_backend.dto.stock_management_dto.AddItemDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.BranchDTO;
+import org.rtss.mosad_backend.dto.stock_management_dto.StockInDTO;
 import org.rtss.mosad_backend.service.stock_management_service.ItemService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +44,23 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.deleteItem(itemId));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/nn")
     public ResponseEntity<List<AddItemDTO>>searchItems(@Param("brand") String brand,@Param("size") String size,@Param("branchId") Long branchId){
         return ResponseEntity.ok().body(itemService.searchItems(brand,size,branchId));
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<AddItemDTO>>searchItemsByName(@Param("Category") String category,@Param("Brand") String brand,@Param("name") String name,@Param("tyreSize") String tyreSize,@Param("branchId") Long branchId){
+        return ResponseEntity.ok().body(itemService.searchItemsByName(category,brand,name,tyreSize,branchId));
+    }
+
+    @GetMapping("/allbranches")
+    public ResponseEntity<List<BranchDTO>> getBranches(){
+        return ResponseEntity.ok().body(itemService.getBranches());
+    }
+
+    @GetMapping("/stockin")
+    public ResponseEntity<List<StockInDTO>> getStockInHistory(@Param("ItemId") Long itemId){
+        return ResponseEntity.ok().body( itemService.getStockInHistory(itemId));
+    }
+
 }

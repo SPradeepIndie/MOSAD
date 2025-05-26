@@ -12,10 +12,12 @@ import org.rtss.mosad_backend.dto.user_dtos.UserRoleDTO;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserContactDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserDTOMapper;
 import org.rtss.mosad_backend.dto_mapper.user_dto_mapper.UserRoleDTOMapper;
+import org.rtss.mosad_backend.entity.branch_management.Branch;
 import org.rtss.mosad_backend.entity.user_management.UserContacts;
 import org.rtss.mosad_backend.entity.user_management.UserRoles;
 import org.rtss.mosad_backend.entity.user_management.Users;
 import org.rtss.mosad_backend.exceptions.ObjectNotValidException;
+import org.rtss.mosad_backend.repository.branch_management.BranchRepo;
 import org.rtss.mosad_backend.repository.user_management.UserRolesRepo;
 import org.rtss.mosad_backend.repository.user_management.UsersRepo;
 import org.rtss.mosad_backend.validator.DtoValidator;
@@ -35,6 +37,7 @@ class RegisterServiceTest {
     private DtoValidator dtoValidator;
     private UsersRepo usersRepo;
     private UserRolesRepo userRolesRepo;
+    private BranchRepo branchRepo;
     private PasswordEncoder passwordEncoder;
     private UserDTOMapper userDTOMapper;
     private UserRoleDTOMapper userRoleDTOMapper ;
@@ -47,10 +50,13 @@ class RegisterServiceTest {
     private static final String TEST_PASSWORD = "spk@123";
     private static final String TEST_ROLE_NAME = "test1";
     private static final String TEST_CONTACT = "0112536722";
+    private static final String TEST_BRANCH_NAME = "Mirigama Branch";
+
     private UserRoles userRoles;
     private Users user;
     private UserContacts userContacts;
     private UserRegistrationDTO userRegistrationDto;
+    private Branch branch;
 
     @BeforeEach
     void setUp() {
@@ -62,11 +68,12 @@ class RegisterServiceTest {
         dtoValidator = mock(DtoValidator.class);
         usersRepo = mock(UsersRepo.class);
         userRolesRepo = mock(UserRolesRepo.class);
+        branchRepo= mock(BranchRepo.class);
 
         ResponseDTO responseDTO = new ResponseDTO();
 
         registerService=new RegisterService(userDTOMapper, userRoleDTOMapper, userContactDTOMapper,
-                responseDTO,passwordEncoder,usersRepo,userRolesRepo,dtoValidator);
+                responseDTO,passwordEncoder,usersRepo,userRolesRepo,branchRepo,dtoValidator);
 
         userContacts=new UserContacts();
         userContacts.setContactNum(TEST_CONTACT);
@@ -76,7 +83,8 @@ class RegisterServiceTest {
                 new UserDTO(TEST_USERNAME,TEST_FIRST_NAME,  TEST_LAST_NAME, TEST_EMAIL),
                 TEST_PASSWORD,
                 new UserRoleDTO(TEST_ROLE_NAME),
-                new ArrayList<>(List.of(new UserContactDTO(TEST_CONTACT)))
+                new ArrayList<>(List.of(new UserContactDTO(TEST_CONTACT))),
+                TEST_BRANCH_NAME
         );
         userRoles=new UserRoles();
         userRoles.setRoleName(TEST_ROLE_NAME);
@@ -89,6 +97,10 @@ class RegisterServiceTest {
         user.setEmail(TEST_EMAIL);
         user.setUserContacts(userContactsSet);
         user.setUserRoles(userRoles);
+
+        branch=new Branch();
+        branch.setBranchName(TEST_BRANCH_NAME);
+        branch.setUsers(new HashSet<>(List.of(user)));
     }
 
     //Best Scenario...
@@ -103,6 +115,7 @@ class RegisterServiceTest {
         when(userDTOMapper.userDtoToUsers(any())).thenReturn(user);
         when(userRoleDTOMapper.userRoleDTOToUserRoles(any())).thenReturn(userRoles);
         when(userContactDTOMapper.userContactsDTOToUserContacts(any())).thenReturn(userContacts);
+        when(branchRepo.findBranchByBranchName(any())).thenReturn(Optional.of(branch));
         when(usersRepo.saveAndFlush(any())).thenReturn(null); // Simulate successful save
 
         ArgumentCaptor<Users> usersCaptor = ArgumentCaptor.forClass(Users.class);
@@ -170,7 +183,8 @@ class RegisterServiceTest {
                 new UserDTO(TEST_USERNAME,TEST_FIRST_NAME,  TEST_LAST_NAME, TEST_EMAIL),
                 TEST_PASSWORD,
                 new UserRoleDTO("Invalid Roles"),
-                new ArrayList<>(List.of(new UserContactDTO(TEST_CONTACT)))
+                new ArrayList<>(List.of(new UserContactDTO(TEST_CONTACT))),
+                TEST_BRANCH_NAME
         );
         UserRoles invaliduserRoles=new UserRoles();
         userRoles.setRoleName("Invalid Roles");
@@ -182,6 +196,7 @@ class RegisterServiceTest {
         user.setLastName(TEST_LAST_NAME);
         user.setEmail(TEST_EMAIL);
         user.setUserRoles(invaliduserRoles);
+
 
         doNothing().when(dtoValidator).validate(any());
         when(usersRepo.findByUsername(any())).thenReturn(Optional.empty());

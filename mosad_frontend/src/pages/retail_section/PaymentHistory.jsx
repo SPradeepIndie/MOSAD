@@ -1,10 +1,11 @@
 import React, {  useState ,useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-import { fetchPaymentHistory } from "../../services/apiRetailService";
+import {useFetchPaymentHistory} from '../../hooks/servicesHook/useRetailService'
 import useAuth from "../../hooks/useAuth";
 
 const PaymentHistory = () => {
+    const fetchPaymentHistory=useFetchPaymentHistory();
     const [rows, setRows] = useState([]);
     const {auth}=useAuth();
 
@@ -31,7 +32,7 @@ const PaymentHistory = () => {
     // Define columns for the DataGrid
     const columns = [
         { field: "date", headerName: "Date", width: 150 },
-        { field: "description", headerName: "Description", width: 300 },
+        { field: "description", headerName: "Retail Customer Name", width: 300 },
         { field: "paymentStatus", headerName: "Payment Status", width: 200 },
         { field: "amount", headerName: "Amount", width: 150, type: "number" }
     ];

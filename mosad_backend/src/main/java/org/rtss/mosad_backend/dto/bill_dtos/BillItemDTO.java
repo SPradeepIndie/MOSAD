@@ -1,19 +1,39 @@
 package org.rtss.mosad_backend.dto.bill_dtos;
 
 public class BillItemDTO {
-    private Long id; // Unique identifier for the bill item
+    private Long billItemId;
+    private Long itemId;
     private String description;
-    private Double unitPrice;
     private Integer quantity;
-    private Double subtotal;
+    private Double unitPrice;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public BillItemDTO(Long billItemId, Long itemId, String description, Integer quantity, Double unitPrice) {
+        this.billItemId = billItemId;
+        this.itemId = itemId;
+        this.description = description;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public BillItemDTO() {
+
+    }
+
+    // Getters and Setters
+    public Long getBillItemId() {
+        return billItemId;
+    }
+
+    public void setBillItemId(Long billItemId) {
+        this.billItemId = billItemId;
+    }
+
+   public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
     }
 
     public String getDescription() {
@@ -24,14 +44,6 @@ public class BillItemDTO {
         this.description = description;
     }
 
-    public Double getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
@@ -40,12 +52,13 @@ public class BillItemDTO {
         this.quantity = quantity;
     }
 
-    public Double getSubtotal() {
-        return subtotal;
+    public Double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setSubtotal(Double subtotal) {
-        this.subtotal = subtotal;
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
     }
+
+
 }
-

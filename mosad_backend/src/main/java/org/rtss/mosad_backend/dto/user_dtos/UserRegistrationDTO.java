@@ -26,11 +26,15 @@ public class UserRegistrationDTO{
     @NotNull(message = "User contact object can not be null")
     private ArrayList<UserContactDTO> userContactDto;
 
-    public UserRegistrationDTO(UserDTO userDto, String password, UserRoleDTO userRoleDto, ArrayList<UserContactDTO> userContactDto) {
+    @NotBlank(message = "User need to have a branch")
+    private String branchName;
+
+    public UserRegistrationDTO(UserDTO userDto, String password, UserRoleDTO userRoleDto, ArrayList<UserContactDTO> userContactDto, String branchName) {
         this.userDto = userDto;
         this.password = password;
         this.userRoleDto = userRoleDto;
         this.userContactDto = userContactDto;
+        this.branchName = branchName;
     }
 
     public UserRegistrationDTO() {
@@ -68,14 +72,12 @@ public class UserRegistrationDTO{
         this.userContactDto = userContactDto;
     }
 
-    @Override
-    public String toString() {
-        return "UserRegistrationDTO{" +
-                "userDto=" + userDto +
-                ", password='" + password + '\'' +
-                ", userRoleDto=" + userRoleDto +
-                ", userContactDto=" + userContactDto +
-                '}';
+    public @NotNull(message = "User need to have a branch") String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(@NotNull(message = "User need to have a branch") String branchName) {
+        this.branchName = branchName;
     }
 }
 

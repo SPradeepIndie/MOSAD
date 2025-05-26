@@ -14,16 +14,20 @@ public class CreditDTO {
     private Date dueDate;
     @NotEmpty(message = "Customer id can not be empty")
     private Long customerId;
+    @NotEmpty(message = "Is completed can not be empty")
+    private Boolean isCompleted;
+
 
 
     public CreditDTO() {
     }
 
-    public CreditDTO(Long creditId, double balance, Date dueDate,Long customerId) {
+    public CreditDTO(Long creditId, double balance, Date dueDate,Long customerId,boolean isCompleted) {
         this.creditId = creditId;
         this.balance = balance;
         this.dueDate = dueDate;
         this.customerId = customerId;
+        this.isCompleted = isCompleted;
 
     }
 
@@ -57,5 +61,13 @@ public class CreditDTO {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 }

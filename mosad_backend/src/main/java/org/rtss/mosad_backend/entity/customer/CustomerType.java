@@ -4,5 +4,6 @@ package org.rtss.mosad_backend.entity.customer;
 public enum CustomerType {
     NORMAL,
     REBUILD,
-    BOTH // NORMAL and REBUILD
+    BOTH,
+    RETAIL
 }

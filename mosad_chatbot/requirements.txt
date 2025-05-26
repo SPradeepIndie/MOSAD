@@ -1,0 +1,15 @@
+fastapi
+numpy<2
+uvicorn
+crewai 
+websockets
+openai
+websockets
+pandas  
+python-dotenv  
+langchain
+langchain-openai  
+langchain_community
+onnxruntime
+rapidfuzz
+crewai-tools
