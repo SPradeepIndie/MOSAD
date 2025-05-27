@@ -73,3 +73,53 @@ paths:
           description: Forbidden
         '500':
           description: Server error
+          
+  /api/v1/homestats/cal:
+    get:
+      summary: Get calendar duedates for credits
+      operationId: getCalendarCreditDueDates
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description:  Credit due dates fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Invalid credentials
+        '403':
+          description: Forbidden
+        '500':
+          description: Server error
+        
+  /api/v1/brand:
+    get:
+      summary: Get Brands by Category
+      operationId: getBrands
+      tags:
+        - Dashboard
+      parameters:
+        - name: catName
+          in: query
+          schema:
+            type: string
+            example: Tyre
+          description: category name to filter the brnads
+      responses:
+        '200':
+          description: Brands fetched successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          description: Invalid credentials
+        '403':
+          description: Forbidden
+        '500':
+          description: Server error
+  
