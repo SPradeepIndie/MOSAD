@@ -56,6 +56,8 @@ paths:
       operationId: logoutUser
       tags:
         - Authentication
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Logged out successfully
@@ -161,4 +163,10 @@ paths:
           description: Forbidden
         '500':
           description: Server error
-  
+          
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
